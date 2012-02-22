@@ -61,31 +61,6 @@ Java_org_helllabs_android_xmp_Xmp_initContext(JNIEnv *env, jobject obj)
 		return;
 
 	ctx = xmp_create_context();
-	xmp_init_formats(ctx);
-	xmp_drv_register(&drv_smix);
-}
-
-JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_init(JNIEnv *env, jobject obj, jint rate)
-{
-	xmp_init(ctx, 0, NULL);
-	opt = xmp_get_options(ctx);
-	opt->verbosity = 0;
-
-	xmp_register_event_callback(ctx, process_echoback, NULL);
-	_playing = 0;
-
-	opt->freq = rate;
-	opt->resol = 16;
-	opt->outfmt &= ~XMP_FMT_MONO;
-
-	if (xmp_open_audio(ctx) < 0) {
-		//xmp_deinit(ctx);
-		//xmp_free_context(ctx);
-		return -1;
-	}
-
-	return 0;
 }
 
 JNIEXPORT jint JNICALL
