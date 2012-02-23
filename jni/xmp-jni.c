@@ -23,18 +23,10 @@ static int _ins[NCH];
 static int _key[NCH];
 static int _decay = 8;
 
-#if 0
-static void process_echoback(unsigned long i, void *data)
-{
-	unsigned long msg = i >> 4;
-
-	switch (i & 0x0f) {
-}
-#endif
 
 /* For ModList */
 JNIEXPORT void JNICALL
-Java_org_helllabs_android_xmp_Xmp_initContext(JNIEnv *env, jobject obj)
+Java_org_helllabs_android_xmp_Xmp_init(JNIEnv *env, jobject obj)
 {
 	if (ctx != NULL)
 		return;

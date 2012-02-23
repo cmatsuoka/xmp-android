@@ -40,6 +40,7 @@ public class ModService extends Service {
 	boolean restartList;
 	boolean returnToPrev;
 	boolean paused;
+	boolean looped;
 	String fileName;			// currently playing file
 	String currentTitle;
 	QueueManager queue;
@@ -88,7 +89,6 @@ public class ModService extends Service {
 				minSize < bufferSize ? bufferSize : minSize,
 				AudioTrack.MODE_STREAM);
 
-		xmp.initContext();
 		xmp.init(sampleRate);
 
 		isPlaying = false;
@@ -174,9 +174,6 @@ public class ModService extends Service {
 
 	       		fileName = queue.getFilename();
 	       		notifier.notification(xmp.getTitle(), queue.index());
-	       		
-	    		xmp.optInterpolation(prefs.getBoolean(Settings.PREF_INTERPOLATION, true));
-	    		xmp.optFilter(prefs.getBoolean(Settings.PREF_FILTER, true));
 		       		    	
 	        	final int numClients = callbacks.beginBroadcast();
 	        	for (int j = 0; j < numClients; j++) {
@@ -186,13 +183,6 @@ public class ModService extends Service {
 	    			} catch (RemoteException e) { }
 	        	}
 	        	callbacks.finishBroadcast();
-	       		
-	    		String volBoost = prefs.getString(Settings.PREF_VOL_BOOST, "1");
-	    		xmp.optAmplify(Integer.parseInt(volBoost));
-	    		xmp.optMix(prefs.getInt(Settings.PREF_PAN_SEPARATION, 70));
-	    		xmp.optStereo(prefs.getBoolean(Settings.PREF_STEREO, true));
-	    		xmp.optInterpolation(prefs.getBoolean(Settings.PREF_INTERPOLATION, true));
-	    		xmp.optFilter(prefs.getBoolean(Settings.PREF_FILTER, true));	   		
 	
 	       		audio.play();
 	       		xmp.startPlayer();
@@ -200,9 +190,8 @@ public class ModService extends Service {
 	    		short buffer[] = new short[minSize];
 	    		
 	       		while (xmp.playFrame() == 0) {
-	       			int size = xmp.softmixer();
-	       			buffer = xmp.getBuffer(size, buffer);
-	       			audio.write(buffer, 0, size / 2);
+	       			int size = xmp.getBuffer(buffer);
+	       			audio.write(buffer, 0, size);
 	       			
 	       			while (paused) {
 	       				watchdog.refresh();
@@ -389,13 +378,8 @@ public class ModService extends Service {
 		}
 
 		public boolean toggleLoop() throws RemoteException {
-			if (xmp.testFlag(Xmp.XMP_CTL_LOOP)) {
-				xmp.resetFlag(Xmp.XMP_CTL_LOOP);
-				return false;
-			} else {
-				xmp.setFlag(Xmp.XMP_CTL_LOOP);
-				return true;
-			}
+			looped = !looped;
+			return looped;
 		}
 		
 		public boolean isPaused() {
