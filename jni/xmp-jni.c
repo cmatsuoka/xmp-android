@@ -7,17 +7,16 @@
 
 /* #include <android/log.h> */
 
-#define NCH 64
-
 extern struct xmp_drv_info drv_smix;
 
 static xmp_context ctx = NULL;
 static struct xmp_module_info mi;
 
 static int _playing = 0;
-static int _cur_vol[NCH];
-static int _ins[NCH];
-static int _key[NCH];
+static int _cur_vol[XMP_MAX_CHANNELS];
+static int _ins[XMP_MAX_CHANNELS];
+static int _key[XMP_MAX_CHANNELS];
+static int _last_key[XMP_MAX_CHANNELS];
 static int _decay = 8;
 
 
@@ -34,7 +33,7 @@ Java_org_helllabs_android_xmp_Xmp_init(JNIEnv *env, jobject obj)
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_deinit(JNIEnv *env, jobject obj)
 {
-	xmp_free_context(ctx);
+	/* xmp_free_context(ctx); */
 	return 0;
 }
 
@@ -106,8 +105,9 @@ Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint sta
 {
 	int i;
 
-	for (i = 0; i < NCH; i++) {
+	for (i = 0; i < XMP_MAX_CHANNELS; i++) {
 		_key[i] = -1;
+		_last_key[i] = -1;
 	}
 
 	_playing = 1;
@@ -300,8 +300,20 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 {
 	int i;
 
-	for (i = 0; i < NCH; i++) {
-		if (_key[i] > 0) {
+	for (i = 0; i < mi.mod->chn; i++) {
+		int track = mi.mod->xxp[mi.pattern]->index[i];
+                struct xmp_event *event = &mi.mod->xxt[track]->event[mi.row];
+
+		if (event->note > 0 && event->note <= 0x80) {
+			_key[i] = event->note - 1;
+			_last_key[i] = _key[i];
+		} else if (event->vol > 0) {
+			_key[i] = _last_key[i];
+		}
+
+		_ins[i] = event->ins - 1;
+
+		if (_key[i] >= 0) {
 			_cur_vol[i] = mi.channel_info[i].volume;
 			_key[i] = -1;
 		} else {
@@ -311,7 +323,7 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 		}
 	}
 
-	(*env)->SetIntArrayRegion(env, vol, 0, NCH, _cur_vol);
-	(*env)->SetIntArrayRegion(env, ins, 0, NCH, _ins);
-	(*env)->SetIntArrayRegion(env, key, 0, NCH, _key);
+	(*env)->SetIntArrayRegion(env, vol, 0, XMP_MAX_CHANNELS, _cur_vol);
+	(*env)->SetIntArrayRegion(env, ins, 0, XMP_MAX_CHANNELS, _ins);
+	(*env)->SetIntArrayRegion(env, key, 0, XMP_MAX_CHANNELS, _key);
 }

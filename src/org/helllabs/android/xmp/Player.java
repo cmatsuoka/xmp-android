@@ -217,8 +217,9 @@ public class Player extends Activity {
 					sleep(100);
 				} catch (InterruptedException e) { }
 				
-				if (screenOn)
+				if (screenOn) {
 					handler.post(updateInfoRunnable);
+				}
     		} while (t >= 0 && !endPlay);
     		
     		seekBar.setProgress(0);

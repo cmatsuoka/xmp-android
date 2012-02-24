@@ -189,9 +189,9 @@ public class ModService extends Service {
 	    			    		
 	    		short buffer[] = new short[minSize];
 	    		
-	    		int loopCount = 0;
+	    		int count, loopCount = 0;
 	       		while (xmp.playFrame() == 0) {
-	       			int count = xmp.getLoopCount();
+	       			count = xmp.getLoopCount();
 	       			if (!looped && count != loopCount)
 	       				break;
 	       			loopCount = count;
@@ -213,9 +213,9 @@ public class ModService extends Service {
 	       			checkMediaButtons();
 	       		}
 
-	       		xmp.endPlayer();
+	       		xmp.endPlayer();     		
 	       		xmp.releaseModule();
-	       		
+       		
 	       		audio.stop();
 	       		
 	       		if (restartList) {
