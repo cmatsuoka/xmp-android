@@ -218,6 +218,12 @@ Java_org_helllabs_android_xmp_Xmp_getPlayPat(JNIEnv *env, jobject obj)
 	return mi.mod->pat;
 }
 
+JNIEXPORT jint JNICALL
+Java_org_helllabs_android_xmp_Xmp_getLoopCount(JNIEnv *env, jobject obj)
+{
+	return mi.loop_count;
+}
+
 JNIEXPORT jstring JNICALL
 Java_org_helllabs_android_xmp_Xmp_getVersion(JNIEnv *env, jobject obj)
 {

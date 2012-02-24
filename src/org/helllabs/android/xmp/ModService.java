@@ -185,13 +185,17 @@ public class ModService extends Service {
 	        	callbacks.finishBroadcast();
 	
 	       		audio.play();
-	       		
-	       		Log.i("Xmp ModService", "Start player");
 	       		xmp.startPlayer(0, sampleRate, 0);
 	    			    		
 	    		short buffer[] = new short[minSize];
 	    		
+	    		int loopCount = 0;
 	       		while (xmp.playFrame() == 0) {
+	       			int count = xmp.getLoopCount();
+	       			if (!looped && count != loopCount)
+	       				break;
+	       			loopCount = count;
+	       			
 	       			int size = xmp.getBuffer(buffer);
 	       			audio.write(buffer, 0, size);
 	       			

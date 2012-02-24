@@ -40,6 +40,7 @@ public class Xmp {
 	public native int getPlayBpm();
 	public native int getPlayPos();
 	public native int getPlayPat();
+	public native int getLoopCount();
 	public native String getVersion();
 	public native String getTitle();
 	public native String[] getFormats();
