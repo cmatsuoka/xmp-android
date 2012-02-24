@@ -18,7 +18,6 @@ import android.widget.EditText;
 
 public class PlaylistUtils {
 	ProgressDialog progressDialog;
-	Xmp xmp = new Xmp();
 	
 	public void newPlaylist(final Context context) {
 		newPlaylist(context, null);

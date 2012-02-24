@@ -32,7 +32,7 @@ public class InfoCache {
 		return false;
 	}
 	
-	public static boolean testModule(String filename, Xmp.TestInfo info) {
+	public static boolean testModule(String filename, ModInfo info) {
 		final File file = new File(filename);
 		final File cacheFile = new File(Settings.cacheDir, filename + ".cache");
 		final File skipFile = new File(Settings.cacheDir, filename + ".skip");
@@ -75,10 +75,10 @@ public class InfoCache {
 
 		if (!Settings.cacheDir.isDirectory()) {
 			if (Settings.cacheDir.mkdirs() == false) {
-				Xmp.TestInfo info = xmp.new TestInfo();
+				ModInfo info = new ModInfo();
 				// Can't use cache
 				if (xmp.testModule(filename, info)) {
-					return info.toModInfo(filename);
+					return info;
 				} else {
 					return null;
 				}
@@ -94,7 +94,7 @@ public class InfoCache {
 					ModInfo mi = new ModInfo();
 					
 					mi.name = in.readLine();
-					mi.filename = in.readLine();
+					in.readLine();		// skip filename
 					mi.type = in.readLine();
 					
 					in.close();
@@ -103,25 +103,14 @@ public class InfoCache {
 				in.close();
 			}
 
-			Xmp.TestInfo info = xmp.new TestInfo();
+			ModInfo info = new ModInfo();
 			
 			if ((xmp.testModule(filename, info))) {
-
-				
 				String[] lines = {
 					Long.toString(file.length()),
 					info.name,
 					filename,
 					info.type
-					/*Integer.toString(mi.chn),
-					Integer.toString(mi.pat),
-					Integer.toString(mi.ins),
-					Integer.toString(mi.trk),
-					Integer.toString(mi.smp),
-					Integer.toString(mi.len),
-					Integer.toString(mi.bpm),
-					Integer.toString(mi.tpo),
-					Integer.toString(mi.time)*/
 				};
 				
 				File dir = cacheFile.getParentFile();
@@ -130,14 +119,14 @@ public class InfoCache {
 				cacheFile.createNewFile();
 				FileUtils.writeToFile(cacheFile, lines);
 
-				return info.toModInfo(filename);
+				return info;
 			}
 			
 			return null;
 		} catch (IOException e) {
-			Xmp.TestInfo info = xmp.new TestInfo();
+			ModInfo info = new ModInfo();
 			if (xmp.testModule(filename, info)) {
-				return info.toModInfo(filename);
+				return info;
 			} else {
 				return null;
 			}

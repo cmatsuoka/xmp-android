@@ -63,21 +63,21 @@ Java_org_helllabs_android_xmp_Xmp_testModule(JNIEnv *env, jobject obj, jstring n
 
 	if (res == 0) {
 		if (info != NULL) {
-			jclass testInfoClass = (*env)->FindClass(env,
-	                        	"org/helllabs/java/xmp/Xmp.ModuleInfo");
+			jclass modInfoClass = (*env)->FindClass(env,
+	                        	"org/helllabs/android/xmp/ModInfo");
 			jfieldID field;
 	
-			if (testInfoClass == NULL)
+			if (modInfoClass == NULL)
 				return JNI_FALSE;
 			
-			field = (*env)->GetFieldID(env, testInfoClass, "name",
+			field = (*env)->GetFieldID(env, modInfoClass, "name",
 	                        	"Ljava/lang/String;");
 			if (field == NULL)
 				return JNI_FALSE;
 			(*env)->SetObjectField(env, info, field,
 					(*env)->NewStringUTF(env, ti.name));
 	
-			field = (*env)->GetFieldID(env, testInfoClass, "type",
+			field = (*env)->GetFieldID(env, modInfoClass, "type",
 	                        	"Ljava/lang/String;");
 			if (field == NULL)
 				return JNI_FALSE;

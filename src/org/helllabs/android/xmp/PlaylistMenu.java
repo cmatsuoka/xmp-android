@@ -27,7 +27,6 @@ import android.widget.ListView;
 public class PlaylistMenu extends ListActivity {
 	static final int SETTINGS_REQUEST = 45;
 	static final int PLAYLIST_REQUEST = 46;
-	Xmp xmp = new Xmp();
 	SharedPreferences prefs;
 	String media_path;
 	ProgressDialog progressDialog;
@@ -41,7 +40,6 @@ public class PlaylistMenu extends ListActivity {
 		setContentView(R.layout.playlist_menu);
 		registerForContextMenu(getListView());
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		//xmp.initContext();
 		
 		ChangeLog changeLog = new ChangeLog(this);
 		

@@ -65,6 +65,8 @@ public class ModService extends Service {
 	public void onCreate() {
     	super.onCreate();
     	
+    	Log.i("Xmp ModService", "Create service");
+    	
    		prefs = PreferenceManager.getDefaultSharedPreferences(this);
    		
    		int bufferMs = prefs.getInt(Settings.PREF_BUFFER_MS, 500);
@@ -247,15 +249,17 @@ public class ModService extends Service {
 			} catch (RemoteException e) { }
 	    }	    
 	    callbacks.finishBroadcast();
-	    
+
 	    isPlaying = false;
     	xmp.stopModule();
     	paused = false;
+
     	if (playThread != null && playThread.isAlive()) {
     		try {
     			playThread.join();
     		} catch (InterruptedException e) { }
     	}
+    	
     	xmp.deinit();
     	audio.release();
     }

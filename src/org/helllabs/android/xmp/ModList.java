@@ -44,7 +44,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class ModList extends PlaylistActivity {
-	Xmp xmp = new Xmp();	/* used to get mod info */
 	boolean isBadDir = false;
 	ProgressDialog progressDialog;
 	final Handler handler = new Handler();
@@ -144,8 +143,9 @@ public class ModList extends PlaylistActivity {
             	
             	list.clear();
             	for (File file : modDir.listFiles(new ModFilter())) {
-            		ModInfo m = InfoCache.getModInfo(path + "/" + file.getName());
-            		list.add(new PlaylistInfo(m.name, m.type, m.filename, -1));
+            		String filename = path + "/" + file.getName();
+            		ModInfo m = InfoCache.getModInfo(filename);
+            		list.add(new PlaylistInfo(m.name, m.type, filename, -1));
             	}
             	Collections.sort(list);
             	modList.addAll(list);

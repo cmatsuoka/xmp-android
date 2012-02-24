@@ -114,7 +114,7 @@ public abstract class PlaylistActivity extends ListActivity {
 			playModule(mods);
 		}
 	}
-	
+
 	void playModule(String mod) {
 		String[] mods = { mod };
 		playModule(mods);
