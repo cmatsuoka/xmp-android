@@ -42,6 +42,7 @@ public class ModService extends Service {
 	boolean returnToPrev;
 	boolean paused;
 	boolean looped;
+	Boolean updateData = false;
 	String fileName;			// currently playing file
 	String currentTitle;
 	QueueManager queue;
@@ -189,6 +190,7 @@ public class ModService extends Service {
 	
 	       		audio.play();
 	       		xmp.startPlayer(0, sampleRate, 0);
+	       		updateData = true;
 	    			    		
 	    		short buffer[] = new short[minSize];
 	    		
@@ -236,7 +238,9 @@ public class ModService extends Service {
 	       		}
     		} while (!stopPlaying && queue.next());
 
-    		stopPlaying = true;		// stop getChannelData update
+    		synchronized (updateData) {
+    			updateData = false;		// stop getChannelData update
+    		}
     		watchdog.stop();
     		notifier.cancel();
         	end();
@@ -388,8 +392,10 @@ public class ModService extends Service {
 		}
 		
 		public void getChannelData(int[] volumes, int[] instruments, int[] keys) {
-			if (!stopPlaying) {
-				xmp.getChannelData(volumes, instruments, keys);
+			synchronized (updateData) {
+				if (updateData) {
+					xmp.getChannelData(volumes, instruments, keys);
+				}
 			}
 		}
 		
