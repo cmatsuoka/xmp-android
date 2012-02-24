@@ -137,7 +137,7 @@ JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_getBuffer(JNIEnv *env, jobject obj, jshortArray buffer)
 {
 	(*env)->SetShortArrayRegion(env, buffer, 0, mi.buffer_size, mi.buffer);
-	return mi.buffer_size;
+	return mi.buffer_size / 2;
 }
 
 JNIEXPORT jint JNICALL

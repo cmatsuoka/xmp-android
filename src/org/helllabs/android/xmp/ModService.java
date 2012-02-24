@@ -340,7 +340,7 @@ public class ModService extends Service {
 	    }
 	    
 	    public int time() {
-	    	return xmp.time();
+	    	return xmp.time() / 100;
 	    }
 	
 		public void seek(int seconds) {
