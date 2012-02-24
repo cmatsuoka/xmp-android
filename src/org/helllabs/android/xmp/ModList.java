@@ -145,7 +145,7 @@ public class ModList extends PlaylistActivity {
             	list.clear();
             	for (File file : modDir.listFiles(new ModFilter())) {
             		ModInfo m = InfoCache.getModInfo(path + "/" + file.getName());
-            		list.add(new PlaylistInfo(m.name, m.chn + " chn " + m.type, m.filename, -1));
+            		list.add(new PlaylistInfo(m.name, m.type, m.filename, -1));
             	}
             	Collections.sort(list);
             	modList.addAll(list);

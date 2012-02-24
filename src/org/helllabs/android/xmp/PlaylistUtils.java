@@ -94,8 +94,7 @@ public class PlaylistUtils {
             			continue;
             		String filename = path + "/" + file.getName();
             		ModInfo mi = InfoCache.getModInfo(filename);
-            		list.add(filename + ":" + mi.chn + " chn " + mi.type +
-            				":" + mi.name);
+            		list.add(filename + ":" + mi.type +	":" + mi.name);
             		num++;
             	}
             	

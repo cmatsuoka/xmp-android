@@ -367,6 +367,10 @@ public class ModService extends Service {
 			return xmp.getPlayPat();
 		}
 		
+		public void getModVars(int[] vars) {
+			xmp.getModVars(vars);
+		}
+		
 		public void getChannelData(int[] volumes, int[] instruments, int[] keys) {
 			xmp.getChannelData(volumes, instruments, keys);
 		}

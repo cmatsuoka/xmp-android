@@ -7,8 +7,6 @@
 
 /* #include <android/log.h> */
 
-extern struct xmp_drv_info drv_smix;
-
 static xmp_context ctx = NULL;
 static struct xmp_module_info mi;
 
@@ -222,6 +220,21 @@ JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_getLoopCount(JNIEnv *env, jobject obj)
 {
 	return mi.loop_count;
+}
+
+JNIEXPORT void JNICALL
+Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray vars)
+{
+	int v[6];
+
+	v[0] = mi.total_time;
+	v[1] = mi.mod->len;
+	v[2] = mi.mod->pat;
+	v[3] = mi.mod->chn;
+	v[4] = mi.mod->ins;
+	v[5] = mi.mod->smp;
+
+	(*env)->SetIntArrayRegion(env, vars, 0, 6, v);
 }
 
 JNIEXPORT jstring JNICALL

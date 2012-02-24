@@ -96,15 +96,6 @@ public class InfoCache {
 					mi.name = in.readLine();
 					mi.filename = in.readLine();
 					mi.type = in.readLine();
-					mi.chn = Integer.parseInt(in.readLine());
-					mi.pat = Integer.parseInt(in.readLine());
-					mi.ins = Integer.parseInt(in.readLine());
-					mi.trk = Integer.parseInt(in.readLine());
-					mi.smp = Integer.parseInt(in.readLine());
-					mi.len = Integer.parseInt(in.readLine());
-					mi.bpm = Integer.parseInt(in.readLine());
-					mi.tpo = Integer.parseInt(in.readLine());
-					mi.time = Integer.parseInt(in.readLine());
 					
 					in.close();
 					return mi;

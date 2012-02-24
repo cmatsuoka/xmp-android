@@ -527,9 +527,22 @@ public class Player extends Activity {
 	final Runnable showNewModRunnable = new Runnable() {
 		public void run() {
 			ModInfo m = InfoCache.getModInfo(fileName);
-			totalTime = m.time / 1000;
+			int[] vars = new int[6];
+			try {
+				modPlayer.getModVars(vars);
+			} catch (RemoteException e) {
+
+			}
+			int time = vars[0];
+			int len = vars[1];
+			int pat = vars[2];
+			int chn = vars[3];
+			int ins = vars[4];
+			int smp = vars[5];
+			
+			totalTime = time / 1000;
 	       	seekBar.setProgress(0);
-	       	seekBar.setMax(m.time / 100);
+	       	seekBar.setMax(time / 100);
 	        
 	       	flipperPage = (flipperPage + 1) % 2;
 	       	infoName[flipperPage].setText(m.name);
@@ -537,13 +550,12 @@ public class Player extends Activity {
 	       	titleFlipper.showNext();
 	       	//infoFlipper.showNext();
 	       	
-	       	infoMod.setText(String.format("Module length: %d patterns\n" +
-	       			"Stored patterns: %d\n" +
-	       			"Audio channels: %d\n" +
+	       	infoMod.setText(String.format("Channels: %d\n" +
+	       			"Length: %d, Patterns: %d\n" +
 	       			"Instruments: %d, Samples: %d\n" +
 	       			"Estimated play time: %dmin%02ds",
-	       			m.len, m.pat, m.chn, m.ins, m.smp,
-	       			((m.time + 500) / 60000), ((m.time + 500) / 1000) % 60));
+	       			chn, len, pat, ins, smp,
+	       			((time + 500) / 60000), ((time + 500) / 1000) % 60));
 
 	       	textInstruments.setText("Instruments");
 	       	instrumentList.setInstruments(insList);
@@ -551,13 +563,13 @@ public class Player extends Activity {
 	       	int meterType = Integer.parseInt(prefs.getString(Settings.PREF_METERS, "2"));
 	       	switch (meterType) {
 	       	case 1:
-	       		infoMeter = new LedMeter(infoMeterLayout, m.chn);
+	       		infoMeter = new LedMeter(infoMeterLayout, chn);
 	       		break;
 	       	case 2:
-	       		infoMeter = new BarMeter(infoMeterLayout, m.chn);
+	       		infoMeter = new BarMeter(infoMeterLayout, chn);
 	       		break;
 	       	default:
-	       		infoMeter = new EmptyMeter(infoMeterLayout, m.chn);
+	       		infoMeter = new EmptyMeter(infoMeterLayout, chn);
 	       		break;       		
 	       	}
 	       	
