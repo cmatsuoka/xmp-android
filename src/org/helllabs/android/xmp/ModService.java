@@ -170,11 +170,12 @@ public class ModService extends Service {
 	private class PlayRunnable implements Runnable {
     	public void run() {
     		do {
-	    		Log.i("Xmp ModService", "Load " + queue.getFilename());
-	       		if (xmp.loadModule(queue.getFilename()) < 0)
+    			fileName = queue.getFilename();		// Used in reconnection
+    			
+	    		Log.i("Xmp ModService", "Load " + fileName);
+	       		if (xmp.loadModule(fileName) < 0)
 	       			continue;
 
-	       		fileName = queue.getFilename();
 	       		notifier.notification(xmp.getModName(), queue.index());
 		       		    	
 	        	final int numClients = callbacks.beginBroadcast();

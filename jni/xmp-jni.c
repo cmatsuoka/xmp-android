@@ -46,6 +46,8 @@ Java_org_helllabs_android_xmp_Xmp_loadModule(JNIEnv *env, jobject obj, jstring n
 	res = xmp_load_module(ctx, (char *)filename);
 	(*env)->ReleaseStringUTFChars(env, name, filename);
 
+	xmp_player_get_info(ctx, &mi);
+
 	return res;
 }
 
@@ -297,8 +299,6 @@ Java_org_helllabs_android_xmp_Xmp_getInstruments(JNIEnv *env, jobject obj)
 	stringClass = (*env)->FindClass(env,"java/lang/String");
 	if (stringClass == NULL)
 		return NULL;
-
-	xmp_player_get_info(ctx, &mi);
 
 	stringArray = (*env)->NewObjectArray(env, mi.mod->ins, stringClass, NULL);
 	if (stringArray == NULL)
