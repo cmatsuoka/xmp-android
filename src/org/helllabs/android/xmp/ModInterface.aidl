@@ -14,6 +14,8 @@ interface ModInterface {
 	int getPlayPos();
 	int getPlayPat();
 	void getModVars(out int[] vars);
+	String getModName();
+	String getModType();
 	void getChannelData(out int[] volumes, out int[] instruments, out int[] keys);
 	void nextSong();
 	void prevSong(); 

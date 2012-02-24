@@ -173,7 +173,7 @@ public class ModService extends Service {
 	       			continue;
 
 	       		fileName = queue.getFilename();
-	       		notifier.notification(xmp.getTitle(), queue.index());
+	       		notifier.notification(xmp.getModName(), queue.index());
 		       		    	
 	        	final int numClients = callbacks.beginBroadcast();
 	        	for (int j = 0; j < numClients; j++) {
@@ -369,6 +369,14 @@ public class ModService extends Service {
 		
 		public void getModVars(int[] vars) {
 			xmp.getModVars(vars);
+		}
+		
+		public String getModName() {
+			return xmp.getModName();
+		}
+		
+		public String getModType() {
+			return xmp.getModType();
 		}
 		
 		public void getChannelData(int[] volumes, int[] instruments, int[] keys) {

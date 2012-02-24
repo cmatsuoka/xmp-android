@@ -526,12 +526,15 @@ public class Player extends Activity {
 	
 	final Runnable showNewModRunnable = new Runnable() {
 		public void run() {
-			ModInfo m = InfoCache.getModInfo(fileName);
 			int[] vars = new int[6];
+			String name, type;
 			try {
 				modPlayer.getModVars(vars);
+				name = modPlayer.getModName();
+				type = modPlayer.getModType();
 			} catch (RemoteException e) {
-
+				name = "";
+				type = "";
 			}
 			int time = vars[0];
 			int len = vars[1];
@@ -545,10 +548,11 @@ public class Player extends Activity {
 	       	seekBar.setMax(time / 100);
 	        
 	       	flipperPage = (flipperPage + 1) % 2;
-	       	infoName[flipperPage].setText(m.name);
-	       	infoType[flipperPage].setText(m.type);
+
+			infoName[flipperPage].setText(name);
+		    infoType[flipperPage].setText(type);
+
 	       	titleFlipper.showNext();
-	       	//infoFlipper.showNext();
 	       	
 	       	infoMod.setText(String.format("Channels: %d\n" +
 	       			"Length: %d, Patterns: %d\n" +

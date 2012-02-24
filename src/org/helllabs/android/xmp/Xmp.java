@@ -43,7 +43,8 @@ public class Xmp {
 	public native int getLoopCount();
 	public native void getModVars(int[] vars);
 	public native String getVersion();
-	public native String getTitle();
+	public native String getModName();
+	public native String getModType();
 	public native String[] getFormats();
 	public native String[] getInstruments();
 	public native void getChannelData(int[] volumes, int[] instruments, int[] keys);
