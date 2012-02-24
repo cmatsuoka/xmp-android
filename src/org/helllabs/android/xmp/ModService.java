@@ -233,6 +233,7 @@ public class ModService extends Service {
 	       		}
     		} while (!stopPlaying && queue.next());
 
+    		stopPlaying = true;		// stop getChannelData update
     		watchdog.stop();
     		notifier.cancel();
         	end();
@@ -384,7 +385,9 @@ public class ModService extends Service {
 		}
 		
 		public void getChannelData(int[] volumes, int[] instruments, int[] keys) {
-			xmp.getChannelData(volumes, instruments, keys);
+			if (!stopPlaying) {
+				xmp.getChannelData(volumes, instruments, keys);
+			}
 		}
 		
 		public void nextSong() {
