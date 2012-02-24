@@ -65,7 +65,7 @@ public class ModList extends PlaylistActivity {
 	class ModFilter implements FilenameFilter {
 	    public boolean accept(File dir, String name) {
 	    	File f = new File(dir,name);
-	        return !f.isDirectory() && InfoCache.testModule(f.getPath());
+	        return !f.isDirectory() && InfoCache.testModule(f.getPath(), null);
 	    }
 	}
 	

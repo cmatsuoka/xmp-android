@@ -32,7 +32,7 @@ public class InfoCache {
 		return false;
 	}
 	
-	public static boolean testModule(String filename) {
+	public static boolean testModule(String filename, Xmp.TestInfo info) {
 		final File file = new File(filename);
 		final File cacheFile = new File(Settings.cacheDir, filename + ".cache");
 		final File skipFile = new File(Settings.cacheDir, filename + ".skip");
@@ -40,7 +40,7 @@ public class InfoCache {
 		if (!Settings.cacheDir.isDirectory()) {
 			if (Settings.cacheDir.mkdirs() == false) {
 				// Can't use cache
-				return xmp.testModule(filename);
+				return xmp.testModule(filename, info);
 			}
 		}
 		
@@ -55,7 +55,7 @@ public class InfoCache {
 					return true;
 			}
 			
-			Boolean isMod = xmp.testModule(filename);
+			Boolean isMod = xmp.testModule(filename, info);
 			if (!isMod) {
 				File dir = skipFile.getParentFile();
 				if (!dir.isDirectory())
@@ -65,19 +65,23 @@ public class InfoCache {
 			
 			return isMod;
 		} catch (IOException e) {
-			return xmp.testModule(filename);
+			return xmp.testModule(filename, info);
 		}	
 	}
 	
 	public static ModInfo getModInfo(String filename) {
 		final File file = new File(filename);
 		final File cacheFile = new File(Settings.cacheDir, filename + ".cache");
-		ModInfo mi;
 
 		if (!Settings.cacheDir.isDirectory()) {
 			if (Settings.cacheDir.mkdirs() == false) {
+				Xmp.TestInfo info = xmp.new TestInfo();
 				// Can't use cache
-				return xmp.getModInfo(filename);
+				if (xmp.testModule(filename, info)) {
+					return info.toModInfo(filename);
+				} else {
+					return null;
+				}
 			}
 		}
 
@@ -87,7 +91,7 @@ public class InfoCache {
 				BufferedReader in = new BufferedReader(new FileReader(cacheFile), 512);			
 				int size = Integer.parseInt(in.readLine());
 				if (size == file.length()) {
-					mi = new ModInfo();
+					ModInfo mi = new ModInfo();
 					
 					mi.name = in.readLine();
 					mi.filename = in.readLine();
@@ -108,13 +112,17 @@ public class InfoCache {
 				in.close();
 			}
 
-			if ((mi = xmp.getModInfo(filename)) != null) {
+			Xmp.TestInfo info = xmp.new TestInfo();
+			
+			if ((xmp.testModule(filename, info))) {
+
+				
 				String[] lines = {
 					Long.toString(file.length()),
-					mi.name,
-					mi.filename,
-					mi.type,
-					Integer.toString(mi.chn),
+					info.name,
+					filename,
+					info.type
+					/*Integer.toString(mi.chn),
 					Integer.toString(mi.pat),
 					Integer.toString(mi.ins),
 					Integer.toString(mi.trk),
@@ -122,7 +130,7 @@ public class InfoCache {
 					Integer.toString(mi.len),
 					Integer.toString(mi.bpm),
 					Integer.toString(mi.tpo),
-					Integer.toString(mi.time)
+					Integer.toString(mi.time)*/
 				};
 				
 				File dir = cacheFile.getParentFile();
@@ -130,13 +138,18 @@ public class InfoCache {
 					dir.mkdirs();			
 				cacheFile.createNewFile();
 				FileUtils.writeToFile(cacheFile, lines);
-				
-				return mi;
+
+				return info.toModInfo(filename);
 			}
 			
 			return null;
 		} catch (IOException e) {
-			return xmp.getModInfo(filename);
+			Xmp.TestInfo info = xmp.new TestInfo();
+			if (xmp.testModule(filename, info)) {
+				return info.toModInfo(filename);
+			} else {
+				return null;
+			}
 		}
 	}
 }

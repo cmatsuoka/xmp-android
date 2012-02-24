@@ -41,7 +41,7 @@ public class PlaylistMenu extends ListActivity {
 		setContentView(R.layout.playlist_menu);
 		registerForContextMenu(getListView());
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		xmp.initContext();
+		//xmp.initContext();
 		
 		ChangeLog changeLog = new ChangeLog(this);
 		

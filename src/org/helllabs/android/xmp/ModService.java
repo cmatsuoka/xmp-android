@@ -32,6 +32,7 @@ public class ModService extends Service {
 	SharedPreferences prefs;
 	Watchdog watchdog;
 	int minSize;
+	int sampleRate;
 	boolean stereo;
 	boolean interpolate;
 	Notifier notifier;
@@ -66,10 +67,9 @@ public class ModService extends Service {
     	
    		prefs = PreferenceManager.getDefaultSharedPreferences(this);
    		
-   		int sampleRate = Integer.parseInt(prefs.getString(Settings.PREF_SAMPLING_RATE, "44100"));
    		int bufferMs = prefs.getInt(Settings.PREF_BUFFER_MS, 500);
+   		sampleRate = Integer.parseInt(prefs.getString(Settings.PREF_SAMPLING_RATE, "44100"));   		
    		stereo = prefs.getBoolean(Settings.PREF_STEREO, true);
-   		interpolate = prefs.getBoolean(Settings.PREF_INTERPOLATION, true);
    		
    		int bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
 	
@@ -89,7 +89,7 @@ public class ModService extends Service {
 				minSize < bufferSize ? bufferSize : minSize,
 				AudioTrack.MODE_STREAM);
 
-		xmp.init(sampleRate);
+		xmp.init();
 
 		isPlaying = false;
 		paused = false;
@@ -185,7 +185,7 @@ public class ModService extends Service {
 	        	callbacks.finishBroadcast();
 	
 	       		audio.play();
-	       		xmp.startPlayer();
+	       		xmp.startPlayer(0, sampleRate, 0);
 	    			    		
 	    		short buffer[] = new short[minSize];
 	    		

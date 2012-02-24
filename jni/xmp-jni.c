@@ -14,11 +14,8 @@ extern struct xmp_drv_info drv_smix;
 static xmp_context ctx = NULL;
 static struct xmp_module_info mi;
 
-#if 0
-static int _time, _bpm, _tpo, _pos, _pat;
-#endif
 static int _playing = 0;
-static int _vol[NCH], _cur_vol[NCH];
+static int _cur_vol[NCH];
 static int _ins[NCH];
 static int _key[NCH];
 static int _decay = 8;
@@ -56,17 +53,45 @@ Java_org_helllabs_android_xmp_Xmp_loadModule(JNIEnv *env, jobject obj, jstring n
 }
 
 JNIEXPORT jboolean JNICALL
-Java_org_helllabs_android_xmp_Xmp_testModule(JNIEnv *env, jobject obj, jstring name)
+Java_org_helllabs_android_xmp_Xmp_testModule(JNIEnv *env, jobject obj, jstring name, jobject info)
 {
 	const char *filename;
 	int res;
+	struct xmp_test_info ti;
 
 	filename = (*env)->GetStringUTFChars(env, name, NULL);
 	/* __android_log_print(ANDROID_LOG_DEBUG, "libxmp", "%s", filename); */
-	res = xmp_test_module(ctx, (char *)filename, NULL);
+	res = xmp_test_module((char *)filename, &ti);
 	(*env)->ReleaseStringUTFChars(env, name, filename);
 
-	return res == 0 ? JNI_TRUE : JNI_FALSE;
+	if (res == 0) {
+		if (info != NULL) {
+			jclass testInfoClass = (*env)->FindClass(env,
+	                        	"org/helllabs/java/xmp/Xmp.ModuleInfo");
+			jfieldID field;
+	
+			if (testInfoClass == NULL)
+				return JNI_FALSE;
+			
+			field = (*env)->GetFieldID(env, testInfoClass, "name",
+	                        	"Ljava/lang/String;");
+			if (field == NULL)
+				return JNI_FALSE;
+			(*env)->SetObjectField(env, info, field,
+					(*env)->NewStringUTF(env, ti.name));
+	
+			field = (*env)->GetFieldID(env, testInfoClass, "type",
+	                        	"Ljava/lang/String;");
+			if (field == NULL)
+				return JNI_FALSE;
+			(*env)->SetObjectField(env, info, field,
+					(*env)->NewStringUTF(env, ti.type));
+		}
+
+		return JNI_TRUE;
+	}
+
+	return JNI_FALSE;
 }
 
 JNIEXPORT jint JNICALL
@@ -77,17 +102,16 @@ Java_org_helllabs_android_xmp_Xmp_releaseModule(JNIEnv *env, jobject obj)
 }
 
 JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj)
+Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint start, jint rate, jint flags)
 {
 	int i;
 
 	for (i = 0; i < NCH; i++) {
 		_key[i] = -1;
-		_vol[i] = 0;
 	}
 
 	_playing = 1;
-	return xmp_player_start(ctx, 0, 44100, 0);
+	return xmp_player_start(ctx, start, rate, flags);
 }
 
 JNIEXPORT jint JNICALL
@@ -107,12 +131,11 @@ Java_org_helllabs_android_xmp_Xmp_playFrame(JNIEnv *env, jobject obj)
 	xmp_player_get_info(ctx, &mi);
 }
 
-JNIEXPORT jshortArray JNICALL
+JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_getBuffer(JNIEnv *env, jobject obj, jshortArray buffer)
 {
 	(*env)->SetShortArrayRegion(env, buffer, 0, mi.buffer_size, mi.buffer);
-
-	return buffer;
+	return mi.buffer_size;
 }
 
 JNIEXPORT jint JNICALL
@@ -163,58 +186,6 @@ Java_org_helllabs_android_xmp_Xmp_seek(JNIEnv *env, jobject obj, jint time)
 	return xmp_seek_time(ctx, time * 100);
 }
 
-#if 0
-JNIEXPORT jobject JNICALL
-Java_org_helllabs_android_xmp_Xmp_getModInfo(JNIEnv *env, jobject obj, jstring fname)
-{
-	const char *filename;
-	int res;
-	xmp_context ctx2 = NULL;
-	struct xmp_options *opt;
-	struct xmp_module_info mi;
-	jobject modInfo;
-	jmethodID cid;
-	jclass modInfoClass;
-	jstring name, type;
-
-	modInfoClass = (*env)->FindClass(env, "org/helllabs/android/xmp/ModInfo");
-	if (modInfoClass == NULL)
-		return NULL;
-
-
-	filename = (*env)->GetStringUTFChars(env, fname, NULL);
-	ctx2 = xmp_create_context();
-	opt = xmp_get_options(ctx2);
-	opt->skipsmp = 1;	/* don't load samples */
-	res = xmp_load_module(ctx2, (char *)filename);
-	(*env)->ReleaseStringUTFChars(env, fname, filename);
-	if (res < 0) {
-		xmp_free_context(ctx2);
-		return NULL;
-        }
-	xmp_get_module_info(ctx2, &mi);
-	xmp_release_module(ctx2);
-	xmp_free_context(ctx2);
-
-	/*__android_log_print(ANDROID_LOG_DEBUG, "libxmp", "%s", mi.name);
-	__android_log_print(ANDROID_LOG_DEBUG, "libxmp", "%s", mi.type);*/
-
-	name = (*env)->NewStringUTF(env, mi.name);
-	type = (*env)->NewStringUTF(env, mi.type);
-
-	cid = (*env)->GetMethodID(env, modInfoClass,
-		"<init>",
-		"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIIIIIII)V");
-
-	modInfo = (*env)->NewObject(env, modInfoClass, cid,
-		name, type, fname,
-		mi.chn, mi.pat, mi.ins, mi.trk, mi.smp, mi.len,
-		mi.bpm, mi.tpo, mi.time);
-
-	return modInfo;
-}
-#endif
-
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_time(JNIEnv *env, jobject obj)
 {
@@ -250,20 +221,6 @@ Java_org_helllabs_android_xmp_Xmp_getVersion(JNIEnv *env, jobject obj)
 {
 	return (*env)->NewStringUTF(env, VERSION);
 }
-
-#if 0
-JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_getFormatCount(JNIEnv *env, jobject obj)
-{
-	int num;
-	struct xmp_fmt_info *f, *fmt;
-
-	xmp_get_fmt_info(&fmt);
-	for (num = 0, f = fmt; f; num++, f = f->next);
-
-	return num;
-}
-#endif
 
 JNIEXPORT jobjectArray JNICALL
 Java_org_helllabs_android_xmp_Xmp_getFormats(JNIEnv *env, jobject obj)
@@ -335,7 +292,7 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 
 	for (i = 0; i < NCH; i++) {
 		if (_key[i] > 0) {
-			_cur_vol[i] = _vol[i];
+			_cur_vol[i] = mi.channel_info[i].volume;
 			_key[i] = -1;
 		} else {
 			_cur_vol[i] -= _decay;
