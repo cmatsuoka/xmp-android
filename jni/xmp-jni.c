@@ -185,7 +185,7 @@ Java_org_helllabs_android_xmp_Xmp_decGvol(JNIEnv *env, jobject obj)
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_seek(JNIEnv *env, jobject obj, jint time)
 {
-	return xmp_seek_time(ctx, time * 100);
+	return xmp_seek_time(ctx, time);
 }
 
 JNIEXPORT jint JNICALL
