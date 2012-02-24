@@ -203,6 +203,7 @@ public class ModService extends Service {
 	       			audio.write(buffer, 0, size);
 	       			
 	       			while (paused) {
+	       				audio.pause();
 	       				watchdog.refresh();
 	       				try {
 							Thread.sleep(500);
@@ -211,6 +212,7 @@ public class ModService extends Service {
 							break;
 						}
 	       			}
+	       			audio.play();
 	       			
 	       			watchdog.refresh();
 	       			checkMediaButtons();
