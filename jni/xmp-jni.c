@@ -129,6 +129,8 @@ Java_org_helllabs_android_xmp_Xmp_playFrame(JNIEnv *env, jobject obj)
 
 	ret = xmp_player_frame(ctx);
 	xmp_player_get_info(ctx, &mi);
+
+	return ret;
 }
 
 JNIEXPORT jint JNICALL
@@ -270,6 +272,8 @@ Java_org_helllabs_android_xmp_Xmp_getInstruments(JNIEnv *env, jobject obj)
 	stringClass = (*env)->FindClass(env,"java/lang/String");
 	if (stringClass == NULL)
 		return NULL;
+
+	xmp_player_get_info(ctx, &mi);
 
 	stringArray = (*env)->NewObjectArray(env, mi.mod->ins, stringClass, NULL);
 	if (stringArray == NULL)

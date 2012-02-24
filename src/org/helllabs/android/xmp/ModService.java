@@ -185,6 +185,8 @@ public class ModService extends Service {
 	        	callbacks.finishBroadcast();
 	
 	       		audio.play();
+	       		
+	       		Log.i("Xmp ModService", "Start player");
 	       		xmp.startPlayer(0, sampleRate, 0);
 	    			    		
 	    		short buffer[] = new short[minSize];
@@ -207,9 +209,10 @@ public class ModService extends Service {
 	       			checkMediaButtons();
 	       		}
 
-	       		audio.stop();
 	       		xmp.endPlayer();
 	       		xmp.releaseModule();
+	       		
+	       		audio.stop();
 	       		
 	       		if (restartList) {
 	       			queue.restart();
