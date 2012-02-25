@@ -11,7 +11,7 @@
 		android:orientation="vertical"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
-		<ListView android:id="@+id/android:list"
+		<ListView android:id="@id/android:list"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:layout_weight="1"
@@ -22,7 +22,7 @@
 			android:gravity="top"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-			android:text="No modules found on SD Card." />
+			android:text="No modules found." />
 	</LinearLayout>
 
 	<LinearLayout android:gravity="bottom"

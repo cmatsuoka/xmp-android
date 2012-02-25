@@ -70,8 +70,10 @@ public class ModList extends PlaylistActivity {
 	
 	@Override
 	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);	
 		setContentView(R.layout.modlist);
-		super.onCreate(icicle);			
+		setupButtons();
+		
 		registerForContextMenu(getListView());
 		final String media_path = prefs.getString(Settings.PREF_MEDIA_PATH, Settings.DEFAULT_MEDIA_PATH);
 		

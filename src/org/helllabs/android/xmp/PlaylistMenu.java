@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,7 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 
-public class PlaylistMenu extends ListActivity {
+public class PlaylistMenu extends ActionBarListActivity {
 	static final int SETTINGS_REQUEST = 45;
 	static final int PLAYLIST_REQUEST = 46;
 	SharedPreferences prefs;
@@ -38,6 +37,7 @@ public class PlaylistMenu extends ListActivity {
 		super.onCreate(icicle);
 		context = this;
 		setContentView(R.layout.playlist_menu);
+		
 		registerForContextMenu(getListView());
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
@@ -131,7 +131,6 @@ public class PlaylistMenu extends ListActivity {
 			startActivityForResult(intent, PLAYLIST_REQUEST);
 		}
 	}
-	
 	
 	// Playlist context menu
 	

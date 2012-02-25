@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +23,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-public abstract class PlaylistActivity extends ListActivity {
+public abstract class PlaylistActivity extends ActionBarListActivity {
 	static final int SETTINGS_REQUEST = 45;
 	static final int PLAY_MODULE_REQUEST = 669; 
 	List<PlaylistInfo> modList = new ArrayList<PlaylistInfo>();
@@ -50,7 +49,9 @@ public abstract class PlaylistActivity extends ListActivity {
 		context = this;
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		showToasts = prefs.getBoolean(Settings.PREF_SHOW_TOAST, true);
-	
+	}
+
+	void setupButtons() {
 		playAllButton = (ImageButton)findViewById(R.id.play_all);
 		toggleLoopButton = (ImageButton)findViewById(R.id.toggle_loop);
 		toggleShuffleButton = (ImageButton)findViewById(R.id.toggle_shuffle);

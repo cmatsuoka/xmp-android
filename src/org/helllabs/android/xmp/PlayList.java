@@ -28,9 +28,10 @@ public class PlayList extends PlaylistActivity {
 	String name;
 	
 	@Override
-	public void onCreate(Bundle icicle) {	
-		setContentView(R.layout.playlist);
+	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+		setContentView(R.layout.playlist);
+		setupButtons();
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras == null)
