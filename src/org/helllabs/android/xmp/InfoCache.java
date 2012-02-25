@@ -32,6 +32,17 @@ public class InfoCache {
 		return false;
 	}
 	
+	private static boolean myTestModule(String filename, ModInfo info) {
+		boolean ret = xmp.testModule(filename, info);
+		if (info != null) {
+			info.name = info.name.trim();
+			if (info.name.isEmpty()) {
+				info.name = (new File(filename)).getName();
+			}
+		}
+		return ret;
+	}
+	
 	public static boolean testModule(String filename, ModInfo info) {
 		final File file = new File(filename);
 		final File cacheFile = new File(Settings.cacheDir, filename + ".cache");
@@ -40,7 +51,7 @@ public class InfoCache {
 		if (!Settings.cacheDir.isDirectory()) {
 			if (Settings.cacheDir.mkdirs() == false) {
 				// Can't use cache
-				return xmp.testModule(filename, info);
+				return myTestModule(filename, info);
 			}
 		}
 		
@@ -55,7 +66,7 @@ public class InfoCache {
 					return true;
 			}
 			
-			Boolean isMod = xmp.testModule(filename, info);
+			Boolean isMod = myTestModule(filename, info);
 			if (!isMod) {
 				File dir = skipFile.getParentFile();
 				if (!dir.isDirectory())
@@ -65,7 +76,7 @@ public class InfoCache {
 			
 			return isMod;
 		} catch (IOException e) {
-			return xmp.testModule(filename, info);
+			return myTestModule(filename, info);
 		}	
 	}
 	
@@ -77,7 +88,7 @@ public class InfoCache {
 			if (Settings.cacheDir.mkdirs() == false) {
 				ModInfo info = new ModInfo();
 				// Can't use cache
-				if (xmp.testModule(filename, info)) {
+				if (myTestModule(filename, info)) {					
 					return info;
 				} else {
 					return null;
@@ -105,7 +116,7 @@ public class InfoCache {
 
 			ModInfo info = new ModInfo();
 			
-			if ((xmp.testModule(filename, info))) {
+			if ((myTestModule(filename, info))) {
 				String[] lines = {
 					Long.toString(file.length()),
 					info.name,
@@ -125,7 +136,7 @@ public class InfoCache {
 			return null;
 		} catch (IOException e) {
 			ModInfo info = new ModInfo();
-			if (xmp.testModule(filename, info)) {
+			if (myTestModule(filename, info)) {
 				return info;
 			} else {
 				return null;
