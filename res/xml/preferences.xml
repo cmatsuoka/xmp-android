@@ -65,22 +65,7 @@
       android:summary="@string/preferences_vol_boost_summary"
       android:defaultValue="1"
       android:entries="@array/vol_boost_array"
-      android:entryValues="@array/vol_boost_values" />
-      
-    <CheckBoxPreference
-      android:key="interpolation"
-      android:persistent="true"
-      android:title="@string/preferences_interpolation_title"
-      android:summary="@string/preferences_interpolation_summary"
-      android:defaultValue="true" />      
-      
-    <CheckBoxPreference
-      android:key="filter"
-      android:persistent="true"
-      android:title="@string/preferences_filter_title"
-      android:summary="@string/preferences_filter_summary"
-      android:dependency="interpolation"
-      android:defaultValue="true" />      
+      android:entryValues="@array/vol_boost_values" />      
       
     <CheckBoxPreference
       android:key="stereo"

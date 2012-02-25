@@ -16,7 +16,7 @@ LOCAL_MODULE    := xmp
 LOCAL_CFLAGS	:= -I$(LOCAL_PATH)/src -DVERSION=\"$(XMP_VERSION)\" -O3 -DHAVE_CONFIG_H -I$(LOCAL_PATH) -I$(LOCAL_PATH)/include
 LOCAL_LDLIBS	:= -Lbuild/platforms/android-3/arch-arm/usr/lib -llog
 LOCAL_SRC_FILES := xmp-jni.c \
-	$(SRC_SOURCES:.o=.c) \
+	$(SRC_SOURCES:.o=.c.arm) \
 	$(LOADERS_SOURCES:.o=.c) \
 	$(PROWIZ_SOURCES:.o=.c)
 
