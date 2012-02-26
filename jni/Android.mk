@@ -11,9 +11,9 @@ SRC_SOURCES	:= $(addprefix src/,$(SRC_OBJS))
 LOADERS_SOURCES := $(addprefix src/loaders/,$(LOADERS_OBJS))
 PROWIZ_SOURCES	:= $(addprefix src/loaders/prowizard/,$(PROWIZ_OBJS))
 
-XMP_VERSION	:= `grep ^VERSION $(LOCAL_PATH)/../../../Makefile|sed 's/.* //'`
+VERCODE		:= `sed -ne 's/^VERCODE\s*=\s*//p' $(LOCAL_PATH)/../../../Makefile|sed 's/.* //'`
 LOCAL_MODULE    := xmp
-LOCAL_CFLAGS	:= -I$(LOCAL_PATH)/src -DVERSION=\"$(XMP_VERSION)\" -O3 -DHAVE_CONFIG_H -I$(LOCAL_PATH) -I$(LOCAL_PATH)/include
+LOCAL_CFLAGS	:= -I$(LOCAL_PATH)/src -DVERSION=$(VERCODE) -O3 -DHAVE_CONFIG_H -I$(LOCAL_PATH) -I$(LOCAL_PATH)/include
 LOCAL_LDLIBS	:= -Lbuild/platforms/android-3/arch-arm/usr/lib -llog
 LOCAL_SRC_FILES := xmp-jni.c \
 	$(SRC_SOURCES:.o=.c.arm) \
