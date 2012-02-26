@@ -52,6 +52,7 @@ public class ChangeLog {
 	    	.setTitle("Changelog")
 	    	.setIcon(android.R.drawable.ic_menu_info_details)
 	    	.setView(view)
+	    	.setInverseBackgroundForced(true)
 	    	.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
 	    		public void onClick(DialogInterface dialog, int whichButton) {
 	    		}
