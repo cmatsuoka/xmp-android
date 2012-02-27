@@ -62,10 +62,12 @@ public class PlaylistUtils {
 		  
 		alert.show();
 	}
-		
+	
+	final private ModInfo modInfo = new ModInfo();
+	
 	class ModFilter implements FilenameFilter {
 	    public boolean accept(File dir, String name) {
-	        return InfoCache.testModule(dir + "/" + name, null);
+	        return Xmp.testModule(dir + "/" + name, modInfo);
 	    }
 	}
 
@@ -91,9 +93,8 @@ public class PlaylistUtils {
             	for (File file : modDir.listFiles(new ModFilter())) {
             		if (file.isDirectory())
             			continue;
-            		String filename = path + "/" + file.getName();
-            		ModInfo mi = InfoCache.getModInfo(filename);
-            		list.add(filename + ":" + mi.type +	":" + mi.name);
+            		final String filename = path + "/" + file.getName();
+            		list.add(filename + ":" + modInfo.type + ":" + modInfo.name);
             		num++;
             	}
             	

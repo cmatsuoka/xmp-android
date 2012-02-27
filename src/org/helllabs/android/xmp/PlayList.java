@@ -62,7 +62,8 @@ public class PlayList extends PlaylistActivity {
 	    	lineNum = 0;
 	    	while ((line = in.readLine()) != null) {
 	    		String[] fields = line.split(":", 3);
-	    		if (!InfoCache.fileExists(fields[0])) {
+	    		final File f = new File(fields[0]);
+	    		if (!f.exists()) {
 	    			invalidList.add(lineNum);
 	    		} else {
 	    			modList.add(new PlaylistInfo(fields[2], fields[1], fields[0], -1));

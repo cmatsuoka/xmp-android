@@ -25,6 +25,7 @@ package org.helllabs.android.xmp;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -64,7 +65,7 @@ public class ModList extends PlaylistActivity {
 	class ModFilter implements FilenameFilter {
 	    public boolean accept(File dir, String name) {
 	    	File f = new File(dir,name);
-	        return !f.isDirectory() && InfoCache.testModule(f.getPath(), null);
+	        return !f.isDirectory();
 	    }
 	}
 	
@@ -145,9 +146,11 @@ public class ModList extends PlaylistActivity {
             	
             	list.clear();
             	for (File file : modDir.listFiles(new ModFilter())) {
-            		String filename = path + "/" + file.getName();
-            		ModInfo m = InfoCache.getModInfo(filename);
-            		list.add(new PlaylistInfo(m.name, m.type, filename, -1));
+            		final String filename = path + "/" + file.getName();
+            		final String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
+            				DateFormat.MEDIUM).format(file.lastModified());
+            		final String comment = date + String.format(" (%d kB)", file.length() / 1024);
+            		list.add(new PlaylistInfo(file.getName(), comment, filename));
             	}
             	Collections.sort(list);
             	modList.addAll(list);
@@ -225,10 +228,10 @@ public class ModList extends PlaylistActivity {
 				addToPlaylist(directoryNum, modList.size() - directoryNum, addFileToPlaylistDialogClickListener);
 				break;
 			case 2:
-				addToQueue(info.position, 1);
+				addToQueue(info.position, 1, true);
 				break;
 			case 3:
-				addToQueue(directoryNum, modList.size() - directoryNum);
+				addToQueue(directoryNum, modList.size() - directoryNum, true);
 				break;
 			case 4:
 				deleteName = modList.get(info.position).filename;
@@ -280,10 +283,19 @@ public class ModList extends PlaylistActivity {
 	    public void onClick(DialogInterface dialog, int which) {
 	        if (which == DialogInterface.BUTTON_POSITIVE) {
 	        	if (playlistSelection >= 0) {
+	        		boolean invalid = false;
 	        		for (int i = fileSelection; i < fileSelection + fileNum; i++) {
-	        			PlaylistInfo pi = modList.get(i);
-	        			String line = pi.filename + ":" + pi.comment + ":" + pi.name;
-	        			PlaylistUtils.addToList(context, PlaylistUtils.listNoSuffix()[playlistSelection], line);
+	        			final PlaylistInfo pi = modList.get(i);
+	        			ModInfo info = new ModInfo();
+	        			if (Xmp.testModule(pi.filename, info)) {
+	        				String line = pi.filename + ":" + info.type + ":" + info.name;
+	        				PlaylistUtils.addToList(context, PlaylistUtils.listNoSuffix()[playlistSelection], line);
+	        			} else {
+	        				invalid = true;
+	        			}
+	        		}
+	        		if (invalid) {
+	        			Message.error(context, "Unrecognized file format");
 	        		}
 	        	}
 	        }
@@ -296,7 +308,8 @@ public class ModList extends PlaylistActivity {
 	private DialogInterface.OnClickListener deleteDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
-				if (InfoCache.delete(deleteName)) {
+				final File file = new File(deleteName);
+				if (file.delete()) {
 					updateModlist(currentDir);
 					Message.toast(context, getString(R.string.msg_file_deleted));
 				} else {

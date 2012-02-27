@@ -170,10 +170,19 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 	};
 	
 	protected void addToQueue(int start, int size) {
+		addToQueue(start, size, false);
+	}
+	
+	protected void addToQueue(int start, int size, boolean test) {
 		final String[] list = new String[size];
+		int realSize = 0;
 		
-		for (int i = 0; i < size; i++)
-			list[i] = modList.get(start + i).filename;
+		for (int i = 0; i < size; i++) {
+			final String filename = modList.get(start + i).filename;
+			if (Xmp.testModule(filename, null)) {
+				list[realSize++] = modList.get(start + i).filename;
+			}
+		}
 		
 		Intent service = new Intent(this, ModService.class);
 		

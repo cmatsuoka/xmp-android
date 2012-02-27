@@ -106,7 +106,7 @@ public class PlaylistMenu extends ActionBarListActivity {
 		List<PlaylistInfo> list = new ArrayList<PlaylistInfo>();
 		
 		list.clear();
-		list.add(new PlaylistInfo("Module list", "Files in " + media_path,
+		list.add(new PlaylistInfo("File browser", "Files in " + media_path,
 							R.drawable.folder));
 		
 		for (String p : PlaylistUtils.listNoSuffix()) {

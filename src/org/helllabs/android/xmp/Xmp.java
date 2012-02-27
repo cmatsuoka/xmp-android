@@ -6,7 +6,7 @@ public class Xmp {
 	
 	public native int init();
 	public native int deinit();
-	public native boolean testModule(String name, ModInfo info);
+	public native static boolean testModule(String name, ModInfo info);
 	public native int loadModule(String name);
 	public native int releaseModule();
 	public native int startPlayer(int start, int rate, int flags);
@@ -29,7 +29,7 @@ public class Xmp {
 	public native int getPlayPat();
 	public native int getLoopCount();
 	public native void getModVars(int[] vars);
-	public native String getVersion();
+	public native static String getVersion();
 	public native String getModName();
 	public native String getModType();
 	public native String[] getFormats();
