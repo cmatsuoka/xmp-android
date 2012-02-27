@@ -69,14 +69,13 @@ public class PlaylistMenu extends ActionBarListActivity {
 		}
 		
 		// Clear old cache
-		if (Settings.cacheDir.isDirectory() || Settings.oldCacheDir.isDirectory()) {
+		if (Settings.oldCacheDir.isDirectory()) {
 			progressDialog = ProgressDialog.show(this,      
 					"Please wait", "Removing old cache files...", true);
 			
 			new Thread() { 
 				public void run() {
 					try {
-						Settings.deleteCache(Settings.cacheDir);
 						Settings.deleteCache(Settings.oldCacheDir);
 					} catch (IOException e) {
 						Message.toast(context, "Can't delete old cache");
