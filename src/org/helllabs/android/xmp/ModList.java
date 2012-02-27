@@ -183,7 +183,7 @@ public class ModList extends PlaylistActivity {
 			}
 			updateModlist(name);
 		} else {
-			playModule(name);
+			super.onListItemClick(l, v, position, id);
 		}
 	}
 	
@@ -228,10 +228,10 @@ public class ModList extends PlaylistActivity {
 				addToPlaylist(directoryNum, modList.size() - directoryNum, addFileToPlaylistDialogClickListener);
 				break;
 			case 2:
-				addToQueue(info.position, 1, true);
+				addToQueue(info.position, 1);
 				break;
 			case 3:
-				addToQueue(directoryNum, modList.size() - directoryNum, true);
+				addToQueue(directoryNum, modList.size() - directoryNum);
 				break;
 			case 4:
 				deleteName = modList.get(info.position).filename;
@@ -286,16 +286,20 @@ public class ModList extends PlaylistActivity {
 	        		boolean invalid = false;
 	        		for (int i = fileSelection; i < fileSelection + fileNum; i++) {
 	        			final PlaylistInfo pi = modList.get(i);
-	        			ModInfo info = new ModInfo();
-	        			if (Xmp.testModule(pi.filename, info)) {
-	        				String line = pi.filename + ":" + info.type + ":" + info.name;
+	        			ModInfo modInfo = new ModInfo();
+	        			if (InfoCache.testModule(pi.filename, modInfo)) {
+	        				String line = pi.filename + ":" + modInfo.type + ":" + modInfo.name;
 	        				PlaylistUtils.addToList(context, PlaylistUtils.listNoSuffix()[playlistSelection], line);
 	        			} else {
 	        				invalid = true;
 	        			}
 	        		}
 	        		if (invalid) {
-	        			Message.error(context, "Unrecognized file format");
+	        			if (fileNum > 1) {
+	        				Message.toast(context, "Only valid files were added to playlist");
+	        			} else {
+	        				Message.error(context, "Unrecognized file format");
+	        			}
 	        		}
 	        	}
 	        }
@@ -308,8 +312,7 @@ public class ModList extends PlaylistActivity {
 	private DialogInterface.OnClickListener deleteDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
-				final File file = new File(deleteName);
-				if (file.delete()) {
+				if (InfoCache.delete(deleteName)) {
 					updateModlist(currentDir);
 					Message.toast(context, getString(R.string.msg_file_deleted));
 				} else {

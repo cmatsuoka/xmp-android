@@ -1,8 +1,7 @@
 package org.helllabs.android.xmp;
 
-import java.io.File;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.helllabs.android.xmp.Watchdog.onTimeoutListener;
 
@@ -437,8 +436,7 @@ public class ModService extends Service {
 		
 		public boolean deleteFile() {
 			Log.i("Xmp ModService", "Delete file " + fileName);
-			final File file = new File(fileName);
-			return file.delete();
+			return InfoCache.delete(fileName);
 		}
 
 		

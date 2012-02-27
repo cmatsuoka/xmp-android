@@ -90,7 +90,12 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		playModule(modList.get(position).filename);
+		final String filename = modList.get(position).filename;
+		if (InfoCache.testModule(filename)) {
+			playModule(filename);
+		} else {
+			Message.toast(context, "Unrecognized file format");
+		}
 	}
 	
 	abstract void update();
@@ -107,7 +112,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 		String[] mods = new String[num];
 		int i = 0;
 		for (PlaylistInfo p : list) {
-			if ((new File(p.filename)).isFile()) {
+			if (InfoCache.testModule(p.filename)) {
 				mods[i++] = p.filename;
 			}
 		}
@@ -170,28 +175,36 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 	};
 	
 	protected void addToQueue(int start, int size) {
-		addToQueue(start, size, false);
-	}
-	
-	protected void addToQueue(int start, int size, boolean test) {
 		final String[] list = new String[size];
 		int realSize = 0;
+		boolean invalid = false;
 		
 		for (int i = 0; i < size; i++) {
 			final String filename = modList.get(start + i).filename;
-			if (Xmp.testModule(filename, null)) {
-				list[realSize++] = modList.get(start + i).filename;
+			if (InfoCache.testModule(filename)) {
+				list[realSize++] = filename;
+			} else {
+				invalid = true;
 			}
 		}
 		
-		Intent service = new Intent(this, ModService.class);
+		if (invalid) {
+			Message.toast(context, "Only valid files were sent to player");
+		}
 		
-		if (ModService.isPlaying) {
-			addList = list;
-			bindService(service, connection, 0);
-		} else {
-    		playModule(list);
-    	}
+		if (realSize > 0) {
+			Intent service = new Intent(this, ModService.class);
+			
+			final String[] realList = new String[realSize];
+			System.arraycopy(list,  0, realList, 0, realSize);
+		
+			if (ModService.isPlaying) {
+				addList = realList;		
+				bindService(service, connection, 0);
+			} else {
+	    		playModule(realList);
+	    	}
+		}
 	}
 		
 	// Menu
