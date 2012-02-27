@@ -28,11 +28,6 @@
       android:title="@string/preferences_use_filename_title"
       android:summary="@string/preferences_use_filename_summary"
       android:defaultValue="false" />
-                         
-    <Preference
-      android:key="clear_cache"
-      android:title="@string/preferences_clear_cache_title"
-      android:summary="@string/preferences_clear_cache_summary" />
                  
   </PreferenceScreen>
   
