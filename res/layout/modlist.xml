@@ -5,6 +5,18 @@
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
+	
+    <TextView android:id="@+id/current_path"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="12dp"
+			android:layout_marginBottom="12dp"
+			android:layout_marginLeft="2dp"
+			android:longClickable="true"
+			android:focusable="true"
+			android:textSize="16sp"
+			android:textStyle="bold"
+			android:text="No modules found." />
 
 	<LinearLayout android:gravity="top"
 		android:layout_weight="1.0"

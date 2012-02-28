@@ -265,7 +265,7 @@ public class PlaylistMenu extends ActionBarListActivity {
 	public void editComment(final Context context, int index) {
 		final String name = PlaylistUtils.listNoSuffix()[index];
 		final InputDialog alert = new InputDialog(context);		  
-		alert.setTitle("Edit comment");  
+		alert.setTitle("Edit comment");
 		alert.setMessage("Enter the new comment for " + name + ":");  
 		alert.input.setText(PlaylistUtils.readComment(context, name));
 

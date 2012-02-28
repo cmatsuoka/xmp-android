@@ -43,11 +43,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class ModList extends PlaylistActivity {
 	boolean isBadDir = false;
+	boolean isPathMenu;
 	ProgressDialog progressDialog;
 	final Handler handler = new Handler();
+	TextView curPath;
 	String currentDir;
 	int directoryNum;
 	int parentNum;
@@ -80,6 +83,11 @@ public class ModList extends PlaylistActivity {
 		
 		context = this;
 		
+		setTitle("File Browser");
+		
+		curPath = (TextView)findViewById(R.id.current_path);
+		registerForContextMenu(curPath);
+		
 		// Check if directory exists
 		final File modDir = new File(media_path);
 		
@@ -89,7 +97,7 @@ public class ModList extends PlaylistActivity {
 			isBadDir = true;
 			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 			
-			alertDialog.setTitle("Oops");
+			alertDialog.setTitle("Path not found");
 			alertDialog.setMessage(media_path + " not found. " +
 					"Create this directory or change the module path.");
 			alertDialog.setButton("Create", new DialogInterface.OnClickListener() {
@@ -119,7 +127,7 @@ public class ModList extends PlaylistActivity {
 		modList.clear();
 		
 		currentDir = path;
-		setTitle(path);
+		curPath.setText(path);
 		
 		isBadDir = false;
 		progressDialog = ProgressDialog.show(this,      
@@ -191,31 +199,53 @@ public class ModList extends PlaylistActivity {
 	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		if (v.equals(curPath)) {
+			isPathMenu = true;
+			menu.setHeaderTitle("All files");
+			menu.add(Menu.NONE, 0, 0, "Add to playlist");
+			menu.add(Menu.NONE, 1, 1, "Add to play queue");
+
+			return;
+		}
+		
+		isPathMenu = false;
+		
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-		menu.setHeaderTitle("Add to playlist");
+		menu.setHeaderTitle("This file");
 		if (info.position < parentNum) {
 			// Do nothing
 		} else if (info.position < directoryNum) {			// For directory
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");		
 		} else {											// For files
-			menu.add(1, 0, 0, "Add to playlist");
-			menu.add(1, 1, 1, "Add all to playlist");
-			menu.add(Menu.NONE, 2, 2, "Add to play queue");
-			menu.add(Menu.NONE, 3, 3, "Add all to play queue");
-			menu.add(Menu.NONE, 4, 4, "Delete file");
+			menu.add(Menu.NONE, 0, 0, "Add to playlist");
+			menu.add(Menu.NONE, 1, 1, "Add to play queue");
+			menu.add(Menu.NONE, 2, 2, "Delete file");
 		}
 		
-		menu.setGroupEnabled(1, PlaylistUtils.list().length > 0);
+		//menu.setGroupEnabled(1, PlaylistUtils.list().length > 0);
 	}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
 		final int id = item.getItemId();
+		
+		if (isPathMenu) {
+			switch (id) {
+			case 0:						// Add all to playlist
+				addToPlaylist(directoryNum, modList.size() - directoryNum, addFileToPlaylistDialogClickListener);
+				break;
+			case 1:						// Add all to queue
+				addToQueue(directoryNum, modList.size() - directoryNum);
+				break;
+			}
+			
+			return true;
+		}
 
-		if (info.position < parentNum) {					// Parent dir
+		if (info.position < parentNum) {				// Parent dir
 			// Do nothing
-		} else if (info.position < directoryNum) {			// Directories
+		} else if (info.position < directoryNum) {		// Directories
 			if (id == 0) {
 				addToPlaylist(info.position, 1, addDirToPlaylistDialogClickListener);
 			}
@@ -224,16 +254,10 @@ public class ModList extends PlaylistActivity {
 			case 0:										// Add to playlist
 				addToPlaylist(info.position, 1, addFileToPlaylistDialogClickListener);
 				break;
-			case 1:										// Add all to playlist
-				addToPlaylist(directoryNum, modList.size() - directoryNum, addFileToPlaylistDialogClickListener);
-				break;
-			case 2:
+			case 1:										// Add to queue
 				addToQueue(info.position, 1);
 				break;
-			case 3:
-				addToQueue(directoryNum, modList.size() - directoryNum);
-				break;
-			case 4:
+			case 2:										// Delete file
 				deleteName = modList.get(info.position).filename;
 				Message.yesNoDialog(this, "Delete", "Are you sure to delete " + deleteName + "?", deleteDialogClickListener);
 				break;
