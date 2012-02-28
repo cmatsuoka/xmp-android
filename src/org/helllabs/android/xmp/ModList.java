@@ -42,6 +42,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -51,6 +52,7 @@ public class ModList extends PlaylistActivity {
 	ProgressDialog progressDialog;
 	final Handler handler = new Handler();
 	TextView curPath;
+	ImageButton upButton;
 	String currentDir;
 	int directoryNum;
 	int parentNum;
@@ -82,11 +84,24 @@ public class ModList extends PlaylistActivity {
 		final String media_path = prefs.getString(Settings.PREF_MEDIA_PATH, Settings.DEFAULT_MEDIA_PATH);
 		
 		context = this;
-		
+
 		setTitle("File Browser");
 		
 		curPath = (TextView)findViewById(R.id.current_path);
 		registerForContextMenu(curPath);
+		
+		upButton = (ImageButton)findViewById(R.id.up_button);
+		upButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				final File file = new File(currentDir + "/.");
+				String name;
+				if ((name = file.getParentFile().getParent()) == null) {
+						name = "/";
+				}
+				updateModlist(name);
+			}
+		});
 		
 		// Check if directory exists
 		final File modDir = new File(media_path);
@@ -137,11 +152,11 @@ public class ModList extends PlaylistActivity {
 		final File modDir = new File(path);
 		new Thread() { 
 			public void run() {
-				if (!path.equals("/")) {
+				/* if (!path.equals("/")) {
 					modList.add(new PlaylistInfo("..", "Parent directory", path + "/..", R.drawable.parent));
 					parentNum++;
 					directoryNum++;
-				}	
+				} */
 				
 				List<PlaylistInfo> list = new ArrayList<PlaylistInfo>();
             	for (File file : modDir.listFiles(new DirFilter())) {
