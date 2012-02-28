@@ -189,7 +189,7 @@ public class ActionBarHelperBase extends ActionBarHelper {
 		}
 		actionButton.setImageDrawable(item.getIcon());
 		actionButton.setScaleType(ImageView.ScaleType.CENTER);
-		actionButton.setContentDescription(item.getTitle());
+		//actionButton.setContentDescription(item.getTitle());
 		actionButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				mActivity.onMenuItemSelected(Window.FEATURE_OPTIONS_PANEL, item);
