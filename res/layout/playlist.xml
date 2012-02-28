@@ -9,22 +9,24 @@
     <LinearLayout android:id="@+id/current_list"
         android:orientation="vertical"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="12dp"
-		android:layout_marginBottom="12dp"
-		android:layout_marginLeft="2dp"
+		android:layout_height="wrap_content"	
 		android:longClickable="true"
-		android:focusable="true">
+		android:focusable="true"
+		android:background="#f2f2f2">
 		
 	   <TextView android:id="@+id/current_list_name"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:layout_marginLeft="2dp"
 			android:textSize="16sp"
 			android:textStyle="bold" />
 	   
 	   <TextView android:id="@+id/current_list_description"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginLeft="2dp"
+			android:layout_marginBottom="8dp"
 			android:textSize="13sp" />
 	    			      
     </LinearLayout>	
