@@ -15,8 +15,7 @@
 			android:longClickable="true"
 			android:focusable="true"
 			android:textSize="16sp"
-			android:textStyle="bold"
-			android:text="No modules found." />
+			android:textStyle="bold" />
 
 	<LinearLayout android:gravity="top"
 		android:layout_weight="1.0"

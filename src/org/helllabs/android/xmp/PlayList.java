@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 class PlayListFilter implements FilenameFilter {
 	public boolean accept(File dir, String name) {
@@ -26,6 +27,9 @@ class PlayListFilter implements FilenameFilter {
 
 public class PlayList extends PlaylistActivity {
 	String name;
+	View curList;
+	TextView curListName;
+	TextView curListDesc;
 	
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -37,8 +41,16 @@ public class PlayList extends PlaylistActivity {
 		if (extras == null)
 			return;
 		
+		setTitle("Playlist");
+		
+		curList = (View)findViewById(R.id.current_list);
+		curListName = (TextView)findViewById(R.id.current_list_name);
+		curListDesc = (TextView)findViewById(R.id.current_list_description);
+		//registerForContextMenu(curList);
+		
 		name = extras.getString("name");
-		setTitle(name + " - " + PlaylistUtils.readComment(this, name));
+		curListName.setText(name);
+		curListDesc.setText(PlaylistUtils.readComment(this, name));
 		registerForContextMenu(getListView());
 
 		updateList();
