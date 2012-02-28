@@ -273,8 +273,8 @@ public class ActionBarHelperBase extends ActionBarHelper {
 
 						showAsAction = parser.getAttributeIntValue(MENU_RES_NAMESPACE,
 								MENU_ATTR_SHOW_AS_ACTION, -1);
-						if (showAsAction == MenuItem.SHOW_AS_ACTION_ALWAYS ||
-								showAsAction == MenuItem.SHOW_AS_ACTION_IF_ROOM) {
+						if (showAsAction > 0 && ((showAsAction & MenuItem.SHOW_AS_ACTION_ALWAYS) != 0 ||
+								(showAsAction & MenuItem.SHOW_AS_ACTION_IF_ROOM) != 0)) {
 							mActionItemIds.add(itemId);
 						}
 						break;

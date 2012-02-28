@@ -18,6 +18,7 @@ package org.helllabs.android.xmp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 
 /**
  * An extension of {@link com.example.android.actionbarcompat.ActionBarHelper} that provides Android
@@ -31,5 +32,11 @@ public class ActionBarHelperICS extends ActionBarHelperHoneycomb {
 	@Override
 	protected Context getActionBarThemedContext() {
 		return mActivity.getActionBar().getThemedContext();
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mActivity.getActionBar().setHomeButtonEnabled(true);
 	}
 }

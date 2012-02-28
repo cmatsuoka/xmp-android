@@ -36,16 +36,16 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 	String[] addList;
 	String deleteName;
 	Context context;
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
-	
+
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		
+
 		context = this;
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		showToasts = prefs.getBoolean(Settings.PREF_SHOW_TOAST, true);
@@ -55,14 +55,14 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 		playAllButton = (ImageButton)findViewById(R.id.play_all);
 		toggleLoopButton = (ImageButton)findViewById(R.id.toggle_loop);
 		toggleShuffleButton = (ImageButton)findViewById(R.id.toggle_shuffle);
-			
+
 		playAllButton.setImageResource(R.drawable.list_play);
 		playAllButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				playModule(modList);
 			}
 		});
-	
+
 		toggleLoopButton.setImageResource(loopMode ?
 				R.drawable.list_loop_on : R.drawable.list_loop_off);
 		toggleLoopButton.setOnClickListener(new OnClickListener() {
@@ -72,7 +72,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 						R.drawable.list_loop_on : R.drawable.list_loop_off);
 				if (showToasts)
 					Message.toast(v.getContext(), loopMode ? "Loop on" : "Loop off");
-		    }
+			}
 		});
 
 		toggleShuffleButton.setImageResource(shuffleMode ?
@@ -84,10 +84,10 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 						R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
 				if (showToasts)
 					Message.toast(v.getContext(), shuffleMode ? "Shuffle on" : "Shuffle off");				
-		    }
+			}
 		});
 	}
-	
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		final String filename = modList.get(position).filename;
@@ -97,9 +97,9 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 			Message.toast(context, "Unrecognized file format");
 		}
 	}
-	
+
 	abstract void update();
-	
+
 	void playModule(List<PlaylistInfo> list) {
 		int num = 0;
 		for (PlaylistInfo p : list) {
@@ -108,7 +108,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 		}
 		if (num == 0)
 			return;
-		
+
 		String[] mods = new String[num];
 		int i = 0;
 		for (PlaylistInfo p : list) {
@@ -125,7 +125,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 		String[] mods = { mod };
 		playModule(mods);
 	}
-	
+
 	void playModule(String[] mods) {
 		if (showToasts) {
 			if (mods.length > 1)
@@ -140,24 +140,24 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 		Log.i("Xmp PlaylistActivity", "Start activity Player");
 		startActivityForResult(intent, PLAY_MODULE_REQUEST);
 	}
-		
+
 	@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	Log.i("Xmp ModList", "Activity result " + requestCode + "," + resultCode);
-    	switch (requestCode) {
-    	case SETTINGS_REQUEST:
-            update();
-            showToasts = prefs.getBoolean(Settings.PREF_SHOW_TOAST, true);
-            break;
-    	case PLAY_MODULE_REQUEST:
-    		if (resultCode != RESULT_OK)
-    			update();
-    		break;
-        }
-    }
-	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i("Xmp ModList", "Activity result " + requestCode + "," + resultCode);
+		switch (requestCode) {
+		case SETTINGS_REQUEST:
+			update();
+			showToasts = prefs.getBoolean(Settings.PREF_SHOW_TOAST, true);
+			break;
+		case PLAY_MODULE_REQUEST:
+			if (resultCode != RESULT_OK)
+				update();
+			break;
+		}
+	}
+
 	// Connection
-	
+
 	private ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			modPlayer = ModInterface.Stub.asInterface(service);
@@ -173,7 +173,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 			modPlayer = null;
 		}
 	};
-	
+
 	protected void addToQueue(int start, int size) {
 		final String[] list = new String[size];
 		int realSize = 0;
@@ -202,18 +202,21 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 				addList = realList;		
 				bindService(service, connection, 0);
 			} else {
-	    		playModule(realList);
-	    	}
+				playModule(realList);
+			}
 		}
 	}
-		
+
 	// Menu
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.options_menu, menu);
-	    return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.options_menu, menu);
+
+		// Calling super after populating the menu is necessary here to ensure that the
+		// action bar helpers have a chance to handle this event.
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -234,6 +237,6 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 			update();
 			break;
 		}
-		return true;
+		return super.onOptionsItemSelected(item);
 	}	
 }
