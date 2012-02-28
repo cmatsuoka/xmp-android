@@ -33,19 +33,19 @@ public class PlaylistInfoAdapter extends ArrayAdapter<PlaylistInfo> {
     	PlaylistInfo o = items.get(position);
     	           
     	if (o != null) {                		
-    		TextView tt = (TextView)v.findViewById(R.id.plist_title);
-    		TextView bt = (TextView)v.findViewById(R.id.plist_info);
-    		ImageView im = (ImageView)v.findViewById(R.id.plist_image);
+    		final TextView tt = (TextView)v.findViewById(R.id.plist_title);
+    		final TextView bt = (TextView)v.findViewById(R.id.plist_info);
+    		final ImageView im = (ImageView)v.findViewById(R.id.plist_image);
     		
    			tt.setText(useFilename ? FileUtils.basename(o.filename) : o.name);
    			bt.setText(o.comment);
    			
    			Typeface t = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
    			if (o.imageRes == R.drawable.folder || o.imageRes == R.drawable.parent) {
-   				tt.setTypeface(t, Typeface.ITALIC);
+   				//tt.setTypeface(t, Typeface.ITALIC);
     			bt.setTypeface(t, Typeface.ITALIC);
    			} else {
-   				tt.setTypeface(t, Typeface.NORMAL);
+   				//tt.setTypeface(t, Typeface.NORMAL);
     			bt.setTypeface(t, Typeface.NORMAL);  			
    			}
 
