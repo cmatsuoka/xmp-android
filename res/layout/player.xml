@@ -84,7 +84,8 @@
 
 		<ScrollView
 			android:layout_width="fill_parent"
-			android:layout_height="fill_parent">
+			android:layout_height="fill_parent"
+			android:requiresFadingEdge="vertical">
 
 			<LinearLayout android:id="@+id/info_ins_layout"
 				android:orientation="vertical"
