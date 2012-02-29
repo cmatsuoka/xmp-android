@@ -173,9 +173,16 @@ public class ModService extends Service {
     		do {
     			fileName = queue.getFilename();		// Used in reconnection
     			
+    			if (!InfoCache.testModule(fileName)) {
+    				Log.w("Xmp ModService", fileName + ": unrecognized format");
+    				continue;
+    			}
+    			
 	    		Log.i("Xmp ModService", "Load " + fileName);
-	       		if (xmp.loadModule(fileName) < 0)
+	       		if (xmp.loadModule(fileName) < 0) {
+	       			Log.e("Xmp ModService", "Error loading " + fileName);
 	       			continue;
+	       		}
 
 	       		notifier.notification(xmp.getModName(), queue.index());
 		       		    	

@@ -103,8 +103,9 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 	void playModule(List<PlaylistInfo> list) {
 		int num = 0;
 		for (PlaylistInfo p : list) {
-			if ((new File(p.filename).isFile()))
+			if ((new File(p.filename).isFile())) {
 				num++;
+			}
 		}
 		if (num == 0)
 			return;
@@ -112,9 +113,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 		String[] mods = new String[num];
 		int i = 0;
 		for (PlaylistInfo p : list) {
-			if (InfoCache.testModule(p.filename)) {
-				mods[i++] = p.filename;
-			}
+			mods[i++] = p.filename;
 		}
 		if (i > 0) {
 			playModule(mods);
