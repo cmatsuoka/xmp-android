@@ -13,7 +13,7 @@
 		android:description="@string/app_description"
 		android:theme="@style/AppTheme">
 		<activity android:name=".PlaylistMenu"
-			android:configChanges="keyboardHidden|orientation"
+			android:configChanges="keyboardHidden|orientation|screenSize"
 			android:launchMode="singleTask">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,7 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".Player"
-			android:configChanges="keyboardHidden|orientation"
+			android:configChanges="keyboardHidden|orientation|screenSize"
 			android:theme="@android:style/Theme.NoTitleBar"
 			android:launchMode="singleTop"
 			android:excludeFromRecents="true">
@@ -43,9 +43,9 @@
 		</activity>
 		<activity android:name=".Settings" android:theme="@android:style/Theme.NoTitleBar" />
 		<activity android:name=".ModList"
-			android:configChanges="keyboardHidden|orientation" />
+			android:configChanges="keyboardHidden|orientation|screenSize" />
 		<activity android:name=".PlayList"
-			android:configChanges="keyboardHidden|orientation" />
+			android:configChanges="keyboardHidden|orientation|screenSize" />
 		<activity android:name=".ListFormats" android:theme="@android:style/Theme.NoTitleBar">
 			<intent-filter>
 			    <action android:name="org.helllabs.android.xmp.LIST_FORMATS" />
