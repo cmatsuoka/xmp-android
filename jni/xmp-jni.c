@@ -326,20 +326,19 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 	int i;
 
 	for (i = 0; i < mi.mod->chn; i++) {
-		int track = mi.mod->xxp[mi.pattern]->index[i];
-                struct xmp_event *event = &mi.mod->xxt[track]->event[mi.row];
+                struct xmp_channel_info *ci = &mi.channel_info[i];
 
-		if (event->note > 0 && event->note <= 0x80) {
-			_key[i] = event->note - 1;
+		if (ci->event.note > 0 && ci->event.note <= 0x80) {
+			_key[i] = ci->event.note - 1;
 			_last_key[i] = _key[i];
-		} else if (event->vol > 0) {
+		} else if (ci->event.vol > 0) {
 			_key[i] = _last_key[i];
 		}
 
-		_ins[i] = event->ins - 1;
+		_ins[i] = ci->event.ins - 1;
 
 		if (_key[i] >= 0) {
-			_cur_vol[i] = mi.channel_info[i].volume;
+			_cur_vol[i] = ci->volume;
 			_key[i] = -1;
 		} else {
 			_cur_vol[i] -= _decay;
