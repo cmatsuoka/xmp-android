@@ -226,12 +226,14 @@ public class ModList extends PlaylistActivity {
 		isPathMenu = false;
 		
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-		menu.setHeaderTitle("This file");
+		
 		if (info.position < parentNum) {
 			// Do nothing
 		} else if (info.position < directoryNum) {			// For directory
+			menu.setHeaderTitle("This directory");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");		
 		} else {											// For files
+			menu.setHeaderTitle("This file");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
 			menu.add(Menu.NONE, 1, 1, "Add to play queue");
 			menu.add(Menu.NONE, 2, 2, "Delete file");

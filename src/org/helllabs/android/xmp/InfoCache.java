@@ -11,9 +11,13 @@ public class InfoCache {
 	public static boolean delete(String filename) {
 		final File file = new File(filename);
 		final File cacheFile = new File(Settings.cacheDir, filename + ".cache");
+		final File skipFile = new File(Settings.cacheDir, filename + ".skip");
 
 		if (cacheFile.isFile())
 			cacheFile.delete();
+		
+		if (skipFile.isFile())
+			skipFile.delete();
 
 		return file.delete();
 	}
@@ -21,14 +25,27 @@ public class InfoCache {
 	public static boolean fileExists(String filename) {
 		final File file = new File(filename);
 		final File cacheFile = new File(Settings.cacheDir, filename + ".cache");
+		final File skipFile = new File(Settings.cacheDir, filename + ".skip");
 
 		if (file.isFile())
 			return true;
 
 		if (cacheFile.isFile())
 			cacheFile.delete();
+		
+		if (skipFile.isFile())
+			skipFile.delete();
 
 		return false;
+	}
+	
+	public static boolean testModuleForceIfInvalid(String filename) {
+		final File skipFile = new File(Settings.cacheDir, filename + ".skip");
+		
+		if (skipFile.isFile())
+			skipFile.delete();
+		
+		return testModule(filename);
 	}
 	
 	public static boolean testModule(String filename) {
@@ -49,11 +66,11 @@ public class InfoCache {
 		}
 
 		try {
-			if (skipFile.isFile())
-				return false;
-
 			// If cache file exists and size matches, file is mod
 			if (cacheFile.isFile()) {
+				if (skipFile.isFile())
+					skipFile.delete();
+				
 				BufferedReader in = new BufferedReader(new FileReader(cacheFile), 512);
 				int size = Integer.parseInt(in.readLine());
 				if (size == file.length()) {
@@ -64,7 +81,12 @@ public class InfoCache {
 					return true;
 				}
 				in.close();
+				
+				cacheFile.delete();		// Invalid or outdated cache file
 			}
+			
+			if (skipFile.isFile())
+				return false;
 
 			Boolean isMod = Xmp.testModule(filename, info);
 			if (!isMod) {

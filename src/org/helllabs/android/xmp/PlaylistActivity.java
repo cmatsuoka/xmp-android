@@ -91,7 +91,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		final String filename = modList.get(position).filename;
-		if (InfoCache.testModule(filename)) {
+		if (InfoCache.testModuleForceIfInvalid(filename)) {
 			playModule(filename);
 		} else {
 			Message.toast(context, "Unrecognized file format");
@@ -113,7 +113,9 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 		String[] mods = new String[num];
 		int i = 0;
 		for (PlaylistInfo p : list) {
-			mods[i++] = p.filename;
+			if ((new File(p.filename).isFile())) {
+				mods[i++] = p.filename;
+			}
 		}
 		if (i > 0) {
 			playModule(mods);
