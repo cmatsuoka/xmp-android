@@ -202,24 +202,26 @@ public class Player extends Activity {
     		int t = 0;
     		
     		do {
-    			try {
-					t = modPlayer.time();
-				} catch (RemoteException e) {
+    			if (!paused) {
+	    			try {
+						t = modPlayer.time();
+					} catch (RemoteException e) {
+	
+					}
 
-				}
-    			//Log.v(getString(R.string.app_name), "t = " + t);
-    			if (t >= 0) {
-    				if (!seeking && !paused)
-    					seekBar.setProgress(t);
+	    			if (t >= 0 && !seeking) {
+	    				seekBar.setProgress(t);
+	    			}
+					
+					if (screenOn) {
+						handler.post(updateInfoRunnable);
+					}
     			}
     			
     			try {
 					sleep(100);
 				} catch (InterruptedException e) { }
-				
-				if (screenOn) {
-					handler.post(updateInfoRunnable);
-				}
+    			
     		} while (t >= 0 && !endPlay);
     		
     		seekBar.setProgress(0);
