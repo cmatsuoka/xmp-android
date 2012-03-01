@@ -91,6 +91,10 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		final String filename = modList.get(position).filename;
+		
+		/* Test module again if invalid, in case a new file format is added to the
+		 * player library and the file was previously unrecognized and cached as invalid.
+		 */
 		if (InfoCache.testModuleForceIfInvalid(filename)) {
 			playModule(filename);
 		} else {
