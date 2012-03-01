@@ -40,6 +40,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -60,6 +61,7 @@ public class ModList extends PlaylistActivity {
 	int fileSelection;
 	int fileNum;
 	Context context;
+	int textColor;
 	
 	class DirFilter implements FileFilter {
 	    public boolean accept(File dir) {
@@ -90,6 +92,20 @@ public class ModList extends PlaylistActivity {
 		curPath = (TextView)findViewById(R.id.current_path);
 		registerForContextMenu(curPath);
 		
+		textColor = curPath.getCurrentTextColor();
+		curPath.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if(event.getAction() == (MotionEvent.ACTION_UP)){
+					curPath.setTextColor(textColor);
+				}
+				else{
+					curPath.setTextColor(R.color.actionbar_title_color);
+				}
+				return false;
+			}
+		});
+		
 		upButton = (ImageButton)findViewById(R.id.up_button);
 		upButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -100,6 +116,19 @@ public class ModList extends PlaylistActivity {
 						name = "/";
 				}
 				updateModlist(name);
+			}
+		});
+		
+		upButton.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if(event.getAction() == (MotionEvent.ACTION_UP)){
+					upButton.setImageResource(R.drawable.parent);
+				}
+				else{
+					upButton.setImageResource(R.drawable.parent_touch);
+				}
+				return false;
 			}
 		});
 		
