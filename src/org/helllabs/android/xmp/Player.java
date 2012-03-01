@@ -206,16 +206,18 @@ public class Player extends Activity {
 					t = modPlayer.time();
 				} catch (RemoteException e) { }
     			
-    			if (screenOn) {
-    				if (t >= 0 && !seeking && !paused) {
+    			if (t >= 0) {
+    				if (!seeking && !paused)
     					seekBar.setProgress(t);
-    				}
-					handler.post(updateInfoRunnable);
-				}
-				   			
+    			}
+    			
     			try {
 					sleep(100);
 				} catch (InterruptedException e) { }
+				
+				if (screenOn) {
+					handler.post(updateInfoRunnable);
+				}
     		} while (t >= 0 && !endPlay);
     		
     		seekBar.setProgress(0);
