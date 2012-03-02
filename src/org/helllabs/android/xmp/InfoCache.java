@@ -8,33 +8,39 @@ import java.io.IOException;
 
 public class InfoCache {
 
-	public static boolean delete(String filename) {
-		final File file = new File(filename);
+	public static boolean clearCache(String filename) {
 		final File cacheFile = new File(Settings.cacheDir, filename + ".cache");
 		final File skipFile = new File(Settings.cacheDir, filename + ".skip");
+		boolean ret = false;
 
-		if (cacheFile.isFile())
+		if (cacheFile.isFile()) {
 			cacheFile.delete();
+			ret = true;
+		}
 		
-		if (skipFile.isFile())
+		if (skipFile.isFile()) {
 			skipFile.delete();
-
+			ret = true;
+		}
+		
+		return ret;
+	}
+	
+	public static boolean delete(String filename) {
+		final File file = new File(filename);
+		
+		clearCache(filename);
+		
 		return file.delete();
 	}
 
 	public static boolean fileExists(String filename) {
 		final File file = new File(filename);
-		final File cacheFile = new File(Settings.cacheDir, filename + ".cache");
-		final File skipFile = new File(Settings.cacheDir, filename + ".skip");
 
 		if (file.isFile())
 			return true;
 
-		if (cacheFile.isFile())
-			cacheFile.delete();
-		
-		if (skipFile.isFile())
-			skipFile.delete();
+		clearCache(filename);
 
 		return false;
 	}

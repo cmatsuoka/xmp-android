@@ -248,6 +248,7 @@ public class ModList extends PlaylistActivity {
 			menu.setHeaderTitle("All files");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
 			menu.add(Menu.NONE, 1, 1, "Add to play queue");
+			menu.add(Menu.NONE, 2, 2, "Clear cache");
 
 			return;
 		}
@@ -283,6 +284,9 @@ public class ModList extends PlaylistActivity {
 				break;
 			case 1:						// Add all to queue
 				addToQueue(directoryNum, modList.size() - directoryNum);
+				break;
+			case 2:
+				clearCachedEntries(directoryNum, modList.size() - directoryNum);
 				break;
 			}
 			
@@ -329,6 +333,13 @@ public class ModList extends PlaylistActivity {
 		})
 	    .show();
 	}	
+	
+	protected void clearCachedEntries(int start, int num) {
+		for (int i = 0; i < num; i++) {
+			final String filename = modList.get(start + i).filename;
+			InfoCache.clearCache(filename);
+		}
+	}
 	
 	/*
 	 * Add directory to playlist
