@@ -55,12 +55,29 @@ JNIEXPORT jboolean JNICALL
 Java_org_helllabs_android_xmp_Xmp_testModule(JNIEnv *env, jobject obj, jstring name, jobject info)
 {
 	const char *filename;
-	int res;
+	int i, res;
 	struct xmp_test_info ti;
 
 	filename = (*env)->GetStringUTFChars(env, name, NULL);
 	/* __android_log_print(ANDROID_LOG_DEBUG, "libxmp", "%s", filename); */
 	res = xmp_test_module((char *)filename, &ti);
+
+	/* If the module title is empty, use the file basename */
+	for (i = strlen(ti.name) - 1; i >= 0; i--) {
+		if (ti.name[i] == ' ') {
+			ti.name[i] = 0;
+		} else {
+			break;
+		}
+	}
+	if (strlen(ti.name) == 0) {
+		const char *x = strrchr(filename, '/');
+		if (x == NULL) {
+			x = filename;
+		}
+		strncpy(ti.name, x + 1, XMP_NAME_SIZE);
+	}
+
 	(*env)->ReleaseStringUTFChars(env, name, filename);
 
 	if (res == 0) {
