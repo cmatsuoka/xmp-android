@@ -60,7 +60,7 @@ public class PlaylistUtils {
 			}  
 		});  
 		  
-		alert.show();
+		alert.setInverseBackgroundForced(true).show();
 	}
 	
 	final private ModInfo modInfo = new ModInfo();
