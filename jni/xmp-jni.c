@@ -212,6 +212,18 @@ Java_org_helllabs_android_xmp_Xmp_time(JNIEnv *env, jobject obj)
 }
 
 JNIEXPORT jint JNICALL
+Java_org_helllabs_android_xmp_Xmp_setMixerAmp(JNIEnv *env, jobject obj, jint amp)
+{
+	return xmp_mixer_amp(ctx, amp);
+}
+
+JNIEXPORT jint JNICALL
+Java_org_helllabs_android_xmp_Xmp_setMixerPan(JNIEnv *env, jobject obj, jint pan)
+{
+	return xmp_mixer_pan(ctx, pan);
+}
+
+JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_getPlayTempo(JNIEnv *env, jobject obj)
 {
 	return mi.tempo;

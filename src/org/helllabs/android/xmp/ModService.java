@@ -32,7 +32,7 @@ public class ModService extends Service {
 	SharedPreferences prefs;
 	Watchdog watchdog;
 	int minSize;
-	int sampleRate;
+	int sampleRate, sampleFormat;
 	boolean stereo;
 	boolean interpolate;
 	Notifier notifier;
@@ -71,8 +71,13 @@ public class ModService extends Service {
    		prefs = PreferenceManager.getDefaultSharedPreferences(this);
    		
    		int bufferMs = prefs.getInt(Settings.PREF_BUFFER_MS, 500);
-   		sampleRate = Integer.parseInt(prefs.getString(Settings.PREF_SAMPLING_RATE, "44100"));   		
+   		sampleRate = Integer.parseInt(prefs.getString(Settings.PREF_SAMPLING_RATE, "44100"));
+   		sampleFormat = 0;
+   		
    		stereo = prefs.getBoolean(Settings.PREF_STEREO, true);
+   		if (!stereo) {
+   			sampleFormat |= Xmp.XMP_FORMAT_MONO;
+   		}
    		
    		int bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
 	
@@ -194,9 +199,13 @@ public class ModService extends Service {
 	    			} catch (RemoteException e) { }
 	        	}
 	        	callbacks.finishBroadcast();
-	
+
+	        	String volBoost = prefs.getString(Settings.PREF_VOL_BOOST, "1");
+
 	       		audio.play();
-	       		xmp.startPlayer(0, sampleRate, 0);
+	       		xmp.startPlayer(0, sampleRate, sampleFormat);
+	        	xmp.setMixerAmp(Integer.parseInt(volBoost));
+	        	xmp.setMixerPan(prefs.getInt(Settings.PREF_PAN_SEPARATION, 70));
 	       		updateData = true;
 	    			    		
 	    		short buffer[] = new short[minSize];

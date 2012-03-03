@@ -6,16 +6,16 @@
     <string name="preferences_media_path_summary">The directory where mod files are located</string>
     <string name="preferences_vol_boost_title">Volume boost</string>
     <string name="preferences_vol_boost_summary">Set output volume amplification factor</string>
-    <string name="preferences_pan_separation_summary">Set the default mixing pan separation</string>
+    <string name="preferences_pan_separation_summary">Set the mixer stereo separation</string>
     <string name="preferences_stereo_summary">Mix channels to stereo</string>
     <string name="preferences_stereo_title">Stereo output</string>
-    <string name="preferences_pan_separation_title">Pan separation</string>
+    <string name="preferences_pan_separation_title">Stereo separation</string>
     <string name="preferences_category_sound">Sound settings</string>
     <string name="preferences_category_files">Playlist settings</string>
     <string name="changelog_text">• Player engine updated to libxmp 4\n• Fixes for Honeycomb and ICS\n• New (more intuitive) file browser\n• Performance optimizations\n• Bug fixes\n
 \nThis is an experimental release and may contain bugs, please report issues to cmatsuoka@gmail.com.</string>
     <string name="changelog_title">New in version 2.9.0</string>
-    <string name="preferences_pan_separation_dialog">Set the pan separation for the channel mixer:</string>
+    <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
     <string name="menu_refresh">Rescan</string>
     <string name="menu_prefs">Settings</string>
     <string name="preferences_examples_title">Install modules</string>

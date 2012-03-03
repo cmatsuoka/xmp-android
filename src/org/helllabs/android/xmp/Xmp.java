@@ -2,7 +2,7 @@ package org.helllabs.android.xmp;
 
 
 public class Xmp {
-	public static final int XMP_CTL_LOOP = 1 << 3;
+	public static final int XMP_FORMAT_MONO = 1 << 2;
 	
 	public native int init();
 	public native int deinit();
@@ -20,9 +20,10 @@ public class Xmp {
 	public native int restartModule();
 	public native int incGvol();
 	public native int decGvol();
-	public native int seek(long time);
+	public native int seek(int time);
 	public native int time();
-	public native int seek(int seconds);
+	public native void setMixerAmp(int amp);
+	public native void setMixerPan(int pan);
 	public native int getPlayTempo();
 	public native int getPlayBpm();
 	public native int getPlayPos();
