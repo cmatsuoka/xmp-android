@@ -205,7 +205,7 @@ public class ModService extends Service {
 	       		audio.play();
 	       		xmp.startPlayer(0, sampleRate, sampleFormat);
 	        	xmp.setMixerAmp(Integer.parseInt(volBoost));
-	        	xmp.setMixerPan(prefs.getInt(Settings.PREF_PAN_SEPARATION, 70));
+	        	xmp.setMixerMix(prefs.getInt(Settings.PREF_PAN_SEPARATION, 70));
 	       		updateData = true;
 	    			    		
 	    		short buffer[] = new short[minSize];
