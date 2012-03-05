@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tlv="http://schemas.android.com/apk/res/org.helllabs.android.xmp"
 	android:gravity="top"
 	android:layout_weight="1.0"
 	android:orientation="vertical"
@@ -38,12 +39,16 @@
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
 		
-		<ListView android:id="@id/android:list"
+		<com.commonsware.cwac.tlv.TouchListView android:id="@id/android:list"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:layout_weight="1"
 			android:fastScrollEnabled="true"
-			android:drawSelectorOnTop="false" />
+			android:drawSelectorOnTop="false"
+			tlv:normal_height="44dip"
+			tlv:expanded_height="44dip"
+			tlv:grabber="@+id/plist_image"
+			tlv:remove_mode="slideRight" />
 
 		<TextView android:id="@id/android:empty"
 			android:gravity="top"

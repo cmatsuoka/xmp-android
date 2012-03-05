@@ -1,9 +1,11 @@
 package org.helllabs.android.xmp;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -18,6 +21,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+
+import com.commonsware.cwac.tlv.TouchListView;
+
 
 class PlayListFilter implements FilenameFilter {
 	public boolean accept(File dir, String name) {
@@ -30,6 +36,8 @@ public class PlayList extends PlaylistActivity {
 	View curList;
 	TextView curListName;
 	TextView curListDesc;
+	PlaylistInfoAdapter plist;
+	Boolean modified;
 	
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -43,6 +51,10 @@ public class PlayList extends PlaylistActivity {
 		
 		setTitle("Playlist");
 		
+		TouchListView tlv = (TouchListView)getListView();
+		tlv.setDropListener(onDrop);
+		tlv.setRemoveListener(onRemove);
+		
 		curList = (View)findViewById(R.id.current_list);
 		curListName = (TextView)findViewById(R.id.current_list_name);
 		curListDesc = (TextView)findViewById(R.id.current_list_description);
@@ -52,8 +64,20 @@ public class PlayList extends PlaylistActivity {
 		curListName.setText(name);
 		curListDesc.setText(PlaylistUtils.readComment(this, name));
 		registerForContextMenu(getListView());
+		
+		modified = false;
 
 		updateList();
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		
+		if (modified) {
+			Log.i("Xmp PlayList", "Write new playlist");
+			writeList();
+		}
 	}
 	
 	void update() {
@@ -77,7 +101,7 @@ public class PlayList extends PlaylistActivity {
 	    		if (!InfoCache.fileExists(fields[0])) {
 	    			invalidList.add(lineNum);
 	    		} else {
-	    			modList.add(new PlaylistInfo(fields[2], fields[1], fields[0], -1));
+	    			modList.add(new PlaylistInfo(fields[2], fields[1], fields[0], R.drawable.grabber));
 	    		}
 	    		lineNum++;
 	    	}
@@ -101,7 +125,7 @@ public class PlayList extends PlaylistActivity {
 			}
 		}
 	    
-	    final PlaylistInfoAdapter plist = new PlaylistInfoAdapter(PlayList.this,
+	    plist = new PlaylistInfoAdapter(PlayList.this,
     				R.layout.playlist_item, R.id.plist_info, modList,
     				prefs.getBoolean(Settings.PREF_USE_FILENAME, false));
         
@@ -148,6 +172,45 @@ public class PlayList extends PlaylistActivity {
 
 		} catch (IOException e) {
 
+		}
+	}
+	
+	// List reorder
+	
+	private TouchListView.DropListener onDrop=new TouchListView.DropListener() {
+		@Override
+		public void drop(int from, int to) {
+			PlaylistInfo item = plist.getItem(from);
+			plist.remove(item);
+			plist.insert(item, to);
+			modified = true;
+		}
+	};
+
+	private TouchListView.RemoveListener onRemove=new TouchListView.RemoveListener() {
+		@Override
+		public void remove(int which) {
+			plist.remove(plist.getItem(which));
+		}
+	};
+
+	private void writeList() {
+		File file = new File(Settings.dataDir, name + ".playlist.new");
+		
+		file.delete();
+		
+		try {
+			BufferedWriter out = new BufferedWriter(new FileWriter(file), 512);
+			for (PlaylistInfo info : modList) {
+				out.write(String.format("%s:%s:%s\n", info.filename, info.comment, info.name));
+			}
+			out.close();
+			
+			File oldFile = new File(Settings.dataDir, name + ".playlist");
+			oldFile.delete();
+			file.renameTo(oldFile);
+		} catch (IOException e) {
+			Log.e("Xmp PlayList", "Error writing playlist " + file.getPath());
 		}
 	}
 }
