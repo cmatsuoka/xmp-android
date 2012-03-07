@@ -12,7 +12,7 @@
     <string name="preferences_pan_separation_title">Stereo separation</string>
     <string name="preferences_category_sound">Sound settings</string>
     <string name="preferences_category_files">Playlist settings</string>
-    <string name="changelog_text">• Fix bug in bidirectional sample loops\n• Add reorderable playlists\n• Add Protracker effect EFx (Invert loop)\n
+    <string name="changelog_text">• Fix bidirectional sample loops\n• Fix \"previous\" media button handling\n• Add reorderable playlists\n• Add Protracker effect EFx (Invert loop)\n
 \nThis version is based on a new player library. If you notice any problems, please report to cmatsuoka@gmail.com.</string>
     <string name="changelog_title">New in version 2.9.1</string>
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>

@@ -148,7 +148,7 @@ public class ModService extends Service {
 				break;
 			case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
 				Log.i("Xmp ModService", "Handle KEYCODE_MEDIA_PREVIOUS");
-				if (xmp.time() > 20) {
+				if (xmp.time() > 2000) {
 					xmp.seek(0);
 				} else {
 					xmp.stopModule();
