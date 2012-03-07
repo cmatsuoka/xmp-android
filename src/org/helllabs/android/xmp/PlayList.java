@@ -74,8 +74,7 @@ public class PlayList extends PlaylistActivity {
 	public void onDestroy() {
 		super.onDestroy();
 		
-		if (modified) {
-			Log.i("Xmp PlayList", "Write new playlist");
+		if (modified) {			
 			writeList();
 		}
 	}
@@ -166,6 +165,9 @@ public class PlayList extends PlaylistActivity {
 	
 	public void removeFromPlaylist(String playlist, int position) {
 		File file = new File(Settings.dataDir, name + ".playlist");
+		if (modified) {
+			writeList();
+		}
 		try {
 			FileUtils.removeLineFromFile(file, position);
 		} catch (FileNotFoundException e) {
@@ -194,8 +196,9 @@ public class PlayList extends PlaylistActivity {
 		}
 	};
 
-	private void writeList() {
+	private void writeList() {		
 		File file = new File(Settings.dataDir, name + ".playlist.new");
+		Log.i("Xmp PlayList", "Write playlist " + name);
 		
 		file.delete();
 		
@@ -209,6 +212,8 @@ public class PlayList extends PlaylistActivity {
 			File oldFile = new File(Settings.dataDir, name + ".playlist");
 			oldFile.delete();
 			file.renameTo(oldFile);
+			
+			modified = false;
 		} catch (IOException e) {
 			Log.e("Xmp PlayList", "Error writing playlist " + file.getPath());
 		}
