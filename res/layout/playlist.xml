@@ -48,7 +48,7 @@
 			tlv:normal_height="44dip"
 			tlv:expanded_height="44dip"
 			tlv:grabber="@+id/plist_image"
-			tlv:remove_mode="slideRight" />
+			tlv:remove_mode="none" />
 
 		<TextView android:id="@id/android:empty"
 			android:gravity="top"
