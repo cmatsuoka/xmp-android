@@ -87,4 +87,6 @@ GNU General Public License for more details.</string>
     <string name="preferences_category_experimental">Experimental (be careful)</string>
     <string name="msg_delete">Delete</string>
     <string name="menu_delete">Delete</string>
+    <string name="preferences_keep_screen_on_summary">Prevent screen from sleeping during replay</string>
+    <string name="preferences_keep_screen_on_title">Keep screen on</string>
 </resources>

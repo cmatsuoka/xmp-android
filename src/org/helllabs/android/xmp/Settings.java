@@ -33,6 +33,7 @@ public class Settings extends android.preference.PreferenceActivity {
 	public static final String PREF_SHOW_INS_HIGHLIGHT = "show_ins_highlight";
 	public static final String PREF_USE_FILENAME = "use_filename";
 	public static final String PREF_ENABLE_DELETE = "enable_delete";
+	public static final String PREF_KEEP_SCREEN_ON = "keep_screen_on";
 	private SharedPreferences prefs;
 	private String oldPath;
 	

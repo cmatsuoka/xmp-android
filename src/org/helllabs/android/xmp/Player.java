@@ -303,7 +303,7 @@ public class Player extends Activity {
 		
 		setResult(RESULT_OK);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
+
 		showInfoLine = prefs.getBoolean(Settings.PREF_SHOW_INFO_LINE, true);
 		showInsHighlight = prefs.getBoolean(Settings.PREF_SHOW_INS_HIGHLIGHT, true);
 		showElapsed = true;
@@ -329,6 +329,10 @@ public class Player extends Activity {
 		
 		instrumentList = new InstrumentList(this);
 		infoInsLayout.addView(instrumentList);
+			
+		if (prefs.getBoolean(Settings.PREF_KEEP_SCREEN_ON, false)) {
+			infoLayout.setKeepScreenOn(true);
+		}
 		
 		titleFlipper.setInAnimation(this, R.anim.slide_in_right);
 		titleFlipper.setOutAnimation(this, R.anim.slide_out_left);
@@ -491,7 +495,7 @@ public class Player extends Activity {
 		unregisterReceiver(screenReceiver);
 		
 		Log.i("Xmp Player", "Unbind service");
-		unbindService(connection);
+		unbindService(connection);	
 	}
 	
 	/*
