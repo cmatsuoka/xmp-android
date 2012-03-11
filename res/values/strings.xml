@@ -12,9 +12,9 @@
     <string name="preferences_pan_separation_title">Stereo separation</string>
     <string name="preferences_category_sound">Sound settings</string>
     <string name="preferences_category_files">Playlist settings</string>
-    <string name="changelog_text">• Fix bidirectional sample loops\n• Fix \"previous\" media button handling\n• Add reorderable playlists\n• Add Protracker effect EFx (Invert loop)\n
+    <string name="changelog_text">• Fix note delay effect\n• Fix IT virtual channel mapping\n• Fix IT instrument cutoff setting\n• Fix XM corner case volume setting\n• Fix linear periods for very high notes\n• Fix pattern number display\n• Fix screen update rate\n• Add option to keep screen on\n
 \nThis version is based on a new player library. If you notice any problems, please report to cmatsuoka@gmail.com.</string>
-    <string name="changelog_title">New in version 2.9.1</string>
+    <string name="changelog_title">New in version 2.9.2</string>
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
     <string name="menu_refresh">Rescan</string>
     <string name="menu_prefs">Settings</string>
