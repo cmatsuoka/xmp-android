@@ -244,7 +244,7 @@ Java_org_helllabs_android_xmp_Xmp_getPlayPos(JNIEnv *env, jobject obj)
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_getPlayPat(JNIEnv *env, jobject obj)
 {
-	return mi.mod->pat;
+	return mi.pattern;
 }
 
 JNIEXPORT jint JNICALL
