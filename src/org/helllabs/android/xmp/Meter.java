@@ -1,5 +1,6 @@
 package org.helllabs.android.xmp;
 
+import android.graphics.Typeface;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ abstract public class Meter {
 		
 		for (i = 0; i < MAX_METERS; i++) {
 			infoMeter[i] = new TextView(layout.getContext());
+			infoMeter[i].setTypeface(Typeface.MONOSPACE);
 		}
 		
 		layout.removeAllViews();
