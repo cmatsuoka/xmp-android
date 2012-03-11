@@ -586,8 +586,10 @@ public class Player extends Activity {
 	       		channelLayout.addView(channelInfo[i]);
 	       	}*/
 	       	
-	        progressThread = new ProgressThread();
-	        progressThread.start();
+	       	if (progressThread == null || !progressThread.isAlive()) {
+	       		progressThread = new ProgressThread();
+	       		progressThread.start();
+	       	}
 		}
 	};
 	
