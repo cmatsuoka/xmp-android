@@ -2,6 +2,7 @@ package org.helllabs.android.xmp;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -39,7 +40,7 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		try {
 			c = surfaceHolder.lockCanvas(null);
 			synchronized (surfaceHolder) {
-				doDraw(c);
+				doDraw(c, info);
 			}
 		} finally {
 			// do this in a finally so that if an exception is thrown
@@ -52,7 +53,7 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	}
 
 
-	private void doDraw(Canvas canvas) {
+	private void doDraw(Canvas canvas, Info info) {
 		int lines = canvasHeight / fontSize;
 		int barY = (lines / 2) * fontSize;
 		Rect rect;
@@ -60,6 +61,7 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		//canvas.drawLine(10, 10, 20, 20, notePaint);
 		rect = new Rect(0, barY - fontSize, canvasWidth - 1, barY);
 
+		canvas.drawColor(Color.BLACK);
 		canvas.drawRect(rect, barPaint);
 		for (int i = 0; i < lines; i++) {
 			canvas.drawText("C#2 D 3 --- --- A 3 G#2 --- === --- C#7", 0, (i + 1) * fontSize, notePaint);
