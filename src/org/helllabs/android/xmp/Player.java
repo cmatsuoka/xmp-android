@@ -53,16 +53,17 @@ public class Player extends Activity {
 	TextView infoMod;
 	TextView infoStatus;
 	TextView elapsedTime;
-	TextView textInstruments;
-	LinearLayout infoInsLayout;
-	InstrumentList instrumentList;
+	//TextView textInstruments;
+	//LinearLayout infoInsLayout;
+	//InstrumentList instrumentList;
 	ViewFlipper titleFlipper;
 	int flipperPage;
 	String[] fileArray = null;
 	SharedPreferences prefs;
-	LinearLayout infoMeterLayout;
-	Meter infoMeter;
-	FrameLayout infoLayout;
+	//LinearLayout infoMeterLayout;
+	//Meter infoMeter;
+	//FrameLayout infoLayout;
+	FrameLayout viewerLayout;
 	BitmapDrawable image;
 	final Handler handler = new Handler();
 	int latency;
@@ -183,10 +184,10 @@ public class Player extends Activity {
 				}
 
 				modPlayer.getChannelData(volumes[now], instruments[now], keys[now]);
-				infoMeter.setVolumes(volumes[before]);
+				//infoMeter.setVolumes(volumes[before]);
 				
-				if (showInsHighlight)
-					instrumentList.setVolumes(volumes[before], instruments[before]);
+				/*if (showInsHighlight)
+					instrumentList.setVolumes(volumes[before], instruments[before]);*/
 				
 				before++;
 				if (before >= 10)
@@ -318,20 +319,23 @@ public class Player extends Activity {
 		infoType[0] = (TextView)findViewById(R.id.info_type_0);
 		infoName[1] = (TextView)findViewById(R.id.info_name_1);
 		infoType[1] = (TextView)findViewById(R.id.info_type_1);
-		infoMod = (TextView)findViewById(R.id.info_mod);
+		//infoMod = (TextView)findViewById(R.id.info_mod);
 		infoStatus = (TextView)findViewById(R.id.info_status);
-		infoMeterLayout = (LinearLayout)findViewById(R.id.info_meters);
-		infoInsLayout = (LinearLayout)findViewById(R.id.info_ins_layout);
-		infoLayout = (FrameLayout)findViewById(R.id.info_layout);
+		//infoMeterLayout = (LinearLayout)findViewById(R.id.info_meters);
+		//infoInsLayout = (LinearLayout)findViewById(R.id.info_ins_layout);
+		//infoLayout = (FrameLayout)findViewById(R.id.info_layout);
 		elapsedTime = (TextView)findViewById(R.id.elapsed_time);
-		textInstruments = (TextView)findViewById(R.id.text_instruments);
+		//textInstruments = (TextView)findViewById(R.id.text_instruments);
 		titleFlipper = (ViewFlipper)findViewById(R.id.title_flipper);
+		viewerLayout = (FrameLayout)findViewById(R.id.viewer_layout);
 		
-		instrumentList = new InstrumentList(this);
-		infoInsLayout.addView(instrumentList);
+		viewerLayout.addView(new PatternViewer(this));
+		
+		//instrumentList = new InstrumentList(this);
+		//infoInsLayout.addView(instrumentList);
 			
 		if (prefs.getBoolean(Settings.PREF_KEEP_SCREEN_ON, false)) {
-			infoLayout.setKeepScreenOn(true);
+			titleFlipper.setKeepScreenOn(true);
 		}
 		
 		titleFlipper.setInAnimation(this, R.anim.slide_in_right);
@@ -346,10 +350,10 @@ public class Player extends Activity {
         	infoType[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
         }
         
-        TextView instruments = (TextView)findViewById(R.id.text_instruments);
+        /*TextView instruments = (TextView)findViewById(R.id.text_instruments);
         instruments.setTypeface(font);
         instruments.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-        instruments.setLineSpacing(0, 1.2f);
+        instruments.setLineSpacing(0, 1.2f);*/
 		
 		if (!showInfoLine) {
 			infoStatus.setVisibility(LinearLayout.GONE);
@@ -367,7 +371,7 @@ public class Player extends Activity {
 												R.drawable.logo));
 		image.setGravity(Gravity.CENTER);
 		image.setAlpha(48);
-		infoLayout.setBackgroundDrawable(image.getCurrent());
+		viewerLayout.setBackgroundDrawable(image.getCurrent());
 		loopButton.setImageResource(R.drawable.loop_off);
 		
 		loopButton.setOnClickListener(new OnClickListener() {
@@ -556,13 +560,13 @@ public class Player extends Activity {
 
 	       	titleFlipper.showNext();
 	       	
-	       	infoMod.setText(String.format("Channels: %d\n" +
+	       	/*infoMod.setText(String.format("Channels: %d\n" +
 	       			"Length: %d, Patterns: %d\n" +
 	       			"Instruments: %d, Samples: %d\n" +
 	       			"Estimated play time: %dmin%02ds",
 	       			chn, len, pat, ins, smp,
-	       			((time + 500) / 60000), ((time + 500) / 1000) % 60));
-
+	       			((time + 500) / 60000), ((time + 500) / 1000) % 60));*/
+/*
 	       	textInstruments.setText("Instruments");
 	       	instrumentList.setInstruments(insList);
 	       	
@@ -578,7 +582,7 @@ public class Player extends Activity {
 	       		infoMeter = new EmptyMeter(infoMeterLayout, chn);
 	       		break;       		
 	       	}
-	       	
+	*/       	
 	       	/*channelInfo = new ChannelInfo[m.chn];
 	       	for (int i = 0; i < m.chn; i++) {
 	       		channelInfo[i] = new ChannelInfo(activity);
