@@ -75,7 +75,8 @@ public class Player extends Activity {
 	AlertDialog deleteDialog;
 	BroadcastReceiver screenReceiver;
 	Viewer viewer;
-
+	Viewer.Info[] info;
+	
 	private ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			modPlayer = ModInterface.Stub.asInterface(service);
@@ -124,21 +125,13 @@ public class Player extends Activity {
 			finish();
         }
     };
-    
+      
     final Runnable updateInfoRunnable = new Runnable() {
-    	final int[] spd = new int[10];
-    	final int[] bpm = new int[10];
-    	final int[] pos = new int[10];
-    	final int[] pat = new int[10];
-    	final int[] time = new int[10];
     	int oldSpd = -1;
     	int oldBpm = -1;
     	int oldPos = -1;
     	int oldPat = -1;
     	int oldTime = -1;
-    	final int[][] volumes = new int[10][64];
-    	final int[][] instruments = new int[10][64];
-    	final int[][] keys = new int[10][64];
     	int before = 0, now;
     	boolean oldShowElapsed;
     	
@@ -146,29 +139,29 @@ public class Player extends Activity {
         	now = (before + latency) % 10;
         	
 			try {
-				spd[now] = modPlayer.getPlaySpeed();
-				bpm[now] = modPlayer.getPlayBpm();
-				pos[now] = modPlayer.getPlayPos();
-				pat[now] = modPlayer.getPlayPat();
-				time[now] = modPlayer.time() / 10;
+				info[now].spd = modPlayer.getPlaySpeed();
+				info[now].bpm = modPlayer.getPlayBpm();
+				info[now].pos = modPlayer.getPlayPos();
+				info[now].pat = modPlayer.getPlayPat();
+				info[now].time = modPlayer.time() / 10;
 
-				if (spd[before] != oldSpd || bpm[before] != oldBpm
-						|| pos[before] != oldPos || pat[before] != oldPat)
+				if (info[before].spd != oldSpd || info[before].bpm != oldBpm
+						|| info[before].pos != oldPos || info[before].pat != oldPat)
 
 				{
 					infoStatus.setText(String.format(
 							"Speed:%02x BPM:%02x Pos:%02x Pat:%02x",
-							spd[before], bpm[before], pos[before], pat[before]));
+							info[before].spd, info[before].bpm, info[before].pos, info[before].pat));
 
-					oldSpd = spd[before];
-					oldBpm = bpm[before];
-					oldPos = pos[before];
-					oldPat = pat[before];
+					oldSpd = info[before].spd;
+					oldBpm = info[before].bpm;
+					oldPos = info[before].pos;
+					oldPat = info[before].pat;
 
 				}
 
-				if (time[before] != oldTime || showElapsed != oldShowElapsed) {
-					int t = time[before];
+				if (info[before].time != oldTime || showElapsed != oldShowElapsed) {
+					int t = info[before].time;
 					if (t < 0)
 						t = 0;
 					if (showElapsed) {
@@ -180,11 +173,11 @@ public class Player extends Activity {
 								t % 60));
 					}
 
-					oldTime = time[before];
+					oldTime = info[before].time;
 					oldShowElapsed = showElapsed;
 				}
 
-				modPlayer.getChannelData(volumes[now], instruments[now], keys[now]);
+				modPlayer.getChannelData(info[now].volumes, info[now].instruments, info[now].keys);
 				
 				
 				//infoMeter.setVolumes(volumes[before]);
@@ -192,7 +185,7 @@ public class Player extends Activity {
 				/*if (showInsHighlight)
 					instrumentList.setVolumes(volumes[before], instruments[before]);*/
 				
-				viewer.update();
+				viewer.update(info[before]);
 				
 				before++;
 				if (before >= 10)
@@ -336,6 +329,11 @@ public class Player extends Activity {
 
 		viewer = new PatternViewer(this);
 		viewerLayout.addView(viewer);
+		
+		info = new Viewer.Info[10];
+		for (int i = 0; i < 10; i++) {
+			info[i] = viewer.new Info();
+		}
 		
 		//instrumentList = new InstrumentList(this);
 		//infoInsLayout.addView(instrumentList);

@@ -32,8 +32,8 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	}
 
 	@Override
-	public void update() {
-		super.update();
+	public void update(Info info) {
+		super.update(info);
 		
 		Canvas c = null;
 		try {
