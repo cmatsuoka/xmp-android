@@ -48,8 +48,8 @@ public class Player extends Activity {
 	boolean paused = false;
 	boolean finishing = false;
 	boolean showInfoLine, showElapsed, showInsHighlight;
-	TextView[] infoName = new TextView[2];
-	TextView[] infoType = new TextView[2];
+	final TextView[] infoName = new TextView[2];
+	final TextView[] infoType = new TextView[2];
 	TextView infoMod;
 	TextView infoStatus;
 	TextView elapsedTime;
@@ -74,6 +74,7 @@ public class Player extends Activity {
 	Activity activity;
 	AlertDialog deleteDialog;
 	BroadcastReceiver screenReceiver;
+	Viewer viewer;
 
 	private ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -184,10 +185,14 @@ public class Player extends Activity {
 				}
 
 				modPlayer.getChannelData(volumes[now], instruments[now], keys[now]);
+				
+				
 				//infoMeter.setVolumes(volumes[before]);
 				
 				/*if (showInsHighlight)
 					instrumentList.setVolumes(volumes[before], instruments[before]);*/
+				
+				viewer.update();
 				
 				before++;
 				if (before >= 10)
@@ -328,8 +333,9 @@ public class Player extends Activity {
 		//textInstruments = (TextView)findViewById(R.id.text_instruments);
 		titleFlipper = (ViewFlipper)findViewById(R.id.title_flipper);
 		viewerLayout = (FrameLayout)findViewById(R.id.viewer_layout);
-		
-		viewerLayout.addView(new PatternViewer(this));
+
+		viewer = new PatternViewer(this);
+		viewerLayout.addView(viewer);
 		
 		//instrumentList = new InstrumentList(this);
 		//infoInsLayout.addView(instrumentList);
