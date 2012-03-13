@@ -76,7 +76,12 @@
 
 		</LinearLayout>	
 	</ViewFlipper>	
-			
+
+	<FrameLayout android:id="@+id/viewer_layout"
+	    android:layout_weight="0.5"
+	    android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+<!--	    			
 	<FrameLayout android:id="@+id/info_layout"
 		android:layout_weight="1.0"
 		android:layout_width="fill_parent"
@@ -116,7 +121,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="bottom|center_horizontal" />
 	</FrameLayout>
-
+-->
 	<View
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
