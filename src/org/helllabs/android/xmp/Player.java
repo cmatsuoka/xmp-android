@@ -124,12 +124,12 @@ public class Player extends Activity {
     };
     
     final Runnable updateInfoRunnable = new Runnable() {
-    	final int[] tpo = new int[10];
+    	final int[] spd = new int[10];
     	final int[] bpm = new int[10];
     	final int[] pos = new int[10];
     	final int[] pat = new int[10];
     	final int[] time = new int[10];
-    	int oldTpo = -1;
+    	int oldSpd = -1;
     	int oldBpm = -1;
     	int oldPos = -1;
     	int oldPat = -1;
@@ -144,21 +144,21 @@ public class Player extends Activity {
         	now = (before + latency) % 10;
         	
 			try {
-				tpo[now] = modPlayer.getPlayTempo();
+				spd[now] = modPlayer.getPlaySpeed();
 				bpm[now] = modPlayer.getPlayBpm();
 				pos[now] = modPlayer.getPlayPos();
 				pat[now] = modPlayer.getPlayPat();
 				time[now] = modPlayer.time() / 10;
 
-				if (tpo[before] != oldTpo || bpm[before] != oldBpm
+				if (spd[before] != oldSpd || bpm[before] != oldBpm
 						|| pos[before] != oldPos || pat[before] != oldPat)
 
 				{
 					infoStatus.setText(String.format(
-							"Tempo:%02x BPM:%02x Pos:%02x Pat:%02x",
-							tpo[before], bpm[before], pos[before], pat[before]));
+							"Speed:%02x BPM:%02x Pos:%02x Pat:%02x",
+							spd[before], bpm[before], pos[before], pat[before]));
 
-					oldTpo = tpo[before];
+					oldSpd = spd[before];
 					oldBpm = bpm[before];
 					oldPos = pos[before];
 					oldPat = pat[before];

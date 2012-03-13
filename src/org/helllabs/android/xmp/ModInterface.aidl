@@ -9,7 +9,7 @@ interface ModInterface {
 	void pause();
 	int time();
 	void seek(in int seconds);
-	int getPlayTempo();
+	int getPlaySpeed();
 	int getPlayBpm();
 	int getPlayPos();
 	int getPlayPat();

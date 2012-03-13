@@ -379,8 +379,8 @@ public class ModService extends Service {
 			xmp.seek(seconds);
 		}
 		
-		public int getPlayTempo() {
-			return xmp.getPlayTempo();
+		public int getPlaySpeed() {
+			return xmp.getPlaySpeed();
 		}
 		
 		public int getPlayBpm() {

@@ -24,7 +24,7 @@ public class Xmp {
 	public native int time();
 	public native void setMixerAmp(int amp);
 	public native void setMixerMix(int mix);
-	public native int getPlayTempo();
+	public native int getPlaySpeed();
 	public native int getPlayBpm();
 	public native int getPlayPos();
 	public native int getPlayPat();

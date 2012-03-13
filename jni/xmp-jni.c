@@ -224,9 +224,9 @@ Java_org_helllabs_android_xmp_Xmp_setMixerMix(JNIEnv *env, jobject obj, jint mix
 }
 
 JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_getPlayTempo(JNIEnv *env, jobject obj)
+Java_org_helllabs_android_xmp_Xmp_getPlaySpeed(JNIEnv *env, jobject obj)
 {
-	return mi.tempo;
+	return mi.speed;
 }
 
 JNIEXPORT jint JNICALL
