@@ -149,13 +149,13 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		notePaint.setARGB(255, 140, 140, 160);
 		notePaint.setTypeface(Typeface.MONOSPACE);
 		notePaint.setTextSize(fontSize);
-		//notePaint.setAntiAlias(true);
+		notePaint.setAntiAlias(true);
 		
 		insPaint = new Paint();
-		insPaint.setARGB(255, 140, 80, 80);
+		insPaint.setARGB(255, 160, 80, 80);
 		insPaint.setTypeface(Typeface.MONOSPACE);
 		insPaint.setTextSize(fontSize);
-		//insPaint.setAntiAlias(true);
+		insPaint.setAntiAlias(true);
 		
 		headerTextPaint = new Paint();
 		headerTextPaint.setARGB(255, 220, 220, 220);
