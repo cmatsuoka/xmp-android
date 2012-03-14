@@ -207,7 +207,7 @@ public class Player extends Activity {
 				} catch (RemoteException e) { }
     			
     			if (t >= 0) {
-    				if (!seeking && !paused)
+    				if (!seeking && !paused && screenOn)
     					seekBar.setProgress(t);
     			}
     			
