@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -20,6 +21,9 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	private int fontSize, fontHeight, fontWidth;
 	private String[] allNotes = new String[120];
 	private String[] allInstruments = new String[256];
+	private byte[] rowNotes = new byte[64];
+	private byte[] rowInstruments = new byte[64];
+	private int oldRow, oldOrd;
 	
 	private final static String[] notes = {
 		"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "
@@ -36,14 +40,24 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	}
 
 	@Override
-	public void update(Info info) {
-		super.update(info);
+	public void update(ModInterface modPlayer, int[] modVars, Info info) {
+		super.update(modPlayer, modVars, info);
+		int row = info.values[2];
+		int ord = info.values[0];
 		
 		Canvas c = null;
+		
+		if (oldRow == row && oldOrd == ord) {
+			return;
+		}
+		
+		oldRow = row;
+		oldOrd = ord;		
+		
 		try {
 			c = surfaceHolder.lockCanvas(null);
 			synchronized (surfaceHolder) {
-				doDraw(c, info);
+				doDraw(c, modPlayer, modVars, info);
 			}
 		} finally {
 			// do this in a finally so that if an exception is thrown
@@ -55,12 +69,21 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		}
 	}
 
-	private void doDraw(Canvas canvas, Info info) {
+	private void doDraw(Canvas canvas, ModInterface modPlayer, int[] modVars, Info info) {
 		int lines = canvasHeight / fontHeight;
-		int barY = (lines / 2 + 1) * fontHeight;
-		int channels = (int)(canvasWidth / fontWidth / 6);
+		int barLine = lines / 2 + 1;
+		int barY = barLine * fontHeight;
+		int channels = (int)((canvasWidth / fontWidth - 3) / 6);
+		int row = info.values[2];
+		int pat = info.values[1];
+		int chn = modVars[3];
+		int numRows = info.values[3];
 		Rect rect;
 		
+		if (channels > chn) {
+			channels = chn;
+		}
+
 		// Clear screen
 		canvas.drawColor(Color.BLACK);
 
@@ -69,27 +92,38 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		canvas.drawRect(rect, headerPaint);
 		for (int i = 0; i < channels; i++) {
 			int adj = i < 10 ? 1 : 0;
-			canvas.drawText(Integer.toString(i), (i * 6 + 1 + adj) * fontWidth, fontSize, headerTextPaint);
+			canvas.drawText(Integer.toString(i), (3 + i * 6 + 1 + adj) * fontWidth, fontSize, headerTextPaint);
 		}
 		
 		// Current line bar
-		rect = new Rect(0, barY - fontHeight, canvasWidth - 1, barY - 1);
+		rect = new Rect(0, barY - fontHeight + 1, canvasWidth - 1, barY);
 		canvas.drawRect(rect, barPaint);
 		
 		// Pattern data
 		for (int i = 1; i < lines; i++) {
-			int note = 60;
-			int ins = 0;
+			int lineInPattern = i + row - barLine + 1; 
 			int y = (i + 1) * fontHeight;
-			
+
 			for (int j = 0; j < channels; j++) {
-				canvas.drawText(allNotes[note], (j * 6) * fontWidth, y, notePaint);
-				if (ins == 0) {
-					canvas.drawText("--", (j * 6 + 3) * fontWidth, y, insPaint);
+				if (lineInPattern < 0 || lineInPattern >= numRows)
+					continue;
+				
+				try {
+					modPlayer.getPatternRow(pat, lineInPattern, rowNotes, rowInstruments);
+				} catch (RemoteException e) { }
+				
+				canvas.drawText(allInstruments[lineInPattern], 0, y, headerTextPaint);
+				
+				if (rowNotes[j] > 0) {
+					canvas.drawText(allNotes[rowNotes[j] - 1], (3 + j * 6) * fontWidth, y, notePaint);
 				} else {
-					canvas.drawText(allInstruments[ins], (j * 6 + 3) * fontWidth, y, insPaint);
+					canvas.drawText("---", (3 + j * 6) * fontWidth, y, notePaint);
 				}
-				//canvas.drawText("C#205 D 301 ----- ---23 A 3-- G#202 ----- ===-- ---01 C#702", 0, (i + 1) * fontSize, notePaint);
+				if (rowInstruments[j] > 0) {
+					canvas.drawText(allInstruments[rowInstruments[j]], (3 + j * 6 + 3) * fontWidth, y, insPaint);
+				} else {
+					canvas.drawText("--", (3 + j * 6 + 3) * fontWidth, y, insPaint);
+				}
 			}
 		}
 	}
@@ -142,6 +176,9 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		for (int i = 0; i < 256; i++) {
 			allInstruments[i] = new String(String.format("%02x", i));
 		}
+		
+		oldRow = -1;
+		oldOrd = -1;
 	}
 
 	@Override

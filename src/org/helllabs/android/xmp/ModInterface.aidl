@@ -20,6 +20,7 @@ interface ModInterface {
 	boolean toggleLoop();
 	String getFileName();
 	String[] getInstruments();
+	void getPatternRow(int pat, int row, out byte[] rowNotes, out byte[] rowInstruments);
 	boolean deleteFile();
 	
 	void registerCallback(PlayerCallback cb);

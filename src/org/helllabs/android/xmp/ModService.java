@@ -435,6 +435,12 @@ public class ModService extends Service {
 			return xmp.getInstruments();
 		}
 		
+		public void getPatternRow(int pat, int row, byte[] rowNotes, byte[] rowInstruments) {
+			if (isPlaying) {
+				xmp.getPatternRow(pat, row, rowNotes, rowInstruments);
+			}
+		}
+
 		
 		// File management
 		

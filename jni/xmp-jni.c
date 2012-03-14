@@ -396,3 +396,25 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 	(*env)->SetIntArrayRegion(env, ins, 0, XMP_MAX_CHANNELS, _ins);
 	(*env)->SetIntArrayRegion(env, key, 0, XMP_MAX_CHANNELS, _key);
 }
+
+JNIEXPORT void JNICALL
+Java_org_helllabs_android_xmp_Xmp_getPatternRow(JNIEnv *env, jobject obj, jint pat, jint row, jbyteArray rowNotes, jbyteArray rowInstruments)
+{
+	struct xmp_pattern *xxp = mi.mod->xxp[pat];
+	unsigned char row_note[XMP_MAX_CHANNELS];
+	unsigned char row_ins[XMP_MAX_CHANNELS];
+	int i;
+
+	for (i = 0; i < mi.mod->chn; i++) {
+		struct xmp_track *xxt = mi.mod->xxt[xxp->index[i]];
+		struct xmp_event *e = &xxt->event[row];
+
+		row_note[i] = e->note;
+		row_ins[i] = e->ins;
+	}
+
+	(*env)->SetByteArrayRegion(env, rowNotes,
+				0, XMP_MAX_CHANNELS, row_note);
+	(*env)->SetByteArrayRegion(env, rowInstruments,
+				0, XMP_MAX_CHANNELS, row_ins);
+}

@@ -76,6 +76,7 @@ public class Player extends Activity {
 	BroadcastReceiver screenReceiver;
 	Viewer viewer;
 	Viewer.Info[] info;
+	int[] modVars = new int[6];
 	
 	private ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -185,7 +186,7 @@ public class Player extends Activity {
 				/*if (showInsHighlight)
 					instrumentList.setVolumes(volumes[before], instruments[before]);*/
 				
-				viewer.update(info[before]);
+				viewer.update(modPlayer, modVars, info[before]);
 				
 				before++;
 				if (before >= 10)
@@ -529,6 +530,9 @@ public class Player extends Activity {
 	void showNewMod(String fileName, String[] instruments) {
 		this.fileName = fileName;
 		this.insList = instruments;
+		try {
+			modPlayer.getModVars(modVars);
+		} catch (RemoteException e) { }
 		if (deleteDialog != null)
 			deleteDialog.cancel();
 		handler.post(showNewModRunnable);
@@ -536,22 +540,20 @@ public class Player extends Activity {
 	
 	final Runnable showNewModRunnable = new Runnable() {
 		public void run() {
-			int[] vars = new int[6];
 			String name, type;
 			try {
-				modPlayer.getModVars(vars);
 				name = modPlayer.getModName();
 				type = modPlayer.getModType();
 			} catch (RemoteException e) {
 				name = "";
 				type = "";
 			}
-			int time = vars[0];
-			int len = vars[1];
+			int time = modVars[0];
+			/*int len = vars[1];
 			int pat = vars[2];
 			int chn = vars[3];
 			int ins = vars[4];
-			int smp = vars[5];
+			int smp = vars[5];*/
 			
 			totalTime = time / 1000;
 	       	seekBar.setProgress(0);
