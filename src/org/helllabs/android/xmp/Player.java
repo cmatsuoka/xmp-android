@@ -214,7 +214,7 @@ public class Player extends Activity {
 					sleep(100);
 				} catch (InterruptedException e) { }
 				
-				if (screenOn) {
+				if (screenOn && !paused) {
 					handler.post(updateInfoRunnable);
 				}
     		} while (t >= 0 && !endPlay);
