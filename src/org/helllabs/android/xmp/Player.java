@@ -199,9 +199,13 @@ public class Player extends Activity {
 	private class ProgressThread extends Thread {
 		@Override
     	public void run() {
+			final long frameTime = 1000000000 / 25;
+			long lastTimer = System.nanoTime();
+			long now;
+					
     		int t = 0;
     		
-    		do {
+    		do {   			
     			try {
 					t = modPlayer.time() / 100;
 				} catch (RemoteException e) { }
@@ -212,7 +216,10 @@ public class Player extends Activity {
     			}
     			
     			try {
-					sleep(100);
+        			while ((now = System.nanoTime()) - lastTimer < frameTime) {
+        				sleep(10);
+        			}
+        			lastTimer = now;
 				} catch (InterruptedException e) { }
 				
 				if (screenOn && !paused) {
