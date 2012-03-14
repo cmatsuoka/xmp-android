@@ -20,7 +20,7 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	private Paint headerPaint, headerTextPaint, notePaint, insPaint, barPaint;
 	private int fontSize, fontHeight, fontWidth;
 	private String[] allNotes = new String[120];
-	private String[] allInstruments = new String[256];
+	private String[] hexByte = new String[256];
 	private byte[] rowNotes = new byte[64];
 	private byte[] rowInstruments = new byte[64];
 	private int oldRow, oldOrd;
@@ -112,7 +112,7 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 					modPlayer.getPatternRow(pat, lineInPattern, rowNotes, rowInstruments);
 				} catch (RemoteException e) { }
 				
-				canvas.drawText(allInstruments[lineInPattern], 0, y, headerTextPaint);
+				canvas.drawText(hexByte[lineInPattern], 0, y, headerTextPaint);
 				
 				if (rowNotes[j] > 0x80) {
 					canvas.drawText("===", (3 + j * 6) * fontWidth, y, notePaint);
@@ -122,7 +122,7 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 					canvas.drawText("---", (3 + j * 6) * fontWidth, y, notePaint);
 				}
 				if (rowInstruments[j] > 0) {
-					canvas.drawText(allInstruments[rowInstruments[j]], (3 + j * 6 + 3) * fontWidth, y, insPaint);
+					canvas.drawText(hexByte[rowInstruments[j]], (3 + j * 6 + 3) * fontWidth, y, insPaint);
 				} else {
 					canvas.drawText("--", (3 + j * 6 + 3) * fontWidth, y, insPaint);
 				}
@@ -176,7 +176,7 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 			allNotes[i] = new String(notes[i % 12] + (i / 12));
 		}
 		for (int i = 0; i < 256; i++) {
-			allInstruments[i] = new String(String.format("%02x", i));
+			hexByte[i] = new String(String.format("%02X", i));
 		}
 		
 		oldRow = -1;
