@@ -103,17 +103,17 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		for (int i = 1; i < lines; i++) {
 			int lineInPattern = i + row - barLine + 1; 
 			int y = (i + 1) * fontHeight;
-
-			for (int j = 0; j < channels; j++) {
-				if (lineInPattern < 0 || lineInPattern >= numRows)
-					continue;
-				
+			
+			if (lineInPattern < 0 || lineInPattern >= numRows)
+				continue;
+			
+			canvas.drawText(hexByte[lineInPattern], 0, y, headerTextPaint);
+			
+			for (int j = 0; j < channels; j++) {	
 				try {
 					modPlayer.getPatternRow(pat, lineInPattern, rowNotes, rowInstruments);
 				} catch (RemoteException e) { }
-				
-				canvas.drawText(hexByte[lineInPattern], 0, y, headerTextPaint);
-				
+					
 				if (rowNotes[j] > 0x80) {
 					canvas.drawText("===", (3 + j * 6) * fontWidth, y, notePaint);
 				} else if (rowNotes[j] > 0) {
