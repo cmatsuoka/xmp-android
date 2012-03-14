@@ -114,7 +114,9 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 				
 				canvas.drawText(allInstruments[lineInPattern], 0, y, headerTextPaint);
 				
-				if (rowNotes[j] > 0) {
+				if (rowNotes[j] > 0x80) {
+					canvas.drawText("===", (3 + j * 6) * fontWidth, y, notePaint);
+				} else if (rowNotes[j] > 0) {
 					canvas.drawText(allNotes[rowNotes[j] - 1], (3 + j * 6) * fontWidth, y, notePaint);
 				} else {
 					canvas.drawText("---", (3 + j * 6) * fontWidth, y, notePaint);
