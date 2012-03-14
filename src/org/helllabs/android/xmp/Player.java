@@ -139,24 +139,26 @@ public class Player extends Activity {
         	now = (before + latency) % 10;
         	
 			try {
-				info[now].spd = modPlayer.getPlaySpeed();
+				modPlayer.getInfo(info[now].values);
+				info[now].time = modPlayer.time() / 1000;	// time
+				/*info[now].spd = modPlayer.getPlaySpeed();
 				info[now].bpm = modPlayer.getPlayBpm();
 				info[now].pos = modPlayer.getPlayPos();
 				info[now].pat = modPlayer.getPlayPat();
-				info[now].time = modPlayer.time() / 10;
+				info[now].time = modPlayer.time() / 10;*/
 
-				if (info[before].spd != oldSpd || info[before].bpm != oldBpm
-						|| info[before].pos != oldPos || info[before].pat != oldPat)
+				if (info[before].values[5] != oldSpd || info[before].values[6] != oldBpm
+						|| info[before].values[0] != oldPos || info[before].values[1] != oldPat)
 
 				{
 					infoStatus.setText(String.format(
 							"Speed:%02x BPM:%02x Pos:%02x Pat:%02x",
-							info[before].spd, info[before].bpm, info[before].pos, info[before].pat));
+							info[before].values[5], info[before].values[6], info[before].values[0], info[before].values[1]));
 
-					oldSpd = info[before].spd;
-					oldBpm = info[before].bpm;
-					oldPos = info[before].pos;
-					oldPat = info[before].pat;
+					oldSpd = info[before].values[5];
+					oldBpm = info[before].values[6];
+					oldPos = info[before].values[0];
+					oldPat = info[before].values[1];
 
 				}
 
@@ -202,7 +204,7 @@ public class Player extends Activity {
     		
     		do {
     			try {
-					t = modPlayer.time();
+					t = modPlayer.time() / 100;
 				} catch (RemoteException e) { }
     			
     			if (t >= 0) {

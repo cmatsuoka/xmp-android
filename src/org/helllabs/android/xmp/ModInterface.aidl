@@ -7,12 +7,9 @@ interface ModInterface {
 	void add(in String[] files);
 	void stop();
 	void pause();
-	int time();
+	void getInfo(out int[] values);
 	void seek(in int seconds);
-	int getPlaySpeed();
-	int getPlayBpm();
-	int getPlayPos();
-	int getPlayPat();
+	int time();
 	void getModVars(out int[] vars);
 	String getModName();
 	String getModType();

@@ -22,12 +22,9 @@ public class Xmp {
 	public native int decGvol();
 	public native int seek(int time);
 	public native int time();
+	public native void getInfo(int[] values);
 	public native void setMixerAmp(int amp);
 	public native void setMixerMix(int mix);
-	public native int getPlaySpeed();
-	public native int getPlayBpm();
-	public native int getPlayPos();
-	public native int getPlayPat();
 	public native int getLoopCount();
 	public native void getModVars(int[] vars);
 	public native static String getVersion();

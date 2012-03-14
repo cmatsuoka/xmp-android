@@ -6,11 +6,8 @@ import android.view.SurfaceView;
 public abstract class Viewer extends SurfaceView {
 	
     public class Info {
-    	int spd;
-    	int bpm;
-    	int pos;
-    	int pat;
     	int time;
+    	int[] values = new int[7];	// order pattern row num_rows frame speed bpm
     	int[] volumes = new int[64];
     	int[] instruments = new int[64];
     	int[] keys = new int[64];

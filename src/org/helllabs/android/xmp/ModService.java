@@ -371,28 +371,16 @@ public class ModService extends Service {
 	    	paused = !paused;
 	    }
 	    
-	    public int time() {
-	    	return xmp.time() / 100;
+	    public void getInfo(int[] values) {
+	    	xmp.getInfo(values);
 	    }
 	
 		public void seek(int seconds) {
 			xmp.seek(seconds);
 		}
 		
-		public int getPlaySpeed() {
-			return xmp.getPlaySpeed();
-		}
-		
-		public int getPlayBpm() {
-			return xmp.getPlayBpm();
-		}
-		
-		public int getPlayPos() {
-			return xmp.getPlayPos();
-		}
-		
-		public int getPlayPat() {
-			return xmp.getPlayPat();
+		public int time() {
+			return xmp.time();
 		}
 		
 		public void getModVars(int[] vars) {

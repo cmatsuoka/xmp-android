@@ -128,7 +128,7 @@ Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint sta
 	}
 
 	_playing = 1;
-	return xmp_player_start(ctx, start, rate, flags);
+	return xmp_player_start(ctx, rate, flags);
 }
 
 JNIEXPORT jint JNICALL
@@ -209,6 +209,22 @@ JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_time(JNIEnv *env, jobject obj)
 {
 	return _playing ? mi.time : -1;
+}
+
+JNIEXPORT void JNICALL
+Java_org_helllabs_android_xmp_Xmp_getInfo(JNIEnv *env, jobject obj, jintArray values)
+{
+	int v[7];
+
+	v[0] = mi.order;
+	v[1] = mi.pattern;
+	v[2] = mi.row;
+	v[3] = mi.num_rows;
+	v[4] = mi.frame;
+	v[5] = mi.speed;
+	v[6] = mi.bpm;
+
+	(*env)->SetIntArrayRegion(env, values, 0, 7, v);
 }
 
 JNIEXPORT jint JNICALL
