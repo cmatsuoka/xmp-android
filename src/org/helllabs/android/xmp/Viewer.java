@@ -19,7 +19,11 @@ public abstract class Viewer extends SurfaceView {
 	}
 	
 
-	public void update(ModInterface modPlayer, int modVars[], Info info) {
+	public void update(ModInterface modPlayer, Info info) {
+		
+	}
+	
+	public void setup(int[] modVars) {
 		
 	}
 }

@@ -77,6 +77,7 @@ public class Player extends Activity {
 	Viewer viewer;
 	Viewer.Info[] info;
 	int[] modVars = new int[6];
+	static final int frameRate = 25;
 	
 	private ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -137,7 +138,7 @@ public class Player extends Activity {
     	boolean oldShowElapsed;
     	
         public void run() {
-        	now = (before + latency) % 10;
+        	now = (before + (frameRate * latency / 1000) + 1) % frameRate;
         	
 			try {
 				modPlayer.getInfo(info[now].values);
@@ -186,10 +187,10 @@ public class Player extends Activity {
 				/*if (showInsHighlight)
 					instrumentList.setVolumes(volumes[before], instruments[before]);*/
 				
-				viewer.update(modPlayer, modVars, info[before]);
+				viewer.update(modPlayer, info[before]);
 				
 				before++;
-				if (before >= 10)
+				if (before >= frameRate)
 					before = 0;
 
 			} catch (RemoteException e) { }
@@ -199,20 +200,24 @@ public class Player extends Activity {
 	private class ProgressThread extends Thread {
 		@Override
     	public void run() {
-			final long frameTime = 1000000000 / 25;
+			final long frameTime = 1000000000 / frameRate;
 			long lastTimer = System.nanoTime();
 			long now;
 					
     		int t = 0;
     		
-    		do {   			
-    			try {
-					t = modPlayer.time() / 100;
-				} catch (RemoteException e) { }
-    			
-    			if (t >= 0) {
-    				if (!seeking && !paused && screenOn)
-    					seekBar.setProgress(t);
+    		do {
+    			synchronized (modPlayer) {
+	    			try {
+						t = modPlayer.time() / 100;
+					} catch (RemoteException e) { }
+	    			
+	    			if (!paused && screenOn) {
+	    				if (!seeking && t >= 0) {
+	    					seekBar.setProgress(t);
+	    				}
+						handler.post(updateInfoRunnable);
+					}				
     			}
     			
     			try {
@@ -221,10 +226,6 @@ public class Player extends Activity {
         			}
         			lastTimer = now;
 				} catch (InterruptedException e) { }
-				
-				if (screenOn && !paused) {
-					handler.post(updateInfoRunnable);
-				}
     		} while (t >= 0 && !endPlay);
     		
     		seekBar.setProgress(0);
@@ -315,10 +316,11 @@ public class Player extends Activity {
 		showInsHighlight = prefs.getBoolean(Settings.PREF_SHOW_INS_HIGHLIGHT, true);
 		showElapsed = true;
 		
-		latency = prefs.getInt(Settings.PREF_BUFFER_MS, 500) / 100;
-		if (latency > 9)
-			latency = 9;
-		
+		latency = prefs.getInt(Settings.PREF_BUFFER_MS, 500);
+		if (latency > 1000) {
+			latency = 1000;
+		}
+
 		onNewIntent(getIntent());
     	
 		infoName[0] = (TextView)findViewById(R.id.info_name_0);
@@ -338,8 +340,8 @@ public class Player extends Activity {
 		viewer = new PatternViewer(this);
 		viewerLayout.addView(viewer);
 		
-		info = new Viewer.Info[10];
-		for (int i = 0; i < 10; i++) {
+		info = new Viewer.Info[frameRate];
+		for (int i = 0; i < frameRate; i++) {
 			info[i] = viewer.new Info();
 		}
 		
@@ -573,6 +575,8 @@ public class Player extends Activity {
 
 	       	titleFlipper.showNext();
 	       	
+	       	viewer.setup(modVars);
+	       	
 	       	/*infoMod.setText(String.format("Channels: %d\n" +
 	       			"Length: %d, Patterns: %d\n" +
 	       			"Instruments: %d, Samples: %d\n" +
@@ -622,9 +626,12 @@ public class Player extends Activity {
 		
 		finishing = true;
 		
-		try {
-			modPlayer.stop();
-		} catch (RemoteException e1) { }
+		synchronized (modPlayer) {
+			try {
+				modPlayer.stop();
+			} catch (RemoteException e1) { }
+		}
+		
 		paused = false;
 
 		if (progressThread != null && progressThread.isAlive()) {

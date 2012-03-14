@@ -14,7 +14,6 @@ import android.view.SurfaceHolder;
 
 public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	private Context context;
-	//private static final byte noteMap[] = new byte[32 * 256];
 	private SurfaceHolder surfaceHolder;        
 	private int canvasHeight, canvasWidth;
 	private Paint headerPaint, headerTextPaint, notePaint, insPaint, barPaint;
@@ -24,6 +23,7 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	private byte[] rowNotes = new byte[64];
 	private byte[] rowInstruments = new byte[64];
 	private int oldRow, oldOrd;
+	private int[] modVars;
 	
 	private final static String[] notes = {
 		"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "
@@ -38,10 +38,18 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 			canvasHeight = height;
 		}
 	}
+	
+	@Override
+	public void setup(int[] modVars) {
+		this.modVars = modVars;
+		
+		oldRow = -1;
+		oldOrd = -1;
+	}
 
 	@Override
-	public void update(ModInterface modPlayer, int[] modVars, Info info) {
-		super.update(modPlayer, modVars, info);
+	public void update(ModInterface modPlayer, Info info) {
+		super.update(modPlayer, info);
 		int row = info.values[2];
 		int ord = info.values[0];
 		
@@ -178,9 +186,7 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		for (int i = 0; i < 256; i++) {
 			hexByte[i] = new String(String.format("%02X", i));
 		}
-		
-		oldRow = -1;
-		oldOrd = -1;
+
 	}
 
 	@Override
