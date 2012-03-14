@@ -14,12 +14,17 @@ import android.view.SurfaceHolder;
 public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	private Context context;
 	private static final byte noteMap[] = new byte[32 * 256];
-
-	//class PatternThread extends Thread {
 	private SurfaceHolder surfaceHolder;        
 	private int canvasHeight, canvasWidth;
-	private Paint notePaint, barPaint;
+	private Paint headerPaint, headerTextPaint, notePaint, insPaint, barPaint;
 	private int fontSize;
+	private float fontWidth;
+	private char[] charBuf = new char[2];
+	private StringBuffer stringBuf = new StringBuffer(3);
+	
+	final static String[] notes = {
+		"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "
+	};
 
 
 	/* Callback invoked when the surface dimensions change. */
@@ -52,19 +57,50 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		}
 	}
 
-
 	private void doDraw(Canvas canvas, Info info) {
 		int lines = canvasHeight / fontSize;
-		int barY = (lines / 2) * fontSize;
+		int barY = (lines / 2 + 1) * fontSize;
+		int channels = (int)(canvasWidth / fontWidth / 6);
 		Rect rect;
-
-		//canvas.drawLine(10, 10, 20, 20, notePaint);
-		rect = new Rect(0, barY - fontSize, canvasWidth - 1, barY);
-
+		
+		// Clear screen
 		canvas.drawColor(Color.BLACK);
+
+		// Header
+		rect = new Rect(0, 0, canvasWidth - 1, fontSize);
+		canvas.drawRect(rect, headerPaint);
+		for (int i = 0; i < channels; i++) {
+			Util.toString(i, charBuf);
+			stringBuf.delete(0, stringBuf.length());
+			stringBuf.append(charBuf);
+			canvas.drawText(stringBuf.toString(), (i * 6 + 1) * fontWidth, fontSize, headerTextPaint);
+		}
+		
+		// Current line bar
+		rect = new Rect(0, barY - fontSize, canvasWidth - 1, barY);
 		canvas.drawRect(rect, barPaint);
-		for (int i = 0; i < lines; i++) {
-			canvas.drawText("C#2 D 3 --- --- A 3 G#2 --- === --- C#7", 0, (i + 1) * fontSize, notePaint);
+		
+		// Pattern data
+		for (int i = 1; i < lines; i++) {
+			int note = 60;
+			int ins = 0;
+			int y = (i + 1) * fontSize;
+			
+			for (int j = 0; j < channels; j++) {
+				Util.toString(note / 12, charBuf);
+				stringBuf.delete(0, stringBuf.length());
+				stringBuf.append(notes[note % 12]).append(charBuf[1]);
+				canvas.drawText(stringBuf.toString(), (j * 6) * fontWidth, y, notePaint);
+				if (ins == 0) {
+					canvas.drawText("--", (j * 6 + 3) * fontWidth, y, insPaint);
+				} else {
+					Util.toHex(ins, charBuf);
+					stringBuf.delete(0, stringBuf.length());
+					stringBuf.append(charBuf);
+					canvas.drawText(stringBuf.toString(), (j * 6 + 3) * fontWidth, y, insPaint);
+				}
+				//canvas.drawText("C#205 D 301 ----- ---23 A 3-- G#202 ----- ===-- ---01 C#702", 0, (i + 1) * fontSize, notePaint);
+			}
 		}
 	}
 
@@ -81,15 +117,30 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		this.surfaceHolder = surfaceHolder;
 		this.context = context;
 
-		fontSize = 10;
+		fontSize = getResources().getDimensionPixelSize(R.dimen.patternview_font_size);
 
 		notePaint = new Paint();
 		notePaint.setARGB(255, 140, 140, 160);
 		notePaint.setTypeface(Typeface.MONOSPACE);
 		notePaint.setTextSize(fontSize);
-
+		
+		insPaint = new Paint();
+		insPaint.setARGB(255, 140, 80, 80);
+		insPaint.setTypeface(Typeface.MONOSPACE);
+		insPaint.setTextSize(fontSize);
+		
+		headerTextPaint = new Paint();
+		headerTextPaint.setARGB(255, 220, 220, 220);
+		headerTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
+		headerTextPaint.setTextSize(fontSize);
+		
+		headerPaint = new Paint();
+		headerPaint.setARGB(255, 140, 140, 220);
+		
 		barPaint = new Paint();
 		barPaint.setARGB(255, 40, 40, 40);
+		
+		fontWidth = notePaint.measureText("X");
 	}
 
 	@Override
