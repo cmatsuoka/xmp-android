@@ -149,7 +149,6 @@ public class Player extends Activity {
 
 				if (info[before].values[5] != oldSpd || info[before].values[6] != oldBpm
 						|| info[before].values[0] != oldPos || info[before].values[1] != oldPat)
-
 				{
 					infoStatus.setText(String.format(
 							"Speed:%02x BPM:%02x Pos:%02x Pat:%02x",
@@ -159,7 +158,6 @@ public class Player extends Activity {
 					oldBpm = info[before].values[6];
 					oldPos = info[before].values[0];
 					oldPat = info[before].values[1];
-
 				}
 
 				if (info[before].time != oldTime || showElapsed != oldShowElapsed) {

@@ -25,7 +25,6 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "
 	};
 
-
 	/* Callback invoked when the surface dimensions change. */
 	public void setSurfaceSize(int width, int height) {
 		// synchronized to make sure these all change atomically
