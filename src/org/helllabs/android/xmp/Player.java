@@ -117,10 +117,9 @@ public class Player extends Activity {
         }
         
         public void endPlayCallback() {
-        	synchronized (modPlayer) {
-        		Log.i("Xmp Player", "End progress thread");
-        		endPlay = true;
-        	}
+       		Log.i("Xmp Player", "End progress thread");
+       		endPlay = true;
+
 			if (progressThread != null && progressThread.isAlive()) {
 				try {
 					progressThread.join();
@@ -222,7 +221,7 @@ public class Player extends Activity {
     			}
     			
     			try {
-        			while ((now = System.nanoTime()) - lastTimer < frameTime) {
+        			while ((now = System.nanoTime()) - lastTimer < frameTime && !endPlay) {
         				sleep(10);
         			}
         			lastTimer = now;

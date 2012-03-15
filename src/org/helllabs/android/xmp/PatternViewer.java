@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 // http://developer.android.com/guide/topics/graphics/2d-graphics.html
@@ -21,7 +22,7 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	private String[] hexByte = new String[256];
 	private byte[] rowNotes = new byte[64];
 	private byte[] rowInstruments = new byte[64];
-	private int oldRow, oldOrd;
+	private int oldRow, oldOrd, oldDeltaX;
 	private int[] modVars;
 	
 	private final static String[] notes = {
@@ -43,6 +44,11 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		
 		oldRow = -1;
 		oldOrd = -1;
+		oldDeltaX = -1;
+		
+		synchronized (isDown) {
+			posX = 0;
+		}
 	}
 
 	@Override
@@ -54,13 +60,14 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		
 		Canvas c = null;
 		
-		if (oldRow == row && oldOrd == ord) {
+		if (oldRow == row && oldOrd == ord && oldDeltaX == deltaX) {
 			return;
 		}
 		
 		if (numRows != 0) {		// Skip first invalid infos
 			oldRow = row;
 			oldOrd = ord;
+			oldDeltaX = deltaX;
 		}
 		
 		try {
@@ -93,15 +100,29 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 			channels = chn;
 		}
 
+		int biasX;
+		
+		synchronized (isDown) {
+			int max = canvasWidth - (chn * 6 + 2) * fontWidth;
+			biasX = deltaX + posX;
+
+			if (biasX > 0) {
+				biasX = posX = 0;
+			}
+			if (biasX < max) {
+				biasX = max;
+			}
+		}
+
 		// Clear screen
 		canvas.drawColor(Color.BLACK);
 
 		// Header
 		rect = new Rect(0, 0, canvasWidth - 1, fontHeight - 1);
 		canvas.drawRect(rect, headerPaint);
-		for (int i = 0; i < channels; i++) {
+		for (int i = 0; i < chn; i++) {
 			int adj = i < 10 ? 1 : 0;
-			canvas.drawText(Integer.toString(i), (3 + i * 6 + 1 + adj) * fontWidth, fontSize, headerTextPaint);
+			canvas.drawText(Integer.toString(i), biasX + (3 + i * 6 + 1 + adj) * fontWidth, fontSize, headerTextPaint);
 		}
 		
 		// Current line bar
@@ -111,29 +132,32 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		// Pattern data
 		for (int i = 1; i < lines; i++) {
 			int lineInPattern = i + row - barLine + 1; 
-			int y = (i + 1) * fontHeight;
+			int x, y = (i + 1) * fontHeight;
 			
 			if (lineInPattern < 0 || lineInPattern >= numRows)
 				continue;
 			
-			canvas.drawText(hexByte[lineInPattern], 0, y, headerTextPaint);
+			canvas.drawText(hexByte[lineInPattern], biasX, y, headerTextPaint);
 			
-			for (int j = 0; j < channels; j++) {	
+			for (int j = 0; j < chn; j++) {	
 				try {
 					modPlayer.getPatternRow(pat, lineInPattern, rowNotes, rowInstruments);
 				} catch (RemoteException e) { }
 					
+				x = biasX + (3 + j * 6) * fontWidth;
 				if (rowNotes[j] > 0x80) {
-					canvas.drawText("===", (3 + j * 6) * fontWidth, y, notePaint);
+					canvas.drawText("===", x, y, notePaint);
 				} else if (rowNotes[j] > 0) {
-					canvas.drawText(allNotes[rowNotes[j] - 1], (3 + j * 6) * fontWidth, y, notePaint);
+					canvas.drawText(allNotes[rowNotes[j] - 1], x, y, notePaint);
 				} else {
-					canvas.drawText("---", (3 + j * 6) * fontWidth, y, notePaint);
+					canvas.drawText("---", x, y, notePaint);
 				}
+				
+				x = biasX + (3 + j * 6 + 3) * fontWidth;
 				if (rowInstruments[j] > 0) {
-					canvas.drawText(hexByte[rowInstruments[j]], (3 + j * 6 + 3) * fontWidth, y, insPaint);
+					canvas.drawText(hexByte[rowInstruments[j]], x, y, insPaint);
 				} else {
-					canvas.drawText("--", (3 + j * 6 + 3) * fontWidth, y, insPaint);
+					canvas.drawText("--", x, y, insPaint);
 				}
 			}
 		}
