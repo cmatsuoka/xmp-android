@@ -16,7 +16,7 @@ static int _pan[XMP_MAX_CHANNELS];
 static int _ins[XMP_MAX_CHANNELS];
 static int _key[XMP_MAX_CHANNELS];
 static int _last_key[XMP_MAX_CHANNELS];
-static int _decay = 8;
+static int _decay = 4;
 
 
 /* For ModList */

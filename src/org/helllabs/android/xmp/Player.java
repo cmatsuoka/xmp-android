@@ -632,6 +632,9 @@ public class Player extends Activity {
 			info = new Viewer.Info[frameRate];
 			for (int i = 0; i < frameRate; i++) {
 				info[i] = viewer.new Info();
+				for (int j = 0; j < 64; j++) {
+					info[i].pans[j] = 0x80;		// Initialize to center
+				}
 			}
 			
 			stopUpdate = false;
