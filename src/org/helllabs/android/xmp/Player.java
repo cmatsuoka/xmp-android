@@ -184,16 +184,14 @@ public class Player extends Activity {
 				}
 
 				modPlayer.getChannelData(info[now].volumes, info[now].instruments, info[now].keys);
-				
-				
+								
 				//infoMeter.setVolumes(volumes[before]);
 				
 				/*if (showInsHighlight)
 					instrumentList.setVolumes(volumes[before], instruments[before]);*/
-				
+
 				viewer.update(modPlayer, info[before]);
-
-
+				
 			} catch (Exception e) {
 				
 			} finally {
@@ -346,11 +344,7 @@ public class Player extends Activity {
 
 		viewer = new PatternViewer(this);
 		viewerLayout.addView(viewer);
-		
-		info = new Viewer.Info[frameRate];
-		for (int i = 0; i < frameRate; i++) {
-			info[i] = viewer.new Info();
-		}
+
 		
 		//instrumentList = new InstrumentList(this);
 		//infoInsLayout.addView(instrumentList);
@@ -613,7 +607,12 @@ public class Player extends Activity {
 	       		channelInfo[i].setText(Integer.toString(i));
 	       		channelLayout.addView(channelInfo[i]);
 	       	}*/
-	       	
+			
+			info = new Viewer.Info[frameRate];
+			for (int i = 0; i < frameRate; i++) {
+				info[i] = viewer.new Info();
+			}
+			
 	       	if (progressThread == null || !progressThread.isAlive()) {
 	       		progressThread = new ProgressThread();
 	       		progressThread.start();
