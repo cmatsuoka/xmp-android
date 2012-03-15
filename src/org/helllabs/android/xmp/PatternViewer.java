@@ -52,6 +52,7 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		super.update(modPlayer, info);
 		int row = info.values[2];
 		int ord = info.values[0];
+		int numRows = info.values[3];
 		
 		Canvas c = null;
 		
@@ -59,13 +60,15 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 			return;
 		}
 		
-		oldRow = row;
-		oldOrd = ord;		
+		if (numRows != 0) {		// Skip first invalid infos
+			oldRow = row;
+			oldOrd = ord;
+		}
 		
 		try {
 			c = surfaceHolder.lockCanvas(null);
 			synchronized (surfaceHolder) {
-				doDraw(c, modPlayer, modVars, info);
+				doDraw(c, modPlayer, info);
 			}
 		} finally {
 			// do this in a finally so that if an exception is thrown
@@ -77,7 +80,7 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		}
 	}
 
-	private void doDraw(Canvas canvas, ModInterface modPlayer, int[] modVars, Info info) {
+	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
 		int lines = canvasHeight / fontHeight;
 		int barLine = lines / 2 + 1;
 		int barY = barLine * fontHeight;
