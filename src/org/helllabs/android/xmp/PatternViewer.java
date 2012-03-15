@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 // http://developer.android.com/guide/topics/graphics/2d-graphics.html
@@ -140,8 +139,10 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 			
 			if (lineInPattern < 0 || lineInPattern >= numRows)
 				continue;
-			
-			canvas.drawText(hexByte[lineInPattern], biasX, y, headerTextPaint);
+
+			if (biasX > -2 * fontWidth) {
+				canvas.drawText(hexByte[lineInPattern], biasX, y, headerTextPaint);
+			}
 			
 			for (int j = 0; j < chn; j++) {	
 				try {
@@ -149,6 +150,11 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 				} catch (RemoteException e) { }
 					
 				x = biasX + (3 + j * 6) * fontWidth;
+				
+				if (x > canvasWidth || x < -6 * fontWidth) {
+					continue;
+				}
+				
 				if (rowNotes[j] > 0x80) {
 					canvas.drawText("===", x, y, notePaint);
 				} else if (rowNotes[j] > 0) {
