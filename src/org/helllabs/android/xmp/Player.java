@@ -143,7 +143,7 @@ public class Player extends Activity {
   
 			try {
 				modPlayer.getInfo(info[now].values);							
-				info[now].time = modPlayer.time() / 1000;	// time
+				info[now].time = modPlayer.time() / 1000;
 				/*info[now].spd = modPlayer.getPlaySpeed();
 				info[now].bpm = modPlayer.getPlayBpm();
 				info[now].pos = modPlayer.getPlayPos();
@@ -151,7 +151,7 @@ public class Player extends Activity {
 				info[now].time = modPlayer.time() / 10;*/
 				
 				if (info[before].values[0] < 0) {
-					return;
+					throw new Exception();
 				}
 
 				if (info[before].values[5] != oldSpd || info[before].values[6] != oldBpm
@@ -192,12 +192,15 @@ public class Player extends Activity {
 					instrumentList.setVolumes(volumes[before], instruments[before]);*/
 				
 				viewer.update(modPlayer, info[before]);
+
+
+			} catch (Exception e) {
 				
+			} finally {
 				before++;
 				if (before >= frameRate)
 					before = 0;
-
-			} catch (RemoteException e) { }
+			}
         }
     };
     
@@ -225,12 +228,12 @@ public class Player extends Activity {
     			}
     			
     			try {
-        			while ((now = System.nanoTime()) - lastTimer < frameTime && !endPlay) {
+        			while ((now = System.nanoTime()) - lastTimer < frameTime && !endPlay && !finishing) {
         				sleep(10);
         			}
         			lastTimer = now;
 				} catch (InterruptedException e) { }
-    		} while (t >= 0 && !endPlay);
+    		} while (t >= 0 && !endPlay && !finishing);
     		
     		seekBar.setProgress(0);
     	}
