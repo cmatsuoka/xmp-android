@@ -404,10 +404,10 @@ public class ModService extends Service {
 			return xmp.getModType();
 		}
 		
-		public void getChannelData(int[] volumes, int[] instruments, int[] keys) {
+		public void getChannelData(int[] volumes, int[] pans, int[] instruments, int[] keys) {
 			synchronized (updateData) {
 				if (updateData) {
-					xmp.getChannelData(volumes, instruments, keys);
+					xmp.getChannelData(volumes, pans, instruments, keys);
 				}
 			}
 		}

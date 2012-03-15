@@ -76,7 +76,7 @@ public class Player extends Activity {
 	BroadcastReceiver screenReceiver;
 	Viewer viewer;
 	Viewer.Info[] info;
-	int[] modVars = new int[6];
+	int[] modVars = new int[10];
 	static final int frameRate = 25;
 	Boolean stopUpdate;
 	
@@ -195,7 +195,7 @@ public class Player extends Activity {
 						oldShowElapsed = showElapsed;
 					}
 	
-					modPlayer.getChannelData(info[now].volumes, info[now].instruments, info[now].keys);
+					modPlayer.getChannelData(info[now].volumes, info[now].pans, info[now].instruments, info[now].keys);
 									
 					//infoMeter.setVolumes(volumes[before]);
 					

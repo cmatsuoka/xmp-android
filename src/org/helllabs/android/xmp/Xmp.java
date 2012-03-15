@@ -32,7 +32,7 @@ public class Xmp {
 	public native String getModType();
 	public native String[] getFormats();
 	public native String[] getInstruments();
-	public native void getChannelData(int[] volumes, int[] instruments, int[] keys);
+	public native void getChannelData(int[] volumes, int[] pans, int[] instruments, int[] keys);
 	public native void getPatternRow(int pat, int row, byte[] rowNotes, byte[] rowInstruments);
 	
 	static {

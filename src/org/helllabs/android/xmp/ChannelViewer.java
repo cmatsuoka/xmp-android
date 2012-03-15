@@ -53,6 +53,7 @@ public class ChannelViewer extends Viewer {
 
 	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
 		int chn = modVars[3];
+		int volBase = modVars[6];
 		Rect rect;
 		
 		// Clear screen
@@ -62,6 +63,8 @@ public class ChannelViewer extends Viewer {
 		for (int i = 0; i < chn; i++) {
 			int y = (i * 4 + 1) * fontHeight;
 			int ins = info.instruments[i];
+			int vol = info.volumes[i];
+			int pan = info.volumes[i];
 			
 			rect = new Rect(0, y + 1, 8 * fontWidth, y + 3 * fontHeight);
 			canvas.drawRect(rect, scopePaint);
@@ -75,6 +78,20 @@ public class ChannelViewer extends Viewer {
 				canvas.drawText(hexByte[ci + 1] + ":" + instruments[ci],
 							9 * fontWidth, y + fontHeight, insPaint);
 			}
+			
+			// Draw volumes
+			int volLeft = 11 * fontWidth;
+			int volWidth = ((canvasWidth - 6 * fontWidth) - volLeft) / 2;
+			int volX = volLeft + vol * volWidth / volBase;
+			rect = new Rect(volX, y + 2 * fontHeight, volX + fontWidth / 2, y + 3 * fontHeight);
+			canvas.drawRect(rect, scopeLinePaint);
+			/*
+			// Draw pan
+			int panLeft = volLeft + volWidth + 2 * fontWidth;
+			int panWidth = volWidth;
+			int panX = panLeft + pan * panWidth / 0x100;
+			rect = new Rect(panX, y + 2 * fontHeight, panX + fontWidth / 2, y + 3 * fontHeight);
+			canvas.drawRect(rect, scopeLinePaint);*/
 		}
 	}
 	

@@ -12,6 +12,7 @@ static struct xmp_module_info mi;
 
 static int _playing = 0;
 static int _cur_vol[XMP_MAX_CHANNELS];
+static int _pan[XMP_MAX_CHANNELS];
 static int _ins[XMP_MAX_CHANNELS];
 static int _key[XMP_MAX_CHANNELS];
 static int _last_key[XMP_MAX_CHANNELS];
@@ -272,7 +273,7 @@ Java_org_helllabs_android_xmp_Xmp_getLoopCount(JNIEnv *env, jobject obj)
 JNIEXPORT void JNICALL
 Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray vars)
 {
-	int v[6];
+	int v[7];
 
 	v[0] = mi.total_time;
 	v[1] = mi.mod->len;
@@ -280,8 +281,9 @@ Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray
 	v[3] = mi.mod->chn;
 	v[4] = mi.mod->ins;
 	v[5] = mi.mod->smp;
+	v[6] = mi.vol_base;
 
-	(*env)->SetIntArrayRegion(env, vars, 0, 6, v);
+	(*env)->SetIntArrayRegion(env, vars, 0, 7, v);
 }
 
 JNIEXPORT jstring JNICALL
@@ -366,11 +368,12 @@ Java_org_helllabs_android_xmp_Xmp_getInstruments(JNIEnv *env, jobject obj)
 }
 
 JNIEXPORT void JNICALL
-Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintArray vol, jintArray ins, jintArray key)
+Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintArray vol, jintArray pan, jintArray ins, jintArray key)
 {
+	int chn = mi.mod->chn;
 	int i;
 
-	for (i = 0; i < mi.mod->chn; i++) {
+	for (i = 0; i < chn; i++) {
                 struct xmp_channel_info *ci = &mi.channel_info[i];
 
 		if (ci->event.note > 0 && ci->event.note <= 0x80) {
@@ -390,11 +393,14 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 			if (_cur_vol[i] < 0)
 				_cur_vol[i] = 0;
 		}
+
+		_pan[i] = ci->pan;
 	}
 
-	(*env)->SetIntArrayRegion(env, vol, 0, XMP_MAX_CHANNELS, _cur_vol);
-	(*env)->SetIntArrayRegion(env, ins, 0, XMP_MAX_CHANNELS, _ins);
-	(*env)->SetIntArrayRegion(env, key, 0, XMP_MAX_CHANNELS, _key);
+	(*env)->SetIntArrayRegion(env, vol, 0, chn, _cur_vol);
+	(*env)->SetIntArrayRegion(env, pan, 0, chn, _pan);
+	(*env)->SetIntArrayRegion(env, ins, 0, chn, _ins);
+	(*env)->SetIntArrayRegion(env, key, 0, chn, _key);
 }
 
 JNIEXPORT void JNICALL

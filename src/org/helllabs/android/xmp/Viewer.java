@@ -17,6 +17,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
     	int time;
     	int[] values = new int[7];	// order pattern row num_rows frame speed bpm
     	int[] volumes = new int[64];
+    	int[] pans = new int[64];
     	int[] instruments = new int[64];
     	int[] keys = new int[64];
     };
