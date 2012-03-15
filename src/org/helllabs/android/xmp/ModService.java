@@ -191,7 +191,7 @@ public class ModService extends Service {
 
 	       		notifier.notification(xmp.getModName(), queue.index());
 		       		    	
-	        	final int numClients = callbacks.beginBroadcast();
+	        	int numClients = callbacks.beginBroadcast();
 	        	for (int j = 0; j < numClients; j++) {
 	        		try {
 	    				callbacks.getBroadcastItem(j).newModCallback(
@@ -236,7 +236,16 @@ public class ModService extends Service {
 	       			checkMediaButtons();
 	       		}
 
-	       		xmp.endPlayer();     		
+	       		xmp.endPlayer();   
+	       		
+	        	numClients = callbacks.beginBroadcast();
+	        	for (int j = 0; j < numClients; j++) {
+	        		try {
+	    				callbacks.getBroadcastItem(j).endModCallback();
+	    			} catch (RemoteException e) { }
+	        	}
+	        	callbacks.finishBroadcast();
+	        	
 	       		xmp.releaseModule();
        		
 	       		audio.stop();

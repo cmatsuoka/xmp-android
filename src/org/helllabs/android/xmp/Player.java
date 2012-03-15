@@ -107,6 +107,7 @@ public class Player extends Activity {
 		}
 
 		public void onServiceDisconnected(ComponentName className) {
+			stopUpdate = true;
 			modPlayer = null;
 		}
 	};
@@ -116,6 +117,11 @@ public class Player extends Activity {
         public void newModCallback(String name, String[] instruments) {
         	Log.i("Xmp Player", "Show module data");
             showNewMod(name, instruments);
+        }
+        
+        public void endModCallback() {
+        	Log.i("Xmp Player", "End of module");
+        	stopUpdate = true;
         }
         
         public void endPlayCallback() {
