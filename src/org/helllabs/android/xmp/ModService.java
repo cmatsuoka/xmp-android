@@ -89,8 +89,6 @@ public class ModService extends Service {
 				sampleRate,
 				channelConfig,
 				AudioFormat.ENCODING_PCM_16BIT);
-		
-		Log.i("asd", "minsize=" + minSize + " size=" + bufferSize);
 
 		audio = new AudioTrack(
 				AudioManager.STREAM_MUSIC, sampleRate,

@@ -117,8 +117,10 @@ public class Player extends Activity {
         }
         
         public void endPlayCallback() {
-        	Log.i("Xmp Player", "End progress thread");
-			endPlay = true;
+        	synchronized (modPlayer) {
+        		Log.i("Xmp Player", "End progress thread");
+        		endPlay = true;
+        	}
 			if (progressThread != null && progressThread.isAlive()) {
 				try {
 					progressThread.join();
@@ -139,7 +141,7 @@ public class Player extends Activity {
     	
         public void run() {
         	now = (before + (frameRate * latency / 1000) + 1) % frameRate;
-        	
+  
 			try {
 				modPlayer.getInfo(info[now].values);
 				info[now].time = modPlayer.time() / 1000;	// time
@@ -161,7 +163,6 @@ public class Player extends Activity {
 					oldPos = info[before].values[0];
 					oldPat = info[before].values[1];
 				}
-
 				if (info[before].time != oldTime || showElapsed != oldShowElapsed) {
 					int t = info[before].time;
 					if (t < 0)

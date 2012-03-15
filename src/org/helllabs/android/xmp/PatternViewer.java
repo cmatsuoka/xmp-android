@@ -7,13 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 // http://developer.android.com/guide/topics/graphics/2d-graphics.html
 
 public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
-	private Context context;
+	//private Context context;
 	private SurfaceHolder surfaceHolder;        
 	private int canvasHeight, canvasWidth;
 	private Paint headerPaint, headerTextPaint, notePaint, insPaint, barPaint;
@@ -33,7 +32,6 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	public void setSurfaceSize(int width, int height) {
 		// synchronized to make sure these all change atomically
 		synchronized (surfaceHolder) {
-			Log.i("Xmp PatternViewer", "width=" + width + " height=" + height);
 			canvasWidth = width;
 			canvasHeight = height;
 		}
@@ -145,14 +143,12 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	public PatternViewer(Context context) {
 		super(context);
 
-		Log.d("Xmp PatternViewer", "PatternViewer constructor");
-
 		// register our interest in hearing about changes to our surface
 		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
 
 		this.surfaceHolder = holder;
-		this.context = context;
+		//this.context = context;
 
 		fontSize = getResources().getDimensionPixelSize(R.dimen.patternview_font_size);
 
@@ -199,13 +195,12 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	}
 
 	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
-		Log.d("Xmp PatternViewer", "surfaceCreated");		
+	public void surfaceCreated(SurfaceHolder holder) {		
 		surfaceHolder = holder;
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		Log.d("Xmp PatternViewer", "surfaceDestroyed");
+
 	}
 }
