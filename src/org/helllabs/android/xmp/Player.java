@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -632,9 +630,6 @@ public class Player extends Activity {
 			info = new Viewer.Info[frameRate];
 			for (int i = 0; i < frameRate; i++) {
 				info[i] = viewer.new Info();
-				for (int j = 0; j < 64; j++) {
-					info[i].pans[j] = 0x80;		// Initialize to center
-				}
 			}
 			
 			stopUpdate = false;
