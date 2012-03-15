@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
-import android.view.SurfaceHolder;
 
 // http://developer.android.com/guide/topics/graphics/2d-graphics.html
 
@@ -26,8 +25,8 @@ public class PatternViewer extends Viewer {
 
 	
 	@Override
-	public void setup(int[] modVars) {
-		super.setup(modVars);
+	public void setup(ModInterface modPlayer, int[] modVars) {
+		super.setup(modPlayer, modVars);
 		
 		oldRow = -1;
 		oldOrd = -1;
@@ -39,7 +38,7 @@ public class PatternViewer extends Viewer {
 	}
 
 	@Override
-	public void update(ModInterface modPlayer, Info info) {
+	public void update(Info info) {
 		int row = info.values[2];
 		int ord = info.values[0];
 		int numRows = info.values[3];

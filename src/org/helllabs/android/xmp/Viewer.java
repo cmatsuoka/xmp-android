@@ -11,6 +11,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	protected SurfaceHolder surfaceHolder;
 	protected int canvasHeight, canvasWidth;
 	protected int[] modVars;
+	protected ModInterface modPlayer;
 	
     public class Info {
     	int time;
@@ -78,10 +79,11 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		 });
 	}
 	
-	public abstract void update(ModInterface modPlayer, Info info);
+	public abstract void update(Info info);
 	
-	public void setup(int[] modVars) {
+	public void setup(ModInterface modPlayer, int[] modVars) {
 		this.modVars = modVars;
+		this.modPlayer = modPlayer;
 	}
 	
 	/* Callback invoked when the surface dimensions change. */

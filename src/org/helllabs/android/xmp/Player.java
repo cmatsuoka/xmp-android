@@ -68,7 +68,7 @@ public class Player extends Activity {
 	final Handler handler = new Handler();
 	int latency;
 	int totalTime;
-	String fileName, insList[];
+	String fileName;
 	//boolean endPlay = false;
 	boolean screenOn;
 	Activity activity;
@@ -95,7 +95,7 @@ public class Player extends Activity {
 			} else {
 				// Reconnect to existing service
 				try {
-					showNewMod(modPlayer.getFileName(), modPlayer.getInstruments());
+					showNewMod(modPlayer.getFileName());
 						
 					if (modPlayer.isPaused()) {
 						pause();
@@ -116,7 +116,7 @@ public class Player extends Activity {
     	
         public void newModCallback(String name, String[] instruments) {
         	Log.i("Xmp Player", "Show module data");
-            showNewMod(name, instruments);
+            showNewMod(name);
         }
         
         public void endModCallback() {
@@ -202,7 +202,7 @@ public class Player extends Activity {
 					/*if (showInsHighlight)
 						instrumentList.setVolumes(volumes[before], instruments[before]);*/
 	
-					viewer.update(modPlayer, info[before]);
+					viewer.update(info[before]);
 				}
 			} catch (Exception e) {
 				
@@ -559,9 +559,8 @@ public class Player extends Activity {
 		super.onResume();
 	}
 
-	void showNewMod(String fileName, String[] instruments) {
+	void showNewMod(String fileName) {
 		this.fileName = fileName;
-		this.insList = instruments;
 		try {
 			modPlayer.getModVars(modVars);
 		} catch (RemoteException e) { }
@@ -598,7 +597,7 @@ public class Player extends Activity {
 
 	       	titleFlipper.showNext();
 	       	
-	       	viewer.setup(modVars);
+	       	viewer.setup(modPlayer, modVars);
 	       	
 	       	/*infoMod.setText(String.format("Channels: %d\n" +
 	       			"Length: %d, Patterns: %d\n" +
