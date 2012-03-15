@@ -88,17 +88,11 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		int lines = canvasHeight / fontHeight;
 		int barLine = lines / 2 + 1;
 		int barY = barLine * fontHeight;
-		int channels = (int)((canvasWidth / fontWidth - 3) / 6);
 		int row = info.values[2];
 		int pat = info.values[1];
 		int chn = modVars[3];
 		int numRows = info.values[3];
 		Rect rect;
-		
-		if (channels > chn) {
-			channels = chn;
-		}
-
 		int biasX;
 		
 		synchronized (isDown) {

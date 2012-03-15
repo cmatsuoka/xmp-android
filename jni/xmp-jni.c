@@ -400,11 +400,17 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 JNIEXPORT void JNICALL
 Java_org_helllabs_android_xmp_Xmp_getPatternRow(JNIEnv *env, jobject obj, jint pat, jint row, jbyteArray rowNotes, jbyteArray rowInstruments)
 {
-	struct xmp_pattern *xxp = mi.mod->xxp[pat];
+	struct xmp_pattern *xxp;
 	unsigned char row_note[XMP_MAX_CHANNELS];
 	unsigned char row_ins[XMP_MAX_CHANNELS];
-	int chn = mi.mod->chn;
+	int chn;
 	int i;
+
+	if (mi.mod == NULL || pat > mi.mod->pat || row > mi.mod->xxp[pat]->rows)
+		return;
+
+ 	xxp = mi.mod->xxp[pat];
+	chn = mi.mod->chn;
 
 	for (i = 0; i < chn; i++) {
 		struct xmp_track *xxt = mi.mod->xxt[xxp->index[i]];

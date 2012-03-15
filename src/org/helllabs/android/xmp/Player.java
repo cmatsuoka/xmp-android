@@ -69,7 +69,7 @@ public class Player extends Activity {
 	int latency;
 	int totalTime;
 	String fileName, insList[];
-	boolean endPlay = false;
+	//boolean endPlay = false;
 	boolean screenOn;
 	Activity activity;
 	AlertDialog deleteDialog;
@@ -78,6 +78,7 @@ public class Player extends Activity {
 	Viewer.Info[] info;
 	int[] modVars = new int[6];
 	static final int frameRate = 25;
+	Boolean stopUpdate;
 	
 	private ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -111,6 +112,7 @@ public class Player extends Activity {
 	};
 	
     private PlayerCallback playerCallback = new PlayerCallback.Stub() {
+    	
         public void newModCallback(String name, String[] instruments) {
         	Log.i("Xmp Player", "Show module data");
             showNewMod(name, instruments);
@@ -118,7 +120,7 @@ public class Player extends Activity {
         
         public void endPlayCallback() {
        		Log.i("Xmp Player", "End progress thread");
-       		endPlay = true;
+       		stopUpdate = true;
 
 			if (progressThread != null && progressThread.isAlive()) {
 				try {
@@ -142,56 +144,60 @@ public class Player extends Activity {
         	now = (before + (frameRate * latency / 1000) + 1) % frameRate;
   
 			try {
-				modPlayer.getInfo(info[now].values);							
-				info[now].time = modPlayer.time() / 1000;
-				/*info[now].spd = modPlayer.getPlaySpeed();
-				info[now].bpm = modPlayer.getPlayBpm();
-				info[now].pos = modPlayer.getPlayPos();
-				info[now].pat = modPlayer.getPlayPat();
-				info[now].time = modPlayer.time() / 10;*/
-				
-				if (info[before].values[0] < 0) {
-					throw new Exception();
-				}
+				synchronized (modPlayer) {
+					if (stopUpdate)
+						return;
 
-				if (info[before].values[5] != oldSpd || info[before].values[6] != oldBpm
-						|| info[before].values[0] != oldPos || info[before].values[1] != oldPat)
-				{
-					infoStatus.setText(String.format(
-							"Speed:%02x BPM:%02x Pos:%02x Pat:%02x",
-							info[before].values[5], info[before].values[6], info[before].values[0], info[before].values[1]));
-
-					oldSpd = info[before].values[5];
-					oldBpm = info[before].values[6];
-					oldPos = info[before].values[0];
-					oldPat = info[before].values[1];
-				}
-				if (info[before].time != oldTime || showElapsed != oldShowElapsed) {
-					int t = info[before].time;
-					if (t < 0)
-						t = 0;
-					if (showElapsed) {
-						elapsedTime.setText(String.format("%d:%02d", t / 60,
-								t % 60));
-					} else {
-						t = totalTime - t;
-						elapsedTime.setText(String.format("-%d:%02d", t / 60,
-								t % 60));
+					modPlayer.getInfo(info[now].values);							
+					info[now].time = modPlayer.time() / 1000;
+					/*info[now].spd = modPlayer.getPlaySpeed();
+					info[now].bpm = modPlayer.getPlayBpm();
+					info[now].pos = modPlayer.getPlayPos();
+					info[now].pat = modPlayer.getPlayPat();
+					info[now].time = modPlayer.time() / 10;*/
+					
+					if (info[before].values[0] < 0) {
+						throw new Exception();
 					}
-
-					oldTime = info[before].time;
-					oldShowElapsed = showElapsed;
+	
+					if (info[before].values[5] != oldSpd || info[before].values[6] != oldBpm
+							|| info[before].values[0] != oldPos || info[before].values[1] != oldPat)
+					{
+						infoStatus.setText(String.format(
+								"Speed:%02x BPM:%02x Pos:%02x Pat:%02x",
+								info[before].values[5], info[before].values[6], info[before].values[0], info[before].values[1]));
+	
+						oldSpd = info[before].values[5];
+						oldBpm = info[before].values[6];
+						oldPos = info[before].values[0];
+						oldPat = info[before].values[1];
+					}
+					if (info[before].time != oldTime || showElapsed != oldShowElapsed) {
+						int t = info[before].time;
+						if (t < 0)
+							t = 0;
+						if (showElapsed) {
+							elapsedTime.setText(String.format("%d:%02d", t / 60,
+									t % 60));
+						} else {
+							t = totalTime - t;
+							elapsedTime.setText(String.format("-%d:%02d", t / 60,
+									t % 60));
+						}
+	
+						oldTime = info[before].time;
+						oldShowElapsed = showElapsed;
+					}
+	
+					modPlayer.getChannelData(info[now].volumes, info[now].instruments, info[now].keys);
+									
+					//infoMeter.setVolumes(volumes[before]);
+					
+					/*if (showInsHighlight)
+						instrumentList.setVolumes(volumes[before], instruments[before]);*/
+	
+					viewer.update(modPlayer, info[before]);
 				}
-
-				modPlayer.getChannelData(info[now].volumes, info[now].instruments, info[now].keys);
-								
-				//infoMeter.setVolumes(volumes[before]);
-				
-				/*if (showInsHighlight)
-					instrumentList.setVolumes(volumes[before], instruments[before]);*/
-
-				viewer.update(modPlayer, info[before]);
-				
 			} catch (Exception e) {
 				
 			} finally {
@@ -213,25 +219,28 @@ public class Player extends Activity {
     		
     		do {
     			synchronized (modPlayer) {
+    				if (stopUpdate)
+    					break;
+    				
 	    			try {
 						t = modPlayer.time() / 100;
 					} catch (RemoteException e) { }
-	    			
-	    			if (!paused && screenOn) {
-	    				if (!seeking && t >= 0) {
-	    					seekBar.setProgress(t);
-	    				}
-						handler.post(updateInfoRunnable);
-					}				
     			}
-    			
-    			try {
-        			while ((now = System.nanoTime()) - lastTimer < frameTime && !endPlay && !finishing) {
-        				sleep(10);
-        			}
-        			lastTimer = now;
-				} catch (InterruptedException e) { }
-    		} while (t >= 0 && !endPlay && !finishing);
+	    			
+	    		if (!paused && screenOn) {
+	    			if (!seeking && t >= 0) {
+	    				seekBar.setProgress(t);
+	    			}
+					handler.post(updateInfoRunnable);
+				}
+    			  			
+	    		try {
+	    			while ((now = System.nanoTime()) - lastTimer < frameTime && !stopUpdate) {
+	    				sleep(10);
+	    			}
+	    			lastTimer = now;
+	    		} catch (InterruptedException e) { }
+    		} while (t >= 0 && !stopUpdate);
     		
     		seekBar.setProgress(0);
     	}
@@ -445,7 +454,10 @@ public class Player extends Activity {
 					if (modPlayer.time() > 20) {
 						modPlayer.seek(0);
 					} else {
-						modPlayer.prevSong();
+						stopUpdate = true;
+						synchronized (modPlayer) {
+							modPlayer.prevSong();
+						}
 					}
 					unpause();
 				} catch (RemoteException e) {
@@ -460,10 +472,12 @@ public class Player extends Activity {
 					return;
 				
 				try {
-					modPlayer.nextSong();
-				} catch (RemoteException e) {
-
-				}
+					stopUpdate = true;
+					synchronized (modPlayer) {
+						modPlayer.nextSong();
+					}
+				} catch (RemoteException e) { }
+				
 				unpause();
 		    }
 		});
@@ -613,6 +627,7 @@ public class Player extends Activity {
 				info[i] = viewer.new Info();
 			}
 			
+			stopUpdate = false;
 	       	if (progressThread == null || !progressThread.isAlive()) {
 	       		progressThread = new ProgressThread();
 	       		progressThread.start();
@@ -627,6 +642,8 @@ public class Player extends Activity {
 	}
 	
 	void stopPlayingMod() {
+		stopUpdate = true;
+		
 		if (finishing)
 			return;
 		
