@@ -18,6 +18,7 @@ public class PatternViewer extends Viewer {
 	private byte[] rowNotes = new byte[64];
 	private byte[] rowInstruments = new byte[64];
 	private int oldRow, oldOrd, oldDeltaX;
+	private Rect rect = new Rect(); 
 	
 	private final static String[] notes = {
 		"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "
@@ -78,7 +79,6 @@ public class PatternViewer extends Viewer {
 		int pat = info.values[1];
 		int chn = modVars[3];
 		int numRows = info.values[3];
-		Rect rect;
 		int biasX;
 		
 		synchronized (isDown) {
@@ -101,7 +101,7 @@ public class PatternViewer extends Viewer {
 		canvas.drawColor(Color.BLACK);
 
 		// Header
-		rect = new Rect(0, 0, canvasWidth - 1, fontHeight - 1);
+		rect.set(0, 0, canvasWidth - 1, fontHeight - 1);
 		canvas.drawRect(rect, headerPaint);
 		for (int i = 0; i < chn; i++) {
 			int adj = (i + 1) < 10 ? 1 : 0;
@@ -109,7 +109,7 @@ public class PatternViewer extends Viewer {
 		}
 		
 		// Current line bar
-		rect = new Rect(0, barY - fontHeight + 1, canvasWidth - 1, barY);
+		rect.set(0, barY - fontHeight + 1, canvasWidth - 1, barY);
 		canvas.drawRect(rect, barPaint);
 		
 		// Pattern data

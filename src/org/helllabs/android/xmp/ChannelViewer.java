@@ -7,14 +7,14 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
-import android.util.Log;
 
 public class ChannelViewer extends Viewer {
-	private Paint scopePaint, scopeLinePaint, insPaint;
+	private Paint scopePaint, scopeLinePaint, insPaint, meterPaint;
 	private int fontSize, fontHeight, fontWidth;
 	private String[] hexByte = new String[256];	
 	private String[] instruments;
 	private int[] channelIns;
+	private Rect rect = new Rect();
 
 	@Override
 	public void setup(ModInterface modPlayer, int[] modVars) {
@@ -54,7 +54,6 @@ public class ChannelViewer extends Viewer {
 	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
 		int chn = modVars[3];
 		int volBase = modVars[6];
-		Rect rect;
 		
 		// Clear screen
 		canvas.drawColor(Color.BLACK);
@@ -64,9 +63,9 @@ public class ChannelViewer extends Viewer {
 			int y = (i * 4 + 1) * fontHeight;
 			int ins = info.instruments[i];
 			int vol = info.volumes[i];
-			int pan = info.volumes[i];
+			int pan = info.pans[i];
 			
-			rect = new Rect(0, y + 1, 8 * fontWidth, y + 3 * fontHeight);
+			rect.set(0, y + 1, 8 * fontWidth, y + 3 * fontHeight);
 			canvas.drawRect(rect, scopePaint);
 
 			if (ins >= 0) {
@@ -80,18 +79,26 @@ public class ChannelViewer extends Viewer {
 			}
 			
 			// Draw volumes
-			int volLeft = 11 * fontWidth;
-			int volWidth = ((canvasWidth - 6 * fontWidth) - volLeft) / 2;
+			int volLeft = 9 * fontWidth;
+			int volWidth = (canvasWidth - 6 * fontWidth - volLeft) / 2;
 			int volX = volLeft + vol * volWidth / volBase;
-			rect = new Rect(volX, y + 2 * fontHeight, volX + fontWidth / 2, y + 3 * fontHeight);
-			canvas.drawRect(rect, scopeLinePaint);
-			/*
+			int volY1 = y + 2 * fontHeight;
+			int volY2 = y + 2 * fontHeight + fontHeight / 3;
+			rect.set(volLeft, volY1, volX, volY2);
+			canvas.drawRect(rect, meterPaint);
+			rect.set(volX + 1, volY1, volLeft + volWidth, volY2);
+			canvas.drawRect(rect, scopePaint);
+
 			// Draw pan
-			int panLeft = volLeft + volWidth + 2 * fontWidth;
-			int panWidth = volWidth;
+			int panLeft = volLeft + volWidth + 4 * fontWidth;
+			int panWidth = volWidth; 
 			int panX = panLeft + pan * panWidth / 0x100;
-			rect = new Rect(panX, y + 2 * fontHeight, panX + fontWidth / 2, y + 3 * fontHeight);
-			canvas.drawRect(rect, scopeLinePaint);*/
+			int panY1 = volY1;
+			int panY2 = volY2;
+			rect.set(panLeft, panY1, panLeft + panWidth, panY2);
+			canvas.drawRect(rect, scopePaint);
+			rect.set(panX, panY1, panX + fontWidth / 2, panY2);
+			canvas.drawRect(rect, meterPaint);
 		}
 	}
 	
@@ -105,6 +112,9 @@ public class ChannelViewer extends Viewer {
 		
 		scopeLinePaint = new Paint();
 		scopeLinePaint.setARGB(255, 40, 160, 40);
+		
+		meterPaint = new Paint();
+		meterPaint.setARGB(255, 40, 80, 160);
 		
 		insPaint = new Paint();
 		insPaint.setARGB(255, 140, 140, 160);
