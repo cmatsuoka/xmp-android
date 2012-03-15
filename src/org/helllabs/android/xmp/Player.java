@@ -357,7 +357,7 @@ public class Player extends Activity {
 		titleFlipper = (ViewFlipper)findViewById(R.id.title_flipper);
 		viewerLayout = (FrameLayout)findViewById(R.id.viewer_layout);
 
-		viewer = new PatternViewer(this);
+		viewer = new ChannelViewer(this);
 		viewerLayout.addView(viewer);
 
 		
@@ -395,13 +395,15 @@ public class Player extends Activity {
 		backButton = (ImageButton)findViewById(R.id.back);
 		forwardButton = (ImageButton)findViewById(R.id.forward);
 		loopButton = (ImageButton)findViewById(R.id.loop);
-		
+
+		/*
 		// Set background here because we want to keep aspect ratio
 		image = new BitmapDrawable(BitmapFactory.decodeResource(getResources(),
 												R.drawable.logo));
 		image.setGravity(Gravity.CENTER);
 		image.setAlpha(48);
-		viewerLayout.setBackgroundDrawable(image.getCurrent());
+		viewerLayout.setBackgroundDrawable(image.getCurrent()); */
+		
 		loopButton.setImageResource(R.drawable.loop_off);
 		
 		loopButton.setOnClickListener(new OnClickListener() {

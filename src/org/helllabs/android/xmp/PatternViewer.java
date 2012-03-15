@@ -11,10 +11,7 @@ import android.view.SurfaceHolder;
 
 // http://developer.android.com/guide/topics/graphics/2d-graphics.html
 
-public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
-	//private Context context;
-	private SurfaceHolder surfaceHolder;        
-	private int canvasHeight, canvasWidth;
+public class PatternViewer extends Viewer {
 	private Paint headerPaint, headerTextPaint, notePaint, insPaint, barPaint;
 	private int fontSize, fontHeight, fontWidth;
 	private String[] allNotes = new String[120];
@@ -22,24 +19,15 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	private byte[] rowNotes = new byte[64];
 	private byte[] rowInstruments = new byte[64];
 	private int oldRow, oldOrd, oldDeltaX;
-	private int[] modVars;
 	
 	private final static String[] notes = {
 		"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "
 	};
 
-	/* Callback invoked when the surface dimensions change. */
-	public void setSurfaceSize(int width, int height) {
-		// synchronized to make sure these all change atomically
-		synchronized (surfaceHolder) {
-			canvasWidth = width;
-			canvasHeight = height;
-		}
-	}
 	
 	@Override
 	public void setup(int[] modVars) {
-		this.modVars = modVars;
+		super.setup(modVars);
 		
 		oldRow = -1;
 		oldOrd = -1;
@@ -52,7 +40,6 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 
 	@Override
 	public void update(ModInterface modPlayer, Info info) {
-		super.update(modPlayer, info);
 		int row = info.values[2];
 		int ord = info.values[0];
 		int numRows = info.values[3];
@@ -177,13 +164,6 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 	public PatternViewer(Context context) {
 		super(context);
 
-		// register our interest in hearing about changes to our surface
-		SurfaceHolder holder = getHolder();
-		holder.addCallback(this);
-
-		this.surfaceHolder = holder;
-		//this.context = context;
-
 		fontSize = getResources().getDimensionPixelSize(R.dimen.patternview_font_size);
 
 		notePaint = new Paint();
@@ -219,22 +199,5 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		for (int i = 0; i < 256; i++) {
 			hexByte[i] = new String(String.format("%02X", i));
 		}
-
-	}
-
-	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
-		setSurfaceSize(width, height);
-	}
-
-	@Override
-	public void surfaceCreated(SurfaceHolder holder) {		
-		surfaceHolder = holder;
-	}
-
-	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
-
 	}
 }

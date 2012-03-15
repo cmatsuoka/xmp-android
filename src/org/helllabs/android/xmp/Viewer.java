@@ -2,10 +2,15 @@ package org.helllabs.android.xmp;
 
 import android.content.Context;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
-public abstract class Viewer extends SurfaceView {
+public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callback {
+	protected Context context;
+	protected SurfaceHolder surfaceHolder;
+	protected int canvasHeight, canvasWidth;
+	protected int[] modVars;
 	
     public class Info {
     	int time;
@@ -22,7 +27,13 @@ public abstract class Viewer extends SurfaceView {
     
 	public Viewer(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
+		this.context = context;
+
+		// register our interest in hearing about changes to our surface
+		SurfaceHolder holder = getHolder();
+		holder.addCallback(this);
+
+		surfaceHolder = holder;
 		
 		posX = posY = 0;
 		isDown = false;
@@ -67,12 +78,34 @@ public abstract class Viewer extends SurfaceView {
 		 });
 	}
 	
-
-	public void update(ModInterface modPlayer, Info info) {
-		
-	}
+	public abstract void update(ModInterface modPlayer, Info info);
 	
 	public void setup(int[] modVars) {
-		
+		this.modVars = modVars;
+	}
+	
+	/* Callback invoked when the surface dimensions change. */
+	public void setSurfaceSize(int width, int height) {
+		// synchronized to make sure these all change atomically
+		synchronized (surfaceHolder) {
+			canvasWidth = width;
+			canvasHeight = height;
+		}
+	}
+
+	@Override
+	public void surfaceChanged(SurfaceHolder holder, int format, int width,
+			int height) {
+		setSurfaceSize(width, height);
+	}
+
+	@Override
+	public void surfaceCreated(SurfaceHolder holder) {		
+		surfaceHolder = holder;
+	}
+
+	@Override
+	public void surfaceDestroyed(SurfaceHolder holder) {
+
 	}
 }
