@@ -125,8 +125,8 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		rect = new Rect(0, 0, canvasWidth - 1, fontHeight - 1);
 		canvas.drawRect(rect, headerPaint);
 		for (int i = 0; i < chn; i++) {
-			int adj = i < 10 ? 1 : 0;
-			canvas.drawText(Integer.toString(i), biasX + (3 + i * 6 + 1 + adj) * fontWidth, fontSize, headerTextPaint);
+			int adj = (i + 1) < 10 ? 1 : 0;
+			canvas.drawText(Integer.toString(i + 1), biasX + (3 + i * 6 + 1 + adj) * fontWidth, fontSize, headerTextPaint);
 		}
 		
 		// Current line bar
