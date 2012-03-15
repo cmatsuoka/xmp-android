@@ -140,6 +140,12 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 			
 			for (int j = 0; j < chn; j++) {	
 				try {
+					
+					// Be very careful here!
+					// Our variables are latency-compensated but pattern data is current
+					// so caution is needed to avoid retrieving data using old variables
+					// from a module with pattern data with a newly loaded one.
+					
 					modPlayer.getPatternRow(pat, lineInPattern, rowNotes, rowInstruments);
 				} catch (RemoteException e) { }
 					
