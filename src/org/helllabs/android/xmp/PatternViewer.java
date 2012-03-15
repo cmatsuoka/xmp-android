@@ -105,6 +105,10 @@ public class PatternViewer extends Viewer implements SurfaceHolder.Callback {
 		synchronized (isDown) {
 			int max = canvasWidth - (chn * 6 + 2) * fontWidth;
 			biasX = deltaX + posX;
+			
+			if (max > 0) {
+				max = 0;
+			}
 
 			if (biasX > 0) {
 				biasX = posX = 0;
