@@ -356,7 +356,7 @@ public class Player extends Activity {
 		titleFlipper = (ViewFlipper)findViewById(R.id.title_flipper);
 		viewerLayout = (FrameLayout)findViewById(R.id.viewer_layout);
 
-		viewer = new ChannelViewer(this);
+		viewer = new InstrumentViewer(this);
 		viewerLayout.addView(viewer);
 
 		
