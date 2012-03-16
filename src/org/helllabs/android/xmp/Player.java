@@ -51,23 +51,16 @@ public class Player extends Activity {
 	TextView infoMod;
 	TextView infoStatus;
 	TextView elapsedTime;
-	//TextView textInstruments;
-	//LinearLayout infoInsLayout;
-	//InstrumentList instrumentList;
 	ViewFlipper titleFlipper;
 	int flipperPage;
 	String[] fileArray = null;
 	SharedPreferences prefs;
-	//LinearLayout infoMeterLayout;
-	//Meter infoMeter;
-	//FrameLayout infoLayout;
 	FrameLayout viewerLayout;
 	BitmapDrawable image;
 	final Handler handler = new Handler();
 	int latency;
 	int totalTime;
 	String fileName;
-	//boolean endPlay = false;
 	boolean screenOn;
 	Activity activity;
 	AlertDialog deleteDialog;
@@ -154,11 +147,6 @@ public class Player extends Activity {
 
 					modPlayer.getInfo(info[now].values);							
 					info[now].time = modPlayer.time() / 1000;
-					/*info[now].spd = modPlayer.getPlaySpeed();
-					info[now].bpm = modPlayer.getPlayBpm();
-					info[now].pos = modPlayer.getPlayPos();
-					info[now].pat = modPlayer.getPlayPat();
-					info[now].time = modPlayer.time() / 10;*/
 					
 					if (info[before].values[0] < 0) {
 						throw new Exception();
@@ -195,11 +183,6 @@ public class Player extends Activity {
 	
 					modPlayer.getChannelData(info[now].volumes, info[now].finalvols, info[now].pans,
 							info[now].instruments, info[now].keys, info[now].periods);
-									
-					//infoMeter.setVolumes(volumes[before]);
-					
-					/*if (showInsHighlight)
-						instrumentList.setVolumes(volumes[before], instruments[before]);*/
 	
 					viewer.update(info[before]);
 				}
@@ -348,20 +331,12 @@ public class Player extends Activity {
 		infoType[1] = (TextView)findViewById(R.id.info_type_1);
 		//infoMod = (TextView)findViewById(R.id.info_mod);
 		infoStatus = (TextView)findViewById(R.id.info_status);
-		//infoMeterLayout = (LinearLayout)findViewById(R.id.info_meters);
-		//infoInsLayout = (LinearLayout)findViewById(R.id.info_ins_layout);
-		//infoLayout = (FrameLayout)findViewById(R.id.info_layout);
 		elapsedTime = (TextView)findViewById(R.id.elapsed_time);
-		//textInstruments = (TextView)findViewById(R.id.text_instruments);
 		titleFlipper = (ViewFlipper)findViewById(R.id.title_flipper);
 		viewerLayout = (FrameLayout)findViewById(R.id.viewer_layout);
 
 		viewer = new InstrumentViewer(this);
 		viewerLayout.addView(viewer);
-
-		
-		//instrumentList = new InstrumentList(this);
-		//infoInsLayout.addView(instrumentList);
 			
 		if (prefs.getBoolean(Settings.PREF_KEEP_SCREEN_ON, false)) {
 			titleFlipper.setKeepScreenOn(true);
@@ -378,11 +353,6 @@ public class Player extends Activity {
         	infoType[i].setTypeface(font);
         	infoType[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
         }
-        
-        /*TextView instruments = (TextView)findViewById(R.id.text_instruments);
-        instruments.setTypeface(font);
-        instruments.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-        instruments.setLineSpacing(0, 1.2f);*/
 		
 		if (!showInfoLine) {
 			infoStatus.setVisibility(LinearLayout.GONE);
@@ -448,7 +418,6 @@ public class Player extends Activity {
 					return;
 				
 				stopPlayingMod();
-				//finish();
 		    }
 		});
 		
@@ -604,29 +573,6 @@ public class Player extends Activity {
 	       			"Estimated play time: %dmin%02ds",
 	       			chn, len, pat, ins, smp,
 	       			((time + 500) / 60000), ((time + 500) / 1000) % 60));*/
-/*
-	       	textInstruments.setText("Instruments");
-	       	instrumentList.setInstruments(insList);
-	       	
-	       	int meterType = Integer.parseInt(prefs.getString(Settings.PREF_METERS, "2"));
-	       	switch (meterType) {
-	       	case 1:
-	       		infoMeter = new LedMeter(infoMeterLayout, chn);
-	       		break;
-	       	case 2:
-	       		infoMeter = new BarMeter(infoMeterLayout, chn);
-	       		break;
-	       	default:
-	       		infoMeter = new EmptyMeter(infoMeterLayout, chn);
-	       		break;       		
-	       	}
-	*/       	
-	       	/*channelInfo = new ChannelInfo[m.chn];
-	       	for (int i = 0; i < m.chn; i++) {
-	       		channelInfo[i] = new ChannelInfo(activity);
-	       		channelInfo[i].setText(Integer.toString(i));
-	       		channelLayout.addView(channelInfo[i]);
-	       	}*/
 			
 			info = new Viewer.Info[frameRate];
 			for (int i = 0; i < frameRate; i++) {

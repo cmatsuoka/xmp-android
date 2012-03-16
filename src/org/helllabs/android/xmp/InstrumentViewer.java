@@ -1,7 +1,5 @@
 package org.helllabs.android.xmp;
 
-import org.helllabs.android.xmp.Viewer.Info;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
