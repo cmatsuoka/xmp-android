@@ -32,9 +32,9 @@ public class Xmp {
 	public native String getModType();
 	public native String[] getFormats();
 	public native String[] getInstruments();
-	public native void getChannelData(int[] volumes, int[] pans, int[] instruments, int[] keys, int [] periods);
+	public native void getChannelData(int[] volumes, int[] finalvols, int[] pans, int[] instruments, int[] keys);
 	public native void getPatternRow(int pat, int row, byte[] rowNotes, byte[] rowInstruments);
-	public native void getSampleData(int ins, int key, int holdKey, int chn, int period, int width, byte[] buffer);
+	public native void getSampleData(int trigger, int ins, int key, int chn, int width, byte[] buffer);
 	
 	static {
 		System.loadLibrary("xmp");

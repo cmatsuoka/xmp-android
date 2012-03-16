@@ -193,8 +193,8 @@ public class Player extends Activity {
 						oldShowElapsed = showElapsed;
 					}
 	
-					modPlayer.getChannelData(info[now].volumes, info[now].pans,
-							info[now].instruments, info[now].keys, info[now].periods);
+					modPlayer.getChannelData(info[now].volumes, info[now].finalvols, info[now].pans,
+							info[now].instruments, info[now].keys);
 									
 					//infoMeter.setVolumes(volumes[before]);
 					

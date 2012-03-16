@@ -15,7 +15,7 @@ static int _cur_vol[XMP_MAX_CHANNELS];
 static int _pan[XMP_MAX_CHANNELS];
 static int _ins[XMP_MAX_CHANNELS];
 static int _key[XMP_MAX_CHANNELS];
-static int _period[XMP_MAX_CHANNELS];
+static int _finalvol[XMP_MAX_CHANNELS];
 static int _last_key[XMP_MAX_CHANNELS];
 static int _pos[XMP_MAX_CHANNELS];
 static int _decay = 4;
@@ -373,7 +373,7 @@ Java_org_helllabs_android_xmp_Xmp_getInstruments(JNIEnv *env, jobject obj)
 }
 
 JNIEXPORT void JNICALL
-Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintArray vol, jintArray pan, jintArray ins, jintArray key, jintArray period)
+Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintArray vol, jintArray finalvol, jintArray pan, jintArray ins, jintArray key)
 {
 	int chn = mi.mod->chn;
 	int i;
@@ -399,15 +399,15 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 				_cur_vol[i] = 0;
 		}
 
-		_pan[i] = ci->pan;
-		_period[i] = ci->period;
+		_finalvol[i] = ci->finalvol;
+		_pan[i] = ci->finalpan;
 	}
 
 	(*env)->SetIntArrayRegion(env, vol, 0, chn, _cur_vol);
+	(*env)->SetIntArrayRegion(env, finalvol, 0, chn, _finalvol);
 	(*env)->SetIntArrayRegion(env, pan, 0, chn, _pan);
 	(*env)->SetIntArrayRegion(env, ins, 0, chn, _ins);
 	(*env)->SetIntArrayRegion(env, key, 0, chn, _key);
-	(*env)->SetIntArrayRegion(env, period, 0, chn, _period);
 }
 
 JNIEXPORT void JNICALL
@@ -448,7 +448,7 @@ static struct xmp_subinstrument *get_subinstrument(int ins, int key)
 }
 
 JNIEXPORT void JNICALL
-Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint ins, jint key, jint holdKey, jint chn, jint period, jint width, jbyteArray buffer)
+Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint trigger, jint ins, jint key, jint chn, jint width, jbyteArray buffer)
 {
 	struct xmp_subinstrument *sub;
 	struct xmp_sample *xxs;
@@ -459,11 +459,11 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint i
 		width = MAX_BUFFER_SIZE;
 	}
 
-	if (ins < 0 || ins > mi.mod->ins || holdKey > 0x80) {
+	if (ins < 0 || ins > mi.mod->ins || key > 0x80) {
 		goto err;
 	}
 
-	sub = get_subinstrument(ins, holdKey);
+	sub = get_subinstrument(ins, key);
 	if (sub == NULL || sub->sid < 0 || sub->sid >= mi.mod->smp) {
 		goto err;
 	}
@@ -476,7 +476,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint i
 	pos = _pos[chn];
 
 	/* In case of new keypress, reset sample */
-	if (key >= 0) {
+	if (trigger > 0) {
 		pos = 0;
 	}
 

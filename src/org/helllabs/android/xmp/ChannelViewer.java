@@ -17,7 +17,7 @@ public class ChannelViewer extends Viewer {
 	private Rect rect = new Rect();
 	private byte[] buffer;
 	private int[] holdKey;
-	String channelNumber[];
+	private String channelNumber[];
 
 	@Override
 	public void setup(ModInterface modPlayer, int[] modVars) {
@@ -57,7 +57,7 @@ public class ChannelViewer extends Viewer {
 	@Override
 	public void update(Info info) {
 		Canvas c = null;
-
+		
 		try {
 			c = surfaceHolder.lockCanvas(null);
 			synchronized (surfaceHolder) {
@@ -110,9 +110,9 @@ public class ChannelViewer extends Viewer {
 			final int y = biasY + (i * 4 + 1) * fontHeight;
 			final int ins = info.instruments[i];
 			final int vol = info.volumes[i];
+			final int finalvol = info.finalvols[i];
 			final int pan = info.pans[i];
 			int key = info.keys[i];
-			final int period = info.periods[i];
 			
 			if (ins >= 0) {
 				holdIns[i] = ins;
@@ -122,7 +122,8 @@ public class ChannelViewer extends Viewer {
 				holdKey[i] = key;
 			}
 
-			if (y > canvasHeight) {
+			// Don't draw if not visible
+			if (y < -scopeHeight || y > canvasHeight) {
 				continue;
 			}
 
@@ -135,17 +136,24 @@ public class ChannelViewer extends Viewer {
 			canvas.drawRect(rect, scopePaint);
 
 			try {
+				int trigger;
 
 				// Be very careful here!
 				// Our variables are latency-compensated but sample data is current
 				// so caution is needed to avoid retrieving data using old variables
 				// from a module with sample data from a newly loaded one.
+				
+				if (ins >= 0 || key >= 0) {
+					trigger = 1;
+				} else {
+					trigger = 0;
+				}
 
-				modPlayer.getSampleData(holdIns[i], key, holdKey[i], i, period, scopeWidth, buffer);
+				modPlayer.getSampleData(trigger, holdIns[i], holdKey[i], i, scopeWidth, buffer);
 
 			} catch (RemoteException e) { }
 			for (int j = 0; j < scopeWidth; j++) {
-				canvas.drawPoint(scopeLeft + j, y + scopeHeight / 2 + buffer[j] * scopeHeight / 2 / 180, scopeLinePaint);
+				canvas.drawPoint(scopeLeft + j, y + scopeHeight / 2 + buffer[j] * finalvol / 64 * scopeHeight / 2 / 180, scopeLinePaint);
 			}
 
 

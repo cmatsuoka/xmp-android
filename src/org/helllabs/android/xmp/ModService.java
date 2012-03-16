@@ -404,18 +404,18 @@ public class ModService extends Service {
 			return xmp.getModType();
 		}
 		
-		public void getChannelData(int[] volumes, int[] pans, int[] instruments, int[] keys, int[] periods) {
+		public void getChannelData(int[] volumes, int[] finalvols, int[] pans, int[] instruments, int[] keys) {
 			synchronized (updateData) {
 				if (updateData) {
-					xmp.getChannelData(volumes, pans, instruments, keys, periods);
+					xmp.getChannelData(volumes, finalvols, pans, instruments, keys);
 				}
 			}
 		}
 		
-		public void getSampleData(int ins, int key, int holdKey, int chn, int period, int width, byte[] buffer) {
+		public void getSampleData(int trigger, int ins, int key, int chn, int width, byte[] buffer) {
 			synchronized (updateData) {
 				if (updateData) {
-					xmp.getSampleData(ins, key, holdKey, chn, period, width, buffer);
+					xmp.getSampleData(trigger, ins, key, chn, width, buffer);
 				}
 			}
 		}
