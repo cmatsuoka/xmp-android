@@ -17,6 +17,7 @@ static int _ins[XMP_MAX_CHANNELS];
 static int _key[XMP_MAX_CHANNELS];
 static int _period[XMP_MAX_CHANNELS];
 static int _last_key[XMP_MAX_CHANNELS];
+static int _pos[XMP_MAX_CHANNELS];
 static int _decay = 4;
 
 #define MAX_BUFFER_SIZE 256
@@ -447,21 +448,22 @@ static struct xmp_subinstrument *get_subinstrument(int ins, int key)
 }
 
 JNIEXPORT void JNICALL
-Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint ins, jint key, jint period, jint width, jbyteArray buffer)
+Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint ins, jint key, jint holdKey, jint chn, jint period, jint width, jbyteArray buffer)
 {
 	struct xmp_subinstrument *sub;
 	struct xmp_sample *xxs;
-	int i, pos, len;
+	int i, pos, transient_size;
+	int limit;
 
 	if (width > MAX_BUFFER_SIZE) {
 		width = MAX_BUFFER_SIZE;
 	}
 
-	if (ins < 0 || ins > mi.mod->ins || key < 0 || key > 0x80) {
+	if (ins < 0 || ins > mi.mod->ins || holdKey > 0x80) {
 		goto err;
 	}
 
-	sub = get_subinstrument(ins, key);
+	sub = get_subinstrument(ins, holdKey);
 	if (sub == NULL || sub->sid < 0 || sub->sid >= mi.mod->smp) {
 		goto err;
 	}
@@ -471,22 +473,73 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint i
 		goto err;
 	}
 
-	len = xxs->len;
+	pos = _pos[chn];
+
+	/* In case of new keypress, reset sample */
+	if (key >= 0) {
+		pos = 0;
+	}
+
+	/* Limit is the buffer size or the remaining transient size */
+	if (xxs->flg & XMP_SAMPLE_LOOP) {
+		transient_size = xxs->lps - pos;
+	} else {
+		transient_size = xxs->len - pos;
+	}
+	if (transient_size < 0) {
+		transient_size = 0;
+	}
+
+	limit = width;
+	if (limit > transient_size) {
+		limit = transient_size;
+	}
+
 	if (xxs->flg & XMP_SAMPLE_16BIT) {
-		for (i = 0; i < width; i++) {
-			if (i < len)
-				_buffer[i] = ((short *)&xxs->data)[i] / 256;
-			else
-				_buffer[i] = 0;
+		/* transient */
+		for (i = 0; i < limit; i++) {
+			_buffer[i] = ((short *)&xxs->data)[pos] / 256;
+			pos++;
+		}
+
+		/* loop */
+		if (xxs->flg & XMP_SAMPLE_LOOP) {
+			for (i = limit; i < width; i++) {
+				_buffer[i] = ((short *)xxs->data)[pos];	
+				pos++;
+				if (pos >= xxs->lpe) {
+					pos = xxs->lps;
+				}
+			}
+		} else {
+			for (i = limit; i < width; i++) {
+				_buffer[i] = 0;	
+			}
 		}
 	} else {
-		for (i = 0; i < width; i++) {
-			if (i < len)
-				_buffer[i] = xxs->data[i];
-			else
-				_buffer[i] = 0;
+		/* transient */
+		for (i = 0; i < limit; i++) {
+			_buffer[i] = xxs->data[pos];
+			pos++;
+		}
+
+		/* loop */
+		if (xxs->flg & XMP_SAMPLE_LOOP) {
+			for (i = limit; i < width; i++) {
+				_buffer[i] = xxs->data[pos];	
+				pos++;
+				if (pos >= xxs->lpe) {
+					pos = xxs->lps;
+				}
+			}
+		} else {
+			for (i = limit; i < width; i++) {
+				_buffer[i] = 0;	
+			}
 		}
 	}
+
+	_pos[chn] = pos;
 
 	(*env)->SetByteArrayRegion(env, buffer, 0, width, _buffer);
 	return;

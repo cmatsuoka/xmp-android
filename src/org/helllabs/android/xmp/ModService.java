@@ -412,10 +412,10 @@ public class ModService extends Service {
 			}
 		}
 		
-		public void getSampleData(int ins, int key, int period, int width, byte[] buffer) {
+		public void getSampleData(int ins, int key, int holdKey, int chn, int period, int width, byte[] buffer) {
 			synchronized (updateData) {
 				if (updateData) {
-					xmp.getSampleData(ins, key, period, width, buffer);
+					xmp.getSampleData(ins, key, holdKey, chn, period, width, buffer);
 				}
 			}
 		}

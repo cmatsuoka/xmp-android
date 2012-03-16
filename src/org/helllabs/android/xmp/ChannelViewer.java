@@ -13,7 +13,7 @@ public class ChannelViewer extends Viewer {
 	private int fontSize, fontHeight, fontWidth;
 	private int font2Size, font2Height, font2Width;
 	private String[] insName = new String[256];		
-	private int[] channelIns;
+	private int[] holdIns;
 	private Rect rect = new Rect();
 	private byte[] buffer;
 	private int[] holdKey;
@@ -37,9 +37,9 @@ public class ChannelViewer extends Viewer {
 			}
 		} catch (RemoteException e) { }
 
-		channelIns = new int[chn];
+		holdIns = new int[chn];
 		for (int i = 0; i < chn; i++) {
-			channelIns[i] = -1;
+			holdIns[i] = -1;
 		}
 
 		synchronized (isDown) {
@@ -113,6 +113,14 @@ public class ChannelViewer extends Viewer {
 			final int pan = info.pans[i];
 			int key = info.keys[i];
 			final int period = info.periods[i];
+			
+			if (ins >= 0) {
+				holdIns[i] = ins;
+			}
+			
+			if (key >= 0) {
+				holdKey[i] = key;
+			}
 
 			if (y > canvasHeight) {
 				continue;
@@ -126,12 +134,6 @@ public class ChannelViewer extends Viewer {
 			rect.set(scopeLeft, y + 1, scopeLeft + scopeWidth, y + scopeHeight);
 			canvas.drawRect(rect, scopePaint);
 
-			if (key >= 0) {
-				holdKey[i] = key;
-			} else {
-				key = holdKey[i];
-			}
-
 			try {
 
 				// Be very careful here!
@@ -139,20 +141,17 @@ public class ChannelViewer extends Viewer {
 				// so caution is needed to avoid retrieving data using old variables
 				// from a module with sample data from a newly loaded one.
 
-				modPlayer.getSampleData(ins, key, period, scopeWidth, buffer);
+				modPlayer.getSampleData(holdIns[i], key, holdKey[i], i, period, scopeWidth, buffer);
 
 			} catch (RemoteException e) { }
 			for (int j = 0; j < scopeWidth; j++) {
 				canvas.drawPoint(scopeLeft + j, y + scopeHeight / 2 + buffer[j] * scopeHeight / 2 / 180, scopeLinePaint);
 			}
 
-			if (ins >= 0) {
-				channelIns[i] = ins;
-			}
 
-			int ci = channelIns[i];
+			final int ci = holdIns[i];
 			if (ci >= 0) {
-				canvas.drawText(insName[ci + 1], volLeft, y + fontHeight, insPaint);
+				canvas.drawText(insName[ci], volLeft, y + fontHeight, insPaint);
 			}
 
 			// Draw volumes
