@@ -194,7 +194,7 @@ public class Player extends Activity {
 					}
 	
 					modPlayer.getChannelData(info[now].volumes, info[now].finalvols, info[now].pans,
-							info[now].instruments, info[now].keys);
+							info[now].instruments, info[now].keys, info[now].periods);
 									
 					//infoMeter.setVolumes(volumes[before]);
 					

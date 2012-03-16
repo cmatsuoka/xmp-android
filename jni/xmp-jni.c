@@ -16,6 +16,7 @@ static int _hold_vol[XMP_MAX_CHANNELS];
 static int _pan[XMP_MAX_CHANNELS];
 static int _ins[XMP_MAX_CHANNELS];
 static int _key[XMP_MAX_CHANNELS];
+static int _period[XMP_MAX_CHANNELS];
 static int _finalvol[XMP_MAX_CHANNELS];
 static int _last_key[XMP_MAX_CHANNELS];
 static int _pos[XMP_MAX_CHANNELS];
@@ -279,7 +280,7 @@ Java_org_helllabs_android_xmp_Xmp_getLoopCount(JNIEnv *env, jobject obj)
 JNIEXPORT void JNICALL
 Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray vars)
 {
-	int v[7];
+	int v[6];
 
 	v[0] = mi.total_time;
 	v[1] = mi.mod->len;
@@ -287,9 +288,8 @@ Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray
 	v[3] = mi.mod->chn;
 	v[4] = mi.mod->ins;
 	v[5] = mi.mod->smp;
-	v[6] = mi.vol_base;
 
-	(*env)->SetIntArrayRegion(env, vars, 0, 7, v);
+	(*env)->SetIntArrayRegion(env, vars, 0, 6, v);
 }
 
 JNIEXPORT jstring JNICALL
@@ -373,9 +373,22 @@ Java_org_helllabs_android_xmp_Xmp_getInstruments(JNIEnv *env, jobject obj)
 	return stringArray;
 }
 
-JNIEXPORT void JNICALL
-Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintArray vol, jintArray finalvol, jintArray pan, jintArray ins, jintArray key)
+static struct xmp_subinstrument *get_subinstrument(int ins, int key)
 {
+	if (ins >= 0 && ins < mi.mod->ins) {
+		if (mi.mod->xxi[ins].map[key].ins != 0xff) {
+			int mapped = mi.mod->xxi[ins].map[key].ins;
+			return &mi.mod->xxi[ins].sub[mapped];
+		}
+	}
+
+	return NULL;
+}
+
+JNIEXPORT void JNICALL
+Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintArray vol, jintArray finalvol, jintArray pan, jintArray ins, jintArray key, jintArray period)
+{
+	struct xmp_subinstrument *sub;
 	int chn = mi.mod->chn;
 	int i;
 
@@ -394,19 +407,23 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 		if (ci->event.note > 0 && ci->event.note <= 0x80) {
 			_key[i] = ci->event.note - 1;
 			_last_key[i] = _key[i];
-			_cur_vol[i] = _hold_vol[i];
+			sub = get_subinstrument(ci->instrument, _key[i]);
+			if (sub != NULL) {
+				_cur_vol[i] = sub->vol;
+			}
 		} else {
 			_key[i] = -1;
 		}
 
 		if (ci->event.vol > 0) {
 			_key[i] = _last_key[i];
-			_cur_vol[i] = _hold_vol[i];
+			_cur_vol[i] = ci->event.vol * 0x40 / mi.vol_base;
 		}
 
-		_ins[i] = ci->instrument - 1;
+		_ins[i] = (signed char)ci->instrument;
 		_finalvol[i] = ci->volume;
 		_pan[i] = ci->pan;
+		_period[i] = ci->period;
 	}
 
 	(*env)->SetIntArrayRegion(env, vol, 0, chn, _cur_vol);
@@ -414,6 +431,7 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 	(*env)->SetIntArrayRegion(env, pan, 0, chn, _pan);
 	(*env)->SetIntArrayRegion(env, ins, 0, chn, _ins);
 	(*env)->SetIntArrayRegion(env, key, 0, chn, _key);
+	(*env)->SetIntArrayRegion(env, period, 0, chn, _period);
 }
 
 JNIEXPORT void JNICALL
@@ -443,18 +461,8 @@ Java_org_helllabs_android_xmp_Xmp_getPatternRow(JNIEnv *env, jobject obj, jint p
 	(*env)->SetByteArrayRegion(env, rowInstruments, 0, chn, row_ins);
 }
 
-static struct xmp_subinstrument *get_subinstrument(int ins, int key)
-{
-	if (mi.mod->xxi[ins].map[key].ins != 0xff) {
-		int mapped = mi.mod->xxi[ins].map[key].ins;
-		return &mi.mod->xxi[ins].sub[mapped];
-	}
-
-	return NULL;
-}
-
 JNIEXPORT void JNICALL
-Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint trigger, jint ins, jint key, jint chn, jint width, jbyteArray buffer)
+Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint trigger, jint ins, jint key, jint period, jint chn, jint width, jbyteArray buffer)
 {
 	struct xmp_subinstrument *sub;
 	struct xmp_sample *xxs;
@@ -487,7 +495,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 		pos = 0;
 	}
 
-	step = (int)pow(2, 1.0 * key / 12);
+	step = (XMP_PERIOD_BASE << 5) / period;
 	lps = xxs->lps << 5;
 	lpe = xxs->lpe << 5;
 

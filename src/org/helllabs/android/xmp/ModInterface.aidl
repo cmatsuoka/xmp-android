@@ -13,8 +13,8 @@ interface ModInterface {
 	void getModVars(out int[] vars);
 	String getModName();
 	String getModType();
-	void getChannelData(out int[] volumes, out int[] finalvols, out int[] pans, out int[] instruments, out int[] keys);
-	void getSampleData(int trigger, int ins, int key, int chn, int width, out byte[] buffer);
+	void getChannelData(out int[] volumes, out int[] finalvols, out int[] pans, out int[] instruments, out int[] keys, out int[] periods);
+	void getSampleData(int trigger, int ins, int key, int period, int chn, int width, out byte[] buffer);
 	void nextSong();
 	void prevSong(); 
 	boolean isPaused();

@@ -21,6 +21,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
     	int[] pans = new int[64];
     	int[] instruments = new int[64];
     	int[] keys = new int[64];
+    	int[] periods = new int[64];
     };
 
     protected int deltaX, deltaY;

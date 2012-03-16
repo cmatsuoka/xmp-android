@@ -13,7 +13,6 @@ public class ChannelViewer extends Viewer {
 	private int fontSize, fontHeight, fontWidth;
 	private int font2Size, font2Height, font2Width;
 	private String[] insName = new String[256];		
-	private int[] holdIns;
 	private Rect rect = new Rect();
 	private byte[] buffer;
 	private int[] holdKey;
@@ -36,11 +35,6 @@ public class ChannelViewer extends Viewer {
 				}
 			}
 		} catch (RemoteException e) { }
-
-		holdIns = new int[chn];
-		for (int i = 0; i < chn; i++) {
-			holdIns[i] = -1;
-		}
 
 		synchronized (isDown) {
 			posY = 0;
@@ -112,10 +106,7 @@ public class ChannelViewer extends Viewer {
 			final int finalvol = info.finalvols[i];
 			final int pan = info.pans[i];
 			final int key = info.keys[i];
-			
-			if (ins >= 0) {
-				holdIns[i] = ins;
-			}
+			final int period = info.periods[i];
 			
 			if (key >= 0) {
 				holdKey[i] = key;
@@ -142,23 +133,22 @@ public class ChannelViewer extends Viewer {
 				// so caution is needed to avoid retrieving data using old variables
 				// from a module with sample data from a newly loaded one.
 				
-				if (ins >= 0 || key >= 0) {
+				if (key >= 0) {
 					trigger = 1;
 				} else {
 					trigger = 0;
 				}
 
-				modPlayer.getSampleData(trigger, holdIns[i], holdKey[i], i, scopeWidth, buffer);
+				modPlayer.getSampleData(trigger, ins, holdKey[i], period, i, scopeWidth, buffer);
 
 			} catch (RemoteException e) { }
 			for (int j = 0; j < scopeWidth; j++) {
 				canvas.drawPoint(scopeLeft + j, y + scopeHeight / 2 + buffer[j] * finalvol / 64 * scopeHeight / 2 / 180, scopeLinePaint);
 			}
 
-
-			final int ci = holdIns[i];
-			if (ci >= 0) {
-				canvas.drawText(insName[ci], volLeft, y + fontHeight, insPaint);
+			// Draw instrument name
+			if (ins >= 0) {
+				canvas.drawText(insName[ins], volLeft, y + fontHeight, insPaint);
 			}
 
 			// Draw volumes
@@ -174,8 +164,10 @@ public class ChannelViewer extends Viewer {
 			int panX = panLeft + panWidth / 2 + pan * panWidth / 0x100;
 			rect.set(panLeft, volY1, panLeft + panWidth, volY2);
 			canvas.drawRect(rect, scopePaint);
-			rect.set(panX, volY1, panX + fontWidth / 2, volY2);
-			canvas.drawRect(rect, meterPaint);
+			if (ins >= 0) {
+				rect.set(panX, volY1, panX + fontWidth / 2, volY2);
+				canvas.drawRect(rect, meterPaint);
+			}
 		}
 	}
 
