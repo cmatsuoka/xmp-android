@@ -12,7 +12,7 @@ public class ChannelViewer extends Viewer {
 	private Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint;
 	private int fontSize, fontHeight, fontWidth;
 	private int font2Size, font2Height, font2Width;
-	private String[] insName = new String[256];		
+	private String[] insName;		
 	private Rect rect = new Rect();
 	private byte[] buffer;
 	private int[] holdKey;
@@ -23,18 +23,18 @@ public class ChannelViewer extends Viewer {
 		super.setup(modPlayer, modVars);
 
 		int chn = modVars[3];
+		int insNum = modVars[4];
 		String[] instruments;
 
+		insName = new String[insNum];
+		
 		try {
 			instruments = modPlayer.getInstruments();
-			for (int i = 0; i < 256; i++) {
-				if (i < instruments.length) {
-					insName[i] = new String(String.format("%02X %s", i, instruments[i]));
-				} else {
-					insName[i] = new String(String.format("%02X", i));
-				}
+			for (int i = 0; i < insNum; i++) {
+				insName[i] = new String(String.format("%02X %s", i + 1, instruments[i]));
 			}
 		} catch (RemoteException e) { }
+
 
 		synchronized (isDown) {
 			posY = 0;
@@ -51,7 +51,7 @@ public class ChannelViewer extends Viewer {
 	@Override
 	public void update(Info info) {
 		Canvas c = null;
-		
+
 		try {
 			c = surfaceHolder.lockCanvas(null);
 			synchronized (surfaceHolder) {
@@ -69,6 +69,7 @@ public class ChannelViewer extends Viewer {
 
 	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
 		final int chn = modVars[3];
+		final int insNum = modVars[4];
 		final int scopeWidth = 8 * fontWidth;
 		final int scopeHeight = 3 * fontHeight;
 		final int scopeLeft = 2 * font2Width + 2 * fontWidth;
@@ -106,7 +107,7 @@ public class ChannelViewer extends Viewer {
 			final int pan = info.pans[i];
 			final int key = info.keys[i];
 			final int period = info.periods[i];
-			
+
 			if (key >= 0) {
 				holdKey[i] = key;
 			}
@@ -131,7 +132,7 @@ public class ChannelViewer extends Viewer {
 				// Our variables are latency-compensated but sample data is current
 				// so caution is needed to avoid retrieving data using old variables
 				// from a module with sample data from a newly loaded one.
-				
+
 				if (key >= 0) {
 					trigger = 1;
 				} else {
@@ -146,7 +147,7 @@ public class ChannelViewer extends Viewer {
 			}
 
 			// Draw instrument name
-			if (ins >= 0) {
+			if (ins >= 0 && ins < insNum) {
 				canvas.drawText(insName[ins], volLeft, y + fontHeight, insPaint);
 			}
 
