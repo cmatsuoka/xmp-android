@@ -72,13 +72,13 @@ public class PatternViewer extends Viewer {
 	}
 
 	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
-		int lines = canvasHeight / fontHeight;
-		int barLine = lines / 2 + 1;
-		int barY = barLine * fontHeight;
-		int row = info.values[2];
-		int pat = info.values[1];
-		int chn = modVars[3];
-		int numRows = info.values[3];
+		final int lines = canvasHeight / fontHeight;
+		final int barLine = lines / 2 + 1;
+		final int barY = barLine * fontHeight;
+		final int row = info.values[2];
+		final int pat = info.values[1];
+		final int chn = modVars[3];
+		final int numRows = info.values[3];
 		int biasX;
 		
 		synchronized (isDown) {
@@ -114,8 +114,9 @@ public class PatternViewer extends Viewer {
 		
 		// Pattern data
 		for (int i = 1; i < lines; i++) {
-			int lineInPattern = i + row - barLine + 1; 
-			int x, y = (i + 1) * fontHeight;
+			final int lineInPattern = i + row - barLine + 1; 
+			final int y = (i + 1) * fontHeight;
+			int x;
 			
 			if (lineInPattern < 0 || lineInPattern >= numRows)
 				continue;
@@ -130,7 +131,7 @@ public class PatternViewer extends Viewer {
 					// Be very careful here!
 					// Our variables are latency-compensated but pattern data is current
 					// so caution is needed to avoid retrieving data using old variables
-					// from a module with pattern data with a newly loaded one.
+					// from a module with pattern data from a newly loaded one.
 					
 					modPlayer.getPatternRow(pat, lineInPattern, rowNotes, rowInstruments);
 				} catch (RemoteException e) { }

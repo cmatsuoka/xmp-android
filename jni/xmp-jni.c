@@ -15,8 +15,12 @@ static int _cur_vol[XMP_MAX_CHANNELS];
 static int _pan[XMP_MAX_CHANNELS];
 static int _ins[XMP_MAX_CHANNELS];
 static int _key[XMP_MAX_CHANNELS];
+static int _period[XMP_MAX_CHANNELS];
 static int _last_key[XMP_MAX_CHANNELS];
 static int _decay = 4;
+
+#define MAX_BUFFER_SIZE 256
+static char _buffer[MAX_BUFFER_SIZE];
 
 
 /* For ModList */
@@ -368,7 +372,7 @@ Java_org_helllabs_android_xmp_Xmp_getInstruments(JNIEnv *env, jobject obj)
 }
 
 JNIEXPORT void JNICALL
-Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintArray vol, jintArray pan, jintArray ins, jintArray key)
+Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintArray vol, jintArray pan, jintArray ins, jintArray key, jintArray period)
 {
 	int chn = mi.mod->chn;
 	int i;
@@ -395,12 +399,14 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 		}
 
 		_pan[i] = ci->pan;
+		_period[i] = ci->period;
 	}
 
 	(*env)->SetIntArrayRegion(env, vol, 0, chn, _cur_vol);
 	(*env)->SetIntArrayRegion(env, pan, 0, chn, _pan);
 	(*env)->SetIntArrayRegion(env, ins, 0, chn, _ins);
 	(*env)->SetIntArrayRegion(env, key, 0, chn, _key);
+	(*env)->SetIntArrayRegion(env, period, 0, chn, _period);
 }
 
 JNIEXPORT void JNICALL
@@ -428,4 +434,64 @@ Java_org_helllabs_android_xmp_Xmp_getPatternRow(JNIEnv *env, jobject obj, jint p
 
 	(*env)->SetByteArrayRegion(env, rowNotes, 0, chn, row_note);
 	(*env)->SetByteArrayRegion(env, rowInstruments, 0, chn, row_ins);
+}
+
+static struct xmp_subinstrument *get_subinstrument(int ins, int key)
+{
+	if (mi.mod->xxi[ins].map[key].ins != 0xff) {
+		int mapped = mi.mod->xxi[ins].map[key].ins;
+		return &mi.mod->xxi[ins].sub[mapped];
+	}
+
+	return NULL;
+}
+
+JNIEXPORT void JNICALL
+Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint ins, jint key, jint period, jint width, jbyteArray buffer)
+{
+	struct xmp_subinstrument *sub;
+	struct xmp_sample *xxs;
+	int i, pos, len;
+
+	if (width > MAX_BUFFER_SIZE) {
+		width = MAX_BUFFER_SIZE;
+	}
+
+	if (ins < 0 || ins > mi.mod->ins || key < 0 || key > 0x80) {
+		goto err;
+	}
+
+	sub = get_subinstrument(ins, key);
+	if (sub == NULL || sub->sid < 0 || sub->sid >= mi.mod->smp) {
+		goto err;
+	}
+
+	xxs = &mi.mod->xxs[sub->sid];
+	if (xxs == NULL) {
+		goto err;
+	}
+
+	len = xxs->len;
+	if (xxs->flg & XMP_SAMPLE_16BIT) {
+		for (i = 0; i < width; i++) {
+			if (i < len)
+				_buffer[i] = ((short *)&xxs->data)[i] / 256;
+			else
+				_buffer[i] = 0;
+		}
+	} else {
+		for (i = 0; i < width; i++) {
+			if (i < len)
+				_buffer[i] = xxs->data[i];
+			else
+				_buffer[i] = 0;
+		}
+	}
+
+	(*env)->SetByteArrayRegion(env, buffer, 0, width, _buffer);
+	return;
+
+    err:
+	memset(_buffer, 0, width);
+	(*env)->SetByteArrayRegion(env, buffer, 0, width, _buffer);
 }
