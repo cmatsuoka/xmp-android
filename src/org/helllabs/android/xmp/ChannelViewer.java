@@ -55,7 +55,6 @@ public class ChannelViewer extends Viewer {
 		try {
 			c = surfaceHolder.lockCanvas(null);
 			synchronized (surfaceHolder) {
-
 				doDraw(c, modPlayer, info);
 			}
 		} finally {

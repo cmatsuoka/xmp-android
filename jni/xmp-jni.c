@@ -484,7 +484,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 	}
 
 	xxs = &mi.mod->xxs[sub->sid];
-	if (xxs == NULL) {
+	if (xxs == NULL || xxs->flg & XMP_SAMPLE_SYNTH) {
 		goto err;
 	}
 
