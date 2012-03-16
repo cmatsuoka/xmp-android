@@ -112,7 +112,7 @@ public class ChannelViewer extends Viewer {
 			final int vol = info.volumes[i];
 			final int finalvol = info.finalvols[i];
 			final int pan = info.pans[i];
-			int key = info.keys[i];
+			final int key = info.keys[i];
 			
 			if (ins >= 0) {
 				holdIns[i] = ins;
