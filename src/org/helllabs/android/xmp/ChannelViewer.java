@@ -76,7 +76,6 @@ public class ChannelViewer extends Viewer {
 
 	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
 		final int chn = modVars[3];
-		final int volBase = modVars[6];
 		final int scopeWidth = 8 * fontWidth;
 		final int scopeHeight = 3 * fontHeight;
 		final int scopeLeft = 2 * font2Width + 2 * fontWidth;
@@ -163,7 +162,7 @@ public class ChannelViewer extends Viewer {
 			}
 
 			// Draw volumes
-			int volX = volLeft + vol * volWidth / volBase;
+			int volX = volLeft + vol * volWidth / 0x40;
 			int volY1 = y + 2 * fontHeight;
 			int volY2 = y + 2 * fontHeight + fontHeight / 3;	
 			rect.set(volLeft, volY1, volX, volY2);
@@ -172,7 +171,7 @@ public class ChannelViewer extends Viewer {
 			canvas.drawRect(rect, scopePaint);
 
 			// Draw pan
-			int panX = panLeft + pan * panWidth / 0x100;
+			int panX = panLeft + panWidth / 2 + pan * panWidth / 0x100;
 			rect.set(panLeft, volY1, panLeft + panWidth, volY2);
 			canvas.drawRect(rect, scopePaint);
 			rect.set(panX, volY1, panX + fontWidth / 2, volY2);

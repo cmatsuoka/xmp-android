@@ -12,6 +12,7 @@ static struct xmp_module_info mi;
 
 static int _playing = 0;
 static int _cur_vol[XMP_MAX_CHANNELS];
+static int _hold_vol[XMP_MAX_CHANNELS];
 static int _pan[XMP_MAX_CHANNELS];
 static int _ins[XMP_MAX_CHANNELS];
 static int _key[XMP_MAX_CHANNELS];
@@ -381,6 +382,10 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 	for (i = 0; i < chn; i++) {
                 struct xmp_channel_info *ci = &mi.channel_info[i];
 
+		if (ci->event.vol > 0) {
+			_hold_vol[i] = ci->event.vol * 0x40 / mi.vol_base;
+		}
+
 		_cur_vol[i] -= _decay;
 		if (_cur_vol[i] < 0) {
 			_cur_vol[i] = 0;
@@ -389,19 +394,19 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 		if (ci->event.note > 0 && ci->event.note <= 0x80) {
 			_key[i] = ci->event.note - 1;
 			_last_key[i] = _key[i];
-			_cur_vol[i] = ci->volume;
+			_cur_vol[i] = _hold_vol[i];
 		} else {
 			_key[i] = -1;
 		}
 
 		if (ci->event.vol > 0) {
 			_key[i] = _last_key[i];
-			_cur_vol[i] = ci->volume;
+			_cur_vol[i] = _hold_vol[i];
 		}
 
-		_ins[i] = ci->event.ins - 1;
-		_finalvol[i] = ci->finalvol;
-		_pan[i] = ci->finalpan;
+		_ins[i] = ci->instrument - 1;
+		_finalvol[i] = ci->volume;
+		_pan[i] = ci->pan;
 	}
 
 	(*env)->SetIntArrayRegion(env, vol, 0, chn, _cur_vol);
