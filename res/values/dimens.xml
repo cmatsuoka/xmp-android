@@ -20,4 +20,5 @@
     <dimen name="actionbar_compat_button_home_width">56dp</dimen>
     <dimen name="patternview_font_size">14sp</dimen>
     <dimen name="channelview_font_size">12sp</dimen>
+    <dimen name="channelview_channel_font_size">14sp</dimen>
 </resources>

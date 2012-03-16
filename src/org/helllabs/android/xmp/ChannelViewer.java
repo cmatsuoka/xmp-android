@@ -11,6 +11,7 @@ import android.os.RemoteException;
 public class ChannelViewer extends Viewer {
 	private Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint;
 	private int fontSize, fontHeight, fontWidth;
+	private int font2Size, font2Height, font2Width;
 	private String[] insName = new String[256];		
 	private int[] channelIns;
 	private Rect rect = new Rect();
@@ -45,6 +46,10 @@ public class ChannelViewer extends Viewer {
 		for (int i = 0; i < chn; i++) {
 			channelNumber[i] = new String(String.format("%2d", i + 1));
 		}
+		
+		synchronized (isDown) {
+			posY = 0;
+		}
 	}
 
 	@Override
@@ -72,8 +77,8 @@ public class ChannelViewer extends Viewer {
 		final int volBase = modVars[6];
 		final int scopeWidth = 8 * fontWidth;
 		final int scopeHeight = 3 * fontHeight;
-		final int scopeLeft = 3 * fontWidth;
-		final int volLeft = scopeLeft + scopeWidth + fontWidth;
+		final int scopeLeft = 2 * font2Width + 2 * fontWidth;
+		final int volLeft = scopeLeft + scopeWidth + fontWidth * 2;
 		final int volWidth = (canvasWidth - 6 * fontWidth - volLeft) / 2;
 		final int panLeft = volLeft + volWidth + 4 * fontWidth;
 		final int panWidth = volWidth;
@@ -113,7 +118,7 @@ public class ChannelViewer extends Viewer {
 
 			// Draw channel number
 			
-			canvas.drawText(channelNumber[i], 0, y + scopeHeight / 2 + fontHeight * 120 / 200, numPaint);
+			canvas.drawText(channelNumber[i], 0, y + scopeHeight / 2 + font2Height / 2, numPaint);
 			
 			// Draw scopes
 			
@@ -171,6 +176,7 @@ public class ChannelViewer extends Viewer {
 		super(context);
 		
 		fontSize = getResources().getDimensionPixelSize(R.dimen.channelview_font_size);
+		font2Size = getResources().getDimensionPixelSize(R.dimen.channelview_channel_font_size);
 		
 		scopePaint = new Paint();
 		scopePaint.setARGB(255, 40, 40, 40);
@@ -190,12 +196,14 @@ public class ChannelViewer extends Viewer {
 		numPaint = new Paint();
 		numPaint.setARGB(255, 220, 220, 220);
 		numPaint.setTypeface(Typeface.MONOSPACE);
-		numPaint.setTextSize(fontSize * 120 / 100);
+		numPaint.setTextSize(font2Size);
 		numPaint.setAntiAlias(true);
 		
 		fontWidth = (int)insPaint.measureText("X");
 		fontHeight = fontSize * 12 / 10;
 
+		font2Width = (int)numPaint.measureText("X");
+		font2Height = font2Size * 12 / 10;
 		
 		buffer = new byte[8 * fontWidth];
 	}
