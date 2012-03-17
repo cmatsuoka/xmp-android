@@ -22,6 +22,7 @@ interface ModInterface {
 	String getFileName();
 	String[] getInstruments();
 	void getPatternRow(int pat, int row, out byte[] rowNotes, out byte[] rowInstruments);
+	int mute(int chn, int status);
 	boolean deleteFile();
 	
 	void registerCallback(PlayerCallback cb);

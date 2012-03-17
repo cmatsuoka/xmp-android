@@ -69,7 +69,7 @@ public class Player extends Activity {
 	Viewer.Info[] info;
 	int[] modVars = new int[10];
 	static final int frameRate = 25;
-	Boolean stopUpdate;
+	boolean stopUpdate;
 	int currentViewer = 0;
 	
 	private ServiceConnection connection = new ServiceConnection() {

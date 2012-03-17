@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp;
 
 import android.content.Context;
+import android.os.RemoteException;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -11,7 +12,8 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	protected SurfaceHolder surfaceHolder;
 	protected int canvasHeight, canvasWidth;
 	protected int[] modVars;
-	protected ModInterface modPlayer; 
+	protected ModInterface modPlayer;
+	protected boolean[] isMuted;
 	
     public class Info {
     	int time;
@@ -24,11 +26,13 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
     	int[] periods = new int[64];
     };
 
+    // Touch tracking
+    private int downX, downY;
+    private int currentX, currentY;
+    private boolean moved;
     protected int deltaX, deltaY;
-    protected int downX, downY;
-    protected int currentX, currentY;
     protected int posX, posY;
-    protected Boolean isDown, moved;
+    protected Boolean isDown;
     
 	public Viewer(Context context) {
 		super(context);
@@ -43,7 +47,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		posX = posY = 0;
 		isDown = false;
 		moved = false;
-		
+	
 		setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -74,7 +78,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 				case MotionEvent.ACTION_UP:
 					isDown = false;
 					if (!moved) {
-						onClick();
+						onClick((int)ev.getX(), (int)ev.getY());
 					}
 					
 					synchronized (isDown) {
@@ -91,7 +95,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		 });
 	}
 	
-	protected void onClick() {
+	protected void onClick(int x, int y) {
 		((View)getParent()).performClick();
 	}
 	
@@ -150,8 +154,17 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	}
 	
 	public void setup(ModInterface modPlayer, int[] modVars) {
+		final int chn = modVars[3];
+		
 		this.modVars = modVars;
 		this.modPlayer = modPlayer;
+				
+		isMuted = new boolean[chn];
+		for (int i = 0; i < chn; i++) {
+			try {
+				isMuted[i] = modPlayer.mute(i, 2) == 1;
+			} catch (RemoteException e) { }
+		}
 	}
 	
 	/* Callback invoked when the surface dimensions change. */

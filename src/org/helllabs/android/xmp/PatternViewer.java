@@ -11,7 +11,7 @@ import android.os.RemoteException;
 // http://developer.android.com/guide/topics/graphics/2d-graphics.html
 
 public class PatternViewer extends Viewer {
-	private Paint headerPaint, headerTextPaint, notePaint, insPaint, barPaint;
+	private Paint headerPaint, headerTextPaint, notePaint, insPaint, barPaint, mutePaint;
 	private int fontSize, fontHeight, fontWidth;
 	private String[] allNotes = new String[120];
 	private String[] hexByte = new String[256];
@@ -23,7 +23,6 @@ public class PatternViewer extends Viewer {
 	private final static String[] notes = {
 		"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "
 	};
-
 	
 	@Override
 	public void setup(ModInterface modPlayer, int[] modVars) {
@@ -102,6 +101,7 @@ public class PatternViewer extends Viewer {
 		for (int i = 1; i < lines; i++) {
 			final int lineInPattern = i + row - barLine + 1; 
 			final int y = (i + 1) * fontHeight;
+			Paint paint, paint2;
 			int x;
 			
 			if (lineInPattern < 0 || lineInPattern >= numRows)
@@ -128,24 +128,31 @@ public class PatternViewer extends Viewer {
 					continue;
 				}
 				
-				if (rowNotes[j] > 0x80) {
-					canvas.drawText("===", x, y, notePaint);
-				} else if (rowNotes[j] > 0) {
-					canvas.drawText(allNotes[rowNotes[j] - 1], x, y, notePaint);
+				if (isMuted[j]) {
+					paint = mutePaint;
+					paint2 = mutePaint;
 				} else {
-					canvas.drawText("---", x, y, notePaint);
+					paint = notePaint;
+					paint2 = insPaint;
+				}
+				
+				if (rowNotes[j] > 0x80) {
+					canvas.drawText("===", x, y, paint);
+				} else if (rowNotes[j] > 0) {
+					canvas.drawText(allNotes[rowNotes[j] - 1], x, y, paint);
+				} else {
+					canvas.drawText("---", x, y, paint);
 				}
 				
 				x = biasX + (3 + j * 6 + 3) * fontWidth;
 				if (rowInstruments[j] > 0) {
-					canvas.drawText(hexByte[rowInstruments[j]], x, y, insPaint);
+					canvas.drawText(hexByte[rowInstruments[j]], x, y, paint2);
 				} else {
-					canvas.drawText("--", x, y, insPaint);
+					canvas.drawText("--", x, y, paint2);
 				}
 			}
 		}
 	}
-
 
 	public PatternViewer(Context context) {
 		super(context);
@@ -163,6 +170,12 @@ public class PatternViewer extends Viewer {
 		insPaint.setTypeface(Typeface.MONOSPACE);
 		insPaint.setTextSize(fontSize);
 		insPaint.setAntiAlias(true);
+		
+		mutePaint = new Paint();
+		mutePaint.setARGB(255, 60, 60, 60);
+		mutePaint.setTypeface(Typeface.MONOSPACE);
+		mutePaint.setTextSize(fontSize);
+		mutePaint.setAntiAlias(true);
 		
 		headerTextPaint = new Paint();
 		headerTextPaint.setARGB(255, 220, 220, 220);

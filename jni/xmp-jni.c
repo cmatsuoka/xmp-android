@@ -219,6 +219,12 @@ Java_org_helllabs_android_xmp_Xmp_time(JNIEnv *env, jobject obj)
 	return _playing ? mi.time : -1;
 }
 
+JNIEXPORT jint JNICALL
+Java_org_helllabs_android_xmp_Xmp_mute(JNIEnv *env, jobject obj, jint chn, jint status)
+{
+	return xmp_channel_mute(ctx, chn, status);
+}
+
 JNIEXPORT void JNICALL
 Java_org_helllabs_android_xmp_Xmp_getInfo(JNIEnv *env, jobject obj, jintArray values)
 {

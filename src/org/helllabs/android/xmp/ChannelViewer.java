@@ -7,16 +7,18 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
+import android.util.Log;
 
 public class ChannelViewer extends Viewer {
-	private Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint;
+	private Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint, scopeMutePaint;
 	private int fontSize, fontHeight, fontWidth;
 	private int font2Size, font2Height, font2Width;
 	private String[] insName;		
 	private Rect rect = new Rect();
 	private byte[] buffer;
 	private int[] holdKey;
-	private String channelNumber[];
+	private String[] channelNumber;
+	private ModInterface modPlayer;
 
 	@Override
 	public void setup(ModInterface modPlayer, int[] modVars) {
@@ -25,6 +27,7 @@ public class ChannelViewer extends Viewer {
 		int chn = modVars[3];
 		int insNum = modVars[4];
 		String[] instruments;
+		this.modPlayer = modPlayer;
 
 		insName = new String[insNum];
 		
@@ -35,14 +38,12 @@ public class ChannelViewer extends Viewer {
 			}
 		} catch (RemoteException e) { }
 
-
 		synchronized (isDown) {
 			posY = 0;
 		}
 
 		holdKey = new int[chn];
 		channelNumber = new String[chn];
-
 		for (int i = 0; i < chn; i++) {
 			channelNumber[i] = new String(String.format("%2d", i + 1));
 		}
@@ -66,6 +67,29 @@ public class ChannelViewer extends Viewer {
 			}
 		}
 	}
+	
+	@Override
+	public void onClick(int x, int y) {
+		final int chn = modVars[3];
+		final int scopeWidth = 8 * fontWidth;
+		final int scopeLeft = 2 * font2Width + 2 * fontWidth;
+		
+		// Check if clicked on scopes
+		if (x >= scopeLeft && x <= scopeLeft + scopeWidth) {
+			int scopeNum = (y - posY - fontHeight) / (4 * fontHeight);
+			if (scopeNum >= chn) {
+				scopeNum = chn - 1;
+			}
+			Log.i("asd", "scopeNum=" + scopeNum);
+			try {
+				modPlayer.mute(scopeNum, isMuted[scopeNum] ? 0 : 1);
+				isMuted[scopeNum] = !isMuted[scopeNum];
+			} catch (RemoteException e) { }
+			
+		} else {
+			super.onClick(x, y);
+		}
+	}
 
 	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
 		final int chn = modVars[3];
@@ -86,8 +110,8 @@ public class ChannelViewer extends Viewer {
 
 		for (int i = 0; i < chn; i++) {
 			final int y = biasY + (i * 4 + 1) * fontHeight;
-			final int ins = info.instruments[i];
-			final int vol = info.volumes[i];
+			final int ins = isMuted[i] ? -1 : info.instruments[i];
+			final int vol = isMuted[i] ? 0 : info.volumes[i];
 			final int finalvol = info.finalvols[i];
 			final int pan = info.pans[i];
 			final int key = info.keys[i];
@@ -106,29 +130,33 @@ public class ChannelViewer extends Viewer {
 			canvas.drawText(channelNumber[i], 0, y + scopeHeight / 2 + font2Height / 2, numPaint);
 
 			// Draw scopes
-
 			rect.set(scopeLeft, y + 1, scopeLeft + scopeWidth, y + scopeHeight);
-			canvas.drawRect(rect, scopePaint);
-
-			try {
-				int trigger;
-
-				// Be very careful here!
-				// Our variables are latency-compensated but sample data is current
-				// so caution is needed to avoid retrieving data using old variables
-				// from a module with sample data from a newly loaded one.
-
-				if (key >= 0) {
-					trigger = 1;
-				} else {
-					trigger = 0;
+			if (isMuted[i]) {
+				canvas.drawRect(rect, scopeMutePaint);
+				canvas.drawText("MUTE", scopeLeft + 2 * fontWidth, y + fontHeight + fontSize, insPaint);
+			} else {
+				canvas.drawRect(rect, scopePaint);
+	
+				try {
+					int trigger;
+	
+					// Be very careful here!
+					// Our variables are latency-compensated but sample data is current
+					// so caution is needed to avoid retrieving data using old variables
+					// from a module with sample data from a newly loaded one.
+	
+					if (key >= 0) {
+						trigger = 1;
+					} else {
+						trigger = 0;
+					}
+	
+					modPlayer.getSampleData(trigger, ins, holdKey[i], period, i, scopeWidth, buffer);
+	
+				} catch (RemoteException e) { }
+				for (int j = 0; j < scopeWidth; j++) {
+					canvas.drawPoint(scopeLeft + j, y + scopeHeight / 2 + buffer[j] * finalvol / 64 * scopeHeight / 2 / 180, scopeLinePaint);
 				}
-
-				modPlayer.getSampleData(trigger, ins, holdKey[i], period, i, scopeWidth, buffer);
-
-			} catch (RemoteException e) { }
-			for (int j = 0; j < scopeWidth; j++) {
-				canvas.drawPoint(scopeLeft + j, y + scopeHeight / 2 + buffer[j] * finalvol / 64 * scopeHeight / 2 / 180, scopeLinePaint);
 			}
 
 			// Draw instrument name
@@ -167,7 +195,10 @@ public class ChannelViewer extends Viewer {
 
 		scopeLinePaint = new Paint();
 		scopeLinePaint.setARGB(255, 80, 160, 80);
-
+		
+		scopeMutePaint = new Paint();
+		scopeMutePaint.setARGB(255, 60, 0, 0);
+		
 		meterPaint = new Paint();
 		meterPaint.setARGB(255, 40, 80, 160);
 

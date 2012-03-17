@@ -190,6 +190,11 @@ public class ModService extends Service {
 	       		}
 
 	       		notifier.notification(xmp.getModName(), queue.index());
+	       		
+	       		// Unmute all channels
+	       		for (int i = 0; i < 64; i++) {
+	       			xmp.mute(i, 0);
+	       		}
 		       		    	
 	        	int numClients = callbacks.beginBroadcast();
 	        	for (int j = 0; j < numClients; j++) {
@@ -456,6 +461,10 @@ public class ModService extends Service {
 			if (isPlaying) {
 				xmp.getPatternRow(pat, row, rowNotes, rowInstruments);
 			}
+		}
+		
+		public int mute(int chn, int status) {
+			return xmp.mute(chn, status);
 		}
 
 		
