@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
+import android.util.Log;
 
 public class InstrumentViewer extends Viewer {
 	private Paint[] insPaint, barPaint;
@@ -60,22 +61,9 @@ public class InstrumentViewer extends Viewer {
 		final int ins = modVars[4];
 		int biasY;
 		
-		synchronized (isDown) {
-			int max = canvasHeight - ins * fontHeight - fontHeight / 2;
-			biasY = deltaY + posY;
+		biasY = updatePositionY(canvasHeight - ins * fontHeight - fontHeight / 2);
 
-			if (max > 0) {
-				max = 0;
-			}
-
-			if (biasY > 0) {
-				biasY = posY = 0;
-			}
-
-			if (biasY < max) {
-				biasY = max;
-			}
-		}
+		Log.i("asd", "biasY=" + biasY + " deltaY=" + deltaY);
 		
 		// Clear screen
 		canvas.drawColor(Color.BLACK);

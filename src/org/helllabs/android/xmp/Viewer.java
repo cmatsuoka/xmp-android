@@ -1,7 +1,6 @@
 package org.helllabs.android.xmp;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -27,8 +26,9 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 
     protected int deltaX, deltaY;
     protected int downX, downY;
+    protected int currentX, currentY;
     protected int posX, posY;
-    protected Boolean isDown;
+    protected Boolean isDown, moved;
     
 	public Viewer(Context context) {
 		super(context);
@@ -42,6 +42,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		
 		posX = posY = 0;
 		isDown = false;
+		moved = false;
 		
 		setOnTouchListener(new OnTouchListener() {
 
@@ -56,22 +57,24 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 						downX = (int)ev.getX();
 						downY = (int)ev.getY();
 						deltaX = deltaY = 0;
+						moved = false;
 					}
 					break;
 				case MotionEvent.ACTION_MOVE:
 					synchronized (isDown) {
 						if (isDown) {
-							deltaX = (int)ev.getX() - downX;
-							deltaY = (int)ev.getY() - downY;
+							currentX = (int)ev.getX();
+							currentY = (int)ev.getY();
+							deltaX = currentX - downX;
+							deltaY = currentY - downY;
+							moved = true;
 						}
 					}
 					break;
 				case MotionEvent.ACTION_UP:
 					isDown = false;
-					
-					Log.i("asd", "x=" + deltaX + " y=" + deltaY);
-					if (deltaX == 0 && deltaY == 0) {
-						((View)getParent()).performClick();
+					if (!moved) {
+						onClick();
 					}
 					
 					synchronized (isDown) {
@@ -88,7 +91,63 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		 });
 	}
 	
+	protected void onClick() {
+		((View)getParent()).performClick();
+	}
+	
 	public abstract void update(Info info);
+	
+	protected int updatePositionX(int max) {
+		int bias;
+
+		synchronized (isDown) {
+			bias = deltaX + posX;
+
+			if (max > 0) {
+				max = 0;
+			}
+
+			if (bias > 0) {
+				bias = 0;
+				posX = 0;
+				downX = currentX;
+			}
+
+			if (bias < max) {
+				bias = max;
+				posX = max;
+				downX = currentX;
+			}
+		}
+
+		return bias;
+	}
+	
+	protected int updatePositionY(int max) {
+		int bias;
+
+		synchronized (isDown) {
+			bias = deltaY + posY;
+
+			if (max > 0) {
+				max = 0;
+			}
+
+			if (bias > 0) {
+				bias = 0;
+				posY = 0;
+				downY = currentY;
+			}
+
+			if (bias < max) {
+				bias = max;
+				posY = max;
+				downY = currentY;
+			}
+		}
+
+		return bias;
+	}
 	
 	public void setup(ModInterface modPlayer, int[] modVars) {
 		this.modVars = modVars;

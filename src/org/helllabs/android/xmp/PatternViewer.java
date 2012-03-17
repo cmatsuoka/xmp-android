@@ -81,21 +81,7 @@ public class PatternViewer extends Viewer {
 		final int numRows = info.values[3];
 		int biasX;
 		
-		synchronized (isDown) {
-			int max = canvasWidth - (chn * 6 + 2) * fontWidth;
-			biasX = deltaX + posX;
-			
-			if (max > 0) {
-				max = 0;
-			}
-
-			if (biasX > 0) {
-				biasX = posX = 0;
-			}
-			if (biasX < max) {
-				biasX = max;
-			}
-		}
+		biasX = updatePositionX(canvasWidth - (chn * 6 + 2) * fontWidth);
 
 		// Clear screen
 		canvas.drawColor(Color.BLACK);

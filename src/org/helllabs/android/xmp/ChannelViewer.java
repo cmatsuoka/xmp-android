@@ -79,22 +79,7 @@ public class ChannelViewer extends Viewer {
 		final int panWidth = volWidth;
 		int biasY;
 
-		synchronized (isDown) {
-			int max = canvasHeight - (chn * 4 + 1) * fontHeight;
-			biasY = deltaY + posY;
-
-			if (max > 0) {
-				max = 0;
-			}
-
-			if (biasY > 0) {
-				biasY = posY = 0;
-			}
-
-			if (biasY < max) {
-				biasY = max;
-			}
-		}
+		biasY = updatePositionY(canvasHeight - (chn * 4 + 1) * fontHeight);
 
 		// Clear screen
 		canvas.drawColor(Color.BLACK);
