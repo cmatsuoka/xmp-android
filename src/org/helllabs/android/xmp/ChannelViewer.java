@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
-import android.util.Log;
 
 public class ChannelViewer extends Viewer {
 	private Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint, scopeMutePaint;
@@ -68,26 +67,63 @@ public class ChannelViewer extends Viewer {
 		}
 	}
 	
-	@Override
-	public void onClick(int x, int y) {
+	private int findScope(int x, int y) {
 		final int chn = modVars[3];
 		final int scopeWidth = 8 * fontWidth;
 		final int scopeLeft = 2 * font2Width + 2 * fontWidth;
 		
-		// Check if clicked on scopes
 		if (x >= scopeLeft && x <= scopeLeft + scopeWidth) {
 			int scopeNum = (y - posY - fontHeight) / (4 * fontHeight);
 			if (scopeNum >= chn) {
 				scopeNum = chn - 1;
 			}
-			Log.i("asd", "scopeNum=" + scopeNum);
+			return scopeNum;
+		} else {
+			return -1;
+		}
+	}
+	
+	@Override
+	public void onClick(int x, int y) {
+
+		// Check if clicked on scopes
+		int n = findScope(x, y);
+
+		if (n >= 0) {
 			try {
-				modPlayer.mute(scopeNum, isMuted[scopeNum] ? 0 : 1);
-				isMuted[scopeNum] = !isMuted[scopeNum];
+				modPlayer.mute(n, isMuted[n] ? 0 : 1);
+				isMuted[n] = !isMuted[n];
 			} catch (RemoteException e) { }
-			
 		} else {
 			super.onClick(x, y);
+		}
+	}
+	
+	@Override
+	public void onLongClick(int x, int y) {
+		int chn = modVars[3];
+
+		// Check if clicked on scopes
+		int n = findScope(x, y);
+
+		if (n >= 0) {
+			if (isMuted[n]) {
+				try {
+					for (int i = 0; i < chn; i++) {
+						modPlayer.mute(i, 0);
+						isMuted[i] = false;
+					}
+				} catch (RemoteException e) { }
+			} else {
+				try {
+					for (int i = 0; i < chn; i++) {
+						modPlayer.mute(i, i != n ? 1 : 0);
+						isMuted[i] = i != n;
+					}
+				} catch (RemoteException e) { }
+			}
+		} else {
+			super.onLongClick(x, y);
 		}
 	}
 
