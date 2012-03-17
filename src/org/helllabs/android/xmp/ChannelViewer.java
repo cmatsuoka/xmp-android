@@ -218,7 +218,7 @@ public class ChannelViewer extends Viewer {
 			canvas.drawRect(rect, scopePaint);
 
 			// Draw pan
-			int panX = panLeft + panWidth / 2 + pan * panWidth / 0x100;
+			int panX = panLeft + pan * panWidth / 0x100;
 			rect.set(panLeft, volY1, panLeft + panWidth, volY2);
 			canvas.drawRect(rect, scopePaint);
 			if (ins >= 0) {
