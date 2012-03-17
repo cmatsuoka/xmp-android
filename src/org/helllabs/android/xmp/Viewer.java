@@ -2,6 +2,7 @@ package org.helllabs.android.xmp;
 
 import android.content.Context;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -29,7 +30,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
     // Touch tracking
     private int downX, downY;
     private int currentX, currentY;
-    private boolean moved;
+    private int maxDelta;
     protected int deltaX, deltaY;
     protected int posX, posY;
     protected Boolean isDown;
@@ -46,7 +47,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		
 		posX = posY = 0;
 		isDown = false;
-		moved = false;
+		maxDelta = 0;
 	
 		setOnTouchListener(new OnTouchListener() {
 
@@ -61,7 +62,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 						downX = (int)ev.getX();
 						downY = (int)ev.getY();
 						deltaX = deltaY = 0;
-						moved = false;
+						maxDelta = 0;
 					}
 					break;
 				case MotionEvent.ACTION_MOVE:
@@ -71,13 +72,16 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 							currentY = (int)ev.getY();
 							deltaX = currentX - downX;
 							deltaY = currentY - downY;
-							moved = true;
+							if (Math.abs(deltaX) > maxDelta)
+								maxDelta = Math.abs(deltaX);
+							if (Math.abs(deltaY) > maxDelta)
+								maxDelta = Math.abs(deltaY);
 						}
 					}
 					break;
 				case MotionEvent.ACTION_UP:
 					isDown = false;
-					if (!moved) {
+					if (maxDelta == 0) {
 						onClick((int)ev.getX(), (int)ev.getY());
 					}
 					
