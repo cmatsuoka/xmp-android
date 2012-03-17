@@ -11,7 +11,8 @@ import android.os.RemoteException;
 // http://developer.android.com/guide/topics/graphics/2d-graphics.html
 
 public class PatternViewer extends Viewer {
-	private Paint headerPaint, headerTextPaint, notePaint, insPaint, barPaint, mutePaint;
+	private Paint headerPaint, headerTextPaint, notePaint, insPaint;
+	private Paint barPaint, muteNotePaint, muteInsPaint;
 	private int fontSize, fontHeight, fontWidth;
 	private String[] allNotes = new String[120];
 	private String[] hexByte = new String[256];
@@ -129,8 +130,8 @@ public class PatternViewer extends Viewer {
 				}
 				
 				if (isMuted[j]) {
-					paint = mutePaint;
-					paint2 = mutePaint;
+					paint = muteNotePaint;
+					paint2 = muteInsPaint;
 				} else {
 					paint = notePaint;
 					paint2 = insPaint;
@@ -171,11 +172,17 @@ public class PatternViewer extends Viewer {
 		insPaint.setTextSize(fontSize);
 		insPaint.setAntiAlias(true);
 		
-		mutePaint = new Paint();
-		mutePaint.setARGB(255, 60, 60, 60);
-		mutePaint.setTypeface(Typeface.MONOSPACE);
-		mutePaint.setTextSize(fontSize);
-		mutePaint.setAntiAlias(true);
+		muteNotePaint = new Paint();
+		muteNotePaint.setARGB(255, 60, 60, 60);
+		muteNotePaint.setTypeface(Typeface.MONOSPACE);
+		muteNotePaint.setTextSize(fontSize);
+		muteNotePaint.setAntiAlias(true);
+		
+		muteInsPaint = new Paint();
+		muteInsPaint.setARGB(255, 80, 40, 40);
+		muteInsPaint.setTypeface(Typeface.MONOSPACE);
+		muteInsPaint.setTextSize(fontSize);
+		muteInsPaint.setAntiAlias(true);
 		
 		headerTextPaint = new Paint();
 		headerTextPaint.setARGB(255, 220, 220, 220);
