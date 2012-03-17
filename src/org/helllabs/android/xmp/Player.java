@@ -70,6 +70,7 @@ public class Player extends Activity {
 	int[] modVars = new int[10];
 	static final int frameRate = 25;
 	Boolean stopUpdate;
+	int currentViewer = 0;
 	
 	private ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -183,8 +184,10 @@ public class Player extends Activity {
 	
 					modPlayer.getChannelData(info[now].volumes, info[now].finalvols, info[now].pans,
 							info[now].instruments, info[now].keys, info[now].periods);
-	
-					viewer.update(info[before]);
+
+					synchronized(viewerLayout) {
+						viewer.update(info[before]);
+					}
 				}
 			} catch (Exception e) {
 				
@@ -293,7 +296,30 @@ public class Player extends Activity {
         Typeface font = Typeface.createFromAsset(this.getAssets(), path); 
         name.setTypeface(font); 
     }
-    
+
+    void changeViewer() {
+    	currentViewer++;
+    	currentViewer %= 3;
+    	
+    	synchronized(viewerLayout) {
+    		viewerLayout.removeAllViews();
+    		switch (currentViewer) {
+    		case 0:
+    			viewer = new InstrumentViewer(activity);
+    			break;
+    		case 1:
+    			viewer = new ChannelViewer(activity);
+    			break;
+    		case 2:
+    			viewer = new PatternViewer(activity);
+    			break;
+    		}
+    			
+    		viewerLayout.addView(viewer);
+    		viewer.setup(modPlayer, modVars);
+    	}
+    }
+	
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -337,6 +363,12 @@ public class Player extends Activity {
 
 		viewer = new InstrumentViewer(this);
 		viewerLayout.addView(viewer);
+		viewerLayout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				changeViewer();
+			}
+		});
 			
 		if (prefs.getBoolean(Settings.PREF_KEEP_SCREEN_ON, false)) {
 			titleFlipper.setKeepScreenOn(true);

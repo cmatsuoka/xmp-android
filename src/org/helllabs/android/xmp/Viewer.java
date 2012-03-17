@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -11,7 +12,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	protected SurfaceHolder surfaceHolder;
 	protected int canvasHeight, canvasWidth;
 	protected int[] modVars;
-	protected ModInterface modPlayer;
+	protected ModInterface modPlayer; 
 	
     public class Info {
     	int time;
@@ -46,7 +47,6 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 
 			@Override
 			public boolean onTouch(View v, MotionEvent ev) {
-				
 				int action = ev.getAction();
 				
 				switch (action) {
@@ -68,6 +68,12 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 					break;
 				case MotionEvent.ACTION_UP:
 					isDown = false;
+					
+					Log.i("asd", "x=" + deltaX + " y=" + deltaY);
+					if (deltaX == 0 && deltaY == 0) {
+						((View)getParent()).performClick();
+					}
+					
 					synchronized (isDown) {
 						posX += deltaX;
 						posY += deltaY;
