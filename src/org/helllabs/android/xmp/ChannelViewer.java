@@ -106,8 +106,16 @@ public class ChannelViewer extends Viewer {
 		// Check if clicked on scopes
 		int n = findScope(x, y);
 
+		// If the channel is solo, a long press unmute all channels,
+		// otherwise solo this channel
+		
 		if (n >= 0) {
-			if (isMuted[n]) {
+			int count = 0;
+			for (int i = 0; i < chn; i++) {
+				if (!isMuted[i])
+					count++;
+			}
+			if (count == 1 && !isMuted[n]) {
 				try {
 					for (int i = 0; i < chn; i++) {
 						modPlayer.mute(i, 0);
