@@ -117,9 +117,6 @@ public class InstrumentViewer extends Viewer {
 			int val = 15 * i;
 			barPaint[i] = new Paint();
 			barPaint[i].setARGB(255, val /4, val / 2, val);
-			barPaint[i].setTypeface(Typeface.MONOSPACE);
-			barPaint[i].setTextSize(fontSize);
-			barPaint[i].setAntiAlias(true);
 		}
 
 		fontWidth = (int)insPaint[0].measureText("X");
