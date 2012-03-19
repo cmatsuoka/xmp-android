@@ -28,8 +28,9 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 	static final int PLAY_MODULE_REQUEST = 669; 
 	List<PlaylistInfo> modList = new ArrayList<PlaylistInfo>();
 	ImageButton playAllButton, toggleLoopButton, toggleShuffleButton;
-	boolean shuffleMode = true;
-	boolean loopMode = false;
+	protected boolean shuffleMode = true;
+	protected boolean loopMode = false;
+	protected boolean modifiedOptions = false;
 	SharedPreferences prefs;
 	boolean showToasts;
 	ModInterface modPlayer;
@@ -72,6 +73,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 						R.drawable.list_loop_on : R.drawable.list_loop_off);
 				if (showToasts)
 					Message.toast(v.getContext(), loopMode ? "Loop on" : "Loop off");
+				modifiedOptions = true;
 			}
 		});
 
@@ -83,7 +85,8 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 				((ImageButton)v).setImageResource(shuffleMode ?
 						R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
 				if (showToasts)
-					Message.toast(v.getContext(), shuffleMode ? "Shuffle on" : "Shuffle off");				
+					Message.toast(v.getContext(), shuffleMode ? "Shuffle on" : "Shuffle off");
+				modifiedOptions = true;
 			}
 		});
 	}

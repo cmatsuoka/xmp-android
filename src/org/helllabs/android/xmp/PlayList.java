@@ -43,7 +43,6 @@ public class PlayList extends PlaylistActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		setContentView(R.layout.playlist);
-		setupButtons();
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras == null)
@@ -65,7 +64,11 @@ public class PlayList extends PlaylistActivity {
 		curListDesc.setText(PlaylistUtils.readComment(this, name));
 		registerForContextMenu(getListView());
 		
+		updateOptions();
+		setupButtons();
+				
 		modified = false;
+		modifiedOptions = false;
 
 		updateList();
 	}
@@ -77,10 +80,32 @@ public class PlayList extends PlaylistActivity {
 		if (modified) {			
 			writeList();
 		}
+		
+		if (modifiedOptions) {
+			writeOptions();
+		}
 	}
 	
 	void update() {
 		updateList();
+	}
+	
+	void updateOptions() {
+		File file = new File(Settings.dataDir, name + ".options");
+		String line;
+		
+		try {
+	    	BufferedReader in = new BufferedReader(new FileReader(file), 512);
+	    	line = in.readLine();
+	    	in.close();
+	    	
+	    	if (line != null) {
+	    		shuffleMode = line.indexOf('S') >= 0;
+	    		loopMode = line.indexOf('L') >= 0;
+	    	}
+		} catch (IOException e) {
+			Log.e("Xmp PlayList", "Error reading options file " + file.getPath());
+	    }
 	}
 	
 	void updateList() {
@@ -106,7 +131,7 @@ public class PlayList extends PlaylistActivity {
 	    	}
 	    	in.close();
 	    } catch (IOException e) {
-	    	 
+	    	Log.e("Xmp PlayList", "Error reading playlist " + file.getPath());
 	    }		
 		
 	    if (!invalidList.isEmpty()) {
@@ -195,6 +220,28 @@ public class PlayList extends PlaylistActivity {
 			plist.remove(plist.getItem(which));
 		}
 	};
+	
+	private void writeOptions() {
+		File file = new File(Settings.dataDir, name + ".options.new");
+		
+		file.delete();
+		
+		try {
+			BufferedWriter out = new BufferedWriter(new FileWriter(file), 512);
+			out.write(shuffleMode ? 'S' : 's');
+			out.write(loopMode ? 'L' : 'l');
+			out.close();
+			
+			File oldFile = new File(Settings.dataDir, name + ".options");
+			oldFile.delete();
+			file.renameTo(oldFile);
+			
+			modifiedOptions = false;
+			
+		} catch (IOException e) {
+			Log.e("Xmp PlayList", "Error writing options file " + file.getPath());
+		}		
+	}
 
 	private void writeList() {		
 		File file = new File(Settings.dataDir, name + ".playlist.new");

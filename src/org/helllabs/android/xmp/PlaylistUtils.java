@@ -159,6 +159,7 @@ public class PlaylistUtils {
 		String list = listNoSuffix()[index];
 		(new File(Settings.dataDir, list + ".playlist")).delete();
 		(new File(Settings.dataDir, list + ".comment")).delete();
+		(new File(Settings.dataDir, list + ".options")).delete();
 	}
 	
 	
