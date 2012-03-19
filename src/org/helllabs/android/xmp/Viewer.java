@@ -31,16 +31,33 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
     };
 
     // Touch tracking
-    protected int deltaX, deltaY;
-    protected int posX, posY;
+    protected float posX, posY;
     protected Boolean isDown;
-    protected long downTime;
+    protected int maxX, maxY;
     
     private class MyGestureDetector extends SimpleOnGestureListener {
     	
     	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-    		deltaX -= (int)distanceX;
-    		deltaY -= (int)distanceY;
+    		synchronized (isDown) {
+    			posX += distanceX;
+    			posY += distanceY;
+    			
+    			if (posX < 0) {
+    				posX = 0;
+    			}
+
+    			if (posX > maxX - canvasWidth) {
+    				posX = maxX - canvasWidth;
+    			}
+    			
+    			if (posY < 0) {
+    				posY = 0;
+    			}
+
+    			if (posY > maxY - canvasHeight) {
+    				posY = maxY - canvasHeight;
+    			}
+    		}
     		return true;
     	}
     	
@@ -94,58 +111,6 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	}
 	
 	public abstract void update(Info info);
-	
-	protected int updatePositionX(int max) {
-		int bias;
-
-		synchronized (isDown) {
-			bias = deltaX + posX;
-
-			if (max > 0) {
-				max = 0;
-			}
-
-			if (bias > 0) {
-				bias = 0;
-				posX = 0;
-				deltaX = 0;
-			}
-
-			if (bias < max) {
-				bias = max;
-				posX = max;
-				deltaX = 0;
-			}
-		}
-
-		return bias;
-	}
-	
-	protected int updatePositionY(int max) {
-		int bias;
-
-		synchronized (isDown) {
-			bias = deltaY + posY;
-
-			if (max > 0) {
-				max = 0;
-			}
-
-			if (bias > 0) {
-				bias = 0;
-				posY = 0;
-				deltaY = 0;
-			}
-
-			if (bias < max) {
-				bias = max;
-				posY = max;
-				deltaY = 0;
-			}
-		}
-
-		return bias;
-	}
 	
 	public void setup(ModInterface modPlayer, int[] modVars) {
 		final int chn = modVars[3];

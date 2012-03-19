@@ -32,6 +32,7 @@ public class InstrumentViewer extends Viewer {
 		
 		synchronized (isDown) {
 			posY = 0;
+			maxY = insNum * fontHeight + fontHeight / 2;
 		}
 	}
 	
@@ -58,20 +59,17 @@ public class InstrumentViewer extends Viewer {
 	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
 		final int chn = modVars[3];
 		final int ins = modVars[4];
-		int biasY;
-		
-		biasY = updatePositionY(canvasHeight - ins * fontHeight - fontHeight / 2);
 		
 		// Clear screen
 		canvas.drawColor(Color.BLACK);
 
 		for (int i = 0; i < ins; i++) {
-			final int y = biasY + (i + 1) * fontHeight;
+			final int y = (i + 1) * fontHeight - (int)posY;
 			final int width = (canvasWidth - 3 * fontWidth) / chn;
 			int maxVol;
 			
 			// Don't draw if not visible
-			if (y < 0 || y > (canvasHeight + fontHeight)) {
+			if (y < 0 || y > canvasHeight + fontHeight) {
 				continue;
 			}
 			

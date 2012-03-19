@@ -18,7 +18,7 @@ public class PatternViewer extends Viewer {
 	private String[] hexByte = new String[256];
 	private byte[] rowNotes = new byte[64];
 	private byte[] rowInstruments = new byte[64];
-	private int oldRow, oldOrd, oldDeltaX;
+	private int oldRow, oldOrd, oldPosX;
 	private Rect rect = new Rect(); 
 	
 	private final static String[] notes = {
@@ -31,10 +31,12 @@ public class PatternViewer extends Viewer {
 		
 		oldRow = -1;
 		oldOrd = -1;
-		oldDeltaX = -1;
+		oldPosX = -1;
 		
 		synchronized (isDown) {
+			int chn = modVars[3];
 			posX = 0;
+			maxX = (chn * 6 + 2) * fontWidth;
 		}
 	}
 
@@ -46,14 +48,14 @@ public class PatternViewer extends Viewer {
 		
 		Canvas c = null;
 		
-		if (oldRow == row && oldOrd == ord && oldDeltaX == deltaX) {
+		if (oldRow == row && oldOrd == ord && oldPosX == (int)posX) {
 			return;
 		}
 		
 		if (numRows != 0) {		// Skip first invalid infos
 			oldRow = row;
 			oldOrd = ord;
-			oldDeltaX = deltaX;
+			oldPosX = (int)posX;
 		}
 		
 		try {
@@ -79,9 +81,6 @@ public class PatternViewer extends Viewer {
 		final int pat = info.values[1];
 		final int chn = modVars[3];
 		final int numRows = info.values[3];
-		int biasX;
-		
-		biasX = updatePositionX(canvasWidth - (chn * 6 + 2) * fontWidth);
 
 		// Clear screen
 		canvas.drawColor(Color.BLACK);
@@ -91,7 +90,7 @@ public class PatternViewer extends Viewer {
 		canvas.drawRect(rect, headerPaint);
 		for (int i = 0; i < chn; i++) {
 			int adj = (i + 1) < 10 ? 1 : 0;
-			canvas.drawText(Integer.toString(i + 1), biasX + (3 + i * 6 + 1 + adj) * fontWidth, fontSize, headerTextPaint);
+			canvas.drawText(Integer.toString(i + 1), (3 + i * 6 + 1 + adj) * fontWidth - posX, fontSize, headerTextPaint);
 		}
 		
 		// Current line bar
@@ -108,8 +107,8 @@ public class PatternViewer extends Viewer {
 			if (lineInPattern < 0 || lineInPattern >= numRows)
 				continue;
 
-			if (biasX > -2 * fontWidth) {
-				canvas.drawText(hexByte[lineInPattern], biasX, y, headerTextPaint);
+			if (posX > -2 * fontWidth) {
+				canvas.drawText(hexByte[lineInPattern], -posX, y, headerTextPaint);
 			}
 			
 			for (int j = 0; j < chn; j++) {	
@@ -123,7 +122,7 @@ public class PatternViewer extends Viewer {
 					modPlayer.getPatternRow(pat, lineInPattern, rowNotes, rowInstruments);
 				} catch (RemoteException e) { }
 					
-				x = biasX + (3 + j * 6) * fontWidth;
+				x = (3 + j * 6) * fontWidth - (int)posX;
 				
 				if (x > canvasWidth || x < -6 * fontWidth) {
 					continue;
@@ -145,7 +144,7 @@ public class PatternViewer extends Viewer {
 					canvas.drawText("---", x, y, paint);
 				}
 				
-				x = biasX + (3 + j * 6 + 3) * fontWidth;
+				x = (3 + j * 6 + 3) * fontWidth - (int)posX;
 				if (rowInstruments[j] > 0) {
 					canvas.drawText(hexByte[rowInstruments[j]], x, y, paint2);
 				} else {

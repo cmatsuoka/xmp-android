@@ -39,6 +39,7 @@ public class ChannelViewer extends Viewer {
 
 		synchronized (isDown) {
 			posY = 0;
+			maxY = (chn * 4 + 1) * fontHeight;
 		}
 
 		holdKey = new int[chn];
@@ -73,7 +74,7 @@ public class ChannelViewer extends Viewer {
 		final int scopeLeft = 2 * font2Width + 2 * fontWidth;
 		
 		if (x >= scopeLeft && x <= scopeLeft + scopeWidth) {
-			int scopeNum = (y - posY - fontHeight) / (4 * fontHeight);
+			int scopeNum = (y + (int)posY - fontHeight) / (4 * fontHeight);
 			if (scopeNum >= chn) {
 				scopeNum = chn - 1;
 			}
@@ -145,15 +146,12 @@ public class ChannelViewer extends Viewer {
 		final int volWidth = (canvasWidth - 6 * fontWidth - volLeft) / 2;
 		final int panLeft = volLeft + volWidth + 4 * fontWidth;
 		final int panWidth = volWidth;
-		int biasY;
-
-		biasY = updatePositionY(canvasHeight - (chn * 4 + 1) * fontHeight);
 
 		// Clear screen
 		canvas.drawColor(Color.BLACK);
 
 		for (int i = 0; i < chn; i++) {
-			final int y = biasY + (i * 4 + 1) * fontHeight;
+			final int y = (i * 4 + 1) * fontHeight - (int)posY;
 			final int ins = isMuted[i] ? -1 : info.instruments[i];
 			final int vol = isMuted[i] ? 0 : info.volumes[i];
 			final int finalvol = info.finalvols[i];
