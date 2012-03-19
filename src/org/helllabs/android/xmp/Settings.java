@@ -25,12 +25,10 @@ public class Settings extends android.preference.PreferenceActivity {
 	public static final String PREF_STEREO = "stereo";
 	public static final String PREF_PAN_SEPARATION = "pan_separation";
 	public static final String PREF_EXAMPLES = "examples";
-	public static final String PREF_METERS = "meters";
 	public static final String PREF_SAMPLING_RATE = "sampling_rate";
 	public static final String PREF_BUFFER_MS = "buffer_ms";
 	public static final String PREF_SHOW_TOAST = "show_toast";
 	public static final String PREF_SHOW_INFO_LINE = "show_info_line";
-	public static final String PREF_SHOW_INS_HIGHLIGHT = "show_ins_highlight";
 	public static final String PREF_USE_FILENAME = "use_filename";
 	public static final String PREF_ENABLE_DELETE = "enable_delete";
 	public static final String PREF_KEEP_SCREEN_ON = "keep_screen_on";

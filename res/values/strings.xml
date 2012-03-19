@@ -20,8 +20,6 @@
     <string name="menu_prefs">Settings</string>
     <string name="preferences_examples_title">Install modules</string>
     <string name="preferences_examples_summary">Install example music files when creating modules directory</string>
-    <string name="preferences_meters_title">Volume bars</string>
-    <string name="preferences_meters_summary">Set the type of volume bars</string>
     <string name="preferences_category_interface">Interface settings</string>
     <string name="preferences_loop_list_summary">Play files again after playlist ends</string>
     <string name="preferences_loop_list_title">Loop playlists</string>
@@ -73,8 +71,6 @@ GNU General Public License for more details.</string>
     <string name="msg_no">No</string>
     <string name="msg_file_deleted">File deleted</string>
     <string name="msg_cant_delete">Can\'t delete file</string>
-    <string name="preferences_show_ins_highlight_summary">Highlight playing instruments</string>
-    <string name="preferences_show_ins_highlight_title">Instrument highlight</string>
     <string name="msg_cancel">Cancel</string>
     <string name="msg_ok">Ok</string>
     <string name="msg_select_playlist">Select playlist</string>

@@ -45,7 +45,7 @@ public class Player extends Activity {
 	boolean loopListMode = false;
 	boolean paused = false;
 	boolean finishing = false;
-	boolean showInfoLine, showElapsed, showInsHighlight;
+	boolean showInfoLine, showElapsed;
 	final TextView[] infoName = new TextView[2];
 	final TextView[] infoType = new TextView[2];
 	TextView infoMod;
@@ -341,7 +341,6 @@ public class Player extends Activity {
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		showInfoLine = prefs.getBoolean(Settings.PREF_SHOW_INFO_LINE, true);
-		showInsHighlight = prefs.getBoolean(Settings.PREF_SHOW_INS_HIGHLIGHT, true);
 		showElapsed = true;
 		
 		latency = prefs.getInt(Settings.PREF_BUFFER_MS, 500);
