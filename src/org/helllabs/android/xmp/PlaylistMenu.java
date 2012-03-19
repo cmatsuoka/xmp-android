@@ -271,7 +271,7 @@ public class PlaylistMenu extends ActionBarListActivity {
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 			public void onClick(DialogInterface dialog, int whichButton) {  
-				String value = alert.input.getText().toString();
+				String value = alert.input.getText().toString().replace("\n", " ");				
 				File file = new File(Settings.dataDir, name + ".comment");
 				try {
 					file.delete();
