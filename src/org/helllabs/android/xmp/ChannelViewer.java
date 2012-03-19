@@ -15,6 +15,7 @@ public class ChannelViewer extends Viewer {
 	private String[] insName;		
 	private Rect rect = new Rect();
 	private byte[] buffer;
+	private float[] bufferXY;
 	private int[] holdKey;
 	private String[] channelNumber;
 	private ModInterface modPlayer;
@@ -196,9 +197,14 @@ public class ChannelViewer extends Viewer {
 					modPlayer.getSampleData(trigger, ins, holdKey[i], period, i, scopeWidth, buffer);
 	
 				} catch (RemoteException e) { }
+				int h = scopeHeight / 2;
 				for (int j = 0; j < scopeWidth; j++) {
-					canvas.drawPoint(scopeLeft + j, y + scopeHeight / 2 + buffer[j] * finalvol / 64 * scopeHeight / 2 / 180, scopeLinePaint);
+					bufferXY[j * 2] = scopeLeft + j;
+					bufferXY[j * 2 + 1] = y + h + buffer[j] * h * finalvol / (64 * 180);
 				}
+				
+				// Using drawPoints() instead of drawing each point saves a lot of CPU
+				canvas.drawPoints(bufferXY, 0, scopeWidth << 1, scopeLinePaint);
 			}
 
 			// Draw instrument name
@@ -237,6 +243,8 @@ public class ChannelViewer extends Viewer {
 
 		scopeLinePaint = new Paint();
 		scopeLinePaint.setARGB(255, 80, 160, 80);
+		scopeLinePaint.setStrokeWidth(0);
+		scopeLinePaint.setAntiAlias(false);
 		
 		scopeMutePaint = new Paint();
 		scopeMutePaint.setARGB(255, 60, 0, 0);
@@ -263,5 +271,6 @@ public class ChannelViewer extends Viewer {
 		font2Height = font2Size * 12 / 10;
 
 		buffer = new byte[8 * fontWidth];
+		bufferXY = new float[8 * fontWidth * 2];
 	}
 }
