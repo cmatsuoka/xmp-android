@@ -14,7 +14,8 @@
     android:text="@string/dialog_new_playlist" />
   <EditText android:id="@+id/new_playlist_name"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:singleLine="true" />
     
   <TextView
     android:layout_width="wrap_content"
@@ -23,6 +24,7 @@
     android:text="@string/dialog_new_comment" />
   <EditText android:id="@+id/new_playlist_comment"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" />    
+    android:layout_height="wrap_content"
+    android:singleLine="true" />    
     
 </LinearLayout>

@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.text.method.SingleLineTransformationMethod;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -21,6 +22,7 @@ public class InputDialog extends AlertDialog.Builder {
 		input.setLayoutParams(new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.FILL_PARENT,
 				LinearLayout.LayoutParams.WRAP_CONTENT));
+		input.setTransformationMethod(new SingleLineTransformationMethod());
 		layout.addView(input);		
 		setView(layout);
 	}
