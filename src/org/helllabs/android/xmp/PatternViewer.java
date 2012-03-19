@@ -90,7 +90,10 @@ public class PatternViewer extends Viewer {
 		canvas.drawRect(rect, headerPaint);
 		for (int i = 0; i < chn; i++) {
 			int adj = (i + 1) < 10 ? 1 : 0;
-			canvas.drawText(Integer.toString(i + 1), (3 + i * 6 + 1 + adj) * fontWidth - posX, fontSize, headerTextPaint);
+			int x = (3 + i * 6 + 1 + adj) * fontWidth - (int)posX;
+			if (x > -2 * fontWidth && x < canvasWidth) {
+				canvas.drawText(Integer.toString(i + 1), x, fontSize, headerTextPaint);
+			}
 		}
 		
 		// Current line bar
@@ -124,7 +127,7 @@ public class PatternViewer extends Viewer {
 					
 				x = (3 + j * 6) * fontWidth - (int)posX;
 				
-				if (x > canvasWidth || x < -6 * fontWidth) {
+				if (x < -6 * fontWidth || x > canvasWidth) {
 					continue;
 				}
 				
