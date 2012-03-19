@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.view.KeyEvent;
 
 public class Settings extends android.preference.PreferenceActivity {
@@ -42,6 +43,9 @@ public class Settings extends android.preference.PreferenceActivity {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         oldPath = prefs.getString(PREF_MEDIA_PATH, DEFAULT_MEDIA_PATH);
         addPreferencesFromResource(R.xml.preferences);
+        
+        PreferenceScreen soundScreen = (PreferenceScreen)findPreference("sound_screen");
+        soundScreen.setEnabled(!ModService.isPlaying);
         
         Preference clearCache = (Preference)findPreference("clear_cache");
         clearCache.setOnPreferenceClickListener(new OnPreferenceClickListener() {

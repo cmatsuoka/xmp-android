@@ -37,6 +37,7 @@
   </PreferenceScreen>
   
   <PreferenceScreen
+    android:key="sound_screen"
     android:title="@string/preferences_category_sound">
       
     <ListPreference
