@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -38,6 +40,7 @@ public class PlayList extends PlaylistActivity {
 	TextView curListDesc;
 	PlaylistInfoAdapter plist;
 	Boolean modified;
+	SharedPreferences prefs;
 	
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -50,6 +53,8 @@ public class PlayList extends PlaylistActivity {
 		
 		setTitle("Playlist");
 		
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		TouchListView tlv = (TouchListView)getListView();
 		tlv.setDropListener(onDrop);
 		tlv.setRemoveListener(onRemove);
@@ -57,14 +62,14 @@ public class PlayList extends PlaylistActivity {
 		curList = (View)findViewById(R.id.current_list);
 		curListName = (TextView)findViewById(R.id.current_list_name);
 		curListDesc = (TextView)findViewById(R.id.current_list_description);
-		//registerForContextMenu(curList);
 		
 		name = extras.getString("name");
 		curListName.setText(name);
 		curListDesc.setText(PlaylistUtils.readComment(this, name));
 		registerForContextMenu(getListView());
 		
-		updateOptions();
+		shuffleMode = prefs.getBoolean("options_" + name + "_shuffleMode", true);
+		loopMode = prefs.getBoolean("options_" + name + "_loopMode", false);
 		setupButtons();
 				
 		modified = false;
@@ -88,24 +93,6 @@ public class PlayList extends PlaylistActivity {
 	
 	void update() {
 		updateList();
-	}
-	
-	void updateOptions() {
-		File file = new File(Settings.dataDir, name + ".options");
-		String line;
-		
-		try {
-	    	BufferedReader in = new BufferedReader(new FileReader(file), 512);
-	    	line = in.readLine();
-	    	in.close();
-	    	
-	    	if (line != null) {
-	    		shuffleMode = line.indexOf('S') >= 0;
-	    		loopMode = line.indexOf('L') >= 0;
-	    	}
-		} catch (IOException e) {
-			Log.e("Xmp PlayList", "Error reading options file " + file.getPath());
-	    }
 	}
 	
 	void updateList() {
@@ -222,25 +209,10 @@ public class PlayList extends PlaylistActivity {
 	};
 	
 	private void writeOptions() {
-		File file = new File(Settings.dataDir, name + ".options.new");
-		
-		file.delete();
-		
-		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(file), 512);
-			out.write(shuffleMode ? 'S' : 's');
-			out.write(loopMode ? 'L' : 'l');
-			out.close();
-			
-			File oldFile = new File(Settings.dataDir, name + ".options");
-			oldFile.delete();
-			file.renameTo(oldFile);
-			
-			modifiedOptions = false;
-			
-		} catch (IOException e) {
-			Log.e("Xmp PlayList", "Error writing options file " + file.getPath());
-		}		
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putBoolean("options_" + name + "_shuffleMode", shuffleMode);
+		editor.putBoolean("options_" + name + "_loopMode", loopMode);
+		editor.commit();		
 	}
 
 	private void writeList() {		

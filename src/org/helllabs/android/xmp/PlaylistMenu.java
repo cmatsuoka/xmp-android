@@ -208,22 +208,25 @@ public class PlaylistMenu extends ActionBarListActivity {
 				String value = alert.input.getText().toString();
 				File old1 = new File(Settings.dataDir, name + ".playlist");
 				File old2 = new File(Settings.dataDir, name + ".comment");
-				File old3 = new File(Settings.dataDir, name + ".options");
 				File new1 = new File(Settings.dataDir, value + ".playlist");
 				File new2 = new File(Settings.dataDir, value + ".comment");
-				File new3 = new File(Settings.dataDir, value + ".options");
 
 				if (old1.renameTo(new1) == false) { 
 					error = true;
 				} else if (old2.renameTo(new2) == false) {
 					new1.renameTo(old1);
 					error = true;
-				} else {
-					old3.renameTo(new3);
 				}
 
 				if (error) {
 					Message.error(context, getString(R.string.error_rename_playlist));
+				} else {
+					final SharedPreferences.Editor editor = prefs.edit();
+					editor.putBoolean("options_" + value + "_shuffleMode", prefs.getBoolean("options_" + name + "_shuffleMode", true));
+					editor.putBoolean("options_" + value + "_loopMode", prefs.getBoolean("options_" + name + "_loopMode", false));
+					editor.remove("options_" + name + "_shuffleMode");
+					editor.remove("options_" + name + "_loopMode");
+					editor.commit();
 				}
 
 				updateList();

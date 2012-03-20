@@ -10,7 +10,9 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -159,7 +161,12 @@ public class PlaylistUtils {
 		String list = listNoSuffix()[index];
 		(new File(Settings.dataDir, list + ".playlist")).delete();
 		(new File(Settings.dataDir, list + ".comment")).delete();
-		(new File(Settings.dataDir, list + ".options")).delete();
+
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		final SharedPreferences.Editor editor = prefs.edit();
+		editor.remove("options_" + list + "_shuffleMode");
+		editor.remove("options_" + list + "_loopMode");
+		editor.commit();
 	}
 	
 	
