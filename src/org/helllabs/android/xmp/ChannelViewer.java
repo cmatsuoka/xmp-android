@@ -38,10 +38,7 @@ public class ChannelViewer extends Viewer {
 			}
 		} catch (RemoteException e) { }
 
-		synchronized (isDown) {
-			posY = 0;
-			maxY = (chn * 4 + 1) * fontHeight;
-		}
+		setMaxY((chn * 4 + 1) * fontHeight);
 
 		holdKey = new int[chn];
 		channelNumber = new String[chn];

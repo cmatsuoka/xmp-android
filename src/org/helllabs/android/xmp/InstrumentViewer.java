@@ -30,10 +30,7 @@ public class InstrumentViewer extends Viewer {
 			}
 		} catch (RemoteException e) { }
 		
-		synchronized (isDown) {
-			posY = 0;
-			maxY = insNum * fontHeight + fontHeight / 2;
-		}
+		setMaxY(insNum * fontHeight + fontHeight / 2);
 	}
 	
 	@Override

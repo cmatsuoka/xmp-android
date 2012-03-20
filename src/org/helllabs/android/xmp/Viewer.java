@@ -33,29 +33,26 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
     // Touch tracking
     protected float posX, posY;
     protected Boolean isDown;
-    protected int maxX, maxY;
+    private int maxX, maxY;
     
-    private class MyGestureDetector extends SimpleOnGestureListener {
-    	
+    private class MyGestureDetector extends SimpleOnGestureListener {   	
     	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
     		synchronized (isDown) {
     			posX += distanceX;
     			posY += distanceY;
     			
-    			if (posX < 0) {
-    				posX = 0;
-    			}
-
     			if (posX > maxX - canvasWidth) {
     				posX = maxX - canvasWidth;
     			}
-    			
-    			if (posY < 0) {
-    				posY = 0;
+    			if (posX < 0) {
+    				posX = 0;
     			}
-
+    			
     			if (posY > maxY - canvasHeight) {
     				posY = maxY - canvasHeight;
+    			}
+    			if (posY < 0) {
+    				posY = 0;
     			}
     		}
     		return true;
@@ -123,6 +120,20 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 			try {
 				isMuted[i] = modPlayer.mute(i, 2) == 1;
 			} catch (RemoteException e) { }
+		}
+		
+		posX = posY = 0;
+	}
+	
+	public void setMaxX(int x) {
+		synchronized (isDown) {
+			maxX = x;
+		}
+	}
+	
+	public void setMaxY(int y) {		
+		synchronized (isDown) {
+			maxY = y;
 		}
 	}
 	

@@ -33,11 +33,8 @@ public class PatternViewer extends Viewer {
 		oldOrd = -1;
 		oldPosX = -1;
 		
-		synchronized (isDown) {
-			int chn = modVars[3];
-			posX = 0;
-			maxX = (chn * 6 + 2) * fontWidth;
-		}
+		int chn = modVars[3];
+		setMaxX((chn * 6 + 2) * fontWidth);
 	}
 
 	@Override
