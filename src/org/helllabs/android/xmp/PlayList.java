@@ -87,7 +87,10 @@ public class PlayList extends PlaylistActivity {
 		}
 		
 		if (modifiedOptions) {
-			writeOptions();
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putBoolean("options_" + name + "_shuffleMode", shuffleMode);
+			editor.putBoolean("options_" + name + "_loopMode", loopMode);
+			editor.commit();
 		}
 	}
 	
@@ -206,14 +209,7 @@ public class PlayList extends PlaylistActivity {
 		public void remove(int which) {
 			plist.remove(plist.getItem(which));
 		}
-	};
-	
-	private void writeOptions() {
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putBoolean("options_" + name + "_shuffleMode", shuffleMode);
-		editor.putBoolean("options_" + name + "_loopMode", loopMode);
-		editor.commit();		
-	}
+	};		
 
 	private void writeList() {		
 		File file = new File(Settings.dataDir, name + ".playlist.new");

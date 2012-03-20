@@ -34,6 +34,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.ContextMenu;
@@ -80,7 +81,6 @@ public class ModList extends PlaylistActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);	
 		setContentView(R.layout.modlist);
-		setupButtons();
 		
 		registerForContextMenu(getListView());
 		final String media_path = prefs.getString(Settings.PREF_MEDIA_PATH, Settings.DEFAULT_MEDIA_PATH);
@@ -160,7 +160,23 @@ public class ModList extends PlaylistActivity {
 			return;
 		}
 		
+		shuffleMode = prefs.getBoolean("options_shuffleMode", true);
+		loopMode = prefs.getBoolean("options_loopMode", false);
+		setupButtons();
+		
 		updateModlist(media_path);
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		
+		if (modifiedOptions) {
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putBoolean("options_shuffleMode", shuffleMode);
+			editor.putBoolean("options_loopMode", loopMode);
+			editor.commit();
+		}
 	}
 
 	public void update() {
