@@ -264,7 +264,8 @@ public class ModList extends PlaylistActivity {
 			menu.setHeaderTitle("All files");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
 			menu.add(Menu.NONE, 1, 1, "Add to play queue");
-			menu.add(Menu.NONE, 2, 2, "Clear cache");
+			menu.add(Menu.NONE, 2, 2, "Set as default path");
+			menu.add(Menu.NONE, 3, 3, "Clear cache");
 
 			return;
 		}
@@ -301,7 +302,13 @@ public class ModList extends PlaylistActivity {
 			case 1:						// Add all to queue
 				addToQueue(directoryNum, modList.size() - directoryNum);
 				break;
-			case 2:
+			case 2:						// Set as default path
+				SharedPreferences.Editor editor = prefs.edit();
+				editor.putString(Settings.PREF_MEDIA_PATH, currentDir);
+				editor.commit();
+				Message.toast(context, "Set as default module path");
+				break;
+			case 3:						// Clear cache
 				clearCachedEntries(directoryNum, modList.size() - directoryNum);
 				break;
 			}
