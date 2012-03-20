@@ -31,7 +31,7 @@ public class ModService extends Service {
 	Thread playThread;
 	SharedPreferences prefs;
 	Watchdog watchdog;
-	int minSize;
+	int bufferSize;
 	int sampleRate, sampleFormat;
 	boolean stereo;
 	boolean interpolate;
@@ -79,22 +79,26 @@ public class ModService extends Service {
    			sampleFormat |= Xmp.XMP_FORMAT_MONO;
    		}
    		
-   		int bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
+   		bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
 	
    		int channelConfig = stereo ?
    				AudioFormat.CHANNEL_CONFIGURATION_STEREO :
    				AudioFormat.CHANNEL_CONFIGURATION_MONO;
    		
-		minSize = AudioTrack.getMinBufferSize(
+		int minSize = AudioTrack.getMinBufferSize(
 				sampleRate,
 				channelConfig,
 				AudioFormat.ENCODING_PCM_16BIT);
+		
+		if (bufferSize < minSize) {
+			bufferSize = minSize;
+		}
 
 		audio = new AudioTrack(
 				AudioManager.STREAM_MUSIC, sampleRate,
 				channelConfig,
 				AudioFormat.ENCODING_PCM_16BIT,
-				minSize < bufferSize ? bufferSize : minSize,
+				bufferSize,
 				AudioTrack.MODE_STREAM);
 
 		xmp.init();
@@ -213,7 +217,7 @@ public class ModService extends Service {
 	        	xmp.setMixerMix(prefs.getInt(Settings.PREF_PAN_SEPARATION, 70));
 	       		updateData = true;
 	    			    		
-	    		short buffer[] = new short[minSize];
+	    		short buffer[] = new short[bufferSize];
 	    		
 	    		int count, loopCount = 0;
 	       		while (xmp.playFrame() == 0) {
