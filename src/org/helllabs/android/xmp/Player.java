@@ -11,7 +11,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -34,43 +33,44 @@ import android.widget.ViewFlipper;
 
 public class Player extends Activity {
 	static final int SETTINGS_REQUEST = 45;
-	String media_path;
-	ModInterface modPlayer;	/* actual mod player */
-	ImageButton playButton, stopButton, backButton, forwardButton;
-	ImageButton loopButton;
-	SeekBar seekBar;
-	Thread progressThread;
+	//private String media_path;
+	private ModInterface modPlayer;	/* actual mod player */
+	private ImageButton playButton, stopButton, backButton, forwardButton;
+	private ImageButton loopButton;
+	private SeekBar seekBar;
+	private Thread progressThread;
 	boolean seeking = false;
 	boolean shuffleMode = true;
 	boolean loopListMode = false;
 	boolean paused = false;
 	boolean finishing = false;
 	boolean showInfoLine, showElapsed;
-	final TextView[] infoName = new TextView[2];
-	final TextView[] infoType = new TextView[2];
-	TextView infoMod;
-	TextView infoStatus;
-	TextView elapsedTime;
-	ViewFlipper titleFlipper;
-	int flipperPage;
-	String[] fileArray = null;
-	SharedPreferences prefs;
-	FrameLayout viewerLayout;
-	BitmapDrawable image;
-	final Handler handler = new Handler();
-	int latency;
-	int totalTime;
-	String fileName;
-	boolean screenOn;
-	Activity activity;
-	AlertDialog deleteDialog;
-	BroadcastReceiver screenReceiver;
-	Viewer viewer;
-	Viewer.Info[] info;
-	int[] modVars = new int[10];
-	static final int frameRate = 25;
-	boolean stopUpdate;
-	int currentViewer = 0;
+	private final TextView[] infoName = new TextView[2];
+	private final TextView[] infoType = new TextView[2];
+	//private TextView infoMod;
+	private TextView infoStatus;
+	private TextView elapsedTime;
+	private ViewFlipper titleFlipper;
+	private int flipperPage;
+	private String[] fileArray = null;
+	private SharedPreferences prefs;
+	private FrameLayout viewerLayout;
+	//BitmapDrawable image;
+	private final Handler handler = new Handler();
+	private int latency;
+	private int totalTime;
+	//private String fileName;
+	private boolean screenOn;
+	private Activity activity;
+	private AlertDialog deleteDialog;
+	private BroadcastReceiver screenReceiver;
+	private Viewer viewer;
+	private Viewer.Info[] info;
+	private final int[] modVars = new int[10];
+	private static final int frameRate = 25;
+	private boolean stopUpdate;
+	private int currentViewer = 0;
+	private boolean canChangeViewer = false;
 	
 	private ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -109,11 +109,13 @@ public class Player extends Activity {
         public void newModCallback(String name, String[] instruments) {
         	Log.i("Xmp Player", "Show module data");
             showNewMod(name);
+            canChangeViewer = true;
         }
         
         public void endModCallback() {
         	Log.i("Xmp Player", "End of module");
         	stopUpdate = true;
+        	canChangeViewer = false;
         }
         
         public void endPlayCallback() {
@@ -365,7 +367,9 @@ public class Player extends Activity {
 		viewerLayout.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				changeViewer();
+				if (canChangeViewer) {
+					changeViewer();
+				}
 			}
 		});
 			
@@ -559,7 +563,7 @@ public class Player extends Activity {
 	}
 
 	void showNewMod(String fileName) {
-		this.fileName = fileName;
+		//this.fileName = fileName;
 		try {
 			modPlayer.getModVars(modVars);
 		} catch (RemoteException e) { }
