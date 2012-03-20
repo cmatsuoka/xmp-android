@@ -47,7 +47,6 @@ public class Player extends Activity {
 	boolean showInfoLine, showElapsed;
 	private final TextView[] infoName = new TextView[2];
 	private final TextView[] infoType = new TextView[2];
-	//private TextView infoMod;
 	private TextView infoStatus;
 	private TextView elapsedTime;
 	private ViewFlipper titleFlipper;
@@ -59,7 +58,6 @@ public class Player extends Activity {
 	private final Handler handler = new Handler();
 	private int latency;
 	private int totalTime;
-	//private String fileName;
 	private boolean screenOn;
 	private Activity activity;
 	private AlertDialog deleteDialog;
