@@ -458,7 +458,7 @@ public class Player extends Activity {
 					return;
 				
 				try {
-					if (modPlayer.time() > 20) {
+					if (modPlayer.time() > 3000) {
 						modPlayer.seek(0);
 					} else {
 						stopUpdate = true;
