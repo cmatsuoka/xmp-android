@@ -595,7 +595,7 @@ public class Player extends Activity {
 		    infoType[flipperPage].setText(type);
 
 	       	titleFlipper.showNext();
-	       	
+
 	       	viewer.setup(modPlayer, modVars);
 	       	
 	       	/*infoMod.setText(String.format("Channels: %d\n" +

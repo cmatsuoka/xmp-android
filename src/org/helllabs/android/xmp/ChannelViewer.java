@@ -190,7 +190,7 @@ public class ChannelViewer extends Viewer {
 					} else {
 						trigger = 0;
 					}
-	
+
 					modPlayer.getSampleData(trigger, ins, holdKey[i], period, i, scopeWidth, buffer);
 	
 				} catch (RemoteException e) { }

@@ -480,6 +480,10 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 		width = MAX_BUFFER_SIZE;
 	}
 
+	if (period == 0) {
+		goto err;
+	}
+
 	if (ins < 0 || ins > mi.mod->ins || key > 0x80) {
 		goto err;
 	}
