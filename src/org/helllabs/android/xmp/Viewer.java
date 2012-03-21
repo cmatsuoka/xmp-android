@@ -76,9 +76,9 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
     		return true;
     	}
     	
-    	/*public void onLongPress(MotionEvent e) {
+    	public void onLongPress(MotionEvent e) {
     		onLongClick((int)e.getX(), (int)e.getY());
-    	}*/
+    	}
     	
     	public boolean onDown(MotionEvent e) {
     		velX = velY = 0;		// stop fling
