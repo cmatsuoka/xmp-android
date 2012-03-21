@@ -80,8 +80,9 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
     	@Override
     	public void onLongPress(MotionEvent e) {
     		onLongClick((int)e.getX(), (int)e.getY());
-    	}    	
+    	}
     }
+
     
 	protected void updateScroll() {		// Hmpf, reinventing the wheel instead of using Scroller
 		posX -= velX;
@@ -130,7 +131,10 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	}
 	
 	protected void onClick(int x, int y) {
-		((View)getParent()).performClick();
+		View parent = (View)getParent();
+		if (parent != null) {
+			parent.performClick();
+		}
 	}
 	
 	protected void onLongClick(int x, int y) {

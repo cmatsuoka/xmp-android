@@ -370,8 +370,10 @@ public class Player extends Activity {
 		viewerLayout.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (canChangeViewer) {
-					changeViewer();
+				synchronized (modPlayer) {
+					if (canChangeViewer) {
+						changeViewer();
+					}
 				}
 			}
 		});
@@ -566,9 +568,7 @@ public class Player extends Activity {
 	}
 
 	void showNewMod(String fileName) {
-		try {
-			modPlayer.getModVars(modVars);
-		} catch (RemoteException e) { }
+
 		if (deleteDialog != null)
 			deleteDialog.cancel();
 		handler.post(showNewModRunnable);
@@ -576,51 +576,58 @@ public class Player extends Activity {
 	
 	final Runnable showNewModRunnable = new Runnable() {
 		public void run() {
-			String name, type;
-			try {
-				name = modPlayer.getModName();
-				type = modPlayer.getModType();
-			} catch (RemoteException e) {
-				name = "";
-				type = "";
+			
+			synchronized (modPlayer) {
+				try {
+					modPlayer.getModVars(modVars);
+				} catch (RemoteException e) { }
+				
+				String name, type;
+				try {
+					name = modPlayer.getModName();
+					type = modPlayer.getModType();
+				} catch (RemoteException e) {
+					name = "";
+					type = "";
+				}
+				int time = modVars[0];
+				/*int len = vars[1];
+				int pat = vars[2];
+				int chn = vars[3];
+				int ins = vars[4];
+				int smp = vars[5];*/
+				
+				totalTime = time / 1000;
+		       	seekBar.setProgress(0);
+		       	seekBar.setMax(time / 100);
+		        
+		       	flipperPage = (flipperPage + 1) % 2;
+	
+				infoName[flipperPage].setText(name);
+			    infoType[flipperPage].setText(type);
+	
+		       	titleFlipper.showNext();
+	
+		       	viewer.setup(modPlayer, modVars);
+		       	
+		       	/*infoMod.setText(String.format("Channels: %d\n" +
+		       			"Length: %d, Patterns: %d\n" +
+		       			"Instruments: %d, Samples: %d\n" +
+		       			"Estimated play time: %dmin%02ds",
+		       			chn, len, pat, ins, smp,
+		       			((time + 500) / 60000), ((time + 500) / 1000) % 60));*/
+				
+				info = new Viewer.Info[frameRate];
+				for (int i = 0; i < frameRate; i++) {
+					info[i] = viewer.new Info();
+				}
+				
+				stopUpdate = false;
+		       	if (progressThread == null || !progressThread.isAlive()) {
+		       		progressThread = new ProgressThread();
+		       		progressThread.start();
+		       	}
 			}
-			int time = modVars[0];
-			/*int len = vars[1];
-			int pat = vars[2];
-			int chn = vars[3];
-			int ins = vars[4];
-			int smp = vars[5];*/
-			
-			totalTime = time / 1000;
-	       	seekBar.setProgress(0);
-	       	seekBar.setMax(time / 100);
-	        
-	       	flipperPage = (flipperPage + 1) % 2;
-
-			infoName[flipperPage].setText(name);
-		    infoType[flipperPage].setText(type);
-
-	       	titleFlipper.showNext();
-
-	       	viewer.setup(modPlayer, modVars);
-	       	
-	       	/*infoMod.setText(String.format("Channels: %d\n" +
-	       			"Length: %d, Patterns: %d\n" +
-	       			"Instruments: %d, Samples: %d\n" +
-	       			"Estimated play time: %dmin%02ds",
-	       			chn, len, pat, ins, smp,
-	       			((time + 500) / 60000), ((time + 500) / 1000) % 60));*/
-			
-			info = new Viewer.Info[frameRate];
-			for (int i = 0; i < frameRate; i++) {
-				info[i] = viewer.new Info();
-			}
-			
-			stopUpdate = false;
-	       	if (progressThread == null || !progressThread.isAlive()) {
-	       		progressThread = new ProgressThread();
-	       		progressThread.start();
-	       	}
 		}
 	};
 	
