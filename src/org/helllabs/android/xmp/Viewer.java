@@ -31,43 +31,73 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
     };
 
     // Touch tracking
-    protected float posX, posY;
+    protected float posX, posY, velX, velY;
     protected Boolean isDown;
     private int maxX, maxY;
     
-    private class MyGestureDetector extends SimpleOnGestureListener {   	
+	private void limitPosition() {
+		if (posX > maxX - canvasWidth) {
+			posX = maxX - canvasWidth;
+		}
+		if (posX < 0) {
+			posX = 0;
+		}
+		
+		if (posY > maxY - canvasHeight) {
+			posY = maxY - canvasHeight;
+		}
+		if (posY < 0) {
+			posY = 0;
+		}
+	}
+   
+    private class MyGestureDetector extends SimpleOnGestureListener {
+
+    	@Override
     	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
     		synchronized (isDown) {
     			posX += distanceX;
     			posY += distanceY;
     			
-    			if (posX > maxX - canvasWidth) {
-    				posX = maxX - canvasWidth;
-    			}
-    			if (posX < 0) {
-    				posX = 0;
-    			}
-    			
-    			if (posY > maxY - canvasHeight) {
-    				posY = maxY - canvasHeight;
-    			}
-    			if (posY < 0) {
-    				posY = 0;
-    			}
+    			limitPosition();
     		}
     		return true;
     	}
     	
+    	@Override
+    	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+    		velX = velocityX / 25;
+    		velY = velocityY / 25;
+    		return true;
+    	}
+    	
+    	@Override
     	public boolean onSingleTapUp(MotionEvent e) {
     		onClick((int)e.getX(), (int)e.getY());
     		return true;
     	}
     	
+    	@Override
     	public void onLongPress(MotionEvent e) {
     		onLongClick((int)e.getX(), (int)e.getY());
-    	}
+    	}    	
     }
     
+	protected void updateScroll() {		// Hmpf, reinventing the wheel instead of using Scroller
+		posX -= velX;
+		posY -= velY;
+		
+		limitPosition();
+		
+		velX *= 0.9;
+		if (Math.abs(velX) < 0.5)
+			velX = 0;
+		
+		velY *= 0.9;
+		if (Math.abs(velY) < 0.5)
+			velY = 0;
+	}
+   
 	public Viewer(Context context) {
 		super(context);
 		this.context = context;
@@ -107,7 +137,9 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		// does nothing
 	}
 	
-	public abstract void update(Info info);
+	public void update(Info info) {
+		updateScroll();
+	}
 	
 	public void setup(ModInterface modPlayer, int[] modVars) {
 		final int chn = modVars[3];

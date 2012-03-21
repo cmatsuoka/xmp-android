@@ -39,6 +39,8 @@ public class PatternViewer extends Viewer {
 
 	@Override
 	public void update(Info info) {
+		super.update(info);
+		
 		int row = info.values[2];
 		int ord = info.values[0];
 		int numRows = info.values[3];

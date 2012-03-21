@@ -49,6 +49,8 @@ public class ChannelViewer extends Viewer {
 
 	@Override
 	public void update(Info info) {
+		super.update(info);
+		
 		Canvas c = null;
 
 		try {
