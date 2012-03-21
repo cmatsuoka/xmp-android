@@ -534,7 +534,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 		/* loop */
 		if (xxs->flg & XMP_SAMPLE_LOOP) {
 			for (i = limit; i < width; i++) {
-				_buffer[i] = ((short *)xxs->data)[pos >> 5];	
+				_buffer[i] = ((short *)xxs->data)[pos >> 5] / 256;	
 				pos += step;
 				if (pos >= xxs->lpe) {
 					pos = xxs->lps + pos - xxs->lpe;
