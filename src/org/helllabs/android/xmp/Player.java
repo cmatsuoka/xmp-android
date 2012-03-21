@@ -142,6 +142,8 @@ public class Player extends Activity {
     	int oldTime = -1;
     	int before = 0, now;
     	boolean oldShowElapsed;
+    	final char[] c = new char[2];
+    	StringBuffer s = new StringBuffer();
     	
         public void run() {
         	now = (before + (frameRate * latency / 1000) + 1) % frameRate;
@@ -161,9 +163,27 @@ public class Player extends Activity {
 					if (info[before].values[5] != oldSpd || info[before].values[6] != oldBpm
 							|| info[before].values[0] != oldPos || info[before].values[1] != oldPat)
 					{
-						infoStatus.setText(String.format(
-								"Speed:%02x BPM:%02x Pos:%02x Pat:%02x",
-								info[before].values[5], info[before].values[6], info[before].values[0], info[before].values[1]));
+						// Ugly code to avoid expensive String.format()
+						
+						s.delete(0, s.length());
+						
+						s.append("Speed:");
+						Util.to02X(c, info[before].values[5]);
+						s.append(c);
+						
+						s.append(" BPM:");
+						Util.to02X(c, info[before].values[6]);
+						s.append(c);
+						
+						s.append(" Pos:");
+						Util.to02X(c, info[before].values[0]);
+						s.append(c);
+						
+						s.append(" Pat:");
+						Util.to02X(c, info[before].values[1]);
+						s.append(c);
+						
+						infoStatus.setText(s);
 	
 						oldSpd = info[before].values[5];
 						oldBpm = info[before].values[6];
@@ -174,13 +194,28 @@ public class Player extends Activity {
 						int t = info[before].time;
 						if (t < 0)
 							t = 0;
-						if (showElapsed) {
-							elapsedTime.setText(String.format("%d:%02d", t / 60,
-									t % 60));
+						
+						s.delete(0, s.length());
+						
+						if (showElapsed) {	
+							Util.to2d(c, t / 60);
+							s.append(c);
+							s.append(':');
+							Util.to02d(c, t % 60);
+							s.append(c);
+							
+							elapsedTime.setText(s);
 						} else {
 							t = totalTime - t;
-							elapsedTime.setText(String.format("-%d:%02d", t / 60,
-									t % 60));
+							
+							s.append('-');
+							Util.to2d(c, t / 60);
+							s.append(c);
+							s.append(':');
+							Util.to02d(c, t % 60);
+							s.append(c);
+							
+							elapsedTime.setText(s);
 						}
 	
 						oldTime = info[before].time;

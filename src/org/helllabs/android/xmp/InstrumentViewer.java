@@ -20,14 +20,8 @@ public class InstrumentViewer extends Viewer {
 		
 		int insNum = modVars[4];
 		
-		insName = new String[insNum];
-		String[] instruments;
-		
 		try {
-			instruments = modPlayer.getInstruments();
-			for (int i = 0; i < insNum; i++) {
-				insName[i] = new String(String.format("%02X %s", i + 1, instruments[i]));
-			}
+			insName = modPlayer.getInstruments();
 		} catch (RemoteException e) { }
 		
 		setMaxY(insNum * fontHeight + fontHeight / 2);

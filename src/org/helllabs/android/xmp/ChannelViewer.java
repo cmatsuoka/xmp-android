@@ -25,25 +25,21 @@ public class ChannelViewer extends Viewer {
 		super.setup(modPlayer, modVars);
 
 		int chn = modVars[3];
-		int insNum = modVars[4];
-		String[] instruments;
 		this.modPlayer = modPlayer;
-
-		insName = new String[insNum];
 		
 		try {
-			instruments = modPlayer.getInstruments();
-			for (int i = 0; i < insNum; i++) {
-				insName[i] = new String(String.format("%02X %s", i + 1, instruments[i]));
-			}
+			insName = modPlayer.getInstruments();
 		} catch (RemoteException e) { }
 
 		setMaxY((chn * 4 + 1) * fontHeight);
 
 		holdKey = new int[chn];
 		channelNumber = new String[chn];
+		
+		char[] c = new char[2];
 		for (int i = 0; i < chn; i++) {
-			channelNumber[i] = new String(String.format("%2d", i + 1));
+			Util.to2d(c, i + 1);
+			channelNumber[i] = new String(c);
 		}
 	}
 
