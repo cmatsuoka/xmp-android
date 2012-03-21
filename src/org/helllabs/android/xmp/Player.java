@@ -33,7 +33,6 @@ import android.widget.ViewFlipper;
 
 public class Player extends Activity {
 	static final int SETTINGS_REQUEST = 45;
-	//private String media_path;
 	private ModInterface modPlayer;	/* actual mod player */
 	private ImageButton playButton, stopButton, backButton, forwardButton;
 	private ImageButton loopButton;
@@ -73,26 +72,28 @@ public class Player extends Activity {
 	private ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			modPlayer = ModInterface.Stub.asInterface(service);
-	       	flipperPage = 0;
-			
-			try {
-				modPlayer.registerCallback(playerCallback);
-			} catch (RemoteException e) { }
-			
-			if (fileArray != null && fileArray.length > 0) {
-				// Start new queue
-				playNewMod(fileArray);
-			} else {
-				// Reconnect to existing service
+			flipperPage = 0;
+
+			synchronized (modPlayer) {
 				try {
-					showNewMod(modPlayer.getFileName());
-						
-					if (modPlayer.isPaused()) {
-						pause();
-					} else {
-						unpause();
-					}
+					modPlayer.registerCallback(playerCallback);
 				} catch (RemoteException e) { }
+
+				if (fileArray != null && fileArray.length > 0) {
+					// Start new queue
+					playNewMod(fileArray);
+				} else {
+					// Reconnect to existing service
+					try {
+						showNewMod(modPlayer.getFileName());
+
+						if (modPlayer.isPaused()) {
+							pause();
+						} else {
+							unpause();
+						}
+					} catch (RemoteException e) { }
+				}
 			}
 		}
 
@@ -105,15 +106,19 @@ public class Player extends Activity {
     private PlayerCallback playerCallback = new PlayerCallback.Stub() {
     	
         public void newModCallback(String name, String[] instruments) {
-        	Log.i("Xmp Player", "Show module data");
-            showNewMod(name);
-            canChangeViewer = true;
+        	synchronized (modPlayer) {
+        		Log.i("Xmp Player", "Show module data");
+        		showNewMod(name);
+        		canChangeViewer = true;
+        	}
         }
         
         public void endModCallback() {
-        	Log.i("Xmp Player", "End of module");
-        	stopUpdate = true;
-        	canChangeViewer = false;
+        	synchronized (modPlayer) {
+        		Log.i("Xmp Player", "End of module");
+        		stopUpdate = true;
+        		canChangeViewer = false;
+        	}
         }
         
         public void endPlayCallback() {
@@ -561,7 +566,6 @@ public class Player extends Activity {
 	}
 
 	void showNewMod(String fileName) {
-		//this.fileName = fileName;
 		try {
 			modPlayer.getModVars(modVars);
 		} catch (RemoteException e) { }
