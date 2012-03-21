@@ -203,8 +203,11 @@ public class PatternViewer extends Viewer {
 		for (int i = 0; i < 120; i++) {
 			allNotes[i] = new String(notes[i % 12] + (i / 12));
 		}
+		
+		char[] c = new char[2];
 		for (int i = 0; i < 256; i++) {
-			hexByte[i] = new String(String.format("%02X", i));
+			Util.to02X(c, i);
+			hexByte[i] = new String(c);
 		}
 	}
 }
