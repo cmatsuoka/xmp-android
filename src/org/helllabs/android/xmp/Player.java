@@ -377,7 +377,7 @@ public class Player extends Activity {
 		
 		screenOn = true;
 		
-		if (ModService.isPlaying) {
+		if (ModService.isLoaded) {
 			canChangeViewer = true;
 		}
 		

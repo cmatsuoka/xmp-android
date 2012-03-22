@@ -37,7 +37,8 @@ public class ModService extends Service {
 	boolean interpolate;
 	Notifier notifier;
 	boolean stopPlaying = false;
-	static boolean isPlaying = false;
+	static boolean isAlive = false;
+	static boolean isLoaded = false;
 	boolean restartList;
 	boolean returnToPrev;
 	boolean paused;
@@ -103,7 +104,8 @@ public class ModService extends Service {
 
 		xmp.init();
 
-		isPlaying = false;
+		isAlive = false;
+		isLoaded = false;
 		paused = false;
 		
 		notifier = new Notifier();
@@ -194,6 +196,7 @@ public class ModService extends Service {
 	       		}
 
 	       		notifier.notification(xmp.getModName(), queue.index());
+	       		isLoaded = true;
 	       		
 	       		// Unmute all channels
 	       		for (int i = 0; i < 64; i++) {
@@ -245,7 +248,9 @@ public class ModService extends Service {
 	       			checkMediaButtons();
 	       		}
 
-	       		xmp.endPlayer();   
+	       		xmp.endPlayer();
+	       		
+	       		isLoaded = false;
 	       		
 	        	numClients = callbacks.beginBroadcast();
 	        	for (int j = 0; j < numClients; j++) {
@@ -292,7 +297,7 @@ public class ModService extends Service {
 	    }	    
 	    callbacks.finishBroadcast();
 
-	    isPlaying = false;
+	    isAlive = false;
     	xmp.stopModule();
     	paused = false;
 
@@ -361,7 +366,7 @@ public class ModService extends Service {
 			stopPlaying = false;
 			paused = false;
 
-			if (isPlaying) {
+			if (isAlive) {
 				Log.i("Xmp ModService", "Use existing player thread");
 				restartList = true;
 				nextSong();
@@ -371,7 +376,7 @@ public class ModService extends Service {
 		   		playThread = new Thread(new PlayRunnable());
 		   		playThread.start();
 			}
-			isPlaying = true;
+			isAlive = true;
 		}
 		
 		public void add(String[] files) {	
@@ -462,7 +467,7 @@ public class ModService extends Service {
 		}
 		
 		public void getPatternRow(int pat, int row, byte[] rowNotes, byte[] rowInstruments) {
-			if (isPlaying) {
+			if (isAlive) {
 				xmp.getPatternRow(pat, row, rowNotes, rowInstruments);
 			}
 		}

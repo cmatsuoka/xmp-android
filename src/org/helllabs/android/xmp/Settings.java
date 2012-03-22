@@ -45,7 +45,7 @@ public class Settings extends android.preference.PreferenceActivity {
         addPreferencesFromResource(R.xml.preferences);
         
         PreferenceScreen soundScreen = (PreferenceScreen)findPreference("sound_screen");
-        soundScreen.setEnabled(!ModService.isPlaying);
+        soundScreen.setEnabled(!ModService.isAlive);
         
         Preference clearCache = (Preference)findPreference("clear_cache");
         clearCache.setOnPreferenceClickListener(new OnPreferenceClickListener() {

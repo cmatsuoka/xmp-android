@@ -206,7 +206,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 			final String[] realList = new String[realSize];
 			System.arraycopy(list,  0, realList, 0, realSize);
 		
-			if (ModService.isPlaying) {
+			if (ModService.isAlive) {
 				addList = realList;		
 				bindService(service, connection, 0);
 			} else {
