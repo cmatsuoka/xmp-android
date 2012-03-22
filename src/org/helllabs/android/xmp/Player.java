@@ -377,6 +377,10 @@ public class Player extends Activity {
 		
 		screenOn = true;
 		
+		if (ModService.isPlaying) {
+			canChangeViewer = true;
+		}
+		
 		setResult(RESULT_OK);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
