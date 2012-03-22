@@ -13,13 +13,11 @@ public class Xmp {
 	public native int endPlayer();
 	public native int playFrame();	
 	public native int getBuffer(short buffer[]);
-	public native int nextOrd();
-	public native int prevOrd();
-	public native int setOrd(int n);
+	public native int nextPosition();
+	public native int prevPosition();
+	public native int setPosition(int n);
 	public native int stopModule();
 	public native int restartModule();
-	public native int incGvol();
-	public native int decGvol();
 	public native int seek(int time);
 	public native int time();
 	public native int mute(int chn, int status);

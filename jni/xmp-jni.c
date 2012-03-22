@@ -166,45 +166,33 @@ Java_org_helllabs_android_xmp_Xmp_getBuffer(JNIEnv *env, jobject obj, jshortArra
 }
 
 JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_nextOrd(JNIEnv *env, jobject obj)
+Java_org_helllabs_android_xmp_Xmp_nextPosition(JNIEnv *env, jobject obj)
 {
-	return xmp_ord_next(ctx);
+	return xmp_next_position(ctx);
 }
 
 JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_prevOrd(JNIEnv *env, jobject obj)
+Java_org_helllabs_android_xmp_Xmp_prevPosition(JNIEnv *env, jobject obj)
 {
-	return xmp_ord_prev(ctx);
+	return xmp_prev_position(ctx);
 }
 
 JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_setOrd(JNIEnv *env, jobject obj, jint n)
+Java_org_helllabs_android_xmp_Xmp_setPosition(JNIEnv *env, jobject obj, jint n)
 {
-	return xmp_ord_set(ctx, n);
+	return xmp_set_position(ctx, n);
 }
 
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_stopModule(JNIEnv *env, jobject obj)
 {
-	return xmp_mod_stop(ctx);
+	return xmp_stop_module(ctx);
 }
 
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_restartModule(JNIEnv *env, jobject obj)
 {
-	return xmp_mod_restart(ctx);
-}
-
-JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_incGvol(JNIEnv *env, jobject obj)
-{
-	return xmp_gvol_inc(ctx);
-}
-
-JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_decGvol(JNIEnv *env, jobject obj)
-{
-	return xmp_gvol_dec(ctx);
+	return xmp_restart_module(ctx);
 }
 
 JNIEXPORT jint JNICALL
