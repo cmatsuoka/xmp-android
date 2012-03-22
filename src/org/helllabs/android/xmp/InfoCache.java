@@ -63,6 +63,7 @@ public class InfoCache {
 		final File file = new File(filename);
 		final File cacheFile = new File(Settings.cacheDir, filename + ".cache");
 		final File skipFile = new File(Settings.cacheDir, filename + ".skip");
+		String line;
 
 		if (!Settings.cacheDir.isDirectory()) {
 			if (Settings.cacheDir.mkdirs() == false) {
@@ -74,20 +75,29 @@ public class InfoCache {
 		try {
 			// If cache file exists and size matches, file is mod
 			if (cacheFile.isFile()) {
+				
+				// If we have cache and skip, delete skip
 				if (skipFile.isFile())
 					skipFile.delete();
 				
 				BufferedReader in = new BufferedReader(new FileReader(cacheFile), 512);
-				int size = Integer.parseInt(in.readLine());
-				if (size == file.length()) {
-					info.name = in.readLine();
-					in.readLine();				/* skip filename */
-					info.type = in.readLine();
-					in.close();
-					return true;
+				line = in.readLine();
+				if (line != null) {
+					int size = Integer.parseInt(line);
+					if (size == file.length()) {
+						info.name = in.readLine();
+						if (info.name != null) {
+							in.readLine();				/* skip filename */
+							info.type = in.readLine();
+							if (info.type != null) {
+								in.close();
+								return true;
+							}
+						}
+					}
 				}
-				in.close();
 				
+				in.close();
 				cacheFile.delete();		// Invalid or outdated cache file
 			}
 			
