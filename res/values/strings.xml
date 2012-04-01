@@ -12,7 +12,7 @@
     <string name="preferences_pan_separation_title">Stereo separation</string>
     <string name="preferences_category_sound">Sound settings</string>
     <string name="preferences_category_files">Playlist settings</string>
-    <string name="changelog_text">• Fix crash with zero-length S3M modules\n• Fix race condition on interface restart\n• Fix crash with certain J2B modules\n• Fix IT tremor and retrig effects\n• Fix IT global volume setting\n• Fix IT stray portamento handling\n• Fix LZX file decompressor\n• Add zip and gzip file decompressors\n 
+    <string name="changelog_text">• Add option to display titles in file browser\n• Fix crash with zero-length S3M modules\n• Fix race condition on interface restart\n• Fix crash with certain J2B modules\n• Fix IT tremor and retrig effects\n• Fix IT global volume setting\n• Fix IT stray portamento handling\n
 \nVersion 3.0.1:\n• Enable view change after returning to player from notification\n
 \nVersion 3.0.0:\n• New visualization modes\n• Persistent loop and shuffle options\n• Set module path from file browser\n• Fix envelope loops\n• Fix IT corner case instrument setting\n
 \nVersion 2.9.2:\n• Fix note delay effect\n• Fix IT virtual channel mapping\n• Fix IT instrument cutoff setting\n• Fix XM corner case volume setting\n• Fix linear periods for very high notes\n• Fix pattern number display\n• Fix screen update rate\n• Add option to keep screen on\n
