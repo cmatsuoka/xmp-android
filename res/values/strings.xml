@@ -80,8 +80,8 @@ GNU General Public License for more details.</string>
     <string name="msg_select_playlist">Select playlist</string>
     <string name="menu_new_playlist">New playlist</string>
     <string name="error_storage">Can\'t access external storage.</string>
-    <string name="preferences_use_filename_title">Show file names</string>
-    <string name="preferences_use_filename_summary">Display file names instead of titles in file browser and playlists</string>
+    <string name="preferences_use_filename_title">File names in playlist</string>
+    <string name="preferences_use_filename_summary">Display file names instead of titles in playlists</string>
     <string name="preferences_enable_delete_title">Enable file delete</string>
     <string name="preferences_enable_delete_summary">Display a menu option to delete the currently playing file</string>
     <string name="preferences_category_experimental">Experimental (be careful)</string>
@@ -89,4 +89,6 @@ GNU General Public License for more details.</string>
     <string name="menu_delete">Delete</string>
     <string name="preferences_keep_screen_on_summary">Prevent screen from sleeping during replay</string>
     <string name="preferences_keep_screen_on_title">Keep screen on</string>
+    <string name="preferences_titles_in_browser_title">Titles in browser</string>
+    <string name="preferences_titles_in_browser_summary">Display titles instead of file names in browser (warning: may be slow)</string>
 </resources>

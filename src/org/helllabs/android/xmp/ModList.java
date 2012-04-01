@@ -192,6 +192,8 @@ public class ModList extends PlaylistActivity {
 		isBadDir = false;
 		progressDialog = ProgressDialog.show(this,      
 				"Please wait", "Scanning module files...", true);
+		
+		final boolean titlesInBrowser = prefs.getBoolean(Settings.PREF_TITLES_IN_BROWSER, false);
 
 		parentNum = directoryNum = 0;
 		final File modDir = new File(path);
@@ -212,20 +214,29 @@ public class ModList extends PlaylistActivity {
             	Collections.sort(list);
             	modList.addAll(list);
             	
+            	ModInfo info = new ModInfo();
+            	
             	list.clear();
             	for (File file : modDir.listFiles(new ModFilter())) {
             		final String filename = path + "/" + file.getName();
             		final String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
             				DateFormat.MEDIUM).format(file.lastModified());
-            		final String comment = date + String.format(" (%d kB)", file.length() / 1024);
-            		list.add(new PlaylistInfo(file.getName(), comment, filename));
+            		
+            		if (titlesInBrowser && !file.isDirectory()) {
+            			if (InfoCache.testModule(filename, info)) {
+            				list.add(new PlaylistInfo(info.name, info.type, filename));
+            			}
+            		} else {
+            			final String name = file.getName();
+            			final String comment = date + String.format(" (%d kB)", file.length() / 1024);
+            			list.add(new PlaylistInfo(name, comment, filename));
+            		}
             	}
             	Collections.sort(list);
             	modList.addAll(list);
             	
                 final PlaylistInfoAdapter playlist = new PlaylistInfoAdapter(ModList.this,
-                			R.layout.song_item, R.id.info, modList,
-                			prefs.getBoolean(Settings.PREF_USE_FILENAME, false));
+                			R.layout.song_item, R.id.info, modList, false);
                 
                 /* This one must run in the UI thread */
                 handler.post(new Runnable() {

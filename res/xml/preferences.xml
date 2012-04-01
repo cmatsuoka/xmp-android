@@ -22,13 +22,20 @@
       android:summary="@string/preferences_examples_summary"
       android:defaultValue="true" />
       
-     <CheckBoxPreference
+    <CheckBoxPreference
       android:key="use_filename"
       android:persistent="true"
       android:title="@string/preferences_use_filename_title"
       android:summary="@string/preferences_use_filename_summary"
       android:defaultValue="false" />
-                         
+     
+    <CheckBoxPreference
+      android:key="titles_in_browser"
+      android:persistent="true"
+      android:title="@string/preferences_titles_in_browser_title"
+      android:summary="@string/preferences_titles_in_browser_summary"
+      android:defaultValue="false" />
+     
     <Preference
       android:key="clear_cache"
       android:title="@string/preferences_clear_cache_title"
