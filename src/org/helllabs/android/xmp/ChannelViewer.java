@@ -72,7 +72,7 @@ public class ChannelViewer extends Viewer {
 		if (x >= scopeLeft && x <= scopeLeft + scopeWidth) {
 			int scopeNum = (y + (int)posY - fontHeight) / (4 * fontHeight);
 			if (scopeNum >= chn) {
-				scopeNum = chn - 1;
+				scopeNum = -1;
 			}
 			return scopeNum;
 		} else {
