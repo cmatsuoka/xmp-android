@@ -12,12 +12,13 @@
     <string name="preferences_pan_separation_title">Stereo separation</string>
     <string name="preferences_category_sound">Sound settings</string>
     <string name="preferences_category_files">Playlist settings</string>
-    <string name="changelog_text">• Enable view change after returning to player from notification\n
+    <string name="changelog_text">• Fix crash with zero-length S3M modules\n• Fix race condition on interface restart\n• Fix crash with certain J2B modules\n• Fix IT tremor and retrig effects\n• Fix IT global volume setting\n• Fix IT stray portamento handling\n• Fix LZX file decompressor\n• Add zip and gzip file decompressors\n 
+\nVersion 3.0.1:\n• Enable view change after returning to player from notification\n
 \nVersion 3.0.0:\n• New visualization modes\n• Persistent loop and shuffle options\n• Set module path from file browser\n• Fix envelope loops\n• Fix IT corner case instrument setting\n
 \nVersion 2.9.2:\n• Fix note delay effect\n• Fix IT virtual channel mapping\n• Fix IT instrument cutoff setting\n• Fix XM corner case volume setting\n• Fix linear periods for very high notes\n• Fix pattern number display\n• Fix screen update rate\n• Add option to keep screen on\n
 \nVersion 2.9.1:\n• Fix bidirectional sample loops\n• Fix \"previous\" media button handling\n• Add reorderable playlists\n• Add Protracker effect EFx (Invert loop)\n
 \nVersion 2.9.0:\n• Player engine updated to libxmp 3.9\n• Fixes for Honeycomb and ICS\n• New (more intuitive) file browser\n• Performance optimizations\n• Bug fixes\n</string>
-    <string name="changelog_title">New in version 3.0.1</string>
+    <string name="changelog_title">New in version 3.0.2</string>
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
     <string name="menu_refresh">Rescan</string>
     <string name="menu_prefs">Settings</string>
