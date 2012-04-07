@@ -291,9 +291,9 @@ Java_org_helllabs_android_xmp_Xmp_getVersion(JNIEnv *env, jobject obj)
 {
 	char buf[20];
 	snprintf(buf, 20, "%d.%d.%d",
-		(xmp_version & 0x00ff0000) >> 16,
-		(xmp_version & 0x0000ff00) >> 8,
-		(xmp_version & 0x000000ff));
+		(xmp_vercode & 0x00ff0000) >> 16,
+		(xmp_vercode & 0x0000ff00) >> 8,
+		(xmp_vercode & 0x000000ff));
 
 	return (*env)->NewStringUTF(env, buf);
 }
