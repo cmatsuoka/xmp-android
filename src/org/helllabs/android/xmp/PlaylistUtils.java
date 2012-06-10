@@ -65,14 +65,6 @@ public class PlaylistUtils {
 		alert.setInverseBackgroundForced(true).show();
 	}
 	
-	final private ModInfo modInfo = new ModInfo();
-	
-	class ModFilter implements FilenameFilter {
-	    public boolean accept(File dir, String name) {
-	        return Xmp.testModule(dir + "/" + name, modInfo);
-	    }
-	}
-
 	/*
 	 * Send files in directory to the specified playlist
 	 */
@@ -90,12 +82,15 @@ public class PlaylistUtils {
 		new Thread() { 
 			public void run() { 	
 				List<String> list = new ArrayList<String>();
+				ModInfo modInfo = new ModInfo();
 				
 				int num = 0;
-            	for (File file : modDir.listFiles(new ModFilter())) {
+            	for (File file : modDir.listFiles()) {
             		if (file.isDirectory())
             			continue;
             		final String filename = path + "/" + file.getName();
+            		if (!Xmp.testModule(filename, modInfo))
+            			continue;
             		list.add(filename + ":" + modInfo.type + ":" + modInfo.name);
             		num++;
             	}
