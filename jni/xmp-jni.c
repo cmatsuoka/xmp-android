@@ -417,7 +417,7 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 		_ins[i] = (signed char)ci->instrument;
 		_finalvol[i] = ci->volume;
 		_pan[i] = ci->pan;
-		_period[i] = ci->period;
+		_period[i] = ci->period >> 8;
 	}
 
 	(*env)->SetIntArrayRegion(env, vol, 0, chn, _cur_vol);
