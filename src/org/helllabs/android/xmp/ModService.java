@@ -34,7 +34,7 @@ public class ModService extends Service {
 	private int bufferSize;
 	private int sampleRate, sampleFormat;
 	private boolean stereo;
-	private boolean interpolate;
+	//private boolean interpolate;
 	private Notifier notifier;
 	private boolean stopPlaying = false;
 	private boolean restartList;
@@ -43,7 +43,7 @@ public class ModService extends Service {
 	private boolean looped;
 	private Boolean updateData = false;
 	private String fileName;			// currently playing file
-	private String currentTitle;
+	//private String currentTitle;
 	private QueueManager queue;
 	private final RemoteCallbackList<PlayerCallback> callbacks =
 		new RemoteCallbackList<PlayerCallback>();
