@@ -194,7 +194,7 @@ public class PlayList extends PlaylistActivity {
 	
 	// List reorder
 	
-	private TouchListView.DropListener onDrop=new TouchListView.DropListener() {
+	private TouchListView.DropListener onDrop = new TouchListView.DropListener() {
 		@Override
 		public void drop(int from, int to) {
 			PlaylistInfo item = plist.getItem(from);
@@ -204,7 +204,7 @@ public class PlayList extends PlaylistActivity {
 		}
 	};
 
-	private TouchListView.RemoveListener onRemove=new TouchListView.RemoveListener() {
+	private TouchListView.RemoveListener onRemove = new TouchListView.RemoveListener() {
 		@Override
 		public void remove(int which) {
 			plist.remove(plist.getItem(which));
