@@ -17,7 +17,9 @@
 package org.helllabs.android.xmp;
 
 import android.app.ListActivity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -49,6 +51,11 @@ public abstract class ActionBarListActivity extends ListActivity {
 	/**{@inheritDoc}*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (prefs.getBoolean(Settings.PREF_DARK_THEME, false)) {
+			setTheme(R.style.AppThemeDark);
+		}
+		
 		super.onCreate(savedInstanceState);
 		mActionBarHelper.onCreate(savedInstanceState);
 	}

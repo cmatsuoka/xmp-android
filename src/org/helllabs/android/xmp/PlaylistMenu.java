@@ -33,7 +33,7 @@ public class PlaylistMenu extends ActionBarListActivity {
 	Context context;
 
 	@Override
-	public void onCreate(Bundle icicle) {
+	public void onCreate(Bundle icicle) {		
 		super.onCreate(icicle);
 		context = this;
 		setContentView(R.layout.playlist_menu);

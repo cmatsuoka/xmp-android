@@ -9,6 +9,8 @@
     <string name="preferences_pan_separation_summary">Set the mixer stereo separation</string>
     <string name="preferences_stereo_summary">Mix channels to stereo</string>
     <string name="preferences_stereo_title">Stereo output</string>
+    <string name="preferences_dark_theme_summary">Use dark background in playlists and file browser</string>
+    <string name="preferences_dark_theme_title">Use dark theme</string>
     <string name="preferences_pan_separation_title">Stereo separation</string>
     <string name="preferences_category_sound">Sound settings</string>
     <string name="preferences_category_files">Playlist settings</string>

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
@@ -34,8 +35,10 @@ public class Settings extends android.preference.PreferenceActivity {
 	public static final String PREF_TITLES_IN_BROWSER = "titles_in_browser";
 	public static final String PREF_ENABLE_DELETE = "enable_delete";
 	public static final String PREF_KEEP_SCREEN_ON = "keep_screen_on";
+	public static final String PREF_DARK_THEME = "dark_theme";
 	private SharedPreferences prefs;
 	private String oldPath;
+	private boolean oldDarkTheme;
 	
     @Override
     protected void onCreate(Bundle icicle) {
@@ -43,6 +46,7 @@ public class Settings extends android.preference.PreferenceActivity {
         
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         oldPath = prefs.getString(PREF_MEDIA_PATH, DEFAULT_MEDIA_PATH);
+        oldDarkTheme = prefs.getBoolean(PREF_DARK_THEME, false);
         addPreferencesFromResource(R.xml.preferences);
         
         PreferenceScreen soundScreen = (PreferenceScreen)findPreference("sound_screen");
@@ -65,12 +69,24 @@ public class Settings extends android.preference.PreferenceActivity {
         
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	boolean newDarkTheme;
+    	
     	if(event.getAction() == KeyEvent.ACTION_DOWN) {
     		switch(keyCode) {
     		case KeyEvent.KEYCODE_BACK:
     			String newPath = prefs.getString(PREF_MEDIA_PATH, DEFAULT_MEDIA_PATH);
     			setResult(newPath == oldPath ? RESULT_CANCELED : RESULT_OK);
+    			newDarkTheme = prefs.getBoolean(PREF_DARK_THEME, false);
+    			if (newDarkTheme != oldDarkTheme) {
+    				// Restart application
+    			}
     			finish();
+    			break;
+    		case KeyEvent.KEYCODE_HOME:
+       			newDarkTheme = prefs.getBoolean(PREF_DARK_THEME, false);
+    			if (newDarkTheme != oldDarkTheme) {
+    				System.exit(2);
+    			}    			
     		}
     	}
 
