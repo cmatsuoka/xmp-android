@@ -26,38 +26,40 @@ import android.view.KeyEvent;
 
 
 public class ModService extends Service {
-	final Xmp xmp = new Xmp();
-	AudioTrack audio;
-	Thread playThread;
-	SharedPreferences prefs;
-	Watchdog watchdog;
-	int bufferSize;
-	int sampleRate, sampleFormat;
-	boolean stereo;
-	boolean interpolate;
-	Notifier notifier;
-	boolean stopPlaying = false;
-	static boolean isAlive = false;
-	static boolean isLoaded = false;
-	boolean restartList;
-	boolean returnToPrev;
-	boolean paused;
-	boolean looped;
-	Boolean updateData = false;
-	String fileName;			// currently playing file
-	String currentTitle;
-	QueueManager queue;
-    final RemoteCallbackList<PlayerCallback> callbacks =
+	private final Xmp xmp = new Xmp();
+	private AudioTrack audio;
+	private Thread playThread;
+	private SharedPreferences prefs;
+	private Watchdog watchdog;
+	private int bufferSize;
+	private int sampleRate, sampleFormat;
+	private boolean stereo;
+	private boolean interpolate;
+	private Notifier notifier;
+	private boolean stopPlaying = false;
+	private boolean restartList;
+	private boolean returnToPrev;
+	private boolean paused;
+	private boolean looped;
+	private Boolean updateData = false;
+	private String fileName;			// currently playing file
+	private String currentTitle;
+	private QueueManager queue;
+	private final RemoteCallbackList<PlayerCallback> callbacks =
 		new RemoteCallbackList<PlayerCallback>();
-    boolean autoPaused = false;		// paused on phone call
-    XmpPhoneStateListener listener;
-    TelephonyManager tm;
+	private boolean autoPaused = false;		// paused on phone call
+	private XmpPhoneStateListener listener;
+	private TelephonyManager tm;
     
     // for media buttons
     private AudioManager audioManager;
     private ComponentName remoteControlResponder;
     private static Method registerMediaButtonEventReceiver;
     private static Method unregisterMediaButtonEventReceiver;
+    
+	public static boolean isAlive = false;
+	public static boolean isLoaded = false;
+
 
 	static {
 		initializeRemoteControlRegistrationMethods();
