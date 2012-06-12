@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
@@ -68,25 +67,19 @@ public class Settings extends android.preference.PreferenceActivity {
 
         
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-    	boolean newDarkTheme;
-    	
+    public boolean onKeyDown(int keyCode, KeyEvent event) { 	
     	if(event.getAction() == KeyEvent.ACTION_DOWN) {
     		switch(keyCode) {
     		case KeyEvent.KEYCODE_BACK:
-    			String newPath = prefs.getString(PREF_MEDIA_PATH, DEFAULT_MEDIA_PATH);
-    			setResult(newPath == oldPath ? RESULT_CANCELED : RESULT_OK);
-    			newDarkTheme = prefs.getBoolean(PREF_DARK_THEME, false);
+    			boolean newDarkTheme = prefs.getBoolean(PREF_DARK_THEME, false);
     			if (newDarkTheme != oldDarkTheme) {
     				// Restart application
+    				setResult(RESULT_FIRST_USER);
+    			} else {
+    	   			String newPath = prefs.getString(PREF_MEDIA_PATH, DEFAULT_MEDIA_PATH);
+        			setResult(newPath.equals(oldPath) ? RESULT_CANCELED : RESULT_OK);        				
     			}
-    			finish();
-    			break;
-    		case KeyEvent.KEYCODE_HOME:
-       			newDarkTheme = prefs.getBoolean(PREF_DARK_THEME, false);
-    			if (newDarkTheme != oldDarkTheme) {
-    				System.exit(2);
-    			}    			
+    			finish();   			
     		}
     	}
 

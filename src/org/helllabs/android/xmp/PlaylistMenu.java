@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,15 +25,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-
 public class PlaylistMenu extends ActionBarListActivity {
-	static final int SETTINGS_REQUEST = 45;
-	static final int PLAYLIST_REQUEST = 46;
-	SharedPreferences prefs;
-	String media_path;
-	ProgressDialog progressDialog;
-	int deletePosition;
-	Context context;
+	private static final int SETTINGS_REQUEST = 45;
+	private static final int PLAYLIST_REQUEST = 46;
+	private SharedPreferences prefs;
+	private String media_path;
+	private ProgressDialog progressDialog;
+	private int deletePosition;
+	private Context context;
+	private PendingIntent restartIntent;
+	private Activity activity;
 
 	@Override
 	public void onCreate(Bundle icicle) {		
@@ -86,6 +90,11 @@ public class PlaylistMenu extends ActionBarListActivity {
 		}
 
 		changeLog.show();
+		
+		// for activity restart
+		activity = this;
+		restartIntent = PendingIntent.getActivity(this.getBaseContext(),
+					0, new Intent(getIntent()), getIntent().getFlags());
 	}
 
 	boolean checkStorage() {
@@ -305,8 +314,15 @@ public class PlaylistMenu extends ActionBarListActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case SETTINGS_REQUEST:
-			if (resultCode == RESULT_OK)
+			if (resultCode == RESULT_FIRST_USER) {
+				// Restart activity
+				// see http://blog.janjonas.net/2010-12-20/android-development-restart-application-programmatically
+				AlarmManager alarm = (AlarmManager)activity.getSystemService(Context.ALARM_SERVICE);
+				alarm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent);
+				System.exit(2);
+			} else if (resultCode == RESULT_OK) {
 				updateList();
+			}
 			break;
 		case PLAYLIST_REQUEST:
 			updateList();

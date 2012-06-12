@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -24,19 +27,21 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 public abstract class PlaylistActivity extends ActionBarListActivity {
-	static final int SETTINGS_REQUEST = 45;
-	static final int PLAY_MODULE_REQUEST = 669; 
-	List<PlaylistInfo> modList = new ArrayList<PlaylistInfo>();
-	ImageButton playAllButton, toggleLoopButton, toggleShuffleButton;
+	private static final int SETTINGS_REQUEST = 45;
+	private static final int PLAY_MODULE_REQUEST = 669; 
+	private ImageButton playAllButton, toggleLoopButton, toggleShuffleButton;
+	protected List<PlaylistInfo> modList = new ArrayList<PlaylistInfo>();
 	protected boolean shuffleMode = true;
 	protected boolean loopMode = false;
 	protected boolean modifiedOptions = false;
-	SharedPreferences prefs;
-	boolean showToasts;
-	ModInterface modPlayer;
-	String[] addList;
-	String deleteName;
-	Context context;
+	protected SharedPreferences prefs;
+	protected String deleteName;
+	private boolean showToasts;
+	private ModInterface modPlayer;
+	private String[] addList;
+	private Context context;
+	private PendingIntent restartIntent;
+	private Activity activity;
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -50,6 +55,11 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 		context = this;
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		showToasts = prefs.getBoolean(Settings.PREF_SHOW_TOAST, true);
+		
+		// for activity restart
+		activity = this;
+		restartIntent = PendingIntent.getActivity(this.getBaseContext(),
+					0, new Intent(getIntent()), getIntent().getFlags());
 	}
 
 	void setupButtons() {
@@ -151,10 +161,18 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.i("Xmp ModList", "Activity result " + requestCode + "," + resultCode);
+		Log.i("Xmp PlaylistActivity", "Activity result " + requestCode + "," + resultCode);
 		switch (requestCode) {
 		case SETTINGS_REQUEST:
-			update();
+			if (resultCode == RESULT_FIRST_USER) {
+				// Restart activity
+				// see http://blog.janjonas.net/2010-12-20/android-development-restart-application-programmatically
+				AlarmManager alarm = (AlarmManager)activity.getSystemService(Context.ALARM_SERVICE);
+				alarm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent);
+				System.exit(2);
+			} else {
+				update();
+			}
 			showToasts = prefs.getBoolean(Settings.PREF_SHOW_TOAST, true);
 			break;
 		case PLAY_MODULE_REQUEST:
