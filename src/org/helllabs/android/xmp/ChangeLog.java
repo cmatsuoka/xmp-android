@@ -47,12 +47,13 @@ public class ChangeLog {
 	private void showLog() {
 	    LayoutInflater li = LayoutInflater.from(context);
 	    View view = li.inflate(R.layout.changelog, null);
+	    boolean invert = !prefs.getBoolean(Settings.PREF_DARK_THEME, false);
 
 	    new AlertDialog.Builder(context)
 	    	.setTitle("Changelog")
 	    	.setIcon(android.R.drawable.ic_menu_info_details)
 	    	.setView(view)
-	    	.setInverseBackgroundForced(true)
+	    	.setInverseBackgroundForced(invert)
 	    	.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
 	    		public void onClick(DialogInterface dialog, int whichButton) {
 	    		}
