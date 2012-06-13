@@ -18,4 +18,6 @@
     <color name="actionbar_title_color">#224894</color>
     <color name="actionbar_background">#e0e0e0</color>
     <color name="dark_theme_text_color">#cbcbcb</color>
+    <color name="light_theme_status_color">#f2f2f2</color>
+    <color name="dark_theme_status_color">#101040</color>
 </resources>

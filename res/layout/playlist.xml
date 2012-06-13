@@ -13,7 +13,7 @@
 		android:layout_height="wrap_content"	
 		android:longClickable="true"
 		android:focusable="true"
-		android:background="#f2f2f2">
+		android:background="@color/light_theme_status_color">
 		
 	   <TextView android:id="@+id/current_list_name"
 			android:layout_width="fill_parent"

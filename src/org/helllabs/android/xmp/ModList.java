@@ -45,6 +45,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -81,11 +82,18 @@ public class ModList extends PlaylistActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);	
 		setContentView(R.layout.modlist);
+
 		
 		registerForContextMenu(getListView());
 		final String media_path = prefs.getString(Settings.PREF_MEDIA_PATH, Settings.DEFAULT_MEDIA_PATH);
 		
 		context = this;
+		
+		// Set status area background color
+		LinearLayout statusArea = (LinearLayout)findViewById(R.id.status_area);		
+		if (prefs.getBoolean(Settings.PREF_DARK_THEME, false)) {
+			statusArea.setBackgroundColor(R.color.dark_theme_status_color);
+		}
 
 		setTitle("File Browser");
 		

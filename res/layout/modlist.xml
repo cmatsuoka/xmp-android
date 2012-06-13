@@ -6,11 +6,11 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/status_area"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:background="#f2f2f2">
+		android:background="@color/light_theme_status_color">
 		
 	    <TextView android:id="@+id/current_path"
 	        android:layout_weight="1.0"

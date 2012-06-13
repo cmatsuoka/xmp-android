@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.commonsware.cwac.tlv.TouchListView;
@@ -40,7 +41,6 @@ public class PlayList extends PlaylistActivity {
 	TextView curListDesc;
 	PlaylistInfoAdapter plist;
 	Boolean modified;
-	SharedPreferences prefs;
 	
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -50,6 +50,7 @@ public class PlayList extends PlaylistActivity {
 		Bundle extras = getIntent().getExtras();
 		if (extras == null)
 			return;
+
 		
 		setTitle("Playlist");
 		
@@ -67,6 +68,11 @@ public class PlayList extends PlaylistActivity {
 		curListName.setText(name);
 		curListDesc.setText(PlaylistUtils.readComment(this, name));
 		registerForContextMenu(getListView());
+		
+		// Set status area background color		
+		if (prefs.getBoolean(Settings.PREF_DARK_THEME, false)) {
+			curList.setBackgroundColor(R.color.dark_theme_status_color);
+		}
 		
 		shuffleMode = prefs.getBoolean("options_" + name + "_shuffleMode", true);
 		loopMode = prefs.getBoolean("options_" + name + "_loopMode", false);
