@@ -8,6 +8,7 @@
         <item name="android:actionBarStyle">@style/ActionBar</item>
         <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
         <item name="android:textColor">@color/dark_theme_text_color</item>
+        <item name="android:imageButtonStyle">@android:style/Widget.Button.Small</item>
     </style>
     
     <style name="ActionBar" parent="android:style/Widget.Holo.Light.ActionBar">
