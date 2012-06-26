@@ -84,7 +84,7 @@ public class ModService extends Service {
    		
    		bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
 	
-   		int channelConfig = stereo ?
+		int channelConfig = stereo ?
    				AudioFormat.CHANNEL_CONFIGURATION_STEREO :
    				AudioFormat.CHANNEL_CONFIGURATION_MONO;
    		

@@ -10,6 +10,7 @@ public class InputDialog extends AlertDialog.Builder {
 	private float scale;
 	public EditText input;
 
+	@SuppressWarnings("deprecation")
 	protected InputDialog(Context context) {
 		super(context);
 		

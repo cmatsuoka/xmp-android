@@ -40,6 +40,8 @@ public abstract class ActionBarHelper {
 	 * Honeycomb-specific helper will be returned.
 	 */
 	public static ActionBarHelper createInstance(Activity activity) {
+		
+		@SuppressWarnings("deprecation")
 		int version = Integer.decode(Build.VERSION.SDK);
 		
 		if (version /*Build.VERSION.SDK_INT*/ >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
