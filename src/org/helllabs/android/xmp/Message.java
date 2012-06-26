@@ -43,8 +43,8 @@ public class Message {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(title)
 			.setMessage(message)
-			.setPositiveButton(R.string.msg_yes, listener)
-		    .setNegativeButton(R.string.msg_no, listener)
+			.setPositiveButton(android.R.string.yes, listener)
+		    .setNegativeButton(android.R.string.no, listener)
 		    .show();		
 	}
 }

@@ -366,8 +366,8 @@ public class ModList extends PlaylistActivity {
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.msg_select_playlist)
-		.setPositiveButton(R.string.msg_ok, listener)
-	    .setNegativeButton(R.string.msg_cancel, listener)
+		.setPositiveButton(android.R.string.ok, listener)
+	    .setNegativeButton(android.R.string.cancel, listener)
 	    .setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int which) {
 		        playlistSelection = which;
