@@ -40,6 +40,26 @@
 				<data android:mimeType="audio/x-it" />
 				<data android:host="*" />
 			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="file" />
+				<data android:pathPattern=".*\\.itz" />
+				<data android:pathPattern=".*\\.mdz" />
+				<data android:pathPattern=".*\\.s3z" />
+				<data android:pathPattern=".*\\.xmz" />
+				<data android:pathPattern=".*\\.med" />
+				<data android:pathPattern=".*\\.stm" />				
+				<data android:pathPattern=".*\\.mtm" />
+				<data android:pathPattern=".*\\.mdl" />
+				<data android:pathPattern=".*\\.j2b" />
+				<data android:pathPattern=".*\\.umx" />
+				<data android:pathPattern=".*\\.psm" />
+				<data android:pathPattern=".*\\.669" />
+				<data android:pathPattern=".*\\.amf" />
+				<data android:host="*" />
+			</intent-filter>
 		</activity>
 		<activity android:name=".Settings" android:theme="@android:style/Theme.NoTitleBar" />
 		<activity android:name=".ModList"
