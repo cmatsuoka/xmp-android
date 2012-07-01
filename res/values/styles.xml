@@ -32,13 +32,17 @@
         <item name="android:windowTitleSize">@dimen/actionbar_compat_height</item>
         <item name="android:windowTitleBackgroundStyle">@style/ActionBarCompat</item>
         <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
-		<item name="android:textColor">@color/dark_theme_text_color</item>
+        <item name="android:textViewStyle">@style/DarkTheme.TextView</item>
 
         <!-- for programmatic instantiation -->
         <item name="actionbarCompatTitleStyle">@style/ActionBarCompatTitle</item>
         <item name="actionbarCompatItemStyle">@style/ActionBarCompatItem</item>
         <item name="actionbarCompatItemHomeStyle">@style/ActionBarCompatHomeItem</item>
         <item name="actionbarCompatProgressIndicatorStyle">@style/ActionBarCompatProgressIndicator</item>
+    </style>
+    
+    <style name="DarkTheme.TextView" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/dark_theme_text_color</item>
     </style>
     
     <style name="ActionBarCompat">
