@@ -104,7 +104,7 @@ public class InfoCache {
 			if (skipFile.isFile())
 				return false;
 
-			Boolean isMod = Xmp.testModule(filename, info);
+			boolean isMod = Xmp.testModule(filename, info);
 			if (!isMod) {
 				File dir = skipFile.getParentFile();
 				if (!dir.isDirectory())
