@@ -26,7 +26,7 @@ public class ChannelViewer extends Viewer {
 	public void setup(ModInterface modPlayer, int[] modVars) {
 		super.setup(modPlayer, modVars);
 
-		int chn = modVars[3];
+		final int chn = modVars[3];
 		this.modPlayer = modPlayer;
 		
 		try {
@@ -69,13 +69,30 @@ public class ChannelViewer extends Viewer {
 	private int findScope(int x, int y) {		
 		final int chn = modVars[3];
 		final int scopeWidth = 8 * fontWidth;
-		final int scopeLeft = 2 * font2Width + 2 * fontWidth;
+		int scopeLeft = 2 * font2Width + 2 * fontWidth;
 		
 		if (x >= scopeLeft && x <= scopeLeft + scopeWidth) {
 			int scopeNum = (y + (int)posY - fontHeight) / (4 * fontHeight);
+			if (cols > 1) {
+				if (scopeNum >= ((chn + 1) / cols))
+					scopeNum = -1;
+			} else {
+				if (scopeNum >= chn)
+					scopeNum = -1;
+			}
+			return scopeNum;
+		} else if (cols <= 1) {
+			return -1;
+		}
+		
+		// Two column layout
+		scopeLeft += canvasWidth / cols;
+		
+		if (x >= scopeLeft && x <= scopeLeft + scopeWidth) {
+			int scopeNum = (y + (int)posY - fontHeight) / (4 * fontHeight) + ((chn + 1) / cols);
 			if (scopeNum >= chn) {
 				scopeNum = -1;
-			}
+			}	
 			return scopeNum;
 		} else {
 			return -1;
@@ -134,6 +151,22 @@ public class ChannelViewer extends Viewer {
 		}
 	}
 
+	@Override
+	public void setRotation(int n) {
+		super.setRotation(n);
+		
+		// Use two columns in large screen with landscape orientation
+		if (canvasWidth > 1000) {
+			if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180)
+				cols = 1;
+			else
+				cols = 2;
+		}
+
+		final int chn = modVars[3];
+		setMaxY(((chn + 1) / cols * 4 + 1) * fontHeight);
+	}
+	
 	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
 		final int chn = modVars[3];
 		final int insNum = modVars[4];
@@ -145,15 +178,6 @@ public class ChannelViewer extends Viewer {
 		final int panLeft = volLeft + volWidth + 4 * fontWidth;
 		final int panWidth = volWidth;
 		
-		// Use two columns in landscape orientation
-		if (canvasWidth > 1000) {
-			if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180)
-				cols = 1;
-			else
-				cols = 2;
-		}
-			
-
 		// Clear screen
 		canvas.drawColor(Color.BLACK);
 
@@ -185,7 +209,7 @@ public class ChannelViewer extends Viewer {
 			rect.set(x + scopeLeft, y + 1, x + scopeLeft + scopeWidth, y + scopeHeight);
 			if (isMuted[i]) {
 				canvas.drawRect(rect, scopeMutePaint);
-				canvas.drawText("MUTE", scopeLeft + 2 * fontWidth, y + fontHeight + fontSize, insPaint);
+				canvas.drawText("MUTE", x + scopeLeft + 2 * fontWidth, y + fontHeight + fontSize, insPaint);
 			} else {
 				canvas.drawRect(rect, scopePaint);
 	
