@@ -111,7 +111,14 @@
       android:title="@string/preferences_show_toast_title"
       android:summary="@string/preferences_show_toast_summary"
       android:defaultValue="true" />
-      
+    
+    <CheckBoxPreference
+      android:key="dark_theme"
+      android:persistent="true"
+      android:title="@string/preferences_dark_theme_title"
+      android:summary="@string/preferences_dark_theme_summary"
+      android:defaultValue="false" />
+    
     <PreferenceCategory
       android:title="@string/preferences_category_experimental">
           
@@ -127,13 +134,6 @@
       android:persistent="true"
       android:title="@string/preferences_enable_delete_title"
       android:summary="@string/preferences_enable_delete_summary"
-      android:defaultValue="false" />
-    
-    <CheckBoxPreference
-      android:key="dark_theme"
-      android:persistent="true"
-      android:title="@string/preferences_dark_theme_title"
-      android:summary="@string/preferences_dark_theme_summary"
       android:defaultValue="false" />
     
     </PreferenceCategory>
