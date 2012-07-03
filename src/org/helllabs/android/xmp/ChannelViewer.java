@@ -19,7 +19,8 @@ public class ChannelViewer extends Viewer {
 	private int[] holdKey;
 	private String[] channelNumber;
 	private ModInterface modPlayer;
-
+	private int cols = 1;
+	
 	@Override
 	public void setup(ModInterface modPlayer, int[] modVars) {
 		super.setup(modPlayer, modVars);
@@ -64,7 +65,7 @@ public class ChannelViewer extends Viewer {
 		}
 	}
 	
-	private int findScope(int x, int y) {
+	private int findScope(int x, int y) {		
 		final int chn = modVars[3];
 		final int scopeWidth = 8 * fontWidth;
 		final int scopeLeft = 2 * font2Width + 2 * fontWidth;
@@ -139,7 +140,7 @@ public class ChannelViewer extends Viewer {
 		final int scopeHeight = 3 * fontHeight;
 		final int scopeLeft = 2 * font2Width + 2 * fontWidth;
 		final int volLeft = scopeLeft + scopeWidth + fontWidth * 2;
-		final int volWidth = (canvasWidth - 6 * fontWidth - volLeft) / 2;
+		final int volWidth = (canvasWidth / cols - 6 * fontWidth - volLeft) / 2;
 		final int panLeft = volLeft + volWidth + 4 * fontWidth;
 		final int panWidth = volWidth;
 
@@ -147,7 +148,10 @@ public class ChannelViewer extends Viewer {
 		canvas.drawColor(Color.BLACK);
 
 		for (int i = 0; i < chn; i++) {
-			final int y = (i * 4 + 1) * fontHeight - (int)posY;
+			final int num = (chn + 1) / cols;
+			final int icol = i % num;
+			final int x = (i / num) * canvasWidth / 2;
+			final int y = (icol * 4 + 1) * fontHeight - (int)posY;
 			final int ins = isMuted[i] ? -1 : info.instruments[i];
 			final int vol = isMuted[i] ? 0 : info.volumes[i];
 			final int finalvol = info.finalvols[i];
@@ -165,10 +169,10 @@ public class ChannelViewer extends Viewer {
 			}
 
 			// Draw channel number
-			canvas.drawText(channelNumber[i], 0, y + scopeHeight / 2 + font2Height / 2, numPaint);
+			canvas.drawText(channelNumber[i], x, y + scopeHeight / 2 + font2Height / 2, numPaint);
 
 			// Draw scopes
-			rect.set(scopeLeft, y + 1, scopeLeft + scopeWidth, y + scopeHeight);
+			rect.set(x + scopeLeft, y + 1, x + scopeLeft + scopeWidth, y + scopeHeight);
 			if (isMuted[i]) {
 				canvas.drawRect(rect, scopeMutePaint);
 				canvas.drawText("MUTE", scopeLeft + 2 * fontWidth, y + fontHeight + fontSize, insPaint);
@@ -194,7 +198,7 @@ public class ChannelViewer extends Viewer {
 				} catch (RemoteException e) { }
 				int h = scopeHeight / 2;
 				for (int j = 0; j < scopeWidth; j++) {
-					bufferXY[j * 2] = scopeLeft + j;
+					bufferXY[j * 2] = x + scopeLeft + j;
 					bufferXY[j * 2 + 1] = y + h + buffer[j] * h * finalvol / (64 * 180);
 				}
 				
@@ -204,24 +208,24 @@ public class ChannelViewer extends Viewer {
 
 			// Draw instrument name
 			if (ins >= 0 && ins < insNum) {
-				canvas.drawText(insName[ins], volLeft, y + fontHeight, insPaint);
+				canvas.drawText(insName[ins], x + volLeft, y + fontHeight, insPaint);
 			}
 
 			// Draw volumes
 			int volX = volLeft + vol * volWidth / 0x40;
 			int volY1 = y + 2 * fontHeight;
 			int volY2 = y + 2 * fontHeight + fontHeight / 3;	
-			rect.set(volLeft, volY1, volX, volY2);
+			rect.set(x + volLeft, volY1, x + volX, volY2);
 			canvas.drawRect(rect, meterPaint);
-			rect.set(volX + 1, volY1, volLeft + volWidth, volY2);
+			rect.set(x + volX + 1, volY1, x + volLeft + volWidth, volY2);
 			canvas.drawRect(rect, scopePaint);
 
 			// Draw pan
 			int panX = panLeft + pan * panWidth / 0x100;
-			rect.set(panLeft, volY1, panLeft + panWidth, volY2);
+			rect.set(x + panLeft, volY1, x + panLeft + panWidth, volY2);
 			canvas.drawRect(rect, scopePaint);
 			if (ins >= 0) {
-				rect.set(panX, volY1, panX + fontWidth / 2, volY2);
+				rect.set(x + panX, volY1, x + panX + fontWidth / 2, volY2);
 				canvas.drawRect(rect, meterPaint);
 			}
 		}
