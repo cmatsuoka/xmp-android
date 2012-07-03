@@ -462,7 +462,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 	struct xmp_sample *xxs;
 	int i, pos, transient_size;
 	int limit;
-	int step, lps, lpe;
+	int step, len, lps, lpe;
 
 	if (width > MAX_BUFFER_SIZE) {
 		width = MAX_BUFFER_SIZE;
@@ -493,15 +493,16 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 		pos = 0;
 	}
 
-	step = (XMP_PERIOD_BASE << 5) / period;
-	lps = xxs->lps << 5;
-	lpe = xxs->lpe << 5;
+	step = (XMP_PERIOD_BASE << 4) / period;
+	len = xxs->len << 4;
+	lps = xxs->lps << 4;
+	lpe = xxs->lpe << 4;
 
 	/* Limit is the buffer size or the remaining transient size */
 	if (xxs->flg & XMP_SAMPLE_LOOP) {
-		transient_size = (xxs->lps - pos) / step;
+		transient_size = (lps - pos) / step;
 	} else {
-		transient_size = (xxs->len - pos) / step;
+		transient_size = (len - pos) / step;
 	}
 	if (transient_size < 0) {
 		transient_size = 0;
@@ -515,17 +516,17 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 	if (xxs->flg & XMP_SAMPLE_16BIT) {
 		/* transient */
 		for (i = 0; i < limit; i++) {
-			_buffer[i] = ((short *)&xxs->data)[pos >> 5] / 256;
+			_buffer[i] = ((short *)&xxs->data)[pos >> 5] >> 8;
 			pos += step;
 		}
 
 		/* loop */
 		if (xxs->flg & XMP_SAMPLE_LOOP) {
 			for (i = limit; i < width; i++) {
-				_buffer[i] = ((short *)xxs->data)[pos >> 5] / 256;	
+				_buffer[i] = ((short *)xxs->data)[pos >> 5] >> 8;	
 				pos += step;
-				if (pos >= xxs->lpe) {
-					pos = xxs->lps + pos - xxs->lpe;
+				if (pos >= lpe) {
+					pos = lps + pos - lpe;
 				}
 			}
 		} else {
@@ -545,8 +546,8 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 			for (i = limit; i < width; i++) {
 				_buffer[i] = xxs->data[pos >> 5];
 				pos += step;
-				if (pos >= xxs->lpe) {
-					pos = xxs->lps + pos - xxs->lpe;
+				if (pos >= lpe) {
+					pos = lps + pos - lpe;
 				}
 			}
 		} else {
