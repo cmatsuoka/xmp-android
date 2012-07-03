@@ -16,6 +16,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	protected int[] modVars;
 	protected ModInterface modPlayer;
 	protected boolean[] isMuted;
+	protected int rotation;
 	private GestureDetector gestureDetector;
     View.OnTouchListener gestureListener;
 	
@@ -142,6 +143,10 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	
 	protected void onLongClick(int x, int y) {
 		// does nothing
+	}
+	
+	public void setRotation(int n) {
+		rotation = n;
 	}
 	
 	public void update(Info info) {

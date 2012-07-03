@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
+import android.view.Surface;
 
 public class ChannelViewer extends Viewer {
 	private Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint, scopeMutePaint;
@@ -143,6 +144,15 @@ public class ChannelViewer extends Viewer {
 		final int volWidth = (canvasWidth / cols - 6 * fontWidth - volLeft) / 2;
 		final int panLeft = volLeft + volWidth + 4 * fontWidth;
 		final int panWidth = volWidth;
+		
+		// Use two columns in landscape orientation
+		if (canvasWidth > 1000) {
+			if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180)
+				cols = 1;
+			else
+				cols = 2;
+		}
+			
 
 		// Clear screen
 		canvas.drawColor(Color.BLACK);

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,11 +19,13 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -68,6 +71,7 @@ public class Player extends Activity {
 	private boolean stopUpdate;
 	private int currentViewer = 0;
 	private boolean canChangeViewer = false;
+	private Display display;
 	
 	private ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -290,6 +294,8 @@ public class Player extends Activity {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
+		if (viewer != null)
+			viewer.setRotation(display.getRotation());
 	}
 	
 	@Override
@@ -564,6 +570,9 @@ public class Player extends Activity {
 				seeking = false;
 			}
 		});
+		
+		display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		viewer.setRotation(display.getRotation());
 	}
 
 	
