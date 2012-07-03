@@ -6,9 +6,11 @@
     
     <style name="AppThemeDark" parent="android:style/Theme.Holo">
         <item name="android:actionBarStyle">@style/ActionBar</item>
+        <item name="android:actionOverflowButtonStyle">@android:style/Widget.Holo.Light.ActionButton.Overflow</item>
         <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
         <item name="android:textViewStyle">@style/DarkTheme.TextView</item>
         <item name="android:imageButtonStyle">@android:style/Widget.Button.Small</item>
+        <item name="android:actionMenuTextColor">#000</item>
     </style>
     
     <style name="ActionBar" parent="android:style/Widget.Holo.Light.ActionBar">
