@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.RemoteException;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -17,6 +18,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	protected ModInterface modPlayer;
 	protected boolean[] isMuted;
 	protected int rotation;
+	protected int screenSize;
 	private GestureDetector gestureDetector;
     View.OnTouchListener gestureListener;
 	
@@ -126,6 +128,8 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
         
         setOnClickListener(Viewer.this); 
         setOnTouchListener(gestureListener);
+        
+        screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 	}
 	
 

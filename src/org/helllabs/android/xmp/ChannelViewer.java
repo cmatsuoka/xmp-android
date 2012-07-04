@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -33,7 +34,7 @@ public class ChannelViewer extends Viewer {
 			insName = modPlayer.getInstruments();
 		} catch (RemoteException e) { }
 
-		setMaxY((chn * 4 + 1) * fontHeight);
+		setMaxY(((chn + 1) / cols * 4 + 1) * fontHeight);
 
 		holdKey = new int[chn];
 		channelNumber = new String[chn];
@@ -155,16 +156,21 @@ public class ChannelViewer extends Viewer {
 	public void setRotation(int n) {
 		super.setRotation(n);
 		
-		// Use two columns in large screen with landscape orientation
-		if (canvasWidth > 1000) {
+		// Use two columns in large screen with landscape orientation or xlarge screen in
+		// any orientation
+		switch (screenSize) {
+		case Configuration.SCREENLAYOUT_SIZE_LARGE:
 			if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180)
 				cols = 1;
 			else
 				cols = 2;
+			break;
+		case Configuration.SCREENLAYOUT_SIZE_XLARGE:
+			cols = 2;
+			break;
+		default:
+			cols = 1;
 		}
-
-		final int chn = modVars[3];
-		setMaxY(((chn + 1) / cols * 4 + 1) * fontHeight);
 	}
 	
 	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {

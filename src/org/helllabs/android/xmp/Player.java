@@ -362,6 +362,7 @@ public class Player extends Activity {
     		}
     			
     		viewerLayout.addView(viewer);
+    		viewer.setRotation(display.getRotation());
     		viewer.setup(modPlayer, modVars);
     	}
     }
@@ -372,6 +373,7 @@ public class Player extends Activity {
 		setContentView(R.layout.player);
 		
 		activity = this;
+		display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		
 		Log.i("Xmp Player", "Create player interface");
 		
@@ -421,7 +423,9 @@ public class Player extends Activity {
 					}
 				}
 			}
-		});
+		});		
+
+		viewer.setRotation(display.getRotation());
 			
 		if (prefs.getBoolean(Settings.PREF_KEEP_SCREEN_ON, false)) {
 			titleFlipper.setKeepScreenOn(true);
@@ -570,9 +574,6 @@ public class Player extends Activity {
 				seeking = false;
 			}
 		});
-		
-		display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		viewer.setRotation(display.getRotation());
 	}
 
 	

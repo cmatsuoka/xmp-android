@@ -28,6 +28,11 @@ public class InstrumentViewer extends Viewer {
 	}
 	
 	@Override
+	public void setRotation(int n) {
+		super.setRotation(n);
+	}
+
+	@Override
 	public void update(Info info) {
 		super.update(info);
 		
