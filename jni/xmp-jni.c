@@ -493,13 +493,15 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 		pos = 0;
 	}
 
-	step = (XMP_PERIOD_BASE << 4) / period;
-	len = xxs->len << 4;
-	lps = xxs->lps << 4;
-	lpe = xxs->lpe << 4;
+	step = (XMP_PERIOD_BASE << 5) / period;
+	len = xxs->len;
+	lps = xxs->lps;
+	lpe = xxs->lpe;
 
 	/* Limit is the buffer size or the remaining transient size */
-	if (xxs->flg & XMP_SAMPLE_LOOP) {
+	if (step == 0) {
+		transient_size = 0;
+	} else if (xxs->flg & XMP_SAMPLE_LOOP) {
 		transient_size = (lps - pos) / step;
 	} else {
 		transient_size = (len - pos) / step;
