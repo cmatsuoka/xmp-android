@@ -310,11 +310,11 @@ public class ModService extends Service {
     	xmp.stopModule();
     	paused = false;
 
-    	if (playThread != null && playThread.isAlive()) {
+    	/*if (playThread != null && playThread.isAlive()) {
     		try {
     			playThread.join();
     		} catch (InterruptedException e) { }
-    	}
+    	}*/
     	
     	xmp.deinit();
     	audio.release();
