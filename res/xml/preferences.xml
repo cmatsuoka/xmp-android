@@ -92,7 +92,26 @@
       android:defaultValue="70"
       android:text="%"
       android:max="100" />
-      
+    <PreferenceCategory
+      android:title="@string/preferences_category_mixer">
+       
+    <CheckBoxPreference
+      android:key="nofilter"
+      android:persistent="true"
+      android:title="@string/preferences_nofilter_title"
+      android:summary="@string/preferences_nofilter_summary"
+      android:defaultValue="false" />
+    
+    <ListPreference
+      android:key="interpolation"
+      android:persistent="true"
+      android:title="@string/preferences_interpolation_title"
+      android:summary="@string/preferences_interpolation_summary"
+      android:defaultValue="0"
+      android:entries="@array/interpolation_array"
+      android:entryValues="@array/interpolation_values" />
+     
+    </PreferenceCategory>
   </PreferenceScreen>
   
   <PreferenceScreen

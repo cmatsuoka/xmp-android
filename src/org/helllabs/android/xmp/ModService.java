@@ -33,8 +33,6 @@ public class ModService extends Service {
 	private Watchdog watchdog;
 	private int bufferSize;
 	private int sampleRate, sampleFormat;
-	private boolean stereo;
-	//private boolean interpolate;
 	private Notifier notifier;
 	private boolean stopPlaying = false;
 	private boolean restartList;
@@ -43,7 +41,6 @@ public class ModService extends Service {
 	private boolean looped;
 	private Boolean updateData = false;
 	private String fileName;			// currently playing file
-	//private String currentTitle;
 	private QueueManager queue;
 	private final RemoteCallbackList<PlayerCallback> callbacks =
 		new RemoteCallbackList<PlayerCallback>();
@@ -77,13 +74,23 @@ public class ModService extends Service {
    		sampleRate = Integer.parseInt(prefs.getString(Settings.PREF_SAMPLING_RATE, "44100"));
    		sampleFormat = 0;
    		
-   		stereo = prefs.getBoolean(Settings.PREF_STEREO, true);
+   		final boolean stereo = prefs.getBoolean(Settings.PREF_STEREO, true);
    		if (!stereo) {
    			sampleFormat |= Xmp.XMP_FORMAT_MONO;
    		}
    		
    		bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
 	
+   		final int interpolation = Integer.parseInt(prefs.getString(Settings.PREF_INTERPOLATION, "0"));
+   		if (interpolation == 1) {
+   			sampleFormat |= Xmp.XMP_FORMAT_NEAREST;
+   		}
+   		
+   		final boolean noFilter = prefs.getBoolean(Settings.PREF_NOFILTER, false);
+   		if (noFilter) {
+   			sampleFormat |= Xmp.XMP_FORMAT_NOFILTER;
+   		}
+   		
 		int channelConfig = stereo ?
    				AudioFormat.CHANNEL_CONFIGURATION_STEREO :
    				AudioFormat.CHANNEL_CONFIGURATION_MONO;

@@ -25,6 +25,8 @@ public class Settings extends android.preference.PreferenceActivity {
 	public static final String PREF_CHANGELOG_VERSION = "changelog_version";
 	public static final String PREF_STEREO = "stereo";
 	public static final String PREF_PAN_SEPARATION = "pan_separation";
+	public static final String PREF_INTERPOLATION = "interpolation";
+	public static final String PREF_NOFILTER = "nofilter";
 	public static final String PREF_EXAMPLES = "examples";
 	public static final String PREF_SAMPLING_RATE = "sampling_rate";
 	public static final String PREF_BUFFER_MS = "buffer_ms";

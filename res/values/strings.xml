@@ -9,6 +9,11 @@
     <string name="preferences_pan_separation_summary">Set the mixer stereo separation</string>
     <string name="preferences_stereo_summary">Mix channels to stereo</string>
     <string name="preferences_stereo_title">Stereo output</string>
+    <string name="preferences_category_mixer">Mixer tweaks</string>
+    <string name="preferences_nofilter_summary">Disable lowpass filter used in IT and IMF</string>
+    <string name="preferences_nofilter_title">Disable filters</string>
+    <string name="preferences_interpolation_summary">Select interpolation algorithm</string>
+    <string name="preferences_interpolation_title">Interpolation</string>
     <string name="preferences_dark_theme_summary">Use dark background in playlists and file browser</string>
     <string name="preferences_dark_theme_title">Use dark theme</string>
     <string name="preferences_pan_separation_title">Stereo separation</string>
