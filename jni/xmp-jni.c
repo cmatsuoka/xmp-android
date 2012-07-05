@@ -494,9 +494,9 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 	}
 
 	step = (XMP_PERIOD_BASE << 5) / period;
-	len = xxs->len;
-	lps = xxs->lps;
-	lpe = xxs->lpe;
+	len = xxs->len << 5;
+	lps = xxs->lps << 5;
+	lpe = xxs->lpe << 5;
 
 	/* Limit is the buffer size or the remaining transient size */
 	if (step == 0) {
@@ -527,9 +527,10 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 			for (i = limit; i < width; i++) {
 				_buffer[i] = ((short *)xxs->data)[pos >> 5] >> 8;	
 				pos += step;
-				if (pos >= lpe) {
+				if (pos >= lpe)
 					pos = lps + pos - lpe;
-				}
+				if (pos >= lpe)		/* avoid division */
+					pos = lps;
 			}
 		} else {
 			for (i = limit; i < width; i++) {
@@ -548,9 +549,10 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 			for (i = limit; i < width; i++) {
 				_buffer[i] = xxs->data[pos >> 5];
 				pos += step;
-				if (pos >= lpe) {
+				if (pos >= lpe)
 					pos = lps + pos - lpe;
-				}
+				if (pos >= lpe)		/* avoid division */
+					pos = lps;
 			}
 		} else {
 			for (i = limit; i < width; i++) {
