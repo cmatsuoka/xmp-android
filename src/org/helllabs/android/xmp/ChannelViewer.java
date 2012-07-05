@@ -34,7 +34,10 @@ public class ChannelViewer extends Viewer {
 			insName = modPlayer.getInstruments();
 		} catch (RemoteException e) { }
 
-		setMaxY(((chn + 1) / cols * 4 + 1) * fontHeight);
+		if (cols == 1)
+			setMaxY((chn * 4 + 1) * fontHeight);
+		else
+			setMaxY(((chn + 1) / cols * 4 + 1) * fontHeight);
 
 		holdKey = new int[chn];
 		channelNumber = new String[chn];
