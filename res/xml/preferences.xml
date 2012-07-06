@@ -130,6 +130,13 @@
       android:title="@string/preferences_show_toast_title"
       android:summary="@string/preferences_show_toast_summary"
       android:defaultValue="true" />
+           
+    <CheckBoxPreference 
+      android:key="keep_screen_on"
+      android:persistent="true"
+      android:title="@string/preferences_keep_screen_on_title"
+      android:summary="@string/preferences_keep_screen_on_summary"
+      android:defaultValue="false"/>
     
     <CheckBoxPreference
       android:key="dark_theme"
@@ -140,13 +147,6 @@
     
     <PreferenceCategory
       android:title="@string/preferences_category_experimental">
-          
-    <CheckBoxPreference 
-      android:key="keep_screen_on"
-      android:persistent="true"
-      android:title="@string/preferences_keep_screen_on_title"
-      android:summary="@string/preferences_keep_screen_on_summary"
-      android:defaultValue="false"/>
           
     <CheckBoxPreference
       android:key="enable_delete"
