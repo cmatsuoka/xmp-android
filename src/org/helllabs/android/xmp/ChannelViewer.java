@@ -16,7 +16,7 @@ public class ChannelViewer extends Viewer {
 	private Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint, scopeMutePaint;
 	private int fontSize, fontHeight, fontWidth;
 	private int font2Size, font2Height, font2Width;
-	private String[] insName;		
+	private String[] insName, insNameTrim;		
 	private Rect rect = new Rect();
 	private byte[] buffer;
 	private float[] bufferXY;
@@ -24,6 +24,14 @@ public class ChannelViewer extends Viewer {
 	private String[] channelNumber;
 	private ModInterface modPlayer;
 	private int cols = 1;
+	private int scopeWidth;
+	private int scopeHeight;
+	private int scopeLeft;
+	private int volLeft;
+	private int volWidth;
+	private int panLeft;
+	private int panWidth;
+	private int textWidth;
 	
 	@Override
 	public void setup(ModInterface modPlayer, int[] modVars) {
@@ -44,6 +52,11 @@ public class ChannelViewer extends Viewer {
 			Util.to2d(c, i + 1);
 			channelNumber[i] = new String(c);
 		}
+		
+		scopeWidth = 8 * fontWidth;
+		scopeHeight = 3 * fontHeight;
+		scopeLeft = 2 * font2Width + 2 * fontWidth;
+		volLeft = scopeLeft + scopeWidth + fontWidth * 2;
 	}
 
 	@Override
@@ -156,11 +169,13 @@ public class ChannelViewer extends Viewer {
 	public void setRotation(int n) {
 		super.setRotation(n);
 		
+		// Should use canvasWidth but it's still not updated now!
+		final int width = ((Activity)context).getWindowManager().getDefaultDisplay().getWidth();
+		
 		// Use two columns in large screen or normal screen with 800 or more pixels in
 		// landscape or xlarge screen in any orientation
 		switch (screenSize) {
 		case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-			int width = ((Activity)context).getWindowManager().getDefaultDisplay().getWidth();
 			if (width < 800) {
 				cols = 1;
 				break;
@@ -184,18 +199,20 @@ public class ChannelViewer extends Viewer {
 			setMaxY((chn * 4 + 1) * fontHeight);
 		else
 			setMaxY(((chn + 1) / cols * 4 + 1) * fontHeight);
+		
+		volWidth = (width / cols - 5 * fontWidth - volLeft) / 2;
+		panLeft = volLeft + volWidth + 3 * fontWidth;
+		panWidth = volWidth;
+		textWidth = 2 * volWidth / fontWidth + 3;
+		
+		for (int i = 0; i < insName.length; i++) {
+		
+		}
 	}
 	
 	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
 		final int chn = modVars[3];
 		final int insNum = modVars[4];
-		final int scopeWidth = 8 * fontWidth;
-		final int scopeHeight = 3 * fontHeight;
-		final int scopeLeft = 2 * font2Width + 2 * fontWidth;
-		final int volLeft = scopeLeft + scopeWidth + fontWidth * 2;
-		final int volWidth = (canvasWidth / cols - 5 * fontWidth - volLeft) / 2;
-		final int panLeft = volLeft + volWidth + 3 * fontWidth;
-		final int panWidth = volWidth;
 		
 		// Clear screen
 		canvas.drawColor(Color.BLACK);
@@ -222,7 +239,7 @@ public class ChannelViewer extends Viewer {
 			}
 
 			// Draw channel number
-			canvas.drawText(channelNumber[i], x, y + scopeHeight / 2 + font2Height / 2, numPaint);
+			canvas.drawText(channelNumber[i], x, y + (scopeHeight + font2Height) / 2, numPaint);
 
 			// Draw scopes
 			rect.set(x + scopeLeft, y + 1, x + scopeLeft + scopeWidth, y + scopeHeight);
