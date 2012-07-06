@@ -1,10 +1,12 @@
 package org.helllabs.android.xmp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
@@ -33,11 +35,6 @@ public class ChannelViewer extends Viewer {
 		try {
 			insName = modPlayer.getInstruments();
 		} catch (RemoteException e) { }
-
-		if (cols == 1)
-			setMaxY((chn * 4 + 1) * fontHeight);
-		else
-			setMaxY(((chn + 1) / cols * 4 + 1) * fontHeight);
 
 		holdKey = new int[chn];
 		channelNumber = new String[chn];
@@ -159,9 +156,16 @@ public class ChannelViewer extends Viewer {
 	public void setRotation(int n) {
 		super.setRotation(n);
 		
-		// Use two columns in large screen with landscape orientation or xlarge screen in
-		// any orientation
+		// Use two columns in large screen or normal screen with 800 or more pixels in
+		// landscape or xlarge screen in any orientation
 		switch (screenSize) {
+		case Configuration.SCREENLAYOUT_SIZE_NORMAL:
+			int width = ((Activity)context).getWindowManager().getDefaultDisplay().getWidth();
+			if (width < 800) {
+				cols = 1;
+				break;
+			}
+			/* fall-though */
 		case Configuration.SCREENLAYOUT_SIZE_LARGE:
 			if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180)
 				cols = 1;
@@ -174,6 +178,12 @@ public class ChannelViewer extends Viewer {
 		default:
 			cols = 1;
 		}
+		
+		final int chn = modVars[3];
+		if (cols == 1)
+			setMaxY((chn * 4 + 1) * fontHeight);
+		else
+			setMaxY(((chn + 1) / cols * 4 + 1) * fontHeight);
 	}
 	
 	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
@@ -183,8 +193,8 @@ public class ChannelViewer extends Viewer {
 		final int scopeHeight = 3 * fontHeight;
 		final int scopeLeft = 2 * font2Width + 2 * fontWidth;
 		final int volLeft = scopeLeft + scopeWidth + fontWidth * 2;
-		final int volWidth = (canvasWidth / cols - 6 * fontWidth - volLeft) / 2;
-		final int panLeft = volLeft + volWidth + 4 * fontWidth;
+		final int volWidth = (canvasWidth / cols - 5 * fontWidth - volLeft) / 2;
+		final int panLeft = volLeft + volWidth + 3 * fontWidth;
 		final int panWidth = volWidth;
 		
 		// Clear screen

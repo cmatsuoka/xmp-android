@@ -295,7 +295,7 @@ public class Player extends Activity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		if (viewer != null)
-			viewer.setRotation(display.getRotation());
+			viewer.setRotation(display.getOrientation());
 	}
 	
 	@Override
@@ -361,9 +361,9 @@ public class Player extends Activity {
     			break;
     		}
     			
-    		viewerLayout.addView(viewer);
-    		viewer.setRotation(display.getRotation());
+    		viewerLayout.addView(viewer);   		
     		viewer.setup(modPlayer, modVars);
+    		viewer.setRotation(display.getOrientation());
     	}
     }
 	
@@ -424,8 +424,6 @@ public class Player extends Activity {
 				}
 			}
 		});		
-
-		viewer.setRotation(display.getRotation());
 			
 		if (prefs.getBoolean(Settings.PREF_KEEP_SCREEN_ON, false)) {
 			titleFlipper.setKeepScreenOn(true);
@@ -658,6 +656,7 @@ public class Player extends Activity {
 		       	titleFlipper.showNext();
 	
 		       	viewer.setup(modPlayer, modVars);
+				viewer.setRotation(display.getOrientation());
 		       	
 		       	/*infoMod.setText(String.format("Channels: %d\n" +
 		       			"Length: %d, Patterns: %d\n" +
