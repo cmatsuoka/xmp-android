@@ -1,7 +1,7 @@
 package org.helllabs.android.xmp;
 
 import android.content.Context;
-import android.content.res.Configuration;
+import android.os.Build;
 import android.os.RemoteException;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -129,7 +129,13 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
         setOnClickListener(Viewer.this); 
         setOnTouchListener(gestureListener);
         
-        screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        int version = Integer.decode(Build.VERSION.SDK);
+        if (version >= Build.VERSION_CODES.DONUT) {
+        	ScreenSizeHelper screenSizeHelper = new ScreenSizeHelper();
+        	screenSize = screenSizeHelper.getScreenSize(context);
+        } else {
+        	screenSize = 2;
+        }
 	}
 	
 

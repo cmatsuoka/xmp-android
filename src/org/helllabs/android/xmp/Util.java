@@ -22,5 +22,4 @@ public class Util {
 		c[0] = hexDigits[x >> 4];
 		c[1] = hexDigits[x & 0x0f];
 	}
-
 }
