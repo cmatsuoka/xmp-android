@@ -205,8 +205,14 @@ public class ChannelViewer extends Viewer {
 		panWidth = volWidth;
 		textWidth = 2 * volWidth / fontWidth + 3;
 		
-		for (int i = 0; i < insName.length; i++) {
+		final int num = insName.length;
+		insNameTrim = new String[num];
 		
+		for (int i = 0; i < num; i++) {
+			if (insName[i].length() > textWidth)
+				insNameTrim[i] = insName[i].substring(0, textWidth);
+			else
+				insNameTrim[i] = insName[i];
 		}
 	}
 	
@@ -278,7 +284,7 @@ public class ChannelViewer extends Viewer {
 
 			// Draw instrument name
 			if (ins >= 0 && ins < insNum) {
-				canvas.drawText(insName[ins], x + volLeft, y + fontHeight, insPaint);
+				canvas.drawText(insNameTrim[ins], x + volLeft, y + fontHeight, insPaint);
 			}
 
 			// Draw volumes
