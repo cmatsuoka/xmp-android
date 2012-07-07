@@ -19,7 +19,7 @@
     <string name="preferences_pan_separation_title">Stereo separation</string>
     <string name="preferences_category_sound">Sound settings</string>
     <string name="preferences_category_files">Playlist settings</string>
-    <string name="changelog_text">• Better channel viewer in large displays\n• Add more mixer control options\n• Normalize volumes in channel viewer\n• Fix dark theme menu colors in ICS\n• Fix spurious module skipping\n• Code optimization\n
+    <string name="changelog_text">• Better channel viewer in large displays\n• Add more mixer control options\n• Normalize volumes in channel viewer\n• Fix dark theme menu colors in ICS\n• Fix oscilloscope data\n• Fix spurious module skipping\n• Code optimization\n
 \nVersion 3.1.2:\n• Add support for Asylum Music Format\n• Fix Digital Symphony module loading\n• Fix menu text color in dark theme\n• Register common file name extensions\n
 \nVersion 3.1.1:\n• Experimental option to use dark theme\n• Fix crash with invalid MDL module\n
 \nVersion 3.1.0:\n• Better sound quality\n• Add support to IT sample vibrato\n• Fix IT event reading\n• Fix IT lowpass filter\n• Fix mixer resampling\n• Fix playlist creation (Sage Herron)\n• Fix HSC Adlib instrument conversion\n• Update player engine to libxmp 3.9.3\n
