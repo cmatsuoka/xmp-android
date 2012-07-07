@@ -456,7 +456,7 @@ Java_org_helllabs_android_xmp_Xmp_getPatternRow(JNIEnv *env, jobject obj, jint p
 }
 
 JNIEXPORT void JNICALL
-Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint trigger, jint ins, jint key, jint period, jint chn, jint width, jbyteArray buffer)
+Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboolean trigger, jint ins, jint key, jint period, jint chn, jint width, jbyteArray buffer)
 {
 	struct xmp_subinstrument *sub;
 	struct xmp_sample *xxs;
@@ -489,7 +489,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jint t
 	pos = _pos[chn];
 
 	/* In case of new keypress, reset sample */
-	if (trigger > 0) {
+	if (trigger == JNI_TRUE) {
 		pos = 0;
 	}
 

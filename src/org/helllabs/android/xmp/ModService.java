@@ -435,7 +435,7 @@ public class ModService extends Service {
 			}
 		}
 		
-		public void getSampleData(int trigger, int ins, int key, int period, int chn, int width, byte[] buffer) {
+		public void getSampleData(boolean trigger, int ins, int key, int period, int chn, int width, byte[] buffer) {
 			synchronized (updateData) {
 				if (updateData) {
 					xmp.getSampleData(trigger, ins, key, period, chn, width, buffer);

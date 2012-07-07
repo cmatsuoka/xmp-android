@@ -35,7 +35,7 @@ public class Xmp {
 	public native String[] getInstruments();
 	public native void getChannelData(int[] volumes, int[] finalvols, int[] pans, int[] instruments, int[] keys, int[] periods);
 	public native void getPatternRow(int pat, int row, byte[] rowNotes, byte[] rowInstruments);
-	public native void getSampleData(int trigger, int ins, int key, int period, int chn, int width, byte[] buffer);
+	public native void getSampleData(boolean trigger, int ins, int key, int period, int chn, int width, byte[] buffer);
 	
 	static {
 		System.loadLibrary("xmp");

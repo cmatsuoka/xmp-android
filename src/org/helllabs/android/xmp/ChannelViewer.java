@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.Surface;
 
 public class ChannelViewer extends Viewer {
@@ -31,6 +32,7 @@ public class ChannelViewer extends Viewer {
 	private int panLeft;
 	private int panWidth;
 	private int textWidth;
+	private int[] keyRow = new int[64];
 	
 	@Override
 	public void setup(ModInterface modPlayer, int[] modVars) {
@@ -218,6 +220,7 @@ public class ChannelViewer extends Viewer {
 	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
 		final int chn = modVars[3];
 		final int insNum = modVars[4];
+		final int row = info.values[2];
 		
 		// Clear screen
 		canvas.drawColor(Color.BLACK);
@@ -231,11 +234,17 @@ public class ChannelViewer extends Viewer {
 			final int vol = isMuted[i] ? 0 : info.volumes[i];
 			final int finalvol = info.finalvols[i];
 			final int pan = info.pans[i];
-			final int key = info.keys[i];
+			int key = info.keys[i];
 			final int period = info.periods[i];
 
 			if (key >= 0) {
 				holdKey[i] = key;
+				
+				if (keyRow[i] == row) {
+					key = -1;
+				} else {
+					keyRow[i] = row;
+				}
 			}
 
 			// Don't draw if not visible
@@ -254,21 +263,13 @@ public class ChannelViewer extends Viewer {
 			} else {
 				canvas.drawRect(rect, scopePaint);
 	
-				try {
-					int trigger;
-	
+				try {	
 					// Be very careful here!
 					// Our variables are latency-compensated but sample data is current
 					// so caution is needed to avoid retrieving data using old variables
 					// from a module with sample data from a newly loaded one.
-	
-					if (key >= 0) {
-						trigger = 1;
-					} else {
-						trigger = 0;
-					}
 
-					modPlayer.getSampleData(trigger, ins, holdKey[i], period, i, scopeWidth, buffer);
+					modPlayer.getSampleData(key >= 0, ins, holdKey[i], period, i, scopeWidth, buffer);
 	
 				} catch (RemoteException e) { }
 				int h = scopeHeight / 2;
