@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
@@ -169,7 +168,7 @@ public class ChannelViewer extends Viewer {
 	public void setRotation(int n) {
 		super.setRotation(n);
 		
-		// Should use canvasWidth but it's still not updated now!
+		// Should use canvasWidth but it's not updated yet
 		final int width = ((Activity)context).getWindowManager().getDefaultDisplay().getWidth();
 		
 		// Use two columns in large screen or normal screen with 800 or more pixels in
