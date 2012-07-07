@@ -403,7 +403,7 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 			_last_key[i] = _key[i];
 			sub = get_subinstrument(ci->instrument, _key[i]);
 			if (sub != NULL) {
-				_cur_vol[i] = sub->vol;
+				_cur_vol[i] = sub->vol * 0x40 / mi.vol_base;
 			}
 		} else {
 			_key[i] = -1;
