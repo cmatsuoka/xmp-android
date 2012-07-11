@@ -80,14 +80,14 @@ public class ModService extends Service {
    		}
    		
    		bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
-	
-   		final int interpolation = Integer.parseInt(prefs.getString(Settings.PREF_INTERPOLATION, "0"));
-   		if (interpolation == 1) {
-   			sampleFormat |= Xmp.XMP_FORMAT_NEAREST;
-   		}
+
+   		final boolean interpolate = prefs.getBoolean(Settings.PREF_INTERPOLATE, true);
+   		if (!interpolate) {
+   	   		sampleFormat |= Xmp.XMP_FORMAT_NEAREST;
+   	   	}
    		
-   		final boolean noFilter = prefs.getBoolean(Settings.PREF_NOFILTER, false);
-   		if (noFilter) {
+   		final boolean filter = prefs.getBoolean(Settings.PREF_FILTER, true);
+   		if (!filter) {
    			sampleFormat |= Xmp.XMP_FORMAT_NOFILTER;
    		}
    		
