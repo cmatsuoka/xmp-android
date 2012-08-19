@@ -76,19 +76,19 @@ public class ModService extends Service {
    		
    		final boolean stereo = prefs.getBoolean(Settings.PREF_STEREO, true);
    		if (!stereo) {
-   			sampleFormat |= Xmp.XMP_FORMAT_MONO;
+   			sampleFormat |= Xmp.XMP_MIX_MONO;
    		}
    		
    		bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
 
    		final boolean interpolate = prefs.getBoolean(Settings.PREF_INTERPOLATE, true);
    		if (!interpolate) {
-   	   		sampleFormat |= Xmp.XMP_FORMAT_NEAREST;
+   	   		sampleFormat |= Xmp.XMP_MIX_NEAREST;
    	   	}
    		
    		final boolean filter = prefs.getBoolean(Settings.PREF_FILTER, true);
    		if (!filter) {
-   			sampleFormat |= Xmp.XMP_FORMAT_NOFILTER;
+   			sampleFormat |= Xmp.XMP_MIX_NOFILTER;
    		}
    		
 		int channelConfig = stereo ?

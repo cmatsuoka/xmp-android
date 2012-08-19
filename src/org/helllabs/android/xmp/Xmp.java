@@ -2,9 +2,9 @@ package org.helllabs.android.xmp;
 
 
 public class Xmp {
-	public static final int XMP_FORMAT_MONO = 1 << 2;
-	public static final int XMP_FORMAT_NEAREST = 1 << 3;
-	public static final int XMP_FORMAT_NOFILTER = 1 << 4;
+	public static final int XMP_MIX_MONO = 1 << 2;
+	public static final int XMP_MIX_NEAREST = 1 << 3;
+	public static final int XMP_MIX_NOFILTER = 1 << 4;
 	
 	public native int init();
 	public native int deinit();

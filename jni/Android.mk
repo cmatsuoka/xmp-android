@@ -21,6 +21,6 @@ LOCAL_SRC_FILES := xmp-jni.c \
 	$(SRC_SOURCES:.o=.c.arm) \
 	$(LOADERS_SOURCES:.o=.c) \
 	$(PROWIZ_SOURCES:.o=.c) \
-	$(UNXZ_SOURCES:.o=.c) \
+	$(UNXZ_SOURCES:.o=.c)
 
 include $(BUILD_SHARED_LIBRARY)
