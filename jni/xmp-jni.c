@@ -186,13 +186,15 @@ Java_org_helllabs_android_xmp_Xmp_setPosition(JNIEnv *env, jobject obj, jint n)
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_stopModule(JNIEnv *env, jobject obj)
 {
-	return xmp_stop_module(ctx);
+	xmp_stop_module(ctx);
+	return 0;
 }
 
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_restartModule(JNIEnv *env, jobject obj)
 {
-	return xmp_restart_module(ctx);
+	xmp_restart_module(ctx);
+	return 0;
 }
 
 JNIEXPORT jint JNICALL
