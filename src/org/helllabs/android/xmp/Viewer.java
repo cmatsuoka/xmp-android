@@ -172,7 +172,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		isMuted = new boolean[chn];
 		for (int i = 0; i < chn; i++) {
 			try {
-				isMuted[i] = modPlayer.mute(i, 2) == 1;
+				isMuted[i] = modPlayer.mute(i, -1) == 1;
 			} catch (RemoteException e) { }
 		}
 		
