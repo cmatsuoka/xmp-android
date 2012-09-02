@@ -220,7 +220,7 @@ Java_org_helllabs_android_xmp_Xmp_getInfo(JNIEnv *env, jobject obj, jintArray va
 {
 	int v[7];
 
-	v[0] = mi.order;
+	v[0] = mi.pos;
 	v[1] = mi.pattern;
 	v[2] = mi.row;
 	v[3] = mi.num_rows;
@@ -234,13 +234,13 @@ Java_org_helllabs_android_xmp_Xmp_getInfo(JNIEnv *env, jobject obj, jintArray va
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_setMixerAmp(JNIEnv *env, jobject obj, jint amp)
 {
-	return xmp_mixer_amp(ctx, amp);
+	return xmp_mixer_set(ctx, XMP_MIXER_AMP, amp);
 }
 
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_setMixerMix(JNIEnv *env, jobject obj, jint mix)
 {
-	return xmp_mixer_mix(ctx, mix);
+	return xmp_mixer_set(ctx, XMP_MIXER_MIX, mix);
 }
 
 JNIEXPORT jint JNICALL
@@ -258,7 +258,7 @@ Java_org_helllabs_android_xmp_Xmp_getPlayBpm(JNIEnv *env, jobject obj)
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_getPlayPos(JNIEnv *env, jobject obj)
 {
-	return mi.order;
+	return mi.pos;
 }
 
 JNIEXPORT jint JNICALL
