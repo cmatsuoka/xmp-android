@@ -6,12 +6,12 @@ include $(CLEAR_VARS)
 include $(LOCAL_PATH)/src/Makefile
 include $(LOCAL_PATH)/src/loaders/Makefile
 include $(LOCAL_PATH)/src/loaders/prowizard/Makefile
-include $(LOCAL_PATH)/src/unxz/Makefile
+include $(LOCAL_PATH)/src/depackers/Makefile
 
 SRC_SOURCES	:= $(addprefix src/,$(SRC_OBJS))
 LOADERS_SOURCES := $(addprefix src/loaders/,$(LOADERS_OBJS))
 PROWIZ_SOURCES	:= $(addprefix src/loaders/prowizard/,$(PROWIZ_OBJS))
-UNXZ_SOURCES	:= $(addprefix src/unxz/,$(UNXZ_OBJS))
+DEPACKERS_SOURCES := $(addprefix src/depackers/,$(DEPACKERS_OBJS))
 
 VERCODE		:= `sed -ne 's/^VERCODE\s*=\s*//p' $(LOCAL_PATH)/../../../Makefile|sed 's/.* //'`
 LOCAL_MODULE    := xmp
@@ -21,6 +21,6 @@ LOCAL_SRC_FILES := xmp-jni.c \
 	$(SRC_SOURCES:.o=.c.arm) \
 	$(LOADERS_SOURCES:.o=.c) \
 	$(PROWIZ_SOURCES:.o=.c) \
-	$(UNXZ_SOURCES:.o=.c)
+	$(DEPACKERS_SOURCES:.o=.c)
 
 include $(BUILD_SHARED_LIBRARY)
