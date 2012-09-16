@@ -8,6 +8,7 @@
 /* #include <android/log.h> */
 
 static xmp_context ctx = NULL;
+static struct xmp_module_info mi;
 static struct xmp_frame_info fi;
 
 static int _playing = 0;
@@ -54,7 +55,7 @@ Java_org_helllabs_android_xmp_Xmp_loadModule(JNIEnv *env, jobject obj, jstring n
 	res = xmp_load_module(ctx, (char *)filename);
 	(*env)->ReleaseStringUTFChars(env, name, filename);
 
-	xmp_get_frame_info(ctx, &fi);
+	xmp_get_module_info(ctx, &mi);
 
 	return res;
 }
@@ -273,11 +274,11 @@ Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray
 	int v[6];
 
 	v[0] = fi.total_time;
-	v[1] = fi.mod->len;
-	v[2] = fi.mod->pat;
-	v[3] = fi.mod->chn;
-	v[4] = fi.mod->ins;
-	v[5] = fi.mod->smp;
+	v[1] = mi.mod->len;
+	v[2] = mi.mod->pat;
+	v[3] = mi.mod->chn;
+	v[4] = mi.mod->ins;
+	v[5] = mi.mod->smp;
 
 	(*env)->SetIntArrayRegion(env, vars, 0, 6, v);
 }
@@ -327,13 +328,13 @@ Java_org_helllabs_android_xmp_Xmp_getFormats(JNIEnv *env, jobject obj)
 JNIEXPORT jstring JNICALL
 Java_org_helllabs_android_xmp_Xmp_getModName(JNIEnv *env, jobject obj)
 {
-	return (*env)->NewStringUTF(env, fi.mod->name);
+	return (*env)->NewStringUTF(env, mi.mod->name);
 }
 
 JNIEXPORT jstring JNICALL
 Java_org_helllabs_android_xmp_Xmp_getModType(JNIEnv *env, jobject obj)
 {
-	return (*env)->NewStringUTF(env, fi.mod->type);
+	return (*env)->NewStringUTF(env, mi.mod->type);
 }
 
 JNIEXPORT jobjectArray JNICALL
@@ -349,12 +350,12 @@ Java_org_helllabs_android_xmp_Xmp_getInstruments(JNIEnv *env, jobject obj)
 	if (stringClass == NULL)
 		return NULL;
 
-	stringArray = (*env)->NewObjectArray(env, fi.mod->ins, stringClass, NULL);
+	stringArray = (*env)->NewObjectArray(env, mi.mod->ins, stringClass, NULL);
 	if (stringArray == NULL)
 		return NULL;
 
-	for (i = 0; i < fi.mod->ins; i++) {
-		snprintf(buf, 80, "%02X %s", i + 1, fi.mod->xxi[i].name);
+	for (i = 0; i < mi.mod->ins; i++) {
+		snprintf(buf, 80, "%02X %s", i + 1, mi.mod->xxi[i].name);
 		s = (*env)->NewStringUTF(env, buf);
 		(*env)->SetObjectArrayElement(env, stringArray, i, s);
 		(*env)->DeleteLocalRef(env, s);
@@ -365,10 +366,10 @@ Java_org_helllabs_android_xmp_Xmp_getInstruments(JNIEnv *env, jobject obj)
 
 static struct xmp_subinstrument *get_subinstrument(int ins, int key)
 {
-	if (ins >= 0 && ins < fi.mod->ins) {
-		if (fi.mod->xxi[ins].map[key].ins != 0xff) {
-			int mapped = fi.mod->xxi[ins].map[key].ins;
-			return &fi.mod->xxi[ins].sub[mapped];
+	if (ins >= 0 && ins < mi.mod->ins) {
+		if (mi.mod->xxi[ins].map[key].ins != 0xff) {
+			int mapped = mi.mod->xxi[ins].map[key].ins;
+			return &mi.mod->xxi[ins].sub[mapped];
 		}
 	}
 
@@ -379,14 +380,14 @@ JNIEXPORT void JNICALL
 Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintArray vol, jintArray finalvol, jintArray pan, jintArray ins, jintArray key, jintArray period)
 {
 	struct xmp_subinstrument *sub;
-	int chn = fi.mod->chn;
+	int chn = mi.mod->chn;
 	int i;
 
 	for (i = 0; i < chn; i++) {
                 struct xmp_channel_info *ci = &fi.channel_info[i];
 
 		if (ci->event.vol > 0) {
-			_hold_vol[i] = ci->event.vol * 0x40 / fi.vol_base;
+			_hold_vol[i] = ci->event.vol * 0x40 / mi.vol_base;
 		}
 
 		_cur_vol[i] -= _decay;
@@ -399,7 +400,7 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 			_last_key[i] = _key[i];
 			sub = get_subinstrument(ci->instrument, _key[i]);
 			if (sub != NULL) {
-				_cur_vol[i] = sub->vol * 0x40 / fi.vol_base;
+				_cur_vol[i] = sub->vol * 0x40 / mi.vol_base;
 			}
 		} else {
 			_key[i] = -1;
@@ -407,7 +408,7 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 
 		if (ci->event.vol > 0) {
 			_key[i] = _last_key[i];
-			_cur_vol[i] = ci->event.vol * 0x40 / fi.vol_base;
+			_cur_vol[i] = ci->event.vol * 0x40 / mi.vol_base;
 		}
 
 		_ins[i] = (signed char)ci->instrument;
@@ -433,14 +434,14 @@ Java_org_helllabs_android_xmp_Xmp_getPatternRow(JNIEnv *env, jobject obj, jint p
 	int chn;
 	int i;
 
-	if (fi.mod == NULL || pat > fi.mod->pat || row > fi.mod->xxp[pat]->rows)
+	if (mi.mod == NULL || pat > mi.mod->pat || row > mi.mod->xxp[pat]->rows)
 		return;
 
- 	xxp = fi.mod->xxp[pat];
-	chn = fi.mod->chn;
+ 	xxp = mi.mod->xxp[pat];
+	chn = mi.mod->chn;
 
 	for (i = 0; i < chn; i++) {
-		struct xmp_track *xxt = fi.mod->xxt[xxp->index[i]];
+		struct xmp_track *xxt = mi.mod->xxt[xxp->index[i]];
 		struct xmp_event *e = &xxt->event[row];
 
 		row_note[i] = e->note;
@@ -468,16 +469,16 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 		goto err;
 	}
 
-	if (ins < 0 || ins > fi.mod->ins || key > 0x80) {
+	if (ins < 0 || ins > mi.mod->ins || key > 0x80) {
 		goto err;
 	}
 
 	sub = get_subinstrument(ins, key);
-	if (sub == NULL || sub->sid < 0 || sub->sid >= fi.mod->smp) {
+	if (sub == NULL || sub->sid < 0 || sub->sid >= mi.mod->smp) {
 		goto err;
 	}
 
-	xxs = &fi.mod->xxs[sub->sid];
+	xxs = &mi.mod->xxs[sub->sid];
 	if (xxs == NULL || xxs->flg & XMP_SAMPLE_SYNTH) {
 		goto err;
 	}
