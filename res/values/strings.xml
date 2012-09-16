@@ -21,7 +21,7 @@
     <string name="preferences_pan_separation_title">Stereo separation</string>
     <string name="preferences_category_sound">Sound settings</string>
     <string name="preferences_category_files">Playlist settings</string>
-    <string name="changelog_text">• Update player engine to libxmp 4.0\n• Add support for more compressed formats\n• Add support to Oggmod modules\n• Add cubic spline interpolator\n• Fix a few mixer quality issues\n• Fix mmcmp and ArcFS decompressors\n• Fix IT note off issues\n• Fix XM portamento issues\n 
+    <string name="changelog_text">• Update player engine to libxmp 4.0\n• Add support for more compressed formats\n• Add support to Oggmod modules\n• Add cubic spline interpolator\n• Option for recursive add to playlist\n• Fix a few mixer quality issues\n• Fix mmcmp and ArcFS decompressors\n• Fix IT note off issues\n• Fix XM portamento issues\n 
 \nVersion 3.2.0:\n• Better channel viewer in large screens\n• Add more mixer control options\n• Normalize volumes in channel viewer\n• Fix dark theme menu colors in ICS\n• Fix oscilloscope data\n• Fix spurious module skipping\n• Code optimization\n
 \nVersion 3.1.2:\n• Add support for Asylum Music Format\n• Fix Digital Symphony module loading\n• Fix menu text color in dark theme\n• Register common file name extensions\n
 \nVersion 3.1.1:\n• Experimental option to use dark theme\n• Fix crash with invalid MDL module\n
