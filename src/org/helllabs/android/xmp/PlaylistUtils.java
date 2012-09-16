@@ -12,7 +12,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -68,10 +67,35 @@ public class PlaylistUtils {
 	/*
 	 * Send files in directory to the specified playlist
 	 */
-	public void filesToPlaylist(final Context context, final String path, final String name, final boolean recursive) {
+	
+	private void addFiles(final Context context, final String path, final String name, final boolean recursive)
+	{
+		List<String> list = new ArrayList<String>();
+		ModInfo modInfo = new ModInfo();
 		final File modDir = new File(path);
 		
-		Log.d("asd", "path = " + path);
+		int num = 0;
+    	for (File file : modDir.listFiles()) {
+    		if (file.isDirectory()) {
+    			if (recursive) {
+    				addFiles(context, file.getPath(), name, true);
+    			} else {
+    				continue;
+    			}
+    		}
+    		final String filename = path + "/" + file.getName();
+    		if (!Xmp.testModule(filename, modInfo))
+    			continue;
+    		list.add(filename + ":" + modInfo.type + ":" + modInfo.name);
+    		num++;
+    	}
+    	
+    	if (num > 0)
+    		addToList(context, name, list.toArray(new String[num]));		
+	}
+	
+	public void filesToPlaylist(final Context context, final String path, final String name, final boolean recursive) {
+		final File modDir = new File(path);
 		
 		if (!modDir.isDirectory()) {
 			Message.error(context, context.getString(R.string.error_exist_dir));
@@ -85,29 +109,7 @@ public class PlaylistUtils {
 		
 		new Thread() { 
 			public void run() { 	
-				List<String> list = new ArrayList<String>();
-				ModInfo modInfo = new ModInfo();
-				
-				int num = 0;
-            	for (File file : modDir.listFiles()) {
-            		if (file.isDirectory()) {
-            			if (recursive) {
-            				filesToPlaylist(context, file.getPath(), name, true);
-            			} else {
-            				continue;
-            			}
-            		}
-            		final String filename = path + "/" + file.getName();
-            		Log.d("asd", "now test " + filename);
-            		if (!Xmp.testModule(filename, modInfo))
-            			continue;
-            		list.add(filename + ":" + modInfo.type + ":" + modInfo.name);
-            		num++;
-            	}
-            	
-            	if (num > 0)
-            		addToList(context, name, list.toArray(new String[num]));
-            	
+				addFiles(context, path, name, recursive);
                 progressDialog.dismiss();
 			}
 		}.start();
