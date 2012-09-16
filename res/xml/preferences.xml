@@ -66,21 +66,31 @@
       android:text="ms"
       android:max="1000" />
                   
-     <ListPreference
+    <ListPreference
       android:key="vol_boost"
       android:persistent="true"
       android:title="@string/preferences_vol_boost_title"
       android:summary="@string/preferences_vol_boost_summary"
       android:defaultValue="1"
       android:entries="@array/vol_boost_array"
-      android:entryValues="@array/vol_boost_values" />      
-      
-   <CheckBoxPreference
+      android:entryValues="@array/vol_boost_values" />
+    
+    <CheckBoxPreference
       android:key="interpolate"
       android:persistent="true"
       android:title="@string/preferences_interpolate_title"
       android:summary="@string/preferences_interpolate_summary"
       android:defaultValue="true" />
+    
+    <ListPreference
+      android:key="interp_type"
+      android:persistent="true"
+      android:title="@string/preferences_interp_type_title"
+      android:summary="@string/preferences_interp_type_summary"
+      android:dependency="interpolate"
+      android:defaultValue="1"
+      android:entries="@array/interp_type_array"
+      android:entryValues="@array/interp_type_values" />
 
     <CheckBoxPreference
       android:key="filter"

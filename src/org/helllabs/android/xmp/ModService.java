@@ -76,21 +76,11 @@ public class ModService extends Service {
    		
    		final boolean stereo = prefs.getBoolean(Settings.PREF_STEREO, true);
    		if (!stereo) {
-   			sampleFormat |= Xmp.XMP_MIX_MONO;
+   			sampleFormat |= Xmp.XMP_FORMAT_MONO;
    		}
    		
    		bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
-
-   		final boolean interpolate = prefs.getBoolean(Settings.PREF_INTERPOLATE, true);
-   		if (!interpolate) {
-   	   		sampleFormat |= Xmp.XMP_MIX_NEAREST;
-   	   	}
-   		
-   		final boolean filter = prefs.getBoolean(Settings.PREF_FILTER, true);
-   		if (!filter) {
-   			sampleFormat |= Xmp.XMP_MIX_NOFILTER;
-   		}
-   		
+	
 		int channelConfig = stereo ?
    				AudioFormat.CHANNEL_CONFIGURATION_STEREO :
    				AudioFormat.CHANNEL_CONFIGURATION_MONO;
@@ -222,11 +212,32 @@ public class ModService extends Service {
 	        	callbacks.finishBroadcast();
 
 	        	String volBoost = prefs.getString(Settings.PREF_VOL_BOOST, "1");
+	        	
+	       		final int[] interpTypes = { Xmp.XMP_INTERP_NEAREST, Xmp.XMP_INTERP_LINEAR, Xmp.XMP_INTERP_SPLINE };
+	       		final int temp = Integer.parseInt(prefs.getString(Settings.PREF_INTERP_TYPE, "1"));
+	       		int interpType;
+	       		if (temp >= 1 && temp <= 2) {
+	       			interpType = interpTypes[temp];
+	       		} else {
+	       			interpType = Xmp.XMP_INTERP_LINEAR;
+	       		}
+	       		
+	        	int dsp = 0;
+	        	if (prefs.getBoolean(Settings.PREF_FILTER, true)) {
+	        		dsp |= Xmp.XMP_DSP_LOWPASS;
+	        	}
+	        	
+	        	if (!prefs.getBoolean(Settings.PREF_INTERPOLATE, true)) {
+	        		interpType = Xmp.XMP_INTERP_NEAREST;
+	        	}
 
 	       		audio.play();
 	       		xmp.startPlayer(0, sampleRate, sampleFormat);
-	        	xmp.setMixerAmp(Integer.parseInt(volBoost));
-	        	xmp.setMixerMix(prefs.getInt(Settings.PREF_PAN_SEPARATION, 70));
+	        	xmp.setMixer(Xmp.XMP_MIXER_AMP, Integer.parseInt(volBoost));
+	        	xmp.setMixer(Xmp.XMP_MIXER_MIX, prefs.getInt(Settings.PREF_PAN_SEPARATION, 70));
+	        	xmp.setMixer(Xmp.XMP_MIXER_INTERP, interpType);
+	        	xmp.setMixer(Xmp.XMP_MIXER_DSP, dsp);
+	        		        	
 	       		updateData = true;
 	    			    		
 	    		short buffer[] = new short[bufferSize];

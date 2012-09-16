@@ -12,8 +12,10 @@
     <string name="preferences_category_mixer">Mixer tweaks</string>
     <string name="preferences_filter_summary">Enable IT lowpass filter effect</string>
     <string name="preferences_filter_title">Resonant filters</string>
-    <string name="preferences_interpolate_summary">Interpolate samples when mixing</string>
+    <string name="preferences_interpolate_summary">Interpolate samples</string>
     <string name="preferences_interpolate_title">Interpolation</string>
+    <string name="preferences_interp_type_summary">Set sample interpolation method</string>
+    <string name="preferences_interp_type_title">Interpolation type</string>
     <string name="preferences_dark_theme_summary">Use dark background in playlists and file browser</string>
     <string name="preferences_dark_theme_title">Use dark theme</string>
     <string name="preferences_pan_separation_title">Stereo separation</string>

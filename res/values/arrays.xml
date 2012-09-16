@@ -12,18 +12,16 @@
         <item>3</item>
 	</string-array>
 	
-	<string-array name="meters_array">
-        <item>None</item>
-        <item>Leds</item>
-        <item>Bars</item>
+    <string-array name="interp_type_array">
+        <item>Linear</item>
+        <item>Cubic spline</item>
     </string-array>
     
-    <string-array name="meters_values">
-        <item>0</item>
+    <string-array name="interp_type_values">
         <item>1</item>
         <item>2</item>
-    </string-array>
-            
+	</string-array>
+    
 	<string-array name="sampling_rate_array">
         <item>8kHz</item>
         <item>22kHz</item>

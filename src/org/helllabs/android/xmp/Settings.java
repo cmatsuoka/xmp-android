@@ -27,6 +27,7 @@ public class Settings extends android.preference.PreferenceActivity {
 	public static final String PREF_PAN_SEPARATION = "pan_separation";
 	// Don't use PREF_INTERPOLATION -- was boolean in 2.x and string in 3.2.0
 	public static final String PREF_INTERPOLATE = "interpolate";
+	public static final String PREF_INTERP_TYPE = "interp_type";
 	public static final String PREF_FILTER = "filter";
 	public static final String PREF_EXAMPLES = "examples";
 	public static final String PREF_SAMPLING_RATE = "sampling_rate";
