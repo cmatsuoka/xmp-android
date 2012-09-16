@@ -282,9 +282,10 @@ public class ModList extends PlaylistActivity {
 			isPathMenu = true;
 			menu.setHeaderTitle("All files");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
-			menu.add(Menu.NONE, 1, 1, "Add to play queue");
-			menu.add(Menu.NONE, 2, 2, "Set as default path");
-			menu.add(Menu.NONE, 3, 3, "Clear cache");
+			menu.add(Menu.NONE, 1, 1, "Recursive add to playlist");
+			menu.add(Menu.NONE, 2, 2, "Add to play queue");
+			menu.add(Menu.NONE, 3, 3, "Set as default path");
+			menu.add(Menu.NONE, 4, 4, "Clear cache");
 
 			return;
 		}
@@ -297,7 +298,8 @@ public class ModList extends PlaylistActivity {
 			// Do nothing
 		} else if (info.position < directoryNum) {			// For directory
 			menu.setHeaderTitle("This directory");
-			menu.add(Menu.NONE, 0, 0, "Add to playlist");		
+			menu.add(Menu.NONE, 0, 0, "Add to playlist");
+			menu.add(Menu.NONE, 1, 1, "Recursive add to playlist");
 		} else {											// For files
 			menu.setHeaderTitle("This file");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
@@ -318,16 +320,19 @@ public class ModList extends PlaylistActivity {
 			case 0:						// Add all to playlist
 				addToPlaylist(directoryNum, modList.size() - directoryNum, addFileToPlaylistDialogClickListener);
 				break;
-			case 1:						// Add all to queue
+			case 1:						// Recursive add to playlist
+				addToPlaylist(2, modList.size() - 2, addCurRecursiveToPlaylistDialogClickListener);
+				break;
+			case 2:						// Add all to queue
 				addToQueue(directoryNum, modList.size() - directoryNum);
 				break;
-			case 2:						// Set as default path
+			case 3:						// Set as default path
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putString(Settings.PREF_MEDIA_PATH, currentDir);
 				editor.commit();
 				Message.toast(context, "Set as default module path");
 				break;
-			case 3:						// Clear cache
+			case 4:						// Clear cache
 				clearCachedEntries(directoryNum, modList.size() - directoryNum);
 				break;
 			}
@@ -338,8 +343,13 @@ public class ModList extends PlaylistActivity {
 		if (info.position < parentNum) {				// Parent dir
 			// Do nothing
 		} else if (info.position < directoryNum) {		// Directories
-			if (id == 0) {
+			switch (id) {
+			case 0:										//    Add to playlist
 				addToPlaylist(info.position, 1, addDirToPlaylistDialogClickListener);
+				break;
+			case 1:										//    Recursive add to playlist
+				addToPlaylist(info.position, 1, addRecursiveToPlaylistDialogClickListener);
+				break;
 			}
 		} else {										// Files
 			switch (id) {
@@ -393,7 +403,39 @@ public class ModList extends PlaylistActivity {
 	        if (which == DialogInterface.BUTTON_POSITIVE) {
 	        	if (playlistSelection >= 0) {
 	        		p.filesToPlaylist(context, modList.get(fileSelection).filename,
-	        					PlaylistUtils.listNoSuffix()[playlistSelection]);
+	        					PlaylistUtils.listNoSuffix()[playlistSelection], false);
+	        	}
+	        }
+	    }
+	};
+	
+	/*
+	 * Recursively add current directory to playlist
+	 */	
+	private DialogInterface.OnClickListener addCurRecursiveToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
+	    public void onClick(DialogInterface dialog, int which) {
+	    	PlaylistUtils p = new PlaylistUtils();
+	    	
+	        if (which == DialogInterface.BUTTON_POSITIVE) {
+	        	if (playlistSelection >= 0) {
+	        		p.filesToPlaylist(context, currentDir,
+	        					PlaylistUtils.listNoSuffix()[playlistSelection], true);
+	        	}
+	        }
+	    }
+	};
+	
+	/*
+	 * Recursively add directory to playlist
+	 */	
+	private DialogInterface.OnClickListener addRecursiveToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
+	    public void onClick(DialogInterface dialog, int which) {
+	    	PlaylistUtils p = new PlaylistUtils();
+	    	
+	        if (which == DialogInterface.BUTTON_POSITIVE) {
+	        	if (playlistSelection >= 0) {
+	        		p.filesToPlaylist(context, modList.get(fileSelection).filename,
+	        					PlaylistUtils.listNoSuffix()[playlistSelection], true);
 	        	}
 	        }
 	    }

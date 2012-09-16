@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 
 public class FileUtils {
 	public static void writeToFile(File file, String[] lines) throws IOException {
-		BufferedWriter out = new BufferedWriter(new FileWriter(file, true));
+		BufferedWriter out = new BufferedWriter(new FileWriter(file, true), 512);
 		for (String s : lines) {
 			out.write(s);
 			out.newLine();

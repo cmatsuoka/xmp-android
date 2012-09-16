@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -67,16 +68,20 @@ public class PlaylistUtils {
 	/*
 	 * Send files in directory to the specified playlist
 	 */
-	public void filesToPlaylist(final Context context, final String path, final String name) {
+	public void filesToPlaylist(final Context context, final String path, final String name, final boolean recursive) {
 		final File modDir = new File(path);
+		
+		Log.d("asd", "path = " + path);
 		
 		if (!modDir.isDirectory()) {
 			Message.error(context, context.getString(R.string.error_exist_dir));
 			return;
 		}
 		
-		progressDialog = ProgressDialog.show(context,      
-				"Please wait", "Scanning module files...", true);
+		try {
+			progressDialog = ProgressDialog.show(context,      
+					"Please wait", "Scanning module files...", true);
+		} catch(Exception e) { }
 		
 		new Thread() { 
 			public void run() { 	
@@ -85,9 +90,15 @@ public class PlaylistUtils {
 				
 				int num = 0;
             	for (File file : modDir.listFiles()) {
-            		if (file.isDirectory())
-            			continue;
+            		if (file.isDirectory()) {
+            			if (recursive) {
+            				filesToPlaylist(context, file.getPath(), name, true);
+            			} else {
+            				continue;
+            			}
+            		}
             		final String filename = path + "/" + file.getName();
+            		Log.d("asd", "now test " + filename);
             		if (!Xmp.testModule(filename, modInfo))
             			continue;
             		list.add(filename + ":" + modInfo.type + ":" + modInfo.name);
@@ -101,8 +112,7 @@ public class PlaylistUtils {
 			}
 		}.start();
 	}
-	
-	
+			
 	public void filesToNewPlaylist(final Context context, final String path, final Runnable runnable) {
 		final File modDir = new File(path);
 		
@@ -135,7 +145,7 @@ public class PlaylistUtils {
 					Message.error(context, context.getString(R.string.error_create_playlist));
 				}
 				
-				filesToPlaylist(context, path, name);
+				filesToPlaylist(context, path, name, false);
 				if (runnable != null)
 					handler.post(runnable);
 			}  
