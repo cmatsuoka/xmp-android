@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string-array name="playlist_mode_array">
+		<item>Start playing at selection</item>
+		<item>Play selected file</item>
+		<item>Enqueue selected file</item>
+	</string-array>
+    
+    <string-array name="playlist_mode_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+	</string-array>
+	
     <string-array name="vol_boost_array">
         <item>Normal</item>
         <item>2x</item>

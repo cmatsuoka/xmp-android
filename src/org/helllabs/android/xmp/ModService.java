@@ -379,9 +379,9 @@ public class ModService extends Service {
 	}
 
 	private final ModInterface.Stub binder = new ModInterface.Stub() {
-		public void play(String[] files, boolean shuffle, boolean loopList) {	
+		public void play(String[] files, int start, boolean shuffle, boolean loopList) {			
 			notifier.notification();
-			queue = new QueueManager(files, shuffle, loopList);
+			queue = new QueueManager(files, start, shuffle, loopList);
 			returnToPrev = false;
 			stopPlaying = false;
 			paused = false;

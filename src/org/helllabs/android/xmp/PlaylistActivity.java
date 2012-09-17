@@ -100,16 +100,30 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 			}
 		});
 	}
-
+	
+	// Item click
+	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		final String filename = modList.get(position).filename;
+		final int mode = Integer.parseInt(prefs.getString(Settings.PREF_PLAYLIST_MODE, "1"));
 		
 		/* Test module again if invalid, in case a new file format is added to the
 		 * player library and the file was previously unrecognized and cached as invalid.
 		 */
 		if (InfoCache.testModuleForceIfInvalid(filename)) {
-			playModule(filename);
+			switch (mode) {
+			case 1:								// play all starting at this one
+			default:
+				playModule(modList, position);
+				break;
+			case 2:								// play this one
+				playModule(filename);
+				break;
+			case 3:								// add to queue
+				addToQueue(position, 1);
+				break;
+			}
 		} else {
 			Message.toast(context, "Unrecognized file format");
 		}
@@ -117,7 +131,18 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 
 	abstract void update();
 
+	// Play all modules in list and honor default shuffle mode
 	void playModule(List<PlaylistInfo> list) {
+		playModule(list, 0, shuffleMode);
+	}
+	
+	// Play all modules in list with start position, no shuffle
+	void playModule(List<PlaylistInfo> list, int position) {
+		playModule(list, position, false);
+	}
+	
+	// Play modules in list starting at the specified one
+	void playModule(List<PlaylistInfo> list, int start, boolean shuffle) {
 		int num = 0;
 		for (PlaylistInfo p : list) {
 			if ((new File(p.filename).isFile())) {
@@ -135,16 +160,22 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 			}
 		}
 		if (i > 0) {
-			playModule(mods);
+			playModule(mods, start, shuffle);
 		}
 	}
 
+	// Play this module
 	void playModule(String mod) {
 		String[] mods = { mod };
-		playModule(mods);
+		playModule(mods, 0, shuffleMode);
+	}
+	
+	// Play all modules in list and honor default shuffle mode
+	void playModule(String[] mods) {
+		playModule(mods, 0, shuffleMode);
 	}
 
-	void playModule(String[] mods) {
+	void playModule(String[] mods, int start, boolean shuffle) {
 		if (showToasts) {
 			if (mods.length > 1)
 				Message.toast(this, "Play all modules in list");
@@ -153,8 +184,9 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 		}
 		Intent intent = new Intent(this, Player.class);
 		intent.putExtra("files", mods);
-		intent.putExtra("shuffle", shuffleMode);
+		intent.putExtra("shuffle", shuffle);
 		intent.putExtra("loop", loopMode);
+		intent.putExtra("start", start);
 		Log.i("Xmp PlaylistActivity", "Start activity Player");
 		startActivityForResult(intent, PLAY_MODULE_REQUEST);
 	}

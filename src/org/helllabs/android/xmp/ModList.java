@@ -300,11 +300,18 @@ public class ModList extends PlaylistActivity {
 			menu.setHeaderTitle("This directory");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
 			menu.add(Menu.NONE, 1, 1, "Recursive add to playlist");
-		} else {											// For files
+		} else {											// For files			
+			final int mode = Integer.parseInt(prefs.getString(Settings.PREF_PLAYLIST_MODE, "1"));
+			
 			menu.setHeaderTitle("This file");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
-			menu.add(Menu.NONE, 1, 1, "Add to play queue");
-			menu.add(Menu.NONE, 2, 2, "Delete file");
+			if (mode != 3)
+				menu.add(Menu.NONE, 1, 1, "Add to play queue");
+			if (mode != 2)
+				menu.add(Menu.NONE, 2, 2, "Play this file");
+			if (mode != 1)
+				menu.add(Menu.NONE, 3, 3, "Play all starting here");
+			menu.add(Menu.NONE, 4, 4, "Delete file");
 		}
 		
 		//menu.setGroupEnabled(1, PlaylistUtils.list().length > 0);
@@ -359,7 +366,13 @@ public class ModList extends PlaylistActivity {
 			case 1:										// Add to queue
 				addToQueue(info.position, 1);
 				break;
-			case 2:										// Delete file
+			case 2:										// Play this module
+				playModule(modList.get(info.position).filename);
+				break;
+			case 3:										// Play all starting here
+				playModule(modList, info.position);
+				break;
+			case 4:										// Delete file
 				deleteName = modList.get(info.position).filename;
 				Message.yesNoDialog(this, "Delete", "Are you sure to delete " + deleteName + "?", deleteDialogClickListener);
 				break;

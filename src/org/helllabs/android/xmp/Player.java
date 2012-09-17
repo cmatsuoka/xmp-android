@@ -54,6 +54,7 @@ public class Player extends Activity {
 	private ViewFlipper titleFlipper;
 	private int flipperPage;
 	private String[] fileArray = null;
+	private int start;
 	private SharedPreferences prefs;
 	private FrameLayout viewerLayout;
 	//BitmapDrawable image;
@@ -85,7 +86,7 @@ public class Player extends Activity {
 
 				if (fileArray != null && fileArray.length > 0) {
 					// Start new queue
-					playNewMod(fileArray);
+					playNewMod(fileArray, start);
 				} else {
 					// Reconnect to existing service
 					try {
@@ -322,6 +323,7 @@ public class Player extends Activity {
 				fileArray = extras.getStringArray("files");	
 				shuffleMode = extras.getBoolean("shuffle");
 				loopListMode = extras.getBoolean("loop");
+				start = extras.getInt("start");
 			} else {
 				reconnect = true;
 			}
@@ -679,9 +681,9 @@ public class Player extends Activity {
 		}
 	};
 	
-	void playNewMod(String[] files) {      	 
+	void playNewMod(String[] files, int start) {      	 
        	try {
-			modPlayer.play(files, shuffleMode, loopListMode);
+			modPlayer.play(files, start, shuffleMode, loopListMode);
 		} catch (RemoteException e) { }
 	}
 	

@@ -10,8 +10,11 @@ public class QueueManager {
 	private boolean shuffleMode;
 	private boolean loopListMode;
     
-    public QueueManager(String[] files, boolean shuffle, boolean loop) {
-    	index = 0;
+    public QueueManager(String[] files, int start, boolean shuffle, boolean loop) {
+    	if (start >= files.length) {
+    		start = files.length - 1;
+    	}
+    	index = start;
     	array = new ArrayList<String>(Arrays.asList(files));
     	ridx = new RandomIndex(files.length);
     	shuffleMode = shuffle;

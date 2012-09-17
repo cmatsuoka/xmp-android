@@ -3,7 +3,7 @@ package org.helllabs.android.xmp;
 import org.helllabs.android.xmp.PlayerCallback;
 
 interface ModInterface {
-	void play(in String[] files, boolean shuffle, boolean loopList);
+	void play(in String[] files, int start, boolean shuffle, boolean loopList);
 	void add(in String[] files);
 	void stop();
 	void pause();

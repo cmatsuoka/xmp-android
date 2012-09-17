@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.tlv.TouchListView;
@@ -155,11 +156,17 @@ public class PlayList extends PlaylistActivity {
 	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		//int i = 0;
+		
+		final int mode = Integer.parseInt(prefs.getString(Settings.PREF_PLAYLIST_MODE, "1"));
+
 		menu.setHeaderTitle("Edit playlist");
 		menu.add(Menu.NONE, 0, 0, "Remove from playlist");
 		menu.add(Menu.NONE, 1, 1, "Add to play queue");
 		menu.add(Menu.NONE, 2, 2, "Add all to play queue");
+		if (mode != 2)
+			menu.add(Menu.NONE, 3, 3, "Play this module");
+		if (mode != 1)
+			menu.add(Menu.NONE, 4, 4, "Play all starting here");
 	}
 	
 	@Override
@@ -168,16 +175,22 @@ public class PlayList extends PlaylistActivity {
 		int id = item.getItemId();
 		
 		switch (id) {
-		case 0:
+		case 0:										// Remove from playlist
 			removeFromPlaylist(name, info.position);
 			updateList();
 			break;
-		case 1:
+		case 1:										// Add to play queue
 			addToQueue(info.position, 1);
 			break;
-		case 2:
+		case 2:										// Add all to play queue
 			addToQueue(0, modList.size());
 	    	break;
+		case 3:										// Play only this module
+			playModule(modList.get(info.position).filename);
+			break;
+		case 4:										// Play all starting here
+			playModule(modList, info.position);
+			break;
 		}
 
 		return true;
