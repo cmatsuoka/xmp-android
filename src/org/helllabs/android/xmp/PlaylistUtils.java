@@ -102,10 +102,10 @@ public class PlaylistUtils {
 			return;
 		}
 		
-		try {
-			progressDialog = ProgressDialog.show(context,      
-					"Please wait", "Scanning module files...", true);
-		} catch(Exception e) { }
+
+		progressDialog = ProgressDialog.show(context,      
+				"Please wait", "Scanning module files...", true);
+
 		
 		new Thread() { 
 			public void run() { 	
