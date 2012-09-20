@@ -30,7 +30,7 @@
 \nVersion 3.1.1:\n• Experimental option to use dark theme\n• Fix crash with invalid MDL module\n
 \nVersion 3.1.0:\n• Better sound quality\n• Add support to IT sample vibrato\n• Fix IT event reading\n• Fix IT lowpass filter\n• Fix mixer resampling\n• Fix playlist creation (Sage Herron)\n• Fix HSC Adlib instrument conversion\n• Update player engine to libxmp 3.9.3\n
     </string>
-    <string name="changelog_title">New in version 3.4.0</string>
+    <string name="changelog_title">New in version 3.4.1</string>
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
     <string name="menu_refresh">Rescan</string>
     <string name="menu_prefs">Settings</string>
