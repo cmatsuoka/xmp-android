@@ -143,13 +143,21 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 	
 	// Play modules in list starting at the specified one
 	void playModule(List<PlaylistInfo> list, int start, boolean shuffle) {
-		int num = 0;
+		int num = 0, dir = 0;
 		for (PlaylistInfo p : list) {
-			if ((new File(p.filename).isFile())) {
+			if ((new File(p.filename).isDirectory())) {
+				dir++;
+			} else {
 				num++;
 			}
 		}
 		if (num == 0)
+			return;
+		
+		if (start < dir)
+			start = dir;
+		
+		if (start >= (dir + num))
 			return;
 
 		String[] mods = new String[num];
@@ -160,7 +168,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 			}
 		}
 		if (i > 0) {
-			playModule(mods, start, shuffle);
+			playModule(mods, start - dir, shuffle);
 		}
 	}
 
@@ -176,6 +184,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 	}
 
 	void playModule(String[] mods, int start, boolean shuffle) {
+
 		if (showToasts) {
 			if (mods.length > 1)
 				Message.toast(this, "Play all modules in list");
