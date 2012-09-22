@@ -184,7 +184,6 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 	}
 
 	void playModule(String[] mods, int start, boolean shuffle) {
-
 		if (showToasts) {
 			if (mods.length > 1)
 				Message.toast(this, "Play all modules in list");

@@ -39,6 +39,7 @@ public class ModService extends Service {
 	private boolean returnToPrev;
 	private boolean paused;
 	private boolean looped;
+	private int startIndex;
 	private Boolean updateData = false;
 	private String fileName;			// currently playing file
 	private QueueManager queue;
@@ -292,7 +293,8 @@ public class ModService extends Service {
 	       		audio.stop();
 	       		
 	       		if (restartList) {
-	       			queue.restart();
+	       			//queue.restart();
+	       			queue.setIndex(startIndex - 1);
 	       			restartList = false;
 	       			continue;
 	       		}
@@ -396,6 +398,7 @@ public class ModService extends Service {
 			if (isAlive) {
 				Log.i("Xmp ModService", "Use existing player thread");
 				restartList = true;
+				startIndex = start;
 				nextSong();
 			} else {
 				Log.i("Xmp ModService", "Start player thread");

@@ -317,6 +317,7 @@ public class Player extends Activity {
 			fileArray[0] = path;
 			shuffleMode = false;
 			loopListMode = false;
+			start = 0;
 		} else {	
 			Bundle extras = intent.getExtras();
 			if (extras != null) {
