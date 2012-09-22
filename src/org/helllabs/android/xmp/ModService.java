@@ -180,19 +180,26 @@ public class ModService extends Service {
 	
 	private class PlayRunnable implements Runnable {
     	public void run() {
-    		do {
+    		returnToPrev = false;
+    		do {    			
     			fileName = queue.getFilename();		// Used in reconnection
     			
     			if (!InfoCache.testModule(fileName)) {
     				Log.w("Xmp ModService", fileName + ": unrecognized format");
+    				if (returnToPrev)
+    					queue.previous();
     				continue;
     			}
     			
 	    		Log.i("Xmp ModService", "Load " + fileName);
 	       		if (xmp.loadModule(fileName) < 0) {
 	       			Log.e("Xmp ModService", "Error loading " + fileName);
+	       			if (returnToPrev)
+	       				queue.previous();
 	       			continue;
 	       		}
+	       		
+	       		returnToPrev = false;
 
 	       		notifier.notification(xmp.getModName(), queue.index());
 	       		isLoaded = true;
@@ -292,7 +299,7 @@ public class ModService extends Service {
 	       		
 	       		if (returnToPrev) {
 	       			queue.previous();
-	       			returnToPrev = false;
+	       			//returnToPrev = false;
 	       			continue;
 	       		}
     		} while (!stopPlaying && queue.next());
