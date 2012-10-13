@@ -23,7 +23,8 @@
     <string name="preferences_dark_theme_title">Use dark theme</string>
     <string name="preferences_category_sound">Sound settings</string>
     <string name="preferences_category_files">Playlist settings</string>
-    <string name="changelog_text">• Fix bidirectional sample loops\n• Fix list selection when player already active\n• Fix previous button to skip over invalid files\n
+    <string name="changelog_text">• Fix progress bar\n
+\nVersion 3.4.2:\n• Fix bidirectional sample loops\n• Fix list selection when player already active\n• Fix previous button to skip over invalid files\n
 \nVersion 3.4.1:\n• Fix playlist index\n
 \nVersion 3.4.0:\n• Change in playlist behavior: selecting a module now plays all modules in the list starting at the selected module. If you want the previous behavior please change the default mode in the application settings.\n
 \nVersion 3.3.0:\n• Update player engine to libxmp 4.0\n• Add support for more compressed formats\n• Add support to Oggmod modules\n• Add cubic spline interpolator\n• Option for recursive add to playlist\n• Fix a few mixer quality issues\n• Fix mmcmp and ArcFS decompressors\n• Fix IT note off issues\n• Fix XM portamento issues\n 
@@ -32,7 +33,7 @@
 \nVersion 3.1.1:\n• Experimental option to use dark theme\n• Fix crash with invalid MDL module\n
 \nVersion 3.1.0:\n• Better sound quality\n• Add support to IT sample vibrato\n• Fix IT event reading\n• Fix IT lowpass filter\n• Fix mixer resampling\n• Fix playlist creation (Sage Herron)\n• Fix HSC Adlib instrument conversion\n• Update player engine to libxmp 3.9.3\n
     </string>
-    <string name="changelog_title">New in version 3.4.2</string>
+    <string name="changelog_title">New in version 3.4.3</string>
     <string name="changelog">Changelog</string>
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
     <string name="menu_refresh">Rescan</string>
