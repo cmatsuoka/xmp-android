@@ -273,7 +273,7 @@ Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray
 {
 	int v[6];
 
-	v[0] = fi.total_time;
+	v[0] = mi.seq_data[0].duration;
 	v[1] = mi.mod->len;
 	v[2] = mi.mod->pat;
 	v[3] = mi.mod->chn;
