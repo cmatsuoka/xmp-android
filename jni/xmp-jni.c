@@ -233,9 +233,9 @@ Java_org_helllabs_android_xmp_Xmp_getInfo(JNIEnv *env, jobject obj, jintArray va
 }
 
 JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_setMixer(JNIEnv *env, jobject obj, jint parm, jint val)
+Java_org_helllabs_android_xmp_Xmp_setPlayer(JNIEnv *env, jobject obj, jint parm, jint val)
 {
-	return xmp_set_mixer(ctx, parm, val);
+	return xmp_set_player(ctx, parm, val);
 }
 
 JNIEXPORT jint JNICALL

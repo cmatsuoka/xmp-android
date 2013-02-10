@@ -241,10 +241,10 @@ public class ModService extends Service {
 
 	       		audio.play();
 	       		xmp.startPlayer(0, sampleRate, sampleFormat);
-	        	xmp.setMixer(Xmp.XMP_MIXER_AMP, Integer.parseInt(volBoost));
-	        	xmp.setMixer(Xmp.XMP_MIXER_MIX, prefs.getInt(Settings.PREF_PAN_SEPARATION, 70));
-	        	xmp.setMixer(Xmp.XMP_MIXER_INTERP, interpType);
-	        	xmp.setMixer(Xmp.XMP_MIXER_DSP, dsp);
+	        	xmp.setPlayer(Xmp.XMP_PLAYER_AMP, Integer.parseInt(volBoost));
+	        	xmp.setPlayer(Xmp.XMP_PLAYER_MIX, prefs.getInt(Settings.PREF_PAN_SEPARATION, 70));
+	        	xmp.setPlayer(Xmp.XMP_PLAYER_INTERP, interpType);
+	        	xmp.setPlayer(Xmp.XMP_PLAYER_DSP, dsp);
 	        		        	
 	       		updateData = true;
 	    			    		
