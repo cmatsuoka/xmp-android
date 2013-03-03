@@ -6,15 +6,17 @@ package org.helllabs.android.xmp;
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
+import org.helllabs.android.xmp.R;
+
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.preference.DialogPreference;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.LinearLayout;
 
 
 public class SeekBarPreference extends DialogPreference implements SeekBar.OnSeekBarChangeListener
@@ -92,7 +94,7 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
 		mValueText.setText(mSuffix == null ? t : t.concat(mSuffix));
 		if (shouldPersist())
 			persistInt(value);
-		callChangeListener(new Integer(value));
+		callChangeListener(Integer.valueOf(value));
 	}
 	
 	public void onStartTrackingTouch(SeekBar seek) {}

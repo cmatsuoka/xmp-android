@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp;
 
 
+
 public class Xmp {
 	public static final int XMP_PLAYER_AMP = 0;			/* Amplification factor */
 	public static final int XMP_PLAYER_MIX = 1;			/* Stereo mixing */

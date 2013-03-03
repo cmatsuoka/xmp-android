@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.helllabs.android.xmp.browser.FileUtils;
+
 
 public class InfoCache {
 

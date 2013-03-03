@@ -12,7 +12,7 @@
 		android:label="@string/app_name"
 		android:description="@string/app_description"
 		android:theme="@style/AppTheme">
-		<activity android:name=".PlaylistMenu"
+		<activity android:name=".browser.PlaylistMenu"
 			android:configChanges="keyboardHidden|orientation|screenSize"
 			android:launchMode="singleTask">
 			<intent-filter>
@@ -20,7 +20,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".Player"
+		<activity android:name=".player.Player"
 			android:configChanges="keyboardHidden|orientation|screenSize"
 			android:theme="@android:style/Theme.NoTitleBar"
 			android:launchMode="singleTop"
@@ -62,23 +62,23 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".Settings" android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".ModList"
+		<activity android:name=".browser.ModList"
 			android:configChanges="keyboardHidden|orientation|screenSize" />
-		<activity android:name=".PlayList"
+		<activity android:name=".browser.PlayList"
 			android:configChanges="keyboardHidden|orientation|screenSize" />
-		<activity android:name=".ListFormats" android:theme="@android:style/Theme.NoTitleBar">
+		<activity android:name=".browser.ListFormats" android:theme="@android:style/Theme.NoTitleBar">
 			<intent-filter>
 			    <action android:name="org.helllabs.android.xmp.LIST_FORMATS" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".About" android:theme="@android:style/Theme.NoTitleBar">
+		<activity android:name=".browser.About" android:theme="@android:style/Theme.NoTitleBar">
 			<intent-filter>
 			    <action android:name="org.helllabs.android.xmp.ABOUT" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-		<service android:name=".ModService" />
+		<service android:name=".service.ModService" />
 		<receiver android:name="RemoteControlReceiver">
 			<intent-filter>
 			    <action android:name="android.intent.action.MEDIA_BUTTON" />

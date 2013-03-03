@@ -1,8 +1,8 @@
 package org.helllabs.android.xmp;
 
 public class ModInfo {
-	String name;
-	String type;
+	public String name;
+	public String type;
 	
 	public ModInfo() {
 		
