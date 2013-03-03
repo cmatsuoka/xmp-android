@@ -36,7 +36,7 @@ public class Xmp {
 	public native int time();
 	public native int mute(int chn, int status);
 	public native void getInfo(int[] values);
-	public native void setMixer(int parm, int val);
+	public native void setPlayer(int parm, int val);
 	public native int getLoopCount();
 	public native void getModVars(int[] vars);
 	public native static String getVersion();
