@@ -13,7 +13,7 @@ LOADERS_SOURCES := $(addprefix src/loaders/,$(LOADERS_OBJS))
 PROWIZ_SOURCES	:= $(addprefix src/loaders/prowizard/,$(PROWIZ_OBJS))
 DEPACKERS_SOURCES := $(addprefix src/depackers/,$(DEPACKERS_OBJS))
 
-VERCODE		:= `sed -ne 's/^VERCODE\s*=\s*//p' $(LOCAL_PATH)/../../../Makefile|sed 's/.* //'`
+VERCODE		:= `sed -ne 's/^VERCODE\s*=\s*//p' $(LOCAL_PATH)/../../libxmp/Makefile|sed 's/.* //'`
 LOCAL_MODULE    := xmp
 LOCAL_CFLAGS	:= -I$(LOCAL_PATH)/src -DVERSION=$(VERCODE) -O3 -DHAVE_MKSTEMP -DHAVE_FNMATCH -I$(LOCAL_PATH) -I$(LOCAL_PATH)/include
 LOCAL_LDLIBS	:= -Lbuild/platforms/android-3/arch-arm/usr/lib -llog
