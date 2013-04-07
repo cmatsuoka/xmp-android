@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="org.helllabs.android.xmp"
-	android:versionCode="37"
-	android:versionName="3.4.4"
+	android:versionCode="38"
+	android:versionName="3.5.0"
 	android:installLocation="auto">
 	<uses-sdk
-		android:minSdkVersion="4"
+		android:minSdkVersion="3"
 		android:targetSdkVersion="17"/>
 		<supports-screens/>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
