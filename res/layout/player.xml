@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
@@ -137,7 +136,8 @@
 			android:layout_weight="0.05"
 			android:layout_width="wrap_content"
 			android:layout_height="25dip"
-			android:background="@drawable/btn_small" />
+			android:background="@drawable/btn_small"
+			android:onClick="loopButtonListener" />
 
 	</LinearLayout>
 
@@ -151,22 +151,26 @@
 			android:src="@drawable/back"
 			android:layout_weight="1.0"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content"
+			android:onClick="backButtonListener" />
 		<ImageButton android:id="@+id/play"
 			android:src="@drawable/pause"
 			android:layout_weight="1.0"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content"
+			android:onClick="playButtonListener" />
 		<ImageButton android:id="@+id/stop"
 			android:src="@drawable/stop"
 			android:layout_weight="1.0"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content"
+			android:onClick="stopButtonListener" />
 		<ImageButton android:id="@+id/forward"
 			android:src="@drawable/forward"
 			android:layout_weight="1.0"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content"
+			android:onClick="forwardButtonListener" />
 	</LinearLayout>
 
 </LinearLayout>

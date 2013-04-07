@@ -44,7 +44,7 @@ import android.widget.ViewFlipper;
 public class Player extends Activity {
 	static final int SETTINGS_REQUEST = 45;
 	private ModInterface modPlayer;	/* actual mod player */
-	private ImageButton playButton, stopButton, backButton, forwardButton;
+	private ImageButton playButton;
 	private ImageButton loopButton;
 	private SeekBar seekBar;
 	private Thread progressThread;
@@ -64,7 +64,6 @@ public class Player extends Activity {
 	private int start;
 	private SharedPreferences prefs;
 	private FrameLayout viewerLayout;
-	//BitmapDrawable image;
 	private final Handler handler = new Handler();
 	private int latency;
 	private int totalTime;
@@ -376,6 +375,84 @@ public class Player extends Activity {
     		viewer.setRotation(display.getOrientation());
     	}
     }
+    
+ 
+    // Click listeners
+       
+    public void loopButtonListener(View v) {
+		try {
+			if (modPlayer.toggleLoop()) {
+				loopButton.setImageResource(R.drawable.loop_on);
+			} else {
+				loopButton.setImageResource(R.drawable.loop_off);
+			}
+		} catch (RemoteException e) {
+
+		}
+	}
+    
+	public void playButtonListener(View v) {
+		//Debug.startMethodTracing("xmp");				
+		if (modPlayer == null)
+			return;
+		
+		synchronized (this) {
+			try {
+				modPlayer.pause();
+			} catch (RemoteException e) {
+
+			}
+			
+			if (paused) {
+				unpause();
+			} else {
+				pause();
+			}
+		}
+    }
+
+    public void stopButtonListener(View v) {
+		//Debug.stopMethodTracing();
+		if (modPlayer == null)
+			return;
+		
+		stopPlayingMod();
+    }
+    
+    public void backButtonListener(View v) {
+		if (modPlayer == null)
+			return;
+		
+		try {
+			if (modPlayer.time() > 3000) {
+				modPlayer.seek(0);
+			} else {
+				stopUpdate = true;
+				synchronized (modPlayer) {
+					modPlayer.prevSong();
+				}
+			}
+			unpause();
+		} catch (RemoteException e) {
+
+		}
+	}
+    
+	public void forwardButtonListener(View v) {				
+		if (modPlayer == null)
+			return;
+		
+		try {
+			stopUpdate = true;
+			synchronized (modPlayer) {
+				modPlayer.nextSong();
+			}
+		} catch (RemoteException e) { }
+		
+		unpause();
+    }
+	
+	// Life cycle
 	
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -416,7 +493,6 @@ public class Player extends Activity {
 		infoType[0] = (TextView)findViewById(R.id.info_type_0);
 		infoName[1] = (TextView)findViewById(R.id.info_name_1);
 		infoType[1] = (TextView)findViewById(R.id.info_type_1);
-		//infoMod = (TextView)findViewById(R.id.info_mod);
 		infoStatus = (TextView)findViewById(R.id.info_status);
 		elapsedTime = (TextView)findViewById(R.id.elapsed_time);
 		titleFlipper = (ViewFlipper)findViewById(R.id.title_flipper);
@@ -457,103 +533,9 @@ public class Player extends Activity {
 		}
 		
 		playButton = (ImageButton)findViewById(R.id.play);
-		stopButton = (ImageButton)findViewById(R.id.stop);
-		backButton = (ImageButton)findViewById(R.id.back);
-		forwardButton = (ImageButton)findViewById(R.id.forward);
 		loopButton = (ImageButton)findViewById(R.id.loop);
-
-		/*
-		// Set background here because we want to keep aspect ratio
-		image = new BitmapDrawable(BitmapFactory.decodeResource(getResources(),
-												R.drawable.logo));
-		image.setGravity(Gravity.CENTER);
-		image.setAlpha(48);
-		viewerLayout.setBackgroundDrawable(image.getCurrent()); */
 		
 		loopButton.setImageResource(R.drawable.loop_off);
-		
-		loopButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				try {
-					if (modPlayer.toggleLoop()) {
-						loopButton.setImageResource(R.drawable.loop_on);
-					} else {
-						loopButton.setImageResource(R.drawable.loop_off);
-					}
-				} catch (RemoteException e) {
-
-				}
-			}
-		});
-		
-		playButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				//Debug.startMethodTracing("xmp");				
-				if (modPlayer == null)
-					return;
-				
-				synchronized (this) {
-					try {
-						modPlayer.pause();
-					} catch (RemoteException e) {
-
-					}
-					
-					if (paused) {
-						unpause();
-					} else {
-						pause();
-					}
-				}
-		    }
-		});
-		
-		stopButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				//Debug.stopMethodTracing();
-				if (modPlayer == null)
-					return;
-				
-				stopPlayingMod();
-		    }
-		});
-		
-		backButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				if (modPlayer == null)
-					return;
-				
-				try {
-					if (modPlayer.time() > 3000) {
-						modPlayer.seek(0);
-					} else {
-						stopUpdate = true;
-						synchronized (modPlayer) {
-							modPlayer.prevSong();
-						}
-					}
-					unpause();
-				} catch (RemoteException e) {
-
-				}
-			}
-		});
-		
-		forwardButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {				
-				if (modPlayer == null)
-					return;
-				
-				try {
-					stopUpdate = true;
-					synchronized (modPlayer) {
-						modPlayer.nextSong();
-					}
-				} catch (RemoteException e) { }
-				
-				unpause();
-		    }
-		});
 		
 		elapsedTime.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
