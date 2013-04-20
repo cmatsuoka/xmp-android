@@ -23,16 +23,16 @@
     <string name="preferences_dark_theme_title">Use dark theme</string>
     <string name="preferences_category_sound">Sound settings</string>
     <string name="preferences_category_files">Playlist settings</string>
-    <string name="changelog_text">• Update player engine to libxmp 4.0.4\n• Add zoo depacker\n• Fix IT pan effects\n• Fix IT volume column slide to note\n• Fix IT vibrato effect\n• Fix MED BPM tempo setting\n• Fix global volume slides\n 
+    <string name="changelog_text">• Update player engine to libxmp 4.1.0\n• Improve precision of IT lowpass filter\n• Fix IT portamento after note cut\n• Fix IT envelopes with no envelope points\n• Fix IT vibrato rate\n• Fix XM invalid instrument event reading\n• Fix MED portamento and pitch slides\n• Fix Stonecracker depacker\n 
+\nVersion 3.5.0:\n• Update player engine to libxmp 4.0.4\n• Add zoo depacker\n• Fix IT pan effects\n• Fix IT volume column slide to note\n• Fix IT vibrato effect\n• Fix MED BPM tempo setting\n• Fix global volume slides\n 
 \nVersion 3.4.4:\n• Update player engine to libxmp 4.0.2\n• Fix IT instrument vibrato depth and sweep\n• Fix IT volume column vibrato\n• Fix IT past note effects\n• Fix IT note fadeout\n• Fix global volume slides\n
 \nVersion 3.4.3:\n• Fix progress bar\n
 \nVersion 3.4.2:\n• Fix bidirectional sample loops\n• Fix list selection when player already active\n• Fix previous button to skip over invalid files\n
 \nVersion 3.4.1:\n• Fix playlist index\n
 \nVersion 3.4.0:\n• Change in playlist behavior: selecting a module now plays all modules in the list starting at the selected module. If you want the previous behavior please change the default mode in the application settings.\n
-\nVersion 3.3.0:\n• Update player engine to libxmp 4.0\n• Add support for more compressed formats\n• Add support to Oggmod modules\n• Add cubic spline interpolator\n• Option for recursive add to playlist\n• Fix a few mixer quality issues\n• Fix mmcmp and ArcFS decompressors\n• Fix IT note off issues\n• Fix XM portamento issues\n 
-\nVersion 3.2.0:\n• Better channel viewer in large screens\n• Add more mixer control options\n• Normalize volumes in channel viewer\n• Fix dark theme menu colors in ICS\n• Fix oscilloscope data\n• Fix spurious module skipping\n• Code optimization\n
+\nVersion 3.3.0:\n• Update player engine to libxmp 4.0\n• Add support for more compressed formats\n• Add support to Oggmod modules\n• Add cubic spline interpolator\n• Option for recursive add to playlist\n• Fix a few mixer quality issues\n• Fix mmcmp and ArcFS decompressors\n• Fix IT note off issues\n• Fix XM portamento issues\n
     </string>
-    <string name="changelog_title">New in version 3.5.0</string>
+    <string name="changelog_title">New in version 3.6.0</string>
     <string name="changelog">Changelog</string>
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
     <string name="menu_refresh">Rescan</string>
