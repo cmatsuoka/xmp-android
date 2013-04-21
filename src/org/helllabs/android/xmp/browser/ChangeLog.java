@@ -2,7 +2,6 @@ package org.helllabs.android.xmp.browser;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Settings;
-import org.helllabs.android.xmp.R.layout;
 
 import android.app.AlertDialog;
 import android.content.Context;
