@@ -9,12 +9,12 @@
 		android:layout_height="wrap_content"
 		android:paddingLeft="2dp"
 		android:background="#1a305d">
-		
+
 		<LinearLayout
 			android:orientation="vertical"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content">
-			
+
 			<TextView android:id="@+id/info_name_0"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
@@ -35,14 +35,14 @@
 				android:shadowDx="1.0"
 				android:shadowDy="1.0"
 				android:shadowRadius="1.0" />
-				
+
 		</LinearLayout>
-		
+
 		<LinearLayout
 			android:orientation="vertical"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content">
-			
+
 			<TextView android:id="@+id/info_name_1"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
 			<View
 				android:layout_width="fill_parent"
 				android:layout_height="2dp" />
-				
+
 			<View
 				android:layout_width="fill_parent"
 				android:layout_height="2dp"
@@ -77,10 +77,10 @@
 	</ViewFlipper>	
 
 	<FrameLayout android:id="@+id/viewer_layout"
-	    android:layout_weight="0.5"
-	    android:layout_width="fill_parent"
+		android:layout_weight="0.5"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" />
-	
+
 	<View
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
@@ -113,7 +113,7 @@
 			android:textColor="#606060"
 			android:paddingRight="4dp" />
 	</LinearLayout>
-	
+
 	<LinearLayout
 		android:gravity="center"
 		android:orientation="horizontal"
@@ -137,7 +137,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="25dip"
 			android:background="@drawable/btn_small"
-			android:onClick="loopButtonListener" />
+			android:onClick="loopButtonListener"
+			android:contentDescription="@string/button_mod_loop" />
 
 	</LinearLayout>
 
@@ -152,25 +153,29 @@
 			android:layout_weight="1.0"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:onClick="backButtonListener" />
+			android:onClick="backButtonListener"
+			android:contentDescription="@string/button_prev" />
 		<ImageButton android:id="@+id/play"
 			android:src="@drawable/pause"
 			android:layout_weight="1.0"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:onClick="playButtonListener" />
+			android:onClick="playButtonListener"
+			android:contentDescription="@string/button_play_pause" />
 		<ImageButton android:id="@+id/stop"
 			android:src="@drawable/stop"
 			android:layout_weight="1.0"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:onClick="stopButtonListener" />
+			android:onClick="stopButtonListener"
+			android:contentDescription="@string/button_stop" />
 		<ImageButton android:id="@+id/forward"
 			android:src="@drawable/forward"
 			android:layout_weight="1.0"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:onClick="forwardButtonListener" />
+			android:onClick="forwardButtonListener"
+			android:contentDescription="@string/button_next" />
 	</LinearLayout>
 
 </LinearLayout>

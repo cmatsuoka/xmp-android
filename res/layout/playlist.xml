@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tlv="http://schemas.android.com/apk/res/org.helllabs.android.xmp"
+	xmlns:tlv="http://schemas.android.com/apk/res/org.helllabs.android.xmp"
 	android:gravity="top"
 	android:layout_weight="1.0"
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-    <LinearLayout android:id="@+id/current_list"
-        android:orientation="vertical"
+	<LinearLayout android:id="@+id/current_list"
+		android:orientation="vertical"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"	
+		android:layout_height="wrap_content"
 		android:longClickable="true"
 		android:focusable="true"
 		android:background="@color/light_theme_status_color">
-		
+
 	   <TextView android:id="@+id/current_list_name"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
@@ -22,23 +22,23 @@
 			android:layout_marginLeft="2dp"
 			android:textSize="16sp"
 			android:textStyle="bold" />
-	   
+
 	   <TextView android:id="@+id/current_list_description"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="2dp"
 			android:layout_marginBottom="8dp"
 			android:textSize="13sp" />
-	    			      
-    </LinearLayout>	
-     
-				
+
+	</LinearLayout>
+
+
 	<LinearLayout android:gravity="top"
 		android:layout_weight="1.0"
 		android:orientation="vertical"
 		android:layout_width="fill_parent"
 		android:layout_height="0dp">
-		
+
 		<com.commonsware.cwac.tlv.TouchListView android:id="@id/android:list"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
@@ -55,7 +55,7 @@
 			android:layout_height="fill_parent"
 			android:text="Empty playlist." />
 	</LinearLayout>
-	
+
 	<LinearLayout android:gravity="bottom"
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
@@ -63,15 +63,18 @@
 		<ImageButton android:id="@+id/play_all"
 			android:layout_weight="0.34"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/button_play_all" />
 		<ImageButton android:id="@+id/toggle_loop"
 			android:layout_weight="0.33"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/button_toggle_loop" />
 		<ImageButton android:id="@+id/toggle_shuffle"
 			android:layout_weight="0.33"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/button_toggle_shuffle" />
 	</LinearLayout>
-	
+
 </LinearLayout>

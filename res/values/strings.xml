@@ -95,4 +95,13 @@
     <string name="preferences_keep_screen_on_title">Keep screen on</string>
     <string name="preferences_titles_in_browser_title">Titles in browser</string>
     <string name="preferences_titles_in_browser_summary">Display titles instead of file names in browser (warning: may be slow)</string>
+    <string name="button_parent_dir">Parent directory</string>
+    <string name="button_play_all">Play all</string>
+    <string name="button_toggle_loop">Toggle loop</string>
+    <string name="button_toggle_shuffle">Toggle shuffle</string>
+    <string name="button_mod_loop">Module loop</string>
+    <string name="button_prev">Previous pattern</string>
+    <string name="button_play_pause">Play or pause</string>
+    <string name="button_stop">Stop</string>
+    <string name="button_next">Next pattern</string>
 </resources>

@@ -6,14 +6,14 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-    <LinearLayout android:id="@+id/status_area"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
+	<LinearLayout android:id="@+id/status_area"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:background="@color/light_theme_status_color">
-		
-	    <TextView android:id="@+id/current_path"
-	        android:layout_weight="1.0"
+
+		<TextView android:id="@+id/current_path"
+			android:layout_weight="1.0"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="12dp"
@@ -23,16 +23,17 @@
 			android:focusable="true"
 			android:textSize="16sp"
 			android:textStyle="bold" />
-	    
-	    <ImageButton android:id="@+id/up_button"
-	        android:layout_width="wrap_content"
+
+		<ImageButton android:id="@+id/up_button"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="5dp"
 			android:layout_marginRight="2dp"
 			android:layout_marginLeft="2dp"
+			android:contentDescription="@string/button_parent_dir"
 			android:background="@android:color/transparent"
 			android:src="@drawable/parent" />
-	    
+
 	</LinearLayout>
 
 	<LinearLayout android:gravity="top"
@@ -61,15 +62,18 @@
 		<ImageButton android:id="@+id/play_all"
 			android:layout_weight="0.34"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/button_play_all" />
 		<ImageButton android:id="@+id/toggle_loop"
 			android:layout_weight="0.33"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/button_toggle_loop" />
 		<ImageButton android:id="@+id/toggle_shuffle"
 			android:layout_weight="0.33"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/button_toggle_shuffle" />
 	</LinearLayout>
 
 </LinearLayout>
