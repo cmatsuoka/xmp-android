@@ -23,7 +23,7 @@
     <string name="preferences_dark_theme_title">Use dark theme</string>
     <string name="preferences_category_sound">Sound settings</string>
     <string name="preferences_category_files">Playlist settings</string>
-    <string name="changelog_text">• Update player engine to libxmp 4.1.6-pre\n• Improve interface accessibility\n• Fix IT and XM portamento and envelopes\n• Fix OctaMED synth and effects\n• Fix Oktalyzer sample mapping\n• Fix ThePlayer 5.0a/6.0a pattern decoding\n• Code refactoring and optimization\n
+    <string name="changelog_text">• Update player engine to libxmp 4.1.6-pre\n• Improve interface accessibility\n• Fix media buttons broadcast receiver\n• Fix IT and XM portamento and envelopes\n• Fix OctaMED synth and effects\n• Fix Oktalyzer sample mapping\n• Fix ThePlayer 5.0a/6.0a pattern decoding\n• Code refactoring and optimization\n
 \nVersion 3.6.1:\n• Update player engine to libxmp 4.1.2\n• Fix handling of XM keyoff event\n• Fix loss of precision in portamento\n• Fix MTM sample fine tuning\n
 \nVersion 3.6.0:\n• Update player engine to libxmp 4.1.0\n• Improve precision of IT lowpass filter\n• Fix IT portamento after note cut\n• Fix IT envelopes with no envelope points\n• Fix IT vibrato rate\n• Fix XM invalid instrument event reading\n• Fix MED portamento and pitch slides\n• Fix Stonecracker depacker\n 
 \nVersion 3.5.0:\n• Update player engine to libxmp 4.0.4\n• Add zoo depacker\n• Fix IT pan effects\n• Fix IT volume column slide to note\n• Fix IT vibrato effect\n• Fix MED BPM tempo setting\n• Fix global volume slides\n 
