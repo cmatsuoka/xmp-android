@@ -9,7 +9,7 @@ import android.view.KeyEvent;
 public class RemoteControlReceiver extends BroadcastReceiver {
 
 	public static int keyCode = -1;
-	
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
@@ -17,10 +17,10 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 		if (action.equals(Intent.ACTION_MEDIA_BUTTON)) {
 			int code;
 			KeyEvent event = (KeyEvent)intent.getExtras().get(Intent.EXTRA_KEY_EVENT);
-			
+
 			if (event.getAction() != KeyEvent.ACTION_DOWN)
 				return;
-			
+
 			switch (code = event.getKeyCode()) {
 			case KeyEvent.KEYCODE_MEDIA_NEXT:
 			case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
@@ -34,6 +34,7 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 			default:
 				Log.d("Xmp RemoteControlReceiver", "Unhandled key code " + code);
 			}
+			abortBroadcast();
 		}
 	}
 }

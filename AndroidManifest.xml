@@ -84,8 +84,8 @@
 			</intent-filter>
 		</activity>
 		<service android:name=".service.ModService" />
-		<receiver android:name="RemoteControlReceiver">
-			<intent-filter>
+		<receiver android:name=".service.RemoteControlReceiver" android:enabled="true">
+			<intent-filter android:priority="2147483647">
 				<action android:name="android.intent.action.MEDIA_BUTTON" />
 			</intent-filter>
 		</receiver>
