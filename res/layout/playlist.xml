@@ -39,7 +39,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="0dp">
 
-		<com.commonsware.cwac.tlv.TouchListView android:id="@id/android:list"
+		<com.commonsware.cwac.tlv.TouchListView android:id="@+id/plist_list"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:fastScrollEnabled="true"

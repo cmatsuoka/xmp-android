@@ -7,7 +7,7 @@ import java.util.List;
 import org.helllabs.android.xmp.InfoCache;
 import org.helllabs.android.xmp.ModInterface;
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.Settings;
+import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.player.Player;
 import org.helllabs.android.xmp.service.ModService;
 
@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,7 +34,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-public abstract class PlaylistActivity extends ActionBarListActivity {
+public abstract class PlaylistActivity extends ActionBarActivity {
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAY_MODULE_REQUEST = 669; 
 	private ImageButton playAllButton, toggleLoopButton, toggleShuffleButton;
@@ -61,7 +62,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 
 		context = this;
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		showToasts = prefs.getBoolean(Settings.PREF_SHOW_TOAST, true);
+		showToasts = prefs.getBoolean(Preferences.SHOW_TOAST, true);
 		
 		// for activity restart
 		activity = this;
@@ -110,10 +111,9 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 	
 	// Item click
 	
-	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		final String filename = modList.get(position).filename;
-		final int mode = Integer.parseInt(prefs.getString(Settings.PREF_PLAYLIST_MODE, "1"));
+		final int mode = Integer.parseInt(prefs.getString(Preferences.PLAYLIST_MODE, "1"));
 		
 		/* Test module again if invalid, in case a new file format is added to the
 		 * player library and the file was previously unrecognized and cached as invalid.
@@ -220,7 +220,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 			} else {
 				update();
 			}
-			showToasts = prefs.getBoolean(Settings.PREF_SHOW_TOAST, true);
+			showToasts = prefs.getBoolean(Preferences.SHOW_TOAST, true);
 			break;
 		case PLAY_MODULE_REQUEST:
 			if (resultCode != RESULT_OK)
@@ -304,7 +304,7 @@ public abstract class PlaylistActivity extends ActionBarListActivity {
 			(new PlaylistUtils()).newPlaylist(this);
 			break;
 		case R.id.menu_prefs:		
-			startActivityForResult(new Intent(this, Settings.class), SETTINGS_REQUEST);
+			startActivityForResult(new Intent(this, Preferences.class), SETTINGS_REQUEST);
 			break;
 		case R.id.menu_refresh:
 			update();

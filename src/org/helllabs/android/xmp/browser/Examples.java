@@ -13,16 +13,14 @@ import java.io.FileOutputStream;
 
 
 public class Examples {
-	AssetManager am;
-	String[] assets;
-	Context context;
+	private final Context context;
 	
-	public Examples(Context c) {
-		context = c;
+	public Examples(final Context context) {
+		this.context = context;
 	}
 	
-	public int install(String path, boolean examples) {
-		File dir = new File(path);
+	public int install(final String path, final boolean examples) {
+		final File dir = new File(path);
 		
 		if (dir.isDirectory())
 			return 0;
@@ -30,7 +28,8 @@ public class Examples {
 		if (!dir.mkdirs())
 			return -1;
 		
-		am = context.getResources().getAssets();
+		final AssetManager am = context.getResources().getAssets();
+		String assets[];
 		
 		try {
 			assets = am.list("mod");
@@ -49,12 +48,12 @@ public class Examples {
 	}
 
 	
-	private int copyAsset(InputStream in, String dst) {
-		byte[] buf = new byte[1024];
+	private int copyAsset(final InputStream in, final String dst) {
+		final byte[] buf = new byte[1024];
 		int len;
 		
 		try{			
-		      OutputStream out = new FileOutputStream(new File(dst));
+		      final OutputStream out = new FileOutputStream(new File(dst));
 		      while ((len = in.read(buf)) > 0) {
 		    	  out.write(buf, 0, len);
 		      }

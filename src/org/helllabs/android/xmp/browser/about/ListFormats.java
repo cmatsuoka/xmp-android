@@ -1,20 +1,19 @@
-package org.helllabs.android.xmp.browser;
+package org.helllabs.android.xmp.browser.about;
 
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.Xmp;
+import org.helllabs.libxmp.Player;
 
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
 public class ListFormats extends ListActivity {
-	private Xmp xmp = new Xmp();
 		
-	String[] formats = xmp.getFormats();
+	private final String[] formats = Player.formatList();
 	
 	@Override
-    public void onCreate(Bundle icicle) {
+    public void onCreate(final Bundle icicle) {
 		super.onCreate(icicle);
 		setContentView(R.layout.list_formats);
 		setListAdapter(new ArrayAdapter<String>(this, 

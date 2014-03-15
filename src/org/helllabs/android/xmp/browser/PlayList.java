@@ -13,8 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.helllabs.android.xmp.InfoCache;
+import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.Settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -38,12 +38,10 @@ class PlayListFilter implements FilenameFilter {
 }
 
 public class PlayList extends PlaylistActivity {
-	String name;
-	View curList;
-	TextView curListName;
-	TextView curListDesc;
-	PlaylistInfoAdapter plist;
-	Boolean modified;
+	private String name;
+	private PlaylistInfoAdapter plist;
+	private Boolean modified;
+	private TouchListView listView;
 	
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -59,23 +57,24 @@ public class PlayList extends PlaylistActivity {
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
-		TouchListView tlv = (TouchListView)getListView();
-		tlv.setDropListener(onDrop);
-		tlv.setRemoveListener(onRemove);
+		listView = (TouchListView)findViewById(R.id.plist_list);
 		
-		curList = (View)findViewById(R.id.current_list);
-		curListName = (TextView)findViewById(R.id.current_list_name);
-		curListDesc = (TextView)findViewById(R.id.current_list_description);
+		listView.setDropListener(onDrop);
+		listView.setRemoveListener(onRemove);
+		
+		final View curList = (View)findViewById(R.id.current_list);
+		final TextView curListName = (TextView)findViewById(R.id.current_list_name);
+		final TextView curListDesc = (TextView)findViewById(R.id.current_list_description);
 		
 		name = extras.getString("name");
 		curListName.setText(name);
 		curListDesc.setText(PlaylistUtils.readComment(this, name));
-		registerForContextMenu(getListView());
+		registerForContextMenu(listView);
 		
 		// Set status area background color		
-		if (prefs.getBoolean(Settings.PREF_DARK_THEME, false)) {
-			curList.setBackgroundColor(R.color.dark_theme_status_color);
-		}
+		//if (prefs.getBoolean(Preferences.DARK_THEME, false)) {
+		//	curList.setBackgroundColor(R.color.dark_theme_status_color);
+		//}
 		
 		shuffleMode = prefs.getBoolean("options_" + name + "_shuffleMode", true);
 		loopMode = prefs.getBoolean("options_" + name + "_loopMode", false);
@@ -107,10 +106,10 @@ public class PlayList extends PlaylistActivity {
 		updateList();
 	}
 	
-	void updateList() {
+	private void updateList() {
 		modList.clear();
 		
-		File file = new File(Settings.dataDir, name + ".playlist");
+		File file = new File(Preferences.DATA_DIR, name + ".playlist");
 		String line;
 		int lineNum;
 		
@@ -134,7 +133,7 @@ public class PlayList extends PlaylistActivity {
 	    }		
 		
 	    if (!invalidList.isEmpty()) {
-	    	int[] x = new int[invalidList.size()];
+	    	final int[] x = new int[invalidList.size()];
 	    	Iterator<Integer> iterator = invalidList.iterator();
 	    	for (int i = 0; i < x.length; i++)
 	    		x[i] = iterator.next().intValue();
@@ -150,9 +149,9 @@ public class PlayList extends PlaylistActivity {
 	    
 	    plist = new PlaylistInfoAdapter(PlayList.this,
     				R.layout.playlist_item, R.id.plist_info, modList,
-    				prefs.getBoolean(Settings.PREF_USE_FILENAME, false));
+    				prefs.getBoolean(Preferences.USE_FILENAME, false));
         
-	    setListAdapter(plist);
+	    listView.setAdapter(plist);
 	}
 	
 	// Playlist context menu
@@ -160,7 +159,7 @@ public class PlayList extends PlaylistActivity {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		
-		final int mode = Integer.parseInt(prefs.getString(Settings.PREF_PLAYLIST_MODE, "1"));
+		final int mode = Integer.parseInt(prefs.getString(Preferences.PLAYLIST_MODE, "1"));
 
 		menu.setHeaderTitle("Edit playlist");
 		menu.add(Menu.NONE, 0, 0, "Remove from playlist");
@@ -200,7 +199,7 @@ public class PlayList extends PlaylistActivity {
 	}
 	
 	public void removeFromPlaylist(String playlist, int position) {
-		File file = new File(Settings.dataDir, name + ".playlist");
+		File file = new File(Preferences.DATA_DIR, name + ".playlist");
 		if (modified) {
 			writeList();
 		}
@@ -233,7 +232,7 @@ public class PlayList extends PlaylistActivity {
 	};		
 
 	private void writeList() {		
-		File file = new File(Settings.dataDir, name + ".playlist.new");
+		File file = new File(Preferences.DATA_DIR, name + ".playlist.new");
 		Log.i("Xmp PlayList", "Write playlist " + name);
 		
 		file.delete();
@@ -245,7 +244,7 @@ public class PlayList extends PlaylistActivity {
 			}
 			out.close();
 			
-			File oldFile = new File(Settings.dataDir, name + ".playlist");
+			File oldFile = new File(Preferences.DATA_DIR, name + ".playlist");
 			oldFile.delete();
 			file.renameTo(oldFile);
 			

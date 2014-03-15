@@ -5,13 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.Settings;
+import org.helllabs.android.xmp.browser.about.ChangeLog;
 
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +16,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -28,16 +26,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class PlaylistMenu extends ActionBarListActivity {
+public class PlaylistMenu extends ActionBarActivity {
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAYLIST_REQUEST = 46;
 	private SharedPreferences prefs;
-	private String media_path;
-	private ProgressDialog progressDialog;
+	private String mediaPath;
 	private int deletePosition;
 	private Context context;
-	private PendingIntent restartIntent;
-	private Activity activity;
+	private ListView listView;
 
 	@Override
 	public void onCreate(Bundle icicle) {		
@@ -45,24 +41,41 @@ public class PlaylistMenu extends ActionBarListActivity {
 		context = this;
 		setContentView(R.layout.playlist_menu);
 
-		registerForContextMenu(getListView());
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		listView = (ListView)findViewById(R.id.plist_menu_list);
 
-		ChangeLog changeLog = new ChangeLog(this);
+		listView.setOnItemClickListener(
+				new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+						if (position == 0) {
+							final Intent intent = new Intent(PlaylistMenu.this, ModList.class);
+							startActivityForResult(intent, PLAYLIST_REQUEST);
+						} else {
+							final Intent intent = new Intent(PlaylistMenu.this, PlayList.class);
+							intent.putExtra("name", PlaylistUtils.listNoSuffix()[position -1]);
+							startActivityForResult(intent, PLAYLIST_REQUEST);
+						}
+					}
+				});
+
+		registerForContextMenu(listView);
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if (!checkStorage()) {
 			Message.fatalError(this, getString(R.string.error_storage), PlaylistMenu.this);
 		}
 
-		if (!Settings.dataDir.isDirectory()) {
-			if (!Settings.dataDir.mkdirs()) {
+		if (Preferences.DATA_DIR.isDirectory()) {
+			updateList();
+		} else {
+			if (!Preferences.DATA_DIR.mkdirs()) {
 				Message.fatalError(this, getString(R.string.error_datadir), PlaylistMenu.this);
 			} else {
 				final String name = getString(R.string.empty_playlist);
-				File file = new File(Settings.dataDir, name + ".playlist");
+				File file = new File(Preferences.DATA_DIR, name + ".playlist");
 				try {
 					file.createNewFile();
-					file = new File(Settings.dataDir, name + ".comment");
+					file = new File(Preferences.DATA_DIR, name + ".comment");
 					file.createNewFile();
 					FileUtils.writeToFile(file, getString(R.string.empty_comment));
 					updateList();
@@ -71,83 +84,48 @@ public class PlaylistMenu extends ActionBarListActivity {
 					return;
 				}				
 			}
-		} else {
-			updateList();
 		}
 
-		// Clear old cache
-		if (Settings.oldCacheDir.isDirectory()) {
-			progressDialog = ProgressDialog.show(this,      
-					"Please wait", "Removing old cache files...", true);
-
-			new Thread() { 
-				public void run() {
-					try {
-						Settings.deleteCache(Settings.oldCacheDir);
-					} catch (IOException e) {
-						Message.toast(context, "Can't delete old cache");
-					}	
-					progressDialog.dismiss();
-				}
-			}.start();
-		}
+		final ChangeLog changeLog = new ChangeLog(this);
 
 		changeLog.show();
-		
-		// for activity restart
-		activity = this;
-		restartIntent = PendingIntent.getActivity(this.getBaseContext(),
-					0, new Intent(getIntent()), getIntent().getFlags());
+
 	}
 
-	boolean checkStorage() {
-		String state = Environment.getExternalStorageState();
+	private boolean checkStorage() {
+		final String state = Environment.getExternalStorageState();
 
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 			return true;
-		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-			return true;
 		} else {
-			return false;
+			return Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
 		}
 	}
 
-	void updateList() {
-		media_path = prefs.getString(Settings.PREF_MEDIA_PATH, Settings.DEFAULT_MEDIA_PATH);
+	private void updateList() {
+		mediaPath = prefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 
-		List<PlaylistInfo> list = new ArrayList<PlaylistInfo>();
+		final List<PlaylistInfo> list = new ArrayList<PlaylistInfo>();
 
 		list.clear();
-		list.add(new PlaylistInfo("File browser", "Files in " + media_path,
+		list.add(new PlaylistInfo("File browser", "Files in " + mediaPath,
 				R.drawable.browser));
 
-		for (String p : PlaylistUtils.listNoSuffix()) {
-			list.add(new PlaylistInfo(p, PlaylistUtils.readComment(this, p),
-					R.drawable.list));
+		for (final String p : PlaylistUtils.listNoSuffix()) {
+			list.add(new PlaylistInfo(p, PlaylistUtils.readComment(this, p), R.drawable.list));
 		}
 
 		final PlaylistInfoAdapter playlist = new PlaylistInfoAdapter(PlaylistMenu.this,
 				R.layout.playlist_item, R.id.plist_info, list, false);
 
-		setListAdapter(playlist);
+		listView.setAdapter(playlist);
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		if (position == 0) {
-			Intent intent = new Intent(PlaylistMenu.this, ModList.class);
-			startActivityForResult(intent, PLAYLIST_REQUEST);
-		} else {
-			Intent intent = new Intent(PlaylistMenu.this, PlayList.class);
-			intent.putExtra("name", PlaylistUtils.listNoSuffix()[position -1]);
-			startActivityForResult(intent, PLAYLIST_REQUEST);
-		}
-	}
 
 	// Playlist context menu
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
 		menu.setHeaderTitle("Playlist options");
 
@@ -162,21 +140,14 @@ public class PlaylistMenu extends ActionBarListActivity {
 	}
 
 	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		//SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		//final String media_path = prefs.getString(Settings.PREF_MEDIA_PATH, Settings.DEFAULT_MEDIA_PATH);
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-		int index = item.getItemId();
-		//PlaylistUtils p = new PlaylistUtils();
+	public boolean onContextItemSelected(final MenuItem item) {
+		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+		final int index = item.getItemId();
 
 		if (info.position == 0) {		// First item of list
-			switch (index) {
-			case 0:						// First item of context menu
+			if (index == 0) {			// First item of context menu
 				changeDir(this);
 				return true;
-				/*default:
-				p.filesToPlaylist(this, media_path, PlaylistUtils.listNoSuffix()[index - 2]);
-				return true;*/
 			}
 		} else {
 			switch (index) {
@@ -207,7 +178,7 @@ public class PlaylistMenu extends ActionBarListActivity {
 		return true;
 	}
 
-	public void renameList(final Context context, int index) {
+	public void renameList(final Context context, final int index) {
 		final String name = PlaylistUtils.listNoSuffix()[index];
 		final InputDialog alert = new InputDialog(context);		  
 		alert.setTitle("Rename playlist");
@@ -217,11 +188,11 @@ public class PlaylistMenu extends ActionBarListActivity {
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 			public void onClick(DialogInterface dialog, int whichButton) {
 				boolean error = false;
-				String value = alert.input.getText().toString();
-				File old1 = new File(Settings.dataDir, name + ".playlist");
-				File old2 = new File(Settings.dataDir, name + ".comment");
-				File new1 = new File(Settings.dataDir, value + ".playlist");
-				File new2 = new File(Settings.dataDir, value + ".comment");
+				final String value = alert.input.getText().toString();
+				final File old1 = new File(Preferences.DATA_DIR, name + ".playlist");
+				final File old2 = new File(Preferences.DATA_DIR, name + ".comment");
+				final File new1 = new File(Preferences.DATA_DIR, value + ".playlist");
+				final File new2 = new File(Preferences.DATA_DIR, value + ".comment");
 
 				if (old1.renameTo(new1) == false) { 
 					error = true;
@@ -254,18 +225,18 @@ public class PlaylistMenu extends ActionBarListActivity {
 		alert.show(); 
 	}
 
-	public void changeDir(Context context) {
+	public void changeDir(final Context context) {
 		final InputDialog alert = new InputDialog(context);		  
 		alert.setTitle("Change directory");  
 		alert.setMessage("Enter the mod directory:");
-		alert.input.setText(media_path);
+		alert.input.setText(mediaPath);
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
-			public void onClick(DialogInterface dialog, int whichButton) {  
+			public void onClick(final DialogInterface dialog, final int whichButton) {  
 				String value = alert.input.getText().toString();
-				if (!value.equals(media_path)) {
+				if (!value.equals(mediaPath)) {
 					SharedPreferences.Editor editor = prefs.edit();
-					editor.putString(Settings.PREF_MEDIA_PATH, value);
+					editor.putString(Preferences.MEDIA_PATH, value);
 					editor.commit();
 					updateList();
 				}
@@ -291,7 +262,7 @@ public class PlaylistMenu extends ActionBarListActivity {
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 			public void onClick(DialogInterface dialog, int whichButton) {  
 				String value = alert.input.getText().toString().replace("\n", " ");				
-				File file = new File(Settings.dataDir, name + ".comment");
+				File file = new File(Preferences.DATA_DIR, name + ".comment");
 				try {
 					file.delete();
 					file.createNewFile();
@@ -317,13 +288,7 @@ public class PlaylistMenu extends ActionBarListActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case SETTINGS_REQUEST:
-			if (resultCode == RESULT_FIRST_USER) {
-				// Restart activity
-				// see http://blog.janjonas.net/2010-12-20/android-development-restart-application-programmatically
-				AlarmManager alarm = (AlarmManager)activity.getSystemService(Context.ALARM_SERVICE);
-				alarm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent);
-				System.exit(2);
-			} else if (resultCode == RESULT_OK) {
+			if (resultCode == RESULT_OK) {
 				updateList();
 			}
 			break;
@@ -358,7 +323,7 @@ public class PlaylistMenu extends ActionBarListActivity {
 			updateList();
 			break;
 		case R.id.menu_prefs:		
-			startActivityForResult(new Intent(this, Settings.class), SETTINGS_REQUEST);
+			startActivityForResult(new Intent(this, Preferences.class), SETTINGS_REQUEST);
 			break;
 		case R.id.menu_refresh:
 			updateList();

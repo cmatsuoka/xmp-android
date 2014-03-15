@@ -11,8 +11,8 @@ import org.helllabs.android.xmp.browser.FileUtils;
 public class InfoCache {
 
 	public static boolean clearCache(String filename) {
-		final File cacheFile = new File(Settings.cacheDir, filename + ".cache");
-		final File skipFile = new File(Settings.cacheDir, filename + ".skip");
+		final File cacheFile = new File(Preferences.CACHE_DIR, filename + ".cache");
+		final File skipFile = new File(Preferences.CACHE_DIR, filename + ".skip");
 		boolean ret = false;
 
 		if (cacheFile.isFile()) {
@@ -48,7 +48,7 @@ public class InfoCache {
 	}
 	
 	public static boolean testModuleForceIfInvalid(String filename) {
-		final File skipFile = new File(Settings.cacheDir, filename + ".skip");
+		final File skipFile = new File(Preferences.CACHE_DIR, filename + ".skip");
 		
 		if (skipFile.isFile())
 			skipFile.delete();
@@ -63,12 +63,12 @@ public class InfoCache {
 
 	public static boolean testModule(String filename, ModInfo info) {
 		final File file = new File(filename);
-		final File cacheFile = new File(Settings.cacheDir, filename + ".cache");
-		final File skipFile = new File(Settings.cacheDir, filename + ".skip");
+		final File cacheFile = new File(Preferences.CACHE_DIR, filename + ".cache");
+		final File skipFile = new File(Preferences.CACHE_DIR, filename + ".skip");
 		String line;
 
-		if (!Settings.cacheDir.isDirectory()) {
-			if (Settings.cacheDir.mkdirs() == false) {
+		if (!Preferences.CACHE_DIR.isDirectory()) {
+			if (Preferences.CACHE_DIR.mkdirs() == false) {
 				// Can't use cache
 				return Xmp.testModule(filename, info);
 			}

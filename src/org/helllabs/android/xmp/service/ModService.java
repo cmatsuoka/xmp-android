@@ -7,7 +7,7 @@ import org.helllabs.android.xmp.InfoCache;
 import org.helllabs.android.xmp.ModInterface;
 import org.helllabs.android.xmp.PlayerCallback;
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.Settings;
+import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.player.Player;
 
@@ -77,11 +77,11 @@ public class ModService extends Service {
     	
    		prefs = PreferenceManager.getDefaultSharedPreferences(this);
    		
-   		int bufferMs = prefs.getInt(Settings.PREF_BUFFER_MS, 500);
-   		sampleRate = Integer.parseInt(prefs.getString(Settings.PREF_SAMPLING_RATE, "44100"));
+   		int bufferMs = prefs.getInt(Preferences.BUFFER_MS, 500);
+   		sampleRate = Integer.parseInt(prefs.getString(Preferences.SAMPLING_RATE, "44100"));
    		sampleFormat = 0;
    		
-   		final boolean stereo = prefs.getBoolean(Settings.PREF_STEREO, true);
+   		final boolean stereo = prefs.getBoolean(Preferences.STEREO, true);
    		if (!stereo) {
    			sampleFormat |= Xmp.XMP_FORMAT_MONO;
    		}
@@ -225,10 +225,10 @@ public class ModService extends Service {
 	        	}
 	        	callbacks.finishBroadcast();
 
-	        	String volBoost = prefs.getString(Settings.PREF_VOL_BOOST, "1");
+	        	String volBoost = prefs.getString(Preferences.VOL_BOOST, "1");
 	        	
 	       		final int[] interpTypes = { Xmp.XMP_INTERP_NEAREST, Xmp.XMP_INTERP_LINEAR, Xmp.XMP_INTERP_SPLINE };
-	       		final int temp = Integer.parseInt(prefs.getString(Settings.PREF_INTERP_TYPE, "1"));
+	       		final int temp = Integer.parseInt(prefs.getString(Preferences.INTERP_TYPE, "1"));
 	       		int interpType;
 	       		if (temp >= 1 && temp <= 2) {
 	       			interpType = interpTypes[temp];
@@ -237,18 +237,18 @@ public class ModService extends Service {
 	       		}
 	       		
 	        	int dsp = 0;
-	        	if (prefs.getBoolean(Settings.PREF_FILTER, true)) {
+	        	if (prefs.getBoolean(Preferences.FILTER, true)) {
 	        		dsp |= Xmp.XMP_DSP_LOWPASS;
 	        	}
 	        	
-	        	if (!prefs.getBoolean(Settings.PREF_INTERPOLATE, true)) {
+	        	if (!prefs.getBoolean(Preferences.INTERPOLATE, true)) {
 	        		interpType = Xmp.XMP_INTERP_NEAREST;
 	        	}
 
 	       		audio.play();
 	       		xmp.startPlayer(0, sampleRate, sampleFormat);
 	        	xmp.setPlayer(Xmp.XMP_PLAYER_AMP, Integer.parseInt(volBoost));
-	        	xmp.setPlayer(Xmp.XMP_PLAYER_MIX, prefs.getInt(Settings.PREF_PAN_SEPARATION, 70));
+	        	xmp.setPlayer(Xmp.XMP_PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));
 	        	xmp.setPlayer(Xmp.XMP_PLAYER_INTERP, interpType);
 	        	xmp.setPlayer(Xmp.XMP_PLAYER_DSP, dsp);
 	        		        	

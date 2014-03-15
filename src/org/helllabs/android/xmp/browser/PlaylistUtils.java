@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.helllabs.android.xmp.ModInfo;
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.Settings;
+import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.Xmp;
 
 import android.app.AlertDialog;
@@ -44,8 +44,8 @@ public class PlaylistUtils {
 				EditText e2 = (EditText)layout.findViewById(R.id.new_playlist_comment);
 				String name = e1.getText().toString();
 				String comment = e2.getText().toString();
-				File file1 = new File(Settings.dataDir, name + ".playlist");
-				File file2 = new File(Settings.dataDir, name + ".comment");
+				File file1 = new File(Preferences.DATA_DIR, name + ".playlist");
+				File file2 = new File(Preferences.DATA_DIR, name + ".comment");
 				try {
 					file1.createNewFile();
 					file2.createNewFile();
@@ -142,8 +142,8 @@ public class PlaylistUtils {
 				EditText e2 = (EditText)layout.findViewById(R.id.new_playlist_comment);
 				String name = e1.getText().toString();
 				String comment = e2.getText().toString();
-				File file1 = new File(Settings.dataDir, name + ".playlist");
-				File file2 = new File(Settings.dataDir, name + ".comment");
+				File file1 = new File(Preferences.DATA_DIR, name + ".playlist");
+				File file2 = new File(Preferences.DATA_DIR, name + ".comment");
 				try {
 					file1.createNewFile();
 					file2.createNewFile();
@@ -170,8 +170,8 @@ public class PlaylistUtils {
 	
 	public static void deleteList(Context context, int index) {
 		String list = listNoSuffix()[index];
-		(new File(Settings.dataDir, list + ".playlist")).delete();
-		(new File(Settings.dataDir, list + ".comment")).delete();
+		(new File(Preferences.DATA_DIR, list + ".playlist")).delete();
+		(new File(Preferences.DATA_DIR, list + ".comment")).delete();
 
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		final SharedPreferences.Editor editor = prefs.edit();
@@ -183,7 +183,7 @@ public class PlaylistUtils {
 	
 	public static void addToList(Context context, String name, String line) {
 		try {
-			FileUtils.writeToFile(new File(Settings.dataDir, name + ".playlist"), line);
+			FileUtils.writeToFile(new File(Preferences.DATA_DIR, name + ".playlist"), line);
 		} catch (IOException e) {
 			Message.error(context, context.getString(R.string.error_write_to_playlist));
 		}
@@ -192,7 +192,7 @@ public class PlaylistUtils {
 	
 	public static void addToList(Context context, String name, String[] lines) {
 		try {
-			FileUtils.writeToFile(new File(Settings.dataDir, name + ".playlist"), lines);
+			FileUtils.writeToFile(new File(Preferences.DATA_DIR, name + ".playlist"), lines);
 		} catch (IOException e) {
 			Message.error(context, context.getString(R.string.error_write_to_playlist));
 		}
@@ -201,7 +201,7 @@ public class PlaylistUtils {
 	public static String readComment(Context context, String name) {
 		String comment = null;
 		try {
-			comment = FileUtils.readFromFile(new File(Settings.dataDir, name + ".comment"));
+			comment = FileUtils.readFromFile(new File(Preferences.DATA_DIR, name + ".comment"));
 		} catch (IOException e) {
 			Message.error(context, context.getString(R.string.error_read_comment));
 		}	    
@@ -211,7 +211,7 @@ public class PlaylistUtils {
 	}
 	
 	public static String[] list() {		
-		return Settings.dataDir.list(new PlayListFilter());
+		return Preferences.DATA_DIR.list(new PlayListFilter());
 	}
 	
 	public static String[] listNoSuffix() {

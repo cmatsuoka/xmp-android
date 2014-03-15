@@ -1,4 +1,4 @@
-package org.helllabs.android.xmp.browser;
+package org.helllabs.android.xmp.browser.about;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Xmp;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 public class About extends Activity {
 
 	@Override
-	public void onCreate(Bundle icicle) {	
+	public void onCreate(final Bundle icicle) {	
 		super.onCreate(icicle);
 
 		setContentView(R.layout.about);

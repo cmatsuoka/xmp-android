@@ -9,45 +9,50 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class FileUtils {
-	public static void writeToFile(File file, String[] lines) throws IOException {
-		BufferedWriter out = new BufferedWriter(new FileWriter(file, true), 512);
-		for (String s : lines) {
-			out.write(s);
+public final class FileUtils {
+
+	private FileUtils () {
+		// do nothing
+	}
+
+	public static void writeToFile(final File file, final String[] lines) throws IOException {
+		final BufferedWriter out = new BufferedWriter(new FileWriter(file, true), 512);
+		for (final String line : lines) {
+			out.write(line);
 			out.newLine();
 		}
 		out.close();
 	}
-	
-	public static void writeToFile(File file, String line) throws IOException {
-		String[] lines = { line };
+
+	public static void writeToFile(final File file, final String line) throws IOException {
+		final String[] lines = { line };
 		writeToFile(file, lines);
 	}
-	
-	public static String readFromFile(File file) throws IOException {
-		String line = null;
-		
+
+	public static String readFromFile(final File file) throws IOException {
+		String line;
+
 		BufferedReader in = new BufferedReader(new FileReader(file), 512);
-	    line = in.readLine();
-	    in.close();
-		
-	    return line;
+		line = in.readLine();
+		in.close();
+
+		return line;
 	}
-	
-	public static boolean removeLineFromFile(File inFile, int num)
-	throws FileNotFoundException, IOException {
-		int[] nums = { num };
+
+	public static boolean removeLineFromFile(final File inFile, final int num)
+			throws FileNotFoundException, IOException {
+		final int[] nums = { num };
 		return removeLineFromFile(inFile, nums);
 	}
-	
-	public static boolean removeLineFromFile(File inFile, int[] num)
-	throws IOException, FileNotFoundException {
 
-		File tempFile = new File(inFile.getAbsolutePath() + ".tmp");
+	public static boolean removeLineFromFile(final File inFile, final int[] num)
+			throws IOException, FileNotFoundException {
 
-		BufferedReader br = new BufferedReader(new FileReader(inFile), 512);
-		PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
-		
+		final File tempFile = new File(inFile.getAbsolutePath() + ".tmp");
+
+		final BufferedReader br = new BufferedReader(new FileReader(inFile), 512);
+		final PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+
 		String line;
 		boolean flag;
 		for (int lineNum = 0; (line = br.readLine()) != null; lineNum++) {
@@ -73,11 +78,11 @@ public class FileUtils {
 		// Rename the new file to the filename the original file had.
 		if (!tempFile.renameTo(inFile))
 			return false;
-			
+
 		return true;
 	}
-	
-	static public String basename(String pathname) {
+
+	static public String basename(final String pathname) {
 		return new File(pathname).getName();
 	}
 }

@@ -3,7 +3,7 @@ package org.helllabs.android.xmp.player;
 import org.helllabs.android.xmp.ModInterface;
 import org.helllabs.android.xmp.PlayerCallback;
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.Settings;
+import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.browser.Message;
 import org.helllabs.android.xmp.service.ModService;
 
@@ -479,10 +479,10 @@ public class Player extends Activity {
 		setResult(RESULT_OK);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		showInfoLine = prefs.getBoolean(Settings.PREF_SHOW_INFO_LINE, true);
+		showInfoLine = prefs.getBoolean(Preferences.SHOW_INFO_LINE, true);
 		showElapsed = true;
 		
-		latency = prefs.getInt(Settings.PREF_BUFFER_MS, 500);
+		latency = prefs.getInt(Preferences.BUFFER_MS, 500);
 		if (latency > 1000) {
 			latency = 1000;
 		}
@@ -511,7 +511,7 @@ public class Player extends Activity {
 			}
 		});		
 			
-		if (prefs.getBoolean(Settings.PREF_KEEP_SCREEN_ON, false)) {
+		if (prefs.getBoolean(Preferences.KEEP_SCREEN_ON, false)) {
 			titleFlipper.setKeepScreenOn(true);
 		}
 		
@@ -722,7 +722,7 @@ public class Player extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (prefs.getBoolean(Settings.PREF_ENABLE_DELETE, false)) {
+		if (prefs.getBoolean(Preferences.ENABLE_DELETE, false)) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.player_menu, menu);
 		}

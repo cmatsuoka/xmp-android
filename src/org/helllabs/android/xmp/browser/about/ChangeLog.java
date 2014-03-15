@@ -1,7 +1,7 @@
-package org.helllabs.android.xmp.browser;
+package org.helllabs.android.xmp.browser.about;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.Settings;
+import org.helllabs.android.xmp.Preferences;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,25 +16,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 public class ChangeLog {
-	private SharedPreferences prefs;
-	private int versionCode, lastViewed;
-	private Context context;
+	private int versionCode;
+	private final Context context;
 	
-	public ChangeLog(Context c) {
-		context = c;
+	public ChangeLog(final Context context) {
+		this.context = context;
 	}
 	
 	public int show() {
 	    try {
-	        PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+	        final PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 	        versionCode = packageInfo.versionCode; 
 
-	        prefs = PreferenceManager.getDefaultSharedPreferences(context);
-	        lastViewed = prefs.getInt(Settings.PREF_CHANGELOG_VERSION, 0);
+	        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+	        final int lastViewed = prefs.getInt(Preferences.CHANGELOG_VERSION, 0);
 
 	        if (lastViewed < versionCode) {
-	            Editor editor = prefs.edit();
-	            editor.putInt(Settings.PREF_CHANGELOG_VERSION, versionCode);
+	            final Editor editor = prefs.edit();
+	            editor.putInt(Preferences.CHANGELOG_VERSION, versionCode);
 	            editor.commit();
 	            showLog();
 	            return 0;
@@ -48,15 +47,13 @@ public class ChangeLog {
 	}
 	
 	private void showLog() {
-	    LayoutInflater li = LayoutInflater.from(context);
-	    View view = li.inflate(R.layout.changelog, null);
-	    boolean invert = !prefs.getBoolean(Settings.PREF_DARK_THEME, false);
+	    final LayoutInflater inflater = LayoutInflater.from(context);
+	    final View view = inflater.inflate(R.layout.changelog, null);
 
 	    new AlertDialog.Builder(context)
 	    	.setTitle("Changelog")
 	    	.setIcon(android.R.drawable.ic_menu_info_details)
 	    	.setView(view)
-	    	.setInverseBackgroundForced(invert)
 	    	.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
 	    		public void onClick(DialogInterface dialog, int whichButton) {
 	    		}

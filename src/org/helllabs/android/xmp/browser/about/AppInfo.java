@@ -1,16 +1,22 @@
-package org.helllabs.android.xmp.browser;
+package org.helllabs.android.xmp.browser.about;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
-public class AppInfo {
-	public static String getVersion(Context context) {
+public final class AppInfo {
+	
+	// All methods are staticW
+	private AppInfo() {
+		// Do nothing
+	}
+	
+	public static String getVersion(final Context context) {
 		try {
-			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(
+			final PackageInfo packageInfo = context.getPackageManager().getPackageInfo(
 						context.getPackageName(), 0);
 			String version = packageInfo.versionName;
-			int end = version.indexOf(' ');
+			final int end = version.indexOf(' ');
 			if (end > 0) {
 				version = version.substring(0, end);
 			}
