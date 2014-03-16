@@ -8,8 +8,8 @@ public class ModInfo {
 		
 	}
 	
-	public ModInfo(String _name, String _type, String _filename) {
-		name = _name;
-		type = _type;
+	public ModInfo(final String name, final String type) {
+		this.name = name;
+		this.type = type;
 	}
 }
