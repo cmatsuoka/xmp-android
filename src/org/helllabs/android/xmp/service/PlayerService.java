@@ -9,7 +9,7 @@ import org.helllabs.android.xmp.PlayerCallback;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.Xmp;
-import org.helllabs.android.xmp.player.Player;
+import org.helllabs.android.xmp.player.PlayerActivity;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -31,7 +31,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 
-public class ModService extends Service {
+public class PlayerService extends Service {
 	private final Xmp xmp = new Xmp();
 	private AudioTrack audio;
 	private Thread playThread;
@@ -355,8 +355,8 @@ public class ModService extends Service {
 
 		public Notifier() {
 			nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-	    	contentIntent = PendingIntent.getActivity(ModService.this, 0,
-					new Intent(ModService.this, Player.class), 0);
+	    	contentIntent = PendingIntent.getActivity(PlayerService.this, 0,
+					new Intent(PlayerService.this, PlayerActivity.class), 0);
 		}
 		
 		private String message() {
@@ -386,7 +386,7 @@ public class ModService extends Service {
 		public void notification(String ticker, String latest) {
 	        Notification notification = new Notification(
 	        		R.drawable.notification, ticker, System.currentTimeMillis());
-	        notification.setLatestEventInfo(ModService.this, getText(R.string.app_name),
+	        notification.setLatestEventInfo(PlayerService.this, getText(R.string.app_name),
 	        		latest, contentIntent);
 	        notification.flags |= Notification.FLAG_ONGOING_EVENT;	        
 	        nm.notify(NOTIFY_ID, notification);				

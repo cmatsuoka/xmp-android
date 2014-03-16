@@ -5,7 +5,7 @@ import org.helllabs.android.xmp.PlayerCallback;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.browser.Message;
-import org.helllabs.android.xmp.service.ModService;
+import org.helllabs.android.xmp.service.PlayerService;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -41,7 +41,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-public class Player extends Activity {
+public class PlayerActivity extends Activity {
 	private ModInterface modPlayer;	/* actual mod player */
 	private ImageButton playButton;
 	private ImageButton loopButton;
@@ -334,7 +334,7 @@ public class Player extends Activity {
 			}
 		}
 		
-    	Intent service = new Intent(this, ModService.class);
+    	Intent service = new Intent(this, PlayerService.class);
     	if (!reconnect) {
     		Log.i("Xmp Player", "Start service");
     		startService(service);
@@ -474,7 +474,7 @@ public class Player extends Activity {
 		
 		screenOn = true;
 		
-		if (ModService.isLoaded) {
+		if (PlayerService.isLoaded) {
 			canChangeViewer = true;
 		}
 		

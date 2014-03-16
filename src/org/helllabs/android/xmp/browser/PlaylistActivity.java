@@ -8,8 +8,8 @@ import org.helllabs.android.xmp.InfoCache;
 import org.helllabs.android.xmp.ModInterface;
 import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.player.Player;
-import org.helllabs.android.xmp.service.ModService;
+import org.helllabs.android.xmp.player.PlayerActivity;
+import org.helllabs.android.xmp.service.PlayerService;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -188,7 +188,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 			}
 		}
 		
-		final Intent intent = new Intent(this, Player.class);
+		final Intent intent = new Intent(this, PlayerActivity.class);
 		intent.putExtra("files", mods);
 		intent.putExtra("shuffle", shuffle);
 		intent.putExtra("loop", loopMode);
@@ -250,12 +250,12 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		}
 		
 		if (realSize > 0) {
-			final Intent service = new Intent(this, ModService.class);
+			final Intent service = new Intent(this, PlayerService.class);
 			
 			final String[] realList = new String[realSize];
 			System.arraycopy(list,  0, realList, 0, realSize);
 		
-			if (ModService.isAlive) {
+			if (PlayerService.isAlive) {
 				addList = realList;		
 				bindService(service, connection, 0);
 			} else {

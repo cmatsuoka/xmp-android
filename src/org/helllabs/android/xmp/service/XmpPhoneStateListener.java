@@ -7,9 +7,9 @@ import android.util.Log;
 
 
 public class XmpPhoneStateListener extends PhoneStateListener {
-	ModService service;
+	PlayerService service;
 	
-	public XmpPhoneStateListener(ModService service) {
+	public XmpPhoneStateListener(PlayerService service) {
 		this.service = service;
 	}
 	

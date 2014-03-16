@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.helllabs.android.xmp.browser.Message;
-import org.helllabs.android.xmp.service.ModService;
+import org.helllabs.android.xmp.service.PlayerService;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -55,7 +55,7 @@ public class Preferences extends PreferenceActivity {
 		addPreferencesFromResource(R.xml.preferences);
 
 		PreferenceScreen soundScreen = (PreferenceScreen)findPreference("sound_screen");
-		soundScreen.setEnabled(!ModService.isAlive);
+		soundScreen.setEnabled(!PlayerService.isAlive);
 
 		Preference clearCache = (Preference)findPreference("clear_cache");
 		clearCache.setOnPreferenceClickListener(new OnPreferenceClickListener() {

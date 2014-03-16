@@ -28,7 +28,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".player.Player"
+		<activity android:name=".player.PlayerActivity"
 			android:configChanges="keyboardHidden|orientation|screenSize"
 			android:theme="@android:style/Theme.NoTitleBar"
 			android:launchMode="singleTop"
@@ -86,7 +86,7 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-		<service android:name=".service.ModService" />
+		<service android:name=".service.PlayerService" />
 		<receiver android:name=".service.RemoteControlReceiver" android:enabled="true">
 			<intent-filter android:priority="2147483647">
 				<action android:name="android.intent.action.MEDIA_BUTTON" />
