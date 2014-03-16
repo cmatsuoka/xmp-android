@@ -15,12 +15,12 @@ import android.os.RemoteException;
 import android.view.Surface;
 
 public class ChannelViewer extends Viewer {
-	private Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint, scopeMutePaint;
-	private int fontSize, fontHeight, fontWidth;
-	private int font2Size, font2Height, font2Width;
+	private final Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint, scopeMutePaint;
+	private final int fontSize, fontHeight, fontWidth;
+	private final int font2Size, font2Height, font2Width;
 	private String[] insName, insNameTrim;		
-	private Rect rect = new Rect();
-	private byte[] buffer;
+	private final Rect rect = new Rect();
+	private final byte[] buffer;
 	private float[] bufferXY;
 	private int[] holdKey;
 	private String[] channelNumber;
@@ -33,7 +33,6 @@ public class ChannelViewer extends Viewer {
 	private int volWidth;
 	private int panLeft;
 	private int panWidth;
-	private int textWidth;
 	private int[] keyRow = new int[64];
 	
 	@Override
@@ -50,7 +49,7 @@ public class ChannelViewer extends Viewer {
 		holdKey = new int[chn];
 		channelNumber = new String[chn];
 		
-		char[] c = new char[2];
+		final char[] c = new char[2];
 		for (int i = 0; i < chn; i++) {
 			Util.to2d(c, i + 1);
 			channelNumber[i] = new String(c);
@@ -83,7 +82,7 @@ public class ChannelViewer extends Viewer {
 		}
 	}
 	
-	private int findScope(int x, int y) {		
+	private int findScope(final int x, final int y) {		
 		final int chn = modVars[3];
 		final int scopeWidth = 8 * fontWidth;
 		int scopeLeft = 2 * font2Width + 2 * fontWidth;
@@ -91,11 +90,13 @@ public class ChannelViewer extends Viewer {
 		if (x >= scopeLeft && x <= scopeLeft + scopeWidth) {
 			int scopeNum = (y + (int)posY - fontHeight) / (4 * fontHeight);
 			if (cols > 1) {
-				if (scopeNum >= ((chn + 1) / cols))
+				if (scopeNum >= ((chn + 1) / cols)) {
 					scopeNum = -1;
+				}
 			} else {
-				if (scopeNum >= chn)
+				if (scopeNum >= chn) {
 					scopeNum = -1;
+				}
 			}
 			return scopeNum;
 		} else if (cols <= 1) {
@@ -120,7 +121,7 @@ public class ChannelViewer extends Viewer {
 	public void onClick(int x, int y) {
 
 		// Check if clicked on scopes
-		int n = findScope(x, y);
+		final int n = findScope(x, y);
 
 		if (n >= 0) {
 			try {
@@ -133,11 +134,11 @@ public class ChannelViewer extends Viewer {
 	}
 	
 	@Override
-	public void onLongClick(int x, int y) {
-		int chn = modVars[3];
+	public void onLongClick(final int x, final int y) {
+		final int chn = modVars[3];
 
 		// Check if clicked on scopes
-		int n = findScope(x, y);
+		final int n = findScope(x, y);
 
 		// If the channel is solo, a long press unmute all channels,
 		// otherwise solo this channel
@@ -145,8 +146,9 @@ public class ChannelViewer extends Viewer {
 		if (n >= 0) {
 			int count = 0;
 			for (int i = 0; i < chn; i++) {
-				if (!isMuted[i])
+				if (!isMuted[i]) {
 					count++;
+				}
 			}
 			if (count == 1 && !isMuted[n]) {
 				try {
@@ -185,10 +187,11 @@ public class ChannelViewer extends Viewer {
 			}
 			/* fall-though */
 		case Configuration.SCREENLAYOUT_SIZE_LARGE:
-			if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180)
+			if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) {
 				cols = 1;
-			else
+			} else {
 				cols = 2;
+			}
 			break;
 		case Configuration.SCREENLAYOUT_SIZE_XLARGE:
 			cols = 2;
@@ -198,28 +201,30 @@ public class ChannelViewer extends Viewer {
 		}
 		
 		final int chn = modVars[3];
-		if (cols == 1)
+		if (cols == 1) {
 			setMaxY((chn * 4 + 1) * fontHeight);
-		else
+		} else {
 			setMaxY(((chn + 1) / cols * 4 + 1) * fontHeight);
+		}
 		
 		volWidth = (width / cols - 5 * fontWidth - volLeft) / 2;
 		panLeft = volLeft + volWidth + 3 * fontWidth;
 		panWidth = volWidth;
-		textWidth = 2 * volWidth / fontWidth + 3;
+		final int textWidth = 2 * volWidth / fontWidth + 3;
 		
 		final int num = insName.length;
 		insNameTrim = new String[num];
 		
 		for (int i = 0; i < num; i++) {
-			if (insName[i].length() > textWidth)
+			if (insName[i].length() > textWidth) {
 				insNameTrim[i] = insName[i].substring(0, textWidth);
-			else
+			} else {
 				insNameTrim[i] = insName[i];
+			}
 		}
 	}
 	
-	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
+	private void doDraw(final Canvas canvas, final ModInterface modPlayer, final Info info) {
 		final int chn = modVars[3];
 		final int insNum = modVars[4];
 		final int row = info.values[2];
@@ -274,7 +279,8 @@ public class ChannelViewer extends Viewer {
 					modPlayer.getSampleData(key >= 0, ins, holdKey[i], period, i, scopeWidth, buffer);
 	
 				} catch (RemoteException e) { }
-				int h = scopeHeight / 2;
+				
+				final int h = scopeHeight / 2;
 				for (int j = 0; j < scopeWidth; j++) {
 					bufferXY[j * 2] = x + scopeLeft + j;
 					bufferXY[j * 2 + 1] = y + h + buffer[j] * h * finalvol / (64 * 180);
@@ -290,16 +296,16 @@ public class ChannelViewer extends Viewer {
 			}
 
 			// Draw volumes
-			int volX = volLeft + vol * volWidth / 0x40;
-			int volY1 = y + 2 * fontHeight;
-			int volY2 = y + 2 * fontHeight + fontHeight / 3;	
+			final int volX = volLeft + vol * volWidth / 0x40;
+			final int volY1 = y + 2 * fontHeight;
+			final int volY2 = y + 2 * fontHeight + fontHeight / 3;	
 			rect.set(x + volLeft, volY1, x + volX, volY2);
 			canvas.drawRect(rect, meterPaint);
 			rect.set(x + volX + 1, volY1, x + volLeft + volWidth, volY2);
 			canvas.drawRect(rect, scopePaint);
 
 			// Draw pan
-			int panX = panLeft + pan * panWidth / 0x100;
+			final int panX = panLeft + pan * panWidth / 0x100;
 			rect.set(x + panLeft, volY1, x + panLeft + panWidth, volY2);
 			canvas.drawRect(rect, scopePaint);
 			if (ins >= 0) {
@@ -309,7 +315,7 @@ public class ChannelViewer extends Viewer {
 		}
 	}
 
-	public ChannelViewer(Context context) {
+	public ChannelViewer(final Context context) {
 		super(context);
 
 		fontSize = getResources().getDimensionPixelSize(R.dimen.channelview_font_size);

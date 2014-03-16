@@ -12,16 +12,16 @@ import android.graphics.Typeface;
 import android.os.RemoteException;
 
 public class InstrumentViewer extends Viewer {
-	private Paint[] insPaint, barPaint;
-	private int fontSize, fontHeight, fontWidth;
+	private final Paint[] insPaint, barPaint;
+	private final int fontSize, fontHeight, fontWidth;
 	private String[] insName;
-	private Rect rect = new Rect();
+	private final Rect rect = new Rect();
 	
 	@Override
-	public void setup(ModInterface modPlayer, int[] modVars) {
+	public void setup(final ModInterface modPlayer, final int[] modVars) {
 		super.setup(modPlayer, modVars);
 		
-		int insNum = modVars[4];
+		final int insNum = modVars[4];
 		
 		try {
 			insName = modPlayer.getInstruments();
@@ -30,33 +30,33 @@ public class InstrumentViewer extends Viewer {
 		setMaxY(insNum * fontHeight + fontHeight / 2);
 	}
 	
-	@Override
-	public void setRotation(int n) {
-		super.setRotation(n);
-	}
+	//@Override
+	//public void setRotation(final int val) {
+	//	super.setRotation(val);
+	//}
 
 	@Override
-	public void update(Info info) {
+	public void update(final Info info) {
 		super.update(info);
 		
-		Canvas c = null;
+		Canvas canvas = null;
 		
 		try {
-			c = surfaceHolder.lockCanvas(null);
+			canvas = surfaceHolder.lockCanvas(null);
 			synchronized (surfaceHolder) {
-				doDraw(c, modPlayer, info);
+				doDraw(canvas, modPlayer, info);
 			}
 		} finally {
 			// do this in a finally so that if an exception is thrown
 			// during the above, we don't leave the Surface in an
 			// inconsistent state
-			if (c != null) {
-				surfaceHolder.unlockCanvasAndPost(c);
+			if (canvas != null) {
+				surfaceHolder.unlockCanvasAndPost(canvas);
 			}
 		}
 	}
 	
-	private void doDraw(Canvas canvas, ModInterface modPlayer, Info info) {
+	private void doDraw(final Canvas canvas, final ModInterface modPlayer, final Info info) {
 		final int chn = modVars[3];
 		final int ins = modVars[4];
 		
@@ -76,8 +76,9 @@ public class InstrumentViewer extends Viewer {
 			maxVol = 0;
 			for (int j = 0; j < chn; j++) {
 				
-				if (isMuted[j])
+				if (isMuted[j]) {
 					continue;
+				}
 				
 				if (info.instruments[j] == i) {
 					final int x = 3 * fontWidth + width * j;
@@ -97,7 +98,7 @@ public class InstrumentViewer extends Viewer {
 		}
 	}
 	
-	public InstrumentViewer(Context context) {
+	public InstrumentViewer(final Context context) {
 		super(context);
 		
 		fontSize = getResources().getDimensionPixelSize(R.dimen.instrumentview_font_size);
@@ -114,7 +115,7 @@ public class InstrumentViewer extends Viewer {
 		
 		barPaint = new Paint[8];
 		for (int i = 0; i < 8; i++) {
-			int val = 15 * i;
+			final int val = 15 * i;
 			barPaint[i] = new Paint();
 			barPaint[i].setARGB(255, val /4, val / 2, val);
 		}

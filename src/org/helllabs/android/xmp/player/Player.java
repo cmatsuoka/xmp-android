@@ -42,25 +42,24 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 public class Player extends Activity {
-	static final int SETTINGS_REQUEST = 45;
 	private ModInterface modPlayer;	/* actual mod player */
 	private ImageButton playButton;
 	private ImageButton loopButton;
 	private SeekBar seekBar;
 	private Thread progressThread;
-	boolean seeking = false;
-	boolean shuffleMode = true;
-	boolean loopListMode = false;
-	boolean paused = false;
-	boolean finishing = false;
-	boolean showInfoLine, showElapsed;
+	private boolean seeking;
+	private boolean shuffleMode;
+	private boolean loopListMode;
+	private boolean paused;
+	private boolean finishing;
+	private boolean showElapsed;
 	private final TextView[] infoName = new TextView[2];
 	private final TextView[] infoType = new TextView[2];
 	private TextView infoStatus;
 	private TextView elapsedTime;
 	private ViewFlipper titleFlipper;
 	private int flipperPage;
-	private String[] fileArray = null;
+	private String[] fileArray;
 	private int start;
 	private SharedPreferences prefs;
 	private FrameLayout viewerLayout;
@@ -74,14 +73,14 @@ public class Player extends Activity {
 	private Viewer viewer;
 	private Viewer.Info[] info;
 	private final int[] modVars = new int[10];
-	private static final int frameRate = 25;
+	private static final int FRAME_RATE = 25;
 	private boolean stopUpdate;
-	private int currentViewer = 0;
-	private boolean canChangeViewer = false;
+	private int currentViewer;
+	private boolean canChangeViewer;
 	private Display display;
 	
-	private ServiceConnection connection = new ServiceConnection() {
-		public void onServiceConnected(ComponentName className, IBinder service) {
+	private final ServiceConnection connection = new ServiceConnection() {
+		public void onServiceConnected(final ComponentName className, final IBinder service) {
 			modPlayer = ModInterface.Stub.asInterface(service);
 			flipperPage = 0;
 
@@ -108,15 +107,14 @@ public class Player extends Activity {
 			}
 		}
 
-		public void onServiceDisconnected(ComponentName className) {
+		public void onServiceDisconnected(final ComponentName className) {
 			stopUpdate = true;
 			modPlayer = null;
 		}
 	};
 	
-    private PlayerCallback playerCallback = new PlayerCallback.Stub() {
-    	
-        public void newModCallback(String name, String[] instruments) {
+    private PlayerCallback playerCallback = new PlayerCallback.Stub() {	
+        public void newModCallback(final String name, final String[] instruments) {
         	synchronized (modPlayer) {
         		Log.i("Xmp Player", "Show module data");
         		showNewMod(name);
@@ -145,19 +143,19 @@ public class Player extends Activity {
         }
     };
       
-    final Runnable updateInfoRunnable = new Runnable() {
+    private final Runnable updateInfoRunnable = new Runnable() {
     	int oldSpd = -1;
     	int oldBpm = -1;
     	int oldPos = -1;
     	int oldPat = -1;
     	int oldTime = -1;
-    	int before = 0, now;
+    	int before, now;
     	boolean oldShowElapsed;
     	final char[] c = new char[2];
     	StringBuffer s = new StringBuffer();
     	
         public void run() {
-        	now = (before + (frameRate * latency / 1000) + 1) % frameRate;
+        	now = (before + (FRAME_RATE * latency / 1000) + 1) % FRAME_RATE;
   
 			try {
 				synchronized (modPlayer) {
@@ -244,7 +242,7 @@ public class Player extends Activity {
 				
 			} finally {
 				before++;
-				if (before >= frameRate)
+				if (before >= FRAME_RATE)
 					before = 0;
 			}
         }
@@ -253,7 +251,7 @@ public class Player extends Activity {
 	private class ProgressThread extends Thread {
 		@Override
     	public void run() {
-			final long frameTime = 1000000000 / frameRate;
+			final long frameTime = 1000000000 / FRAME_RATE;
 			long lastTimer = System.nanoTime();
 			long now;
 					
@@ -347,12 +345,12 @@ public class Player extends Activity {
     	}
 	}
 	
-    void setFont(TextView name, String path, int res) {
-        Typeface font = Typeface.createFromAsset(this.getAssets(), path); 
-        name.setTypeface(font); 
-    }
+    //private void setFont(final TextView name, final String path, final int res) {
+    //    final Typeface typeface = Typeface.createFromAsset(this.getAssets(), path); 
+    //    name.setTypeface(typeface); 
+    //}
 
-    void changeViewer() {
+    private void changeViewer() {
     	currentViewer++;
     	currentViewer %= 3;
     	
@@ -379,7 +377,7 @@ public class Player extends Activity {
  
     // Click listeners
        
-    public void loopButtonListener(View v) {
+    public void loopButtonListener(final View view) {
 		try {
 			if (modPlayer.toggleLoop()) {
 				loopButton.setImageResource(R.drawable.loop_on);
@@ -391,10 +389,11 @@ public class Player extends Activity {
 		}
 	}
     
-	public void playButtonListener(View v) {
+	public void playButtonListener(final View view) {
 		//Debug.startMethodTracing("xmp");				
-		if (modPlayer == null)
+		if (modPlayer == null) {
 			return;
+		}
 		
 		synchronized (this) {
 			try {
@@ -411,17 +410,19 @@ public class Player extends Activity {
 		}
     }
 
-    public void stopButtonListener(View v) {
+    public void stopButtonListener(final View view) {
 		//Debug.stopMethodTracing();
-		if (modPlayer == null)
+		if (modPlayer == null) {
 			return;
+		}
 		
 		stopPlayingMod();
     }
     
-    public void backButtonListener(View v) {
-		if (modPlayer == null)
+    public void backButtonListener(final View view) {
+		if (modPlayer == null) {
 			return;
+		}
 		
 		try {
 			if (modPlayer.time() > 3000) {
@@ -438,9 +439,10 @@ public class Player extends Activity {
 		}
 	}
     
-	public void forwardButtonListener(View v) {				
-		if (modPlayer == null)
+	public void forwardButtonListener(final View view) {				
+		if (modPlayer == null) {
 			return;
+		}
 		
 		try {
 			stopUpdate = true;
@@ -455,7 +457,7 @@ public class Player extends Activity {
 	// Life cycle
 	
 	@Override
-	public void onCreate(Bundle icicle) {
+	public void onCreate(final Bundle icicle) {
 		super.onCreate(icicle);
 		setContentView(R.layout.player);
 		
@@ -479,7 +481,7 @@ public class Player extends Activity {
 		setResult(RESULT_OK);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		showInfoLine = prefs.getBoolean(Preferences.SHOW_INFO_LINE, true);
+		final boolean showInfoLine = prefs.getBoolean(Preferences.SHOW_INFO_LINE, true);
 		showElapsed = true;
 		
 		latency = prefs.getInt(Preferences.BUFFER_MS, 500);
@@ -571,8 +573,9 @@ public class Player extends Activity {
 	public void onDestroy() {
 		super.onDestroy();
 		
-		if (deleteDialog != null)
+		if (deleteDialog != null) {
 			deleteDialog.cancel();
+		}
 		
 		if (modPlayer != null) {
 			try {
@@ -602,18 +605,18 @@ public class Player extends Activity {
 
 	@Override
 	protected void onResume() {
-		screenOn = true;
 		super.onResume();
+		screenOn = true;
 	}
 
-	void showNewMod(String fileName) {
-
-		if (deleteDialog != null)
+	private void showNewMod(final String fileName) {
+		if (deleteDialog != null) {
 			deleteDialog.cancel();
+		}
 		handler.post(showNewModRunnable);
 	}
 	
-	final Runnable showNewModRunnable = new Runnable() {
+	private final Runnable showNewModRunnable = new Runnable() {
 		public void run() {
 			
 			synchronized (modPlayer) {
@@ -629,7 +632,7 @@ public class Player extends Activity {
 					name = "";
 					type = "";
 				}
-				int time = modVars[0];
+				final int time = modVars[0];
 				/*int len = vars[1];
 				int pat = vars[2];
 				int chn = vars[3];
@@ -657,9 +660,9 @@ public class Player extends Activity {
 		       			chn, len, pat, ins, smp,
 		       			((time + 500) / 60000), ((time + 500) / 1000) % 60));*/
 				
-				info = new Viewer.Info[frameRate];
-				for (int i = 0; i < frameRate; i++) {
-					info[i] = viewer.new Info();
+				info = new Viewer.Info[FRAME_RATE];
+				for (int i = 0; i < FRAME_RATE; i++) {
+					info[i] = new Viewer.Info();
 				}
 				
 				stopUpdate = false;
@@ -671,18 +674,18 @@ public class Player extends Activity {
 		}
 	};
 	
-	void playNewMod(String[] files, int start) {      	 
+	private void playNewMod(final String[] files, final int start) {      	 
        	try {
 			modPlayer.play(files, start, shuffleMode, loopListMode);
 		} catch (RemoteException e) { }
 	}
 	
-	void stopPlayingMod() {
+	private void stopPlayingMod() {
 		stopUpdate = true;
 		
-		if (finishing)
+		if (finishing) {
 			return;
-		
+		}
 		finishing = true;
 		
 		synchronized (modPlayer) {
@@ -700,8 +703,8 @@ public class Player extends Activity {
 		}
 	}
 	
-	private DialogInterface.OnClickListener deleteDialogClickListener = new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int which) {
+	private final DialogInterface.OnClickListener deleteDialogClickListener = new DialogInterface.OnClickListener() {
+		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				try {
 					if (modPlayer.deleteFile()) {
@@ -721,20 +724,18 @@ public class Player extends Activity {
 	// Menu
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(final Menu menu) {
 		if (prefs.getBoolean(Preferences.ENABLE_DELETE, false)) {
-			MenuInflater inflater = getMenuInflater();
+			final MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.player_menu, menu);
 		}
 	    return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-		case R.id.menu_delete:
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		if (item.getItemId() == R.id.menu_delete) {
 			Message.yesNoDialog(activity, "Delete", "Are you sure to delete this file?", deleteDialogClickListener);
-			break;
 		}
 		return true;
 	}	

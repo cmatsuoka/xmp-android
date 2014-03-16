@@ -3,7 +3,6 @@ package org.helllabs.android.xmp.player;
 import org.helllabs.android.xmp.ModInterface;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.RemoteException;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -21,24 +20,24 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	protected boolean[] isMuted;
 	protected int rotation;
 	protected int screenSize;
-	private GestureDetector gestureDetector;
-	View.OnTouchListener gestureListener;
-
-	public class Info {
-		int time;
-		int[] values = new int[7];	// order pattern row num_rows frame speed bpm
-		int[] volumes = new int[64];
-		int[] finalvols = new int[64];
-		int[] pans = new int[64];
-		int[] instruments = new int[64];
-		int[] keys = new int[64];
-		int[] periods = new int[64];
-	};
+	private final GestureDetector gestureDetector;
+	private final View.OnTouchListener gestureListener;
 
 	// Touch tracking
 	protected float posX, posY, velX, velY;
 	protected Boolean isDown;
 	private int maxX, maxY;
+	
+	public static class Info {
+		public int time;
+		public int[] values = new int[7];	// order pattern row num_rows frame speed bpm
+		public int[] volumes = new int[64];
+		public int[] finalvols = new int[64];
+		public int[] pans = new int[64];
+		public int[] instruments = new int[64];
+		public int[] keys = new int[64];
+		public int[] periods = new int[64];
+	};
 
 	private void limitPosition() {
 		if (posX > maxX - canvasWidth) {
@@ -99,20 +98,22 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		limitPosition();
 
 		velX *= 0.9;
-		if (Math.abs(velX) < 0.5)
+		if (Math.abs(velX) < 0.5) {
 			velX = 0;
+		}
 
 		velY *= 0.9;
-		if (Math.abs(velY) < 0.5)
+		if (Math.abs(velY) < 0.5) {
 			velY = 0;
+		}
 	}
 
-	public Viewer(Context context) {
+	public Viewer(final Context context) {
 		super(context);
 		this.context = context;
 
 		// register our interest in hearing about changes to our surface
-		SurfaceHolder holder = getHolder();
+		final SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
 
 		surfaceHolder = holder;
@@ -121,7 +122,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		isDown = false;
 
 		// Gesture detection
-		gestureDetector = new GestureDetector(new MyGestureDetector());
+		gestureDetector = new GestureDetector(context, new MyGestureDetector());
 		gestureListener = new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
 				return gestureDetector.onTouchEvent(event);
@@ -131,25 +132,25 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		setOnClickListener(Viewer.this); 
 		setOnTouchListener(gestureListener);
 
-		ScreenSizeHelper screenSizeHelper = new ScreenSizeHelper();
+		final ScreenSizeHelper screenSizeHelper = new ScreenSizeHelper();
 		screenSize = screenSizeHelper.getScreenSize(context);
 	}
 
 
 	@Override
-	public void onClick(View v) {
-
+	public void onClick(final View view) {
+		// do nothing
 	}
 
-	protected void onClick(int x, int y) {
-		View parent = (View)getParent();
+	protected void onClick(final int x, final int y) {
+		final View parent = (View)getParent();
 		if (parent != null) {
 			parent.performClick();
 		}
 	}
 
 	protected void onLongClick(int x, int y) {
-		// does nothing
+		// do nothing
 	}
 
 	public void setRotation(int n) {
@@ -160,7 +161,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		updateScroll();
 	}
 
-	public void setup(ModInterface modPlayer, int[] modVars) {
+	public void setup(final ModInterface modPlayer, final int[] modVars) {
 		final int chn = modVars[3];
 
 		this.modVars = modVars;
@@ -176,20 +177,20 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		posX = posY = 0;
 	}
 
-	public void setMaxX(int x) {
+	public void setMaxX(final int x) {
 		synchronized (isDown) {
 			maxX = x;
 		}
 	}
 
-	public void setMaxY(int y) {		
+	public void setMaxY(final int y) {		
 		synchronized (isDown) {
 			maxY = y;
 		}
 	}
 
 	/* Callback invoked when the surface dimensions change. */
-	public void setSurfaceSize(int width, int height) {
+	public void setSurfaceSize(final int width, final int height) {
 		// synchronized to make sure these all change atomically
 		synchronized (surfaceHolder) {
 			canvasWidth = width;
@@ -198,18 +199,17 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	}
 
 	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
+	public void surfaceChanged(final SurfaceHolder holder, final int format, final int width, final int height) {
 		setSurfaceSize(width, height);
 	}
 
 	@Override
-	public void surfaceCreated(SurfaceHolder holder) {		
+	public void surfaceCreated(final SurfaceHolder holder) {		
 		surfaceHolder = holder;
 	}
 
 	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
-
+	public void surfaceDestroyed(final SurfaceHolder holder) {
+		// do nothing
 	}
 }
