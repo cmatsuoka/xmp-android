@@ -6,20 +6,16 @@ import java.util.List;
 
 import org.helllabs.android.xmp.InfoCache;
 import org.helllabs.android.xmp.ModInterface;
-import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Preferences;
+import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.player.Player;
 import org.helllabs.android.xmp.service.ModService;
 
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -37,43 +33,30 @@ import android.widget.ListView;
 public abstract class PlaylistActivity extends ActionBarActivity {
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAY_MODULE_REQUEST = 669; 
-	private ImageButton playAllButton, toggleLoopButton, toggleShuffleButton;
 	protected List<PlaylistInfo> modList = new ArrayList<PlaylistInfo>();
 	protected boolean shuffleMode = true;
-	protected boolean loopMode = false;
-	protected boolean modifiedOptions = false;
+	protected boolean loopMode;
+	protected boolean modifiedOptions;
 	protected SharedPreferences prefs;
 	protected String deleteName;
 	private boolean showToasts;
 	private ModInterface modPlayer;
 	private String[] addList;
 	private Context context;
-	private PendingIntent restartIntent;
-	private Activity activity;
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-	}
-
-	@Override
-	public void onCreate(Bundle icicle) {
+	public void onCreate(final Bundle icicle) {
 		super.onCreate(icicle);
 
 		context = this;
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		showToasts = prefs.getBoolean(Preferences.SHOW_TOAST, true);
-		
-		// for activity restart
-		activity = this;
-		restartIntent = PendingIntent.getActivity(this.getBaseContext(),
-					0, new Intent(getIntent()), getIntent().getFlags());
 	}
 
-	void setupButtons() {
-		playAllButton = (ImageButton)findViewById(R.id.play_all);
-		toggleLoopButton = (ImageButton)findViewById(R.id.toggle_loop);
-		toggleShuffleButton = (ImageButton)findViewById(R.id.toggle_shuffle);
+	protected void setupButtons() {
+		final ImageButton playAllButton = (ImageButton)findViewById(R.id.play_all);
+		final ImageButton toggleLoopButton = (ImageButton)findViewById(R.id.toggle_loop);
+		final ImageButton toggleShuffleButton = (ImageButton)findViewById(R.id.toggle_shuffle);
 
 		playAllButton.setImageResource(R.drawable.list_play);
 		playAllButton.setOnClickListener(new OnClickListener() {
@@ -85,12 +68,13 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		toggleLoopButton.setImageResource(loopMode ?
 				R.drawable.list_loop_on : R.drawable.list_loop_off);
 		toggleLoopButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
+			public void onClick(final View view) {
 				loopMode = !loopMode;
-				((ImageButton)v).setImageResource(loopMode ?
+				((ImageButton)view).setImageResource(loopMode ?
 						R.drawable.list_loop_on : R.drawable.list_loop_off);
-				if (showToasts)
-					Message.toast(v.getContext(), loopMode ? "Loop on" : "Loop off");
+				if (showToasts) {
+					Message.toast(view.getContext(), loopMode ? "Loop on" : "Loop off");
+				}
 				modifiedOptions = true;
 			}
 		});
@@ -136,21 +120,23 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		}
 	}
 
-	abstract void update();
+	abstract public void update();
 
 	// Play all modules in list and honor default shuffle mode
-	void playModule(List<PlaylistInfo> list) {
+	public void playModule(final List<PlaylistInfo> list) {
 		playModule(list, 0, shuffleMode);
 	}
 	
 	// Play all modules in list with start position, no shuffle
-	void playModule(List<PlaylistInfo> list, int position) {
+	public void playModule(final List<PlaylistInfo> list, final int position) {
 		playModule(list, position, false);
 	}
 	
 	// Play modules in list starting at the specified one
-	void playModule(List<PlaylistInfo> list, int start, boolean shuffle) {
-		int num = 0, dir = 0;
+	public void playModule(final List<PlaylistInfo> list, int start, boolean shuffle) {
+		int num = 0;
+		int dir = 0;
+		
 		for (PlaylistInfo p : list) {
 			if ((new File(p.filename).isDirectory())) {
 				dir++;
@@ -158,20 +144,23 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 				num++;
 			}
 		}
-		if (num == 0)
+		if (num == 0) {
 			return;
+		}
 		
-		if (start < dir)
+		if (start < dir) {
 			start = dir;
+		}
 		
-		if (start >= (dir + num))
+		if (start >= (dir + num)) {
 			return;
+		}
 
-		String[] mods = new String[num];
+		final String[] mods = new String[num];
 		int i = 0;
-		for (PlaylistInfo p : list) {
-			if ((new File(p.filename).isFile())) {
-				mods[i++] = p.filename;
+		for (final PlaylistInfo info : list) {
+			if ((new File(info.filename).isFile())) {
+				mods[i++] = info.filename;
 			}
 		}
 		if (i > 0) {
@@ -180,24 +169,26 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 	}
 
 	// Play this module
-	void playModule(String mod) {
-		String[] mods = { mod };
+	public void playModule(final String mod) {
+		final String[] mods = { mod };
 		playModule(mods, 0, shuffleMode);
 	}
 	
 	// Play all modules in list and honor default shuffle mode
-	void playModule(String[] mods) {
+	public void playModule(final String[] mods) {
 		playModule(mods, 0, shuffleMode);
 	}
 
-	void playModule(String[] mods, int start, boolean shuffle) {
+	public void playModule(final String[] mods, int start, boolean shuffle) {
 		if (showToasts) {
-			if (mods.length > 1)
+			if (mods.length > 1) {
 				Message.toast(this, "Play all modules in list");
-			else
+			} else {
 				Message.toast(this, "Play only this module");
+			}
 		}
-		Intent intent = new Intent(this, Player.class);
+		
+		final Intent intent = new Intent(this, Player.class);
 		intent.putExtra("files", mods);
 		intent.putExtra("shuffle", shuffle);
 		intent.putExtra("loop", loopMode);
@@ -207,31 +198,24 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		Log.i("Xmp PlaylistActivity", "Activity result " + requestCode + "," + resultCode);
 		switch (requestCode) {
 		case SETTINGS_REQUEST:
-			if (resultCode == RESULT_FIRST_USER) {
-				// Restart activity
-				// see http://blog.janjonas.net/2010-12-20/android-development-restart-application-programmatically
-				AlarmManager alarm = (AlarmManager)activity.getSystemService(Context.ALARM_SERVICE);
-				alarm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent);
-				System.exit(2);
-			} else {
-				update();
-			}
+			update();			
 			showToasts = prefs.getBoolean(Preferences.SHOW_TOAST, true);
 			break;
 		case PLAY_MODULE_REQUEST:
-			if (resultCode != RESULT_OK)
+			if (resultCode != RESULT_OK) {
 				update();
+			}
 			break;
 		}
 	}
 
 	// Connection
 
-	private ServiceConnection connection = new ServiceConnection() {
+	private final ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			modPlayer = ModInterface.Stub.asInterface(service);
 			try {				
@@ -247,7 +231,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		}
 	};
 
-	protected void addToQueue(int start, int size) {
+	protected void addToQueue(final int start, final int size) {
 		final String[] list = new String[size];
 		int realSize = 0;
 		boolean invalid = false;
@@ -266,7 +250,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		}
 		
 		if (realSize > 0) {
-			Intent service = new Intent(this, ModService.class);
+			final Intent service = new Intent(this, ModService.class);
 			
 			final String[] realList = new String[realSize];
 			System.arraycopy(list,  0, realList, 0, realSize);
@@ -283,8 +267,8 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 	// Menu
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+	public boolean onCreateOptionsMenu(final Menu menu) {
+		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.options_menu, menu);
 
 		// Calling super after populating the menu is necessary here to ensure that the
@@ -293,10 +277,10 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch(item.getItemId()) {
 		case android.R.id.home:
-			Intent intent = new Intent(this, PlaylistMenu.class);
+			final Intent intent = new Intent(this, PlaylistMenu.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			return true;

@@ -14,51 +14,51 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class PlaylistInfoAdapter extends ArrayAdapter<PlaylistInfo> {
-    private List<PlaylistInfo> items;
-    private Context myContext;
-    private boolean useFilename;
+    private final List<PlaylistInfo> items;
+    private final Context context;
+    private final boolean useFilename;
 
-    public PlaylistInfoAdapter(Context context, int resource, int textViewResourceId, List<PlaylistInfo> items, boolean useFilename) {
+    public PlaylistInfoAdapter(final Context context, final int resource, final int textViewResourceId, final List<PlaylistInfo> items, final boolean useFilename) {
     	super(context, resource, textViewResourceId, items);
     	this.items = items;
-    	this.myContext = context;
+    	this.context = context;
     	this.useFilename = useFilename;
     }
     
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-    	View v = convertView;
-    	if (v == null) {
-    		LayoutInflater vi = (LayoutInflater)myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    		v = vi.inflate(R.layout.playlist_item, null);
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
+    	View view = convertView;
+    	if (view == null) {
+    		final LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    		view = inflater.inflate(R.layout.playlist_item, null);
     	}
-    	PlaylistInfo o = items.get(position);
+    	final PlaylistInfo info = items.get(position);
     	           
-    	if (o != null) {                		
-    		final TextView tt = (TextView)v.findViewById(R.id.plist_title);
-    		final TextView bt = (TextView)v.findViewById(R.id.plist_info);
-    		final ImageView im = (ImageView)v.findViewById(R.id.plist_image);
+    	if (info != null) {                		
+    		final TextView titleText = (TextView)view.findViewById(R.id.plist_title);
+    		final TextView infoText = (TextView)view.findViewById(R.id.plist_info);
+    		final ImageView image = (ImageView)view.findViewById(R.id.plist_image);
     		
-   			tt.setText(useFilename ? FileUtils.basename(o.filename) : o.name);
-   			bt.setText(o.comment);
+   			titleText.setText(useFilename ? FileUtils.basename(info.filename) : info.name);
+   			infoText.setText(info.comment);
    			
-   			Typeface t = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
-   			if (o.imageRes == R.drawable.folder || o.imageRes == R.drawable.parent) {
+   			final Typeface typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
+   			if (info.imageRes == R.drawable.folder || info.imageRes == R.drawable.parent) {
    				//tt.setTypeface(t, Typeface.ITALIC);
-    			bt.setTypeface(t, Typeface.ITALIC);
+    			infoText.setTypeface(typeface, Typeface.ITALIC);
    			} else {
    				//tt.setTypeface(t, Typeface.NORMAL);
-    			bt.setTypeface(t, Typeface.NORMAL);  			
+    			infoText.setTypeface(typeface, Typeface.NORMAL);  			
    			}
 
-   			if (o.imageRes > 0) {
-   				im.setImageResource(o.imageRes);
-   				im.setVisibility(View.VISIBLE);
+   			if (info.imageRes > 0) {
+   				image.setImageResource(info.imageRes);
+   				image.setVisibility(View.VISIBLE);
    			} else {
-   				im.setVisibility(View.GONE);
+   				image.setVisibility(View.GONE);
    			}
      	}
             
-    	return v;
+    	return view;
     }
 }

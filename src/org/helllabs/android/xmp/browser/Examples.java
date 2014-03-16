@@ -22,11 +22,13 @@ public class Examples {
 	public int install(final String path, final boolean examples) {
 		final File dir = new File(path);
 		
-		if (dir.isDirectory())
+		if (dir.isDirectory()) {
 			return 0;
+		}
 
-		if (!dir.mkdirs())
+		if (!dir.mkdirs()) {
 			return -1;
+		}
 		
 		final AssetManager am = context.getResources().getAssets();
 		String assets[];
@@ -34,8 +36,9 @@ public class Examples {
 		try {
 			assets = am.list("mod");
 			
-			if (!examples || assets == null)
+			if (!examples || assets == null) {
 				return 0;
+			}
 		
 			for (int i = 0; i < assets.length; i++) {
 				copyAsset(am.open("mod/" + assets[i]), path + "/" + assets[i]);

@@ -23,6 +23,9 @@ import android.widget.EditText;
 
 
 public class PlaylistUtils {
+	public static final String COMMENT_SUFFIX = ".comment";
+	public static final String PLAYLIST_SUFFIX = ".playlist";
+	
 	ProgressDialog progressDialog;
 	
 	public void newPlaylist(final Context context) {
@@ -40,12 +43,12 @@ public class PlaylistUtils {
 		  
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 			public void onClick(DialogInterface dialog, int whichButton) {
-			    EditText e1 = (EditText)layout.findViewById(R.id.new_playlist_name);
-				EditText e2 = (EditText)layout.findViewById(R.id.new_playlist_comment);
-				String name = e1.getText().toString();
-				String comment = e2.getText().toString();
-				File file1 = new File(Preferences.DATA_DIR, name + ".playlist");
-				File file2 = new File(Preferences.DATA_DIR, name + ".comment");
+			    final EditText e1 = (EditText)layout.findViewById(R.id.new_playlist_name);
+				final EditText e2 = (EditText)layout.findViewById(R.id.new_playlist_comment);
+				final String name = e1.getText().toString();
+				final String comment = e2.getText().toString();
+				final File file1 = new File(Preferences.DATA_DIR, name + ".playlist");
+				final File file2 = new File(Preferences.DATA_DIR, name + ".comment");
 				try {
 					file1.createNewFile();
 					file2.createNewFile();

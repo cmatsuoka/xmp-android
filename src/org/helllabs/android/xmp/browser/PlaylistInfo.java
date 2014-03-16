@@ -1,35 +1,35 @@
 package org.helllabs.android.xmp.browser;
 
 public class PlaylistInfo implements Comparable<PlaylistInfo> {
-	String name;
-	String comment;
-	String filename;
-	int imageRes;
+	public final String name;
+	public String comment;
+	public String filename;
+	public int imageRes;
 	
-	public PlaylistInfo(String _name, String _comment, String _filename) {
-		name = _name;
-		comment = _comment;
-		filename = _filename;
-		imageRes = -1;
+	public PlaylistInfo(final String name, final String comment, final String filename) {
+		this.name = name;
+		this.comment = comment;
+		this.filename = filename;
+		this.imageRes = -1;
 	}
 	
-	public PlaylistInfo(String _name, String _comment, int _imageRes) {
-		name = _name;
-		comment = _comment;
-		imageRes = _imageRes;
+	public PlaylistInfo(final String name, final String comment, final int imageRes) {
+		this.name = name;
+		this.comment = comment;
+		this.imageRes = imageRes;
 	}
 	
-	public PlaylistInfo(String _name, String _comment, String _filename, int _imageRes) {
-		name = _name;
-		comment = _comment;
-		filename = _filename;
-		imageRes = _imageRes;
+	public PlaylistInfo(final String name, final String comment, final String filename, final int imageRes) {
+		this.name = name;
+		this.comment = comment;
+		this.filename = filename;
+		this.imageRes = imageRes;
 	}
 	
 	// Comparable
 	
-	public int compareTo(PlaylistInfo p) {
-		return this.name.compareTo(p.name);
+	public int compareTo(final PlaylistInfo info) {
+		return this.name.compareTo(info.name);
 	}
 
 }

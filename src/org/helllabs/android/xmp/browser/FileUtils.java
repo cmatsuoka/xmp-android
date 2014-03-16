@@ -32,25 +32,25 @@ public final class FileUtils {
 	public static String readFromFile(final File file) throws IOException {
 		String line;
 
-		BufferedReader in = new BufferedReader(new FileReader(file), 512);
+		final BufferedReader in = new BufferedReader(new FileReader(file), 512);
 		line = in.readLine();
 		in.close();
 
 		return line;
 	}
 
-	public static boolean removeLineFromFile(final File inFile, final int num)
+	public static boolean removeLineFromFile(final File file, final int num)
 			throws FileNotFoundException, IOException {
 		final int[] nums = { num };
-		return removeLineFromFile(inFile, nums);
+		return removeLineFromFile(file, nums);
 	}
 
-	public static boolean removeLineFromFile(final File inFile, final int[] num)
+	public static boolean removeLineFromFile(final File file, final int[] num)
 			throws IOException, FileNotFoundException {
 
-		final File tempFile = new File(inFile.getAbsolutePath() + ".tmp");
+		final File tempFile = new File(file.getAbsolutePath() + ".tmp");
 
-		final BufferedReader br = new BufferedReader(new FileReader(inFile), 512);
+		final BufferedReader br = new BufferedReader(new FileReader(file), 512);
 		final PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
 
 		String line;
@@ -72,12 +72,14 @@ public final class FileUtils {
 		br.close();
 
 		// Delete the original file
-		if (!inFile.delete())
+		if (!file.delete()) {
 			return false;
+		}
 
 		// Rename the new file to the filename the original file had.
-		if (!tempFile.renameTo(inFile))
+		if (!tempFile.renameTo(file)) {
 			return false;
+		}
 
 		return true;
 	}

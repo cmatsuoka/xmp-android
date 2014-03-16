@@ -7,14 +7,13 @@ import android.widget.LinearLayout;
 
 
 public class InputDialog extends AlertDialog.Builder {
-	private float scale;
 	public EditText input;
 
 	@SuppressWarnings("deprecation")
-	protected InputDialog(Context context) {
+	protected InputDialog(final Context context) {
 		super(context);
 		
-		scale = context.getResources().getDisplayMetrics().density;
+		final float scale = context.getResources().getDisplayMetrics().density;
 		final LinearLayout layout = new LinearLayout(context);
 		final int pad = (int)(scale * 6);
 		layout.setPadding(pad, pad, pad, pad);

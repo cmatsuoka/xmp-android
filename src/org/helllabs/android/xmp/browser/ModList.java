@@ -53,11 +53,11 @@ public class ModList extends PlaylistActivity {
 	 */
 	private final DialogInterface.OnClickListener addDirToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			PlaylistUtils p = new PlaylistUtils();
+			PlaylistUtils utils = new PlaylistUtils();
 
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					p.filesToPlaylist(context, modList.get(fileSelection).filename,
+					utils.filesToPlaylist(context, modList.get(fileSelection).filename,
 							PlaylistUtils.listNoSuffix()[playlistSelection], false);
 				}
 			}
@@ -67,13 +67,13 @@ public class ModList extends PlaylistActivity {
 	/*
 	 * Recursively add current directory to playlist
 	 */	
-	private DialogInterface.OnClickListener addCurRecursiveToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
+	private final DialogInterface.OnClickListener addCurRecursiveToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			PlaylistUtils p = new PlaylistUtils();
+			PlaylistUtils utils = new PlaylistUtils();
 
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					p.filesToPlaylist(context, currentDir,
+					utils.filesToPlaylist(context, currentDir,
 							PlaylistUtils.listNoSuffix()[playlistSelection], true);
 				}
 			}
@@ -83,13 +83,13 @@ public class ModList extends PlaylistActivity {
 	/*
 	 * Recursively add directory to playlist
 	 */	
-	private DialogInterface.OnClickListener addRecursiveToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
+	private final DialogInterface.OnClickListener addRecursiveToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			PlaylistUtils p = new PlaylistUtils();
+			PlaylistUtils utils = new PlaylistUtils();
 
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					p.filesToPlaylist(context, modList.get(fileSelection).filename,
+					utils.filesToPlaylist(context, modList.get(fileSelection).filename,
 							PlaylistUtils.listNoSuffix()[playlistSelection], true);
 				}
 			}
@@ -99,16 +99,16 @@ public class ModList extends PlaylistActivity {
 	/*
 	 * Add Files to playlist
 	 */	
-	private DialogInterface.OnClickListener addFileToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int which) {
+	private final DialogInterface.OnClickListener addFileToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
+		public void onClick(final DialogInterface dialog, int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
 					boolean invalid = false;
 					for (int i = fileSelection; i < fileSelection + fileNum; i++) {
-						final PlaylistInfo pi = modList.get(i);
-						ModInfo modInfo = new ModInfo();
-						if (InfoCache.testModule(pi.filename, modInfo)) {
-							String line = pi.filename + ":" + modInfo.type + ":" + modInfo.name;
+						final PlaylistInfo info = modList.get(i);
+						final ModInfo modInfo = new ModInfo();
+						if (InfoCache.testModule(info.filename, modInfo)) {
+							final String line = info.filename + ":" + modInfo.type + ":" + modInfo.name;
 							PlaylistUtils.addToList(context, PlaylistUtils.listNoSuffix()[playlistSelection], line);
 						} else {
 							invalid = true;
@@ -129,7 +129,7 @@ public class ModList extends PlaylistActivity {
 	/*
 	 * Delete file
 	 */
-	private DialogInterface.OnClickListener deleteDialogClickListener = new DialogInterface.OnClickListener() {
+	private final DialogInterface.OnClickListener deleteDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (InfoCache.delete(deleteName)) {
@@ -143,20 +143,20 @@ public class ModList extends PlaylistActivity {
 	};
 
 	class DirFilter implements FileFilter {
-		public boolean accept(File dir) {
+		public boolean accept(final File dir) {
 			return dir.isDirectory();
 		}
 	}
 
 	class ModFilter implements FilenameFilter {
-		public boolean accept(File dir, String name) {
+		public boolean accept(final File dir, final String name) {
 			final File file = new File(dir,name);
 			return !file.isDirectory();
 		}
 	}
 
 	@Override
-	public void onCreate(Bundle icicle) {
+	public void onCreate(final Bundle icicle) {
 		super.onCreate(icicle);	
 		setContentView(R.layout.modlist);
 
@@ -192,7 +192,7 @@ public class ModList extends PlaylistActivity {
 		curPath.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(event.getAction() == (MotionEvent.ACTION_UP)){
+				if(event.getAction() == MotionEvent.ACTION_UP){
 					curPath.setTextColor(textColor);
 				}
 				else{
@@ -234,7 +234,7 @@ public class ModList extends PlaylistActivity {
 			final Examples examples = new Examples(this);
 
 			//isBadDir = true;
-			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+			final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 
 			alertDialog.setTitle("Path not found");
 			alertDialog.setMessage(media_path + " not found. " +
@@ -392,12 +392,15 @@ public class ModList extends PlaylistActivity {
 
 			menu.setHeaderTitle("This file");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
-			if (mode != 3)
+			if (mode != 3) {
 				menu.add(Menu.NONE, 1, 1, "Add to play queue");
-			if (mode != 2)
+			}
+			if (mode != 2) {
 				menu.add(Menu.NONE, 2, 2, "Play this file");
-			if (mode != 1)
+			}
+			if (mode != 1) {
 				menu.add(Menu.NONE, 3, 3, "Play all starting here");
+			}
 			menu.add(Menu.NONE, 4, 4, "Delete file");
 		}
 
@@ -470,7 +473,7 @@ public class ModList extends PlaylistActivity {
 		return true;
 	}
 
-	protected void addToPlaylist(int start, int num, DialogInterface.OnClickListener listener) {
+	protected void addToPlaylist(final int start, final int num, final DialogInterface.OnClickListener listener) {
 		fileSelection = start;
 		fileNum = num;
 		playlistSelection = 0;

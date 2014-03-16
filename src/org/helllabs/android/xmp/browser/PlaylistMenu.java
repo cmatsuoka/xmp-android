@@ -36,7 +36,7 @@ public class PlaylistMenu extends ActionBarActivity {
 	private ListView listView;
 
 	@Override
-	public void onCreate(Bundle icicle) {		
+	public void onCreate(final Bundle icicle) {		
 		super.onCreate(icicle);
 		context = this;
 		setContentView(R.layout.playlist_menu);
@@ -46,7 +46,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		listView.setOnItemClickListener(
 				new AdapterView.OnItemClickListener() {
 					@Override
-					public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+					public void onItemClick(AdapterView<?> l, View view, int position, long id) { // NOPMD
 						if (position == 0) {
 							final Intent intent = new Intent(PlaylistMenu.this, ModList.class);
 							startActivityForResult(intent, PLAYLIST_REQUEST);
@@ -68,14 +68,12 @@ public class PlaylistMenu extends ActionBarActivity {
 		if (Preferences.DATA_DIR.isDirectory()) {
 			updateList();
 		} else {
-			if (!Preferences.DATA_DIR.mkdirs()) {
-				Message.fatalError(this, getString(R.string.error_datadir), PlaylistMenu.this);
-			} else {
+			if (Preferences.DATA_DIR.mkdirs()) {
 				final String name = getString(R.string.empty_playlist);
-				File file = new File(Preferences.DATA_DIR, name + ".playlist");
+				File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX);
 				try {
 					file.createNewFile();
-					file = new File(Preferences.DATA_DIR, name + ".comment");
+					file = new File(Preferences.DATA_DIR, name + PlaylistUtils.COMMENT_SUFFIX);
 					file.createNewFile();
 					FileUtils.writeToFile(file, getString(R.string.empty_comment));
 					updateList();
@@ -83,6 +81,8 @@ public class PlaylistMenu extends ActionBarActivity {
 					Message.error(this, getString(R.string.error_create_playlist));
 					return;
 				}				
+			} else {
+				Message.fatalError(this, getString(R.string.error_datadir), PlaylistMenu.this);
 			}
 		}
 
@@ -111,8 +111,8 @@ public class PlaylistMenu extends ActionBarActivity {
 		list.add(new PlaylistInfo("File browser", "Files in " + mediaPath,
 				R.drawable.browser));
 
-		for (final String p : PlaylistUtils.listNoSuffix()) {
-			list.add(new PlaylistInfo(p, PlaylistUtils.readComment(this, p), R.drawable.list));
+		for (final String name : PlaylistUtils.listNoSuffix()) {
+			list.add(new PlaylistInfo(name, PlaylistUtils.readComment(this, name), R.drawable.list));
 		}
 
 		final PlaylistInfoAdapter playlist = new PlaylistInfoAdapter(PlaylistMenu.this,
@@ -125,8 +125,8 @@ public class PlaylistMenu extends ActionBarActivity {
 	// Playlist context menu
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+	public void onCreateContextMenu(final ContextMenu menu, final View view, final ContextMenuInfo menuInfo) {
+		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
 		menu.setHeaderTitle("Playlist options");
 
 		if (info.position == 0) {					// Module list
@@ -172,6 +172,8 @@ public class PlaylistMenu extends ActionBarActivity {
 				});
 
 				return true;
+			default:
+				break;
 			}			
 		}
 
@@ -189,10 +191,10 @@ public class PlaylistMenu extends ActionBarActivity {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				boolean error = false;
 				final String value = alert.input.getText().toString();
-				final File old1 = new File(Preferences.DATA_DIR, name + ".playlist");
-				final File old2 = new File(Preferences.DATA_DIR, name + ".comment");
-				final File new1 = new File(Preferences.DATA_DIR, value + ".playlist");
-				final File new2 = new File(Preferences.DATA_DIR, value + ".comment");
+				final File old1 = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX);
+				final File old2 = new File(Preferences.DATA_DIR, name + PlaylistUtils.COMMENT_SUFFIX);
+				final File new1 = new File(Preferences.DATA_DIR, value + PlaylistUtils.PLAYLIST_SUFFIX);
+				final File new2 = new File(Preferences.DATA_DIR, value + PlaylistUtils.COMMENT_SUFFIX);
 
 				if (old1.renameTo(new1) == false) { 
 					error = true;
@@ -233,9 +235,9 @@ public class PlaylistMenu extends ActionBarActivity {
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {  
-				String value = alert.input.getText().toString();
+				final String value = alert.input.getText().toString();
 				if (!value.equals(mediaPath)) {
-					SharedPreferences.Editor editor = prefs.edit();
+					final SharedPreferences.Editor editor = prefs.edit();
 					editor.putString(Preferences.MEDIA_PATH, value);
 					editor.commit();
 					updateList();
@@ -252,7 +254,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		alert.show(); 
 	}
 
-	public void editComment(final Context context, int index) {
+	public void editComment(final Context context, final int index) {
 		final String name = PlaylistUtils.listNoSuffix()[index];
 		final InputDialog alert = new InputDialog(context);		  
 		alert.setTitle("Edit comment");
@@ -261,8 +263,8 @@ public class PlaylistMenu extends ActionBarActivity {
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 			public void onClick(DialogInterface dialog, int whichButton) {  
-				String value = alert.input.getText().toString().replace("\n", " ");				
-				File file = new File(Preferences.DATA_DIR, name + ".comment");
+				final String value = alert.input.getText().toString().replace("\n", " ");				
+				final File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.COMMENT_SUFFIX);
 				try {
 					file.delete();
 					file.createNewFile();
@@ -295,6 +297,8 @@ public class PlaylistMenu extends ActionBarActivity {
 		case PLAYLIST_REQUEST:
 			updateList();
 			break;
+		default:
+			break;
 		}
 	}
 
@@ -303,7 +307,7 @@ public class PlaylistMenu extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.options_menu, menu);
 
 		// Calling super after populating the menu is necessary here to ensure that the
@@ -312,7 +316,7 @@ public class PlaylistMenu extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.menu_new_playlist:
 			(new PlaylistUtils()).newPlaylist(this, new Runnable() {
@@ -327,6 +331,8 @@ public class PlaylistMenu extends ActionBarActivity {
 			break;
 		case R.id.menu_refresh:
 			updateList();
+			break;
+		default:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
