@@ -33,7 +33,7 @@ import android.widget.ListView;
 
 public abstract class PlaylistActivity extends ActionBarActivity {
 	private static final int SETTINGS_REQUEST = 45;
-	private static final int PLAY_MODULE_REQUEST = 669; 
+	private static final int PLAY_MOD_REQUEST = 669; 
 	protected List<PlaylistInfo> modList = new ArrayList<PlaylistInfo>();
 	protected boolean shuffleMode = true;
 	protected boolean loopMode;
@@ -85,10 +85,10 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		toggleShuffleButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				shuffleMode = !shuffleMode;
-				((ImageButton)v).setImageResource(shuffleMode ?
-						R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
-				if (showToasts)
+				((ImageButton)v).setImageResource(shuffleMode ?	R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
+				if (showToasts) {
 					Message.toast(v.getContext(), shuffleMode ? "Shuffle on" : "Shuffle off");
+				}
 				modifiedOptions = true;
 			}
 		});
@@ -139,12 +139,12 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 	}
 	
 	// Play modules in list starting at the specified one
-	public void playModule(final List<PlaylistInfo> list, int start, boolean shuffle) {
+	public void playModule(final List<PlaylistInfo> list, int start, final boolean shuffle) {
 		int num = 0;
 		int dir = 0;
 		
-		for (PlaylistInfo p : list) {
-			if ((new File(p.filename).isDirectory())) {
+		for (final PlaylistInfo info : list) {
+			if ((new File(info.filename).isDirectory())) {
 				dir++;
 			} else {
 				num++;
@@ -163,7 +163,8 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		}
 
 		final String[] mods = new String[num];
-		int i = 0;
+		
+		int i = 0; // NOPMD
 		for (final PlaylistInfo info : list) {
 			if ((new File(info.filename).isFile())) {
 				mods[i++] = info.filename;
@@ -200,7 +201,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		intent.putExtra("loop", loopMode);
 		intent.putExtra("start", start);
 		Log.i("Xmp PlaylistActivity", "Start activity Player");
-		startActivityForResult(intent, PLAY_MODULE_REQUEST);
+		startActivityForResult(intent, PLAY_MOD_REQUEST);
 	}
 
 	@Override
@@ -211,7 +212,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 			update();			
 			showToasts = prefs.getBoolean(Preferences.SHOW_TOAST, true);
 			break;
-		case PLAY_MODULE_REQUEST:
+		case PLAY_MOD_REQUEST:
 			if (resultCode != RESULT_OK) {
 				update();
 			}
@@ -222,7 +223,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 	// Connection
 
 	private final ServiceConnection connection = new ServiceConnection() {
-		public void onServiceConnected(ComponentName className, IBinder service) {
+		public void onServiceConnected(final ComponentName className, final IBinder service) {
 			modPlayer = ModInterface.Stub.asInterface(service);
 			try {				
 				modPlayer.add(addList);
@@ -232,7 +233,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 			unbindService(connection);
 		}
 
-		public void onServiceDisconnected(ComponentName className) {
+		public void onServiceDisconnected(final ComponentName className) {
 			modPlayer = null;
 		}
 	};

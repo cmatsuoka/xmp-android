@@ -41,20 +41,18 @@ public class PlayerService extends Service {
 	private int bufferSize;
 	private int sampleRate, sampleFormat;
 	private Notifier notifier;
-	private boolean stopPlaying = false;
+	private boolean stopPlaying;
 	private boolean restartList;
 	private boolean returnToPrev;
 	private boolean paused;
 	private boolean looped;
 	private int startIndex;
-	private Boolean updateData = false;
+	private Boolean updateData;
 	private String fileName;			// currently playing file
 	private QueueManager queue;
 	private final RemoteCallbackList<PlayerCallback> callbacks =
 		new RemoteCallbackList<PlayerCallback>();
-	private boolean autoPaused = false;		// paused on phone call
-	private XmpPhoneStateListener listener;
-	private TelephonyManager tm;
+	private boolean autoPaused;			// paused on phone call
     
     // for media buttons
     private AudioManager audioManager;
@@ -62,8 +60,8 @@ public class PlayerService extends Service {
     private static Method registerMediaButtonEventReceiver;
     private static Method unregisterMediaButtonEventReceiver;
     
-	public static boolean isAlive = false;
-	public static boolean isLoaded = false;
+	public static boolean isAlive;
+	public static boolean isLoaded;
 
 
 	static {
@@ -78,7 +76,7 @@ public class PlayerService extends Service {
     	
    		prefs = PreferenceManager.getDefaultSharedPreferences(this);
    		
-   		int bufferMs = prefs.getInt(Preferences.BUFFER_MS, 500);
+   		final int bufferMs = prefs.getInt(Preferences.BUFFER_MS, 500);
    		sampleRate = Integer.parseInt(prefs.getString(Preferences.SAMPLING_RATE, "44100"));
    		sampleFormat = 0;
    		
@@ -89,11 +87,11 @@ public class PlayerService extends Service {
    		
    		bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
 	
-		int channelConfig = stereo ?
+		final int channelConfig = stereo ?
    				AudioFormat.CHANNEL_OUT_STEREO :
    				AudioFormat.CHANNEL_OUT_MONO;
    		
-		int minSize = AudioTrack.getMinBufferSize(
+		final int minSize = AudioTrack.getMinBufferSize(
 				sampleRate,
 				channelConfig,
 				AudioFormat.ENCODING_PCM_16BIT);
@@ -116,9 +114,9 @@ public class PlayerService extends Service {
 		paused = false;
 		
 		notifier = new Notifier();
-		listener = new XmpPhoneStateListener(this);
 		
-		tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+		final XmpPhoneStateListener listener = new XmpPhoneStateListener(this);
+		final TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		tm.listen(listener, XmpPhoneStateListener.LISTEN_CALL_STATE);
 		
 		audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
@@ -141,6 +139,7 @@ public class PlayerService extends Service {
     	watchdog.stop();
     	notifier.cancel();
     	end();
+    	super.onDestroy();
     }
 
 	@Override
@@ -149,7 +148,7 @@ public class PlayerService extends Service {
 	}
 	
 	private void checkMediaButtons() {
-		int key = RemoteControlReceiver.keyCode;
+		final int key = RemoteControlReceiver.keyCode;
 		
 		if (key > 0) {
 			switch (key) {
@@ -188,22 +187,26 @@ public class PlayerService extends Service {
 	
 	private class PlayRunnable implements Runnable {
     	public void run() {
+    		final short buffer[] = new short[bufferSize];
     		returnToPrev = false;
+    		
     		do {    			
     			fileName = queue.getFilename();		// Used in reconnection
     			
     			if (!InfoCache.testModule(fileName)) {
     				Log.w(TAG, fileName + ": unrecognized format");
-    				if (returnToPrev)
+    				if (returnToPrev) {
     					queue.previous();
+    				}
     				continue;
     			}
     			
 	    		Log.i(TAG, "Load " + fileName);
 	       		if (xmp.loadModule(fileName) < 0) {
 	       			Log.e(TAG, "Error loading " + fileName);
-	       			if (returnToPrev)
+	       			if (returnToPrev) {
 	       				queue.previous();
+	       			}
 	       			continue;
 	       		}
 	       		
@@ -220,13 +223,12 @@ public class PlayerService extends Service {
 	        	int numClients = callbacks.beginBroadcast();
 	        	for (int j = 0; j < numClients; j++) {
 	        		try {
-	    				callbacks.getBroadcastItem(j).newModCallback(
-	    							fileName, xmp.getInstruments());
+	    				callbacks.getBroadcastItem(j).newModCallback(fileName, xmp.getInstruments());
 	    			} catch (RemoteException e) { }
 	        	}
 	        	callbacks.finishBroadcast();
 
-	        	String volBoost = prefs.getString(Preferences.VOL_BOOST, "1");
+	        	final String volBoost = prefs.getString(Preferences.VOL_BOOST, "1");
 	        	
 	       		final int[] interpTypes = { Xmp.XMP_INTERP_NEAREST, Xmp.XMP_INTERP_LINEAR, Xmp.XMP_INTERP_SPLINE };
 	       		final int temp = Integer.parseInt(prefs.getString(Preferences.INTERP_TYPE, "1"));
@@ -254,17 +256,18 @@ public class PlayerService extends Service {
 	        	xmp.setPlayer(Xmp.XMP_PLAYER_DSP, dsp);
 	        		        	
 	       		updateData = true;
-	    			    		
-	    		short buffer[] = new short[bufferSize];
 	    		
-	    		int count, loopCount = 0;
+	    		int count;
+	    		int loopCount = 0;
+	    		
 	       		while (xmp.playFrame() == 0) {
 	       			count = xmp.getLoopCount();
-	       			if (!looped && count != loopCount)
+	       			if (!looped && count != loopCount) {
 	       				break;
+	       			}
 	       			loopCount = count;
 	       			
-	       			int size = xmp.getBuffer(buffer);
+	       			final int size = xmp.getBuffer(buffer);
 	       			audio.write(buffer, 0, size);
 	       			
 	       			while (paused) {
@@ -348,11 +351,11 @@ public class PlayerService extends Service {
     }
 	
 	private class Notifier {
-	    private NotificationManager nm;
-	    PendingIntent contentIntent;
+	    private final NotificationManager nm;
+	    private final PendingIntent contentIntent;
 	    private static final int NOTIFY_ID = R.layout.player;
-		String title;
-		int index;
+		private String title;
+		private int index;
 
 		public Notifier() {
 			nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
@@ -374,17 +377,17 @@ public class PlayerService extends Service {
 			notification(null, null);
 		}
 		
-		public void notification(String title, int index) {
+		public void notification(final String title, final int index) {
 			this.title = title;
 			this.index = index + 1;			
 			notification(message(), message());
 		}
 		
-		public void notification(String ticker) {
+		public void notification(final String ticker) {
 			notification(ticker, message());
 		}
 		
-		public void notification(String ticker, String latest) {
+		public void notification(final String ticker, final String latest) {
 	        Notification notification = new Notification(
 	        		R.drawable.notification, ticker, System.currentTimeMillis());
 	        notification.setLatestEventInfo(PlayerService.this, getText(R.string.app_name),
@@ -525,20 +528,22 @@ public class PlayerService extends Service {
 		// Callback
 		
 		public void registerCallback(PlayerCallback cb) {
-        	if (cb != null)
+        	if (cb != null) {
             	callbacks.register(cb);
+        	}
         }
         
         public void unregisterCallback(PlayerCallback cb) {
-            if (cb != null)
+            if (cb != null) {
             	callbacks.unregister(cb);
+            }
         }
 	};
 	
 	
 	// for Telephony
 	
-	public boolean autoPause(boolean pause) {
+	public boolean autoPause(final boolean pause) {
 		Log.i(TAG, "Auto pause changed to " + pause + ", previously " + autoPaused);
 		if (pause) {
 			paused = autoPaused = true;
@@ -582,7 +587,7 @@ public class PlayerService extends Service {
 			registerMediaButtonEventReceiver.invoke(audioManager, remoteControlResponder);
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
-			Throwable cause = ite.getCause();
+			final Throwable cause = ite.getCause();
 			if (cause instanceof RuntimeException) {
 				throw (RuntimeException) cause;
 			} else if (cause instanceof Error) {
@@ -604,7 +609,7 @@ public class PlayerService extends Service {
 			unregisterMediaButtonEventReceiver.invoke(audioManager,	remoteControlResponder);
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
-			Throwable cause = ite.getCause();
+			final Throwable cause = ite.getCause();
 			if (cause instanceof RuntimeException) {
 				throw (RuntimeException) cause;
 			} else if (cause instanceof Error) {

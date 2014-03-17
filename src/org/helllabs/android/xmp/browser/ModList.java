@@ -473,5 +473,4 @@ public class ModList extends PlaylistActivity {
 		}
 	}
 
-
 }
