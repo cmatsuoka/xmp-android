@@ -42,6 +42,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 public class PlayerActivity extends Activity {
+	private static final String TAG = PlayerActivity.class.getSimpleName();
 	private ModInterface modPlayer;	/* actual mod player */
 	private ImageButton playButton;
 	private ImageButton loopButton;
@@ -116,7 +117,7 @@ public class PlayerActivity extends Activity {
     private PlayerCallback playerCallback = new PlayerCallback.Stub() {	
         public void newModCallback(final String name, final String[] instruments) {
         	synchronized (modPlayer) {
-        		Log.i("Xmp Player", "Show module data");
+        		Log.i(TAG, "Show module data");
         		showNewMod(name);
         		canChangeViewer = true;
         	}
@@ -124,14 +125,14 @@ public class PlayerActivity extends Activity {
         
         public void endModCallback() {
         	synchronized (modPlayer) {
-        		Log.i("Xmp Player", "End of module");
+        		Log.i(TAG, "End of module");
         		stopUpdate = true;
         		canChangeViewer = false;
         	}
         }
         
         public void endPlayCallback() {
-       		Log.i("Xmp Player", "End progress thread");
+       		Log.i(TAG, "End progress thread");
        		stopUpdate = true;
 
 			if (progressThread != null && progressThread.isAlive()) {
@@ -307,7 +308,7 @@ public class PlayerActivity extends Activity {
 	protected void onNewIntent(Intent intent) {
 		boolean reconnect = false;
 		
-		Log.i("Xmp Player", "Start player interface");
+		Log.i(TAG, "Start player interface");
 		
 		String path = null;
 		if (intent.getData() != null) {
@@ -336,11 +337,11 @@ public class PlayerActivity extends Activity {
 		
     	Intent service = new Intent(this, PlayerService.class);
     	if (!reconnect) {
-    		Log.i("Xmp Player", "Start service");
+    		Log.i(TAG, "Start service");
     		startService(service);
     	}
     	if (!bindService(service, connection, 0)) {
-    		Log.e("Xmp Player", "Can't bind to service");
+    		Log.e(TAG, "Can't bind to service");
     		finish();
     	}
 	}
@@ -464,7 +465,7 @@ public class PlayerActivity extends Activity {
 		activity = this;
 		display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		
-		Log.i("Xmp Player", "Create player interface");
+		Log.i(TAG, "Create player interface");
 		
         // INITIALIZE RECEIVER by jwei512
 		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
@@ -585,7 +586,7 @@ public class PlayerActivity extends Activity {
 		
 		unregisterReceiver(screenReceiver);
 		
-		Log.i("Xmp Player", "Unbind service");
+		Log.i(TAG, "Unbind service");
 		unbindService(connection);	
 	}
 	

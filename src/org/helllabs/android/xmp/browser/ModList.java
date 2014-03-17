@@ -160,7 +160,7 @@ public class ModList extends PlaylistActivity {
 		super.onCreate(icicle);	
 		setContentView(R.layout.modlist);
 
-		listView = (ListView)findViewById(R.id.listview);
+		listView = (ListView)findViewById(R.id.modlist_listview);
 		super.setOnItemClickListener(listView);
 
 		registerForContextMenu(listView);

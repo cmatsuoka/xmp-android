@@ -32,6 +32,7 @@ import android.view.KeyEvent;
 
 
 public class PlayerService extends Service {
+	private static final String TAG = PlayerService.class.getSimpleName();
 	private final Xmp xmp = new Xmp();
 	private AudioTrack audio;
 	private Thread playThread;
@@ -73,7 +74,7 @@ public class PlayerService extends Service {
 	public void onCreate() {
     	super.onCreate();
     	
-    	Log.i("Xmp ModService", "Create service");
+    	Log.i(TAG, "Create service");
     	
    		prefs = PreferenceManager.getDefaultSharedPreferences(this);
    		
@@ -89,8 +90,8 @@ public class PlayerService extends Service {
    		bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
 	
 		int channelConfig = stereo ?
-   				AudioFormat.CHANNEL_CONFIGURATION_STEREO :
-   				AudioFormat.CHANNEL_CONFIGURATION_MONO;
+   				AudioFormat.CHANNEL_OUT_STEREO :
+   				AudioFormat.CHANNEL_OUT_MONO;
    		
 		int minSize = AudioTrack.getMinBufferSize(
 				sampleRate,
@@ -127,7 +128,7 @@ public class PlayerService extends Service {
 		watchdog = new Watchdog(10);
  		watchdog.setOnTimeoutListener(new Watchdog.onTimeoutListener() {
 			public void onTimeout() {
-				Log.e("Xmp ModService", "Stopped by watchdog");
+				Log.e(TAG, "Stopped by watchdog");
 		    	stopSelf();
 			}
 		});
@@ -153,13 +154,13 @@ public class PlayerService extends Service {
 		if (key > 0) {
 			switch (key) {
 			case KeyEvent.KEYCODE_MEDIA_NEXT:
-				Log.i("Xmp ModService", "Handle KEYCODE_MEDIA_NEXT");
+				Log.i(TAG, "Handle KEYCODE_MEDIA_NEXT");
 				xmp.stopModule();
 				stopPlaying = false;
 				paused = false;
 				break;
 			case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-				Log.i("Xmp ModService", "Handle KEYCODE_MEDIA_PREVIOUS");
+				Log.i(TAG, "Handle KEYCODE_MEDIA_PREVIOUS");
 				if (xmp.time() > 2000) {
 					xmp.seek(0);
 				} else {
@@ -170,13 +171,13 @@ public class PlayerService extends Service {
 				paused = false;
 				break;
 			case KeyEvent.KEYCODE_MEDIA_STOP:
-				Log.i("Xmp ModService", "Handle KEYCODE_MEDIA_STOP");
+				Log.i(TAG, "Handle KEYCODE_MEDIA_STOP");
 		    	xmp.stopModule();
 		    	paused = false;
 		    	stopPlaying = true;
 		    	break;
 			case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-				Log.i("Xmp ModService", "Handle KEYCODE_MEDIA_PLAY_PAUSE");
+				Log.i(TAG, "Handle KEYCODE_MEDIA_PLAY_PAUSE");
 				paused = !paused;
 				break;
 			}
@@ -192,15 +193,15 @@ public class PlayerService extends Service {
     			fileName = queue.getFilename();		// Used in reconnection
     			
     			if (!InfoCache.testModule(fileName)) {
-    				Log.w("Xmp ModService", fileName + ": unrecognized format");
+    				Log.w(TAG, fileName + ": unrecognized format");
     				if (returnToPrev)
     					queue.previous();
     				continue;
     			}
     			
-	    		Log.i("Xmp ModService", "Load " + fileName);
+	    		Log.i(TAG, "Load " + fileName);
 	       		if (xmp.loadModule(fileName) < 0) {
-	       			Log.e("Xmp ModService", "Error loading " + fileName);
+	       			Log.e(TAG, "Error loading " + fileName);
 	       			if (returnToPrev)
 	       				queue.previous();
 	       			continue;
@@ -312,7 +313,7 @@ public class PlayerService extends Service {
 	       		}
     		} while (!stopPlaying && queue.next());
 
-    		synchronized (updateData) {
+    		synchronized (xmp) {
     			updateData = false;		// stop getChannelData update
     		}
     		watchdog.stop();
@@ -323,7 +324,7 @@ public class PlayerService extends Service {
     }
 
 	protected void end() {    	
-		Log.i("Xmp ModService", "End service");
+		Log.i(TAG, "End service");
 	    final int numClients = callbacks.beginBroadcast();
 	    for (int i = 0; i < numClients; i++) {
 	    	try {
@@ -402,12 +403,12 @@ public class PlayerService extends Service {
 			paused = false;
 
 			if (isAlive) {
-				Log.i("Xmp ModService", "Use existing player thread");
+				Log.i(TAG, "Use existing player thread");
 				restartList = true;
 				startIndex = start;
 				nextSong();
 			} else {
-				Log.i("Xmp ModService", "Start player thread");
+				Log.i(TAG, "Start player thread");
 				restartList = false;
 		   		playThread = new Thread(new PlayRunnable());
 		   		playThread.start();
@@ -455,7 +456,7 @@ public class PlayerService extends Service {
 		}
 		
 		public void getChannelData(int[] volumes, int[] finalvols, int[] pans, int[] instruments, int[] keys, int[] periods) {
-			synchronized (updateData) {
+			synchronized (xmp) {
 				if (updateData) {
 					xmp.getChannelData(volumes, finalvols, pans, instruments, keys, periods);
 				}
@@ -463,7 +464,7 @@ public class PlayerService extends Service {
 		}
 		
 		public void getSampleData(boolean trigger, int ins, int key, int period, int chn, int width, byte[] buffer) {
-			synchronized (updateData) {
+			synchronized (xmp) {
 				if (updateData) {
 					xmp.getSampleData(trigger, ins, key, period, chn, width, buffer);
 				}
@@ -516,7 +517,7 @@ public class PlayerService extends Service {
 		// File management
 		
 		public boolean deleteFile() {
-			Log.i("Xmp ModService", "Delete file " + fileName);
+			Log.i(TAG, "Delete file " + fileName);
 			return InfoCache.delete(fileName);
 		}
 
@@ -538,7 +539,7 @@ public class PlayerService extends Service {
 	// for Telephony
 	
 	public boolean autoPause(boolean pause) {
-		Log.i("Xmp ModService", "Auto pause changed to " + pause + ", previously " + autoPaused);
+		Log.i(TAG, "Auto pause changed to " + pause + ", previously " + autoPaused);
 		if (pause) {
 			paused = autoPaused = true;
 		} else {
@@ -591,7 +592,7 @@ public class PlayerService extends Service {
 				throw new RuntimeException(ite);
 			}
 		} catch (IllegalAccessException ie) {
-			Log.e("Xmp ModService", "Unexpected " + ie);
+			Log.e(TAG, "Unexpected " + ie);
 		}
 	}
 
@@ -613,7 +614,7 @@ public class PlayerService extends Service {
 				throw new RuntimeException(ite);
 			}
 		} catch (IllegalAccessException ie) {
-			Log.e("Xmp ModService", "Unexpected " + ie);
+			Log.e(TAG, "Unexpected " + ie);
 		}
 	}
 }
