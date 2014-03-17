@@ -7,15 +7,12 @@ public class Xmp {
 	public static final int XMP_PLAYER_MIX = 1;			/* Stereo mixing */
 	public static final int XMP_PLAYER_INTERP = 2;		/* Interpolation type */
 	public static final int XMP_PLAYER_DSP = 3;			/* DSP effect flags */
-	public static final int XMP_PLAYER_TIMING = 4;			/* DSP effect flags */
 
 	public static final int XMP_INTERP_NEAREST = 0;		/* Nearest neighbor */
 	public static final int XMP_INTERP_LINEAR = 1;		/* Linear (default) */
 	public static final int XMP_INTERP_SPLINE = 2;		/* Cubic spline */
 	
 	public static final int XMP_DSP_LOWPASS = 1 << 0;	/* Lowpass filter effect */
-
-	public static final int XMP_TIMING_VBLANK = 1 << 0;	/* VBlank timing (no CIA tempo setting) */
 	
 	public static final int XMP_FORMAT_MONO = 1 << 2;
 	
@@ -30,7 +27,7 @@ public class Xmp {
 	public native int getBuffer(short buffer[]);
 	public native int nextPosition();
 	public native int prevPosition();
-	public native int setPosition(int n);
+	public native int setPosition(int num);
 	public native int stopModule();
 	public native int restartModule();
 	public native int seek(int time);
