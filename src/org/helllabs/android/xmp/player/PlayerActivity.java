@@ -2,8 +2,8 @@ package org.helllabs.android.xmp.player;
 
 import org.helllabs.android.xmp.ModInterface;
 import org.helllabs.android.xmp.PlayerCallback;
-import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Preferences;
+import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.browser.Message;
 import org.helllabs.android.xmp.service.PlayerService;
 

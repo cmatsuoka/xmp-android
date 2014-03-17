@@ -64,16 +64,19 @@
 			android:layout_weight="0.34"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
+			style="@style/ButtonTheme"
 			android:contentDescription="@string/button_play_all" />
 		<ImageButton android:id="@+id/toggle_loop"
 			android:layout_weight="0.33"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
+			style="@style/ButtonTheme"
 			android:contentDescription="@string/button_toggle_loop" />
 		<ImageButton android:id="@+id/toggle_shuffle"
 			android:layout_weight="0.33"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
+			style="@style/ButtonTheme"
 			android:contentDescription="@string/button_toggle_shuffle" />
 	</LinearLayout>
 
