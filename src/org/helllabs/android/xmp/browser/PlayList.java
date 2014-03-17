@@ -58,6 +58,7 @@ public class PlayList extends PlaylistActivity {
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		listView = (TouchListView)findViewById(R.id.plist_list);
+		super.setOnItemClickListener(listView);
 		
 		listView.setDropListener(onDrop);
 		listView.setRemoveListener(onRemove);

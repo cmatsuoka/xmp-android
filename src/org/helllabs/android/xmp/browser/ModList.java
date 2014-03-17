@@ -161,15 +161,7 @@ public class ModList extends PlaylistActivity {
 		setContentView(R.layout.modlist);
 
 		listView = (ListView)findViewById(R.id.listview);
-
-		listView.setOnItemClickListener(
-				new AdapterView.OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-
-					}
-				});
-
+		super.setOnItemClickListener(listView);
 
 		registerForContextMenu(listView);
 		final String media_path = prefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
@@ -343,22 +335,6 @@ public class ModList extends PlaylistActivity {
 				progressDialog.dismiss();
 			}
 		}.start();
-	}
-
-	@Override
-	protected void onListItemClick(final ListView listView, View view, int position, long id) {
-		String name = modList.get(position).filename;
-		final File file = new File(name);
-
-		if (file.isDirectory()) {	
-			if (file.getName().equals("..")) {
-				if ((name = file.getParentFile().getParent()) == null)
-					name = "/";
-			}
-			updateModlist(name);
-		} else {
-			super.onListItemClick(listView, view, position, id);
-		}
 	}
 
 	// Playlist context menu

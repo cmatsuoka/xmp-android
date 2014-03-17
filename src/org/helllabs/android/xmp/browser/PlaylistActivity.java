@@ -27,6 +27,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -93,31 +94,36 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		});
 	}
 	
-	// Item click
-	
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		final String filename = modList.get(position).filename;
-		final int mode = Integer.parseInt(prefs.getString(Preferences.PLAYLIST_MODE, "1"));
-		
-		/* Test module again if invalid, in case a new file format is added to the
-		 * player library and the file was previously unrecognized and cached as invalid.
-		 */
-		if (InfoCache.testModuleForceIfInvalid(filename)) {
-			switch (mode) {
-			case 1:								// play all starting at this one
-			default:
-				playModule(modList, position);
-				break;
-			case 2:								// play this one
-				playModule(filename);
-				break;
-			case 3:								// add to queue
-				addToQueue(position, 1);
-				break;
+	// Item click	
+	protected void setOnItemClickListener(ListView list) {
+		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> list, View view, int position, long id) {
+				final String filename = modList.get(position).filename;
+				final int mode = Integer.parseInt(prefs.getString(Preferences.PLAYLIST_MODE, "1"));
+				
+				/* Test module again if invalid, in case a new file format is added to the
+				 * player library and the file was previously unrecognized and cached as invalid.
+				 */
+				if (InfoCache.testModuleForceIfInvalid(filename)) {
+					switch (mode) {
+					case 1:								// play all starting at this one
+					default:
+						playModule(modList, position);
+						break;
+					case 2:								// play this one
+						playModule(filename);
+						break;
+					case 3:								// add to queue
+						addToQueue(position, 1);
+						break;
+					}
+				} else {
+					Message.toast(context, "Unrecognized file format");
+				}
 			}
-		} else {
-			Message.toast(context, "Unrecognized file format");
-		}
+		});
 	}
 
 	abstract public void update();
