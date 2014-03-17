@@ -41,18 +41,19 @@
 		android:orientation="vertical"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
-		<ListView android:id="@+id/listview"
+		<ListView android:id="@+id/modlist_listview"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:layout_weight="1"
+			android:background="#000000"
 			android:fastScrollEnabled="true"
 			android:drawSelectorOnTop="false" />
 
-		<TextView android:id="@id/android:empty"
+		<!--  <TextView android:id="@id/android:empty"
 			android:gravity="top"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-			android:text="No modules found." />
+			android:text="No modules found." /> -->
 	</LinearLayout>
 
 	<LinearLayout android:gravity="bottom"
