@@ -168,27 +168,19 @@ public class ModList extends PlaylistActivity {
 
 		context = this;
 
-		// Set status area background color
-		/*LinearLayout statusArea = (LinearLayout)findViewById(R.id.status_area);		
-		if (prefs.getBoolean(Preferences.DARK_THEME, false)) {
-			statusArea.setBackgroundColor(R.color.dark_theme_status_color);
-		}*/
-
 		setTitle("File Browser");
 
 		curPath = (TextView)findViewById(R.id.current_path);
 		registerForContextMenu(curPath);
 
-
 		textColor = curPath.getCurrentTextColor();
 		curPath.setOnTouchListener(new View.OnTouchListener() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public boolean onTouch(final View view, final MotionEvent event) {
 				if(event.getAction() == MotionEvent.ACTION_UP){
 					curPath.setTextColor(textColor);
-				}
-				else{
-					curPath.setTextColor(getResources().getColor(R.color.actionbar_title_color));
+				} else {
+					curPath.setTextColor(getResources().getColor(R.color.pressed_color));
 				}
 				return false;
 			}
@@ -456,9 +448,9 @@ public class ModList extends PlaylistActivity {
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.msg_select_playlist)
-		.setPositiveButton(android.R.string.ok, listener)
-		.setNegativeButton(android.R.string.cancel, listener)
-		.setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
+				.setPositiveButton(android.R.string.ok, listener)
+				.setNegativeButton(android.R.string.cancel, listener)
+				.setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				playlistSelection = which;
 			}

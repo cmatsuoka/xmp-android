@@ -10,7 +10,7 @@
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:background="@color/light_theme_status_color">
+		style="@style/StatusTheme">
 
 		<TextView android:id="@+id/current_path"
 			android:layout_weight="1.0"
@@ -40,19 +40,19 @@
 		android:layout_weight="1.0"
 		android:orientation="vertical"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
+		android:layout_height="0dp">
+		
 		<ListView android:id="@+id/modlist_listview"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-			android:layout_weight="1"
 			android:fastScrollEnabled="true"
 			android:drawSelectorOnTop="false" />
 
-		<!--  <TextView android:id="@id/android:empty"
+		<TextView android:id="@id/android:empty"
 			android:gravity="top"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-			android:text="No modules found." /> -->
+			android:text="No modules found." />
 	</LinearLayout>
 
 	<LinearLayout android:gravity="bottom"

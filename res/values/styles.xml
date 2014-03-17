@@ -13,6 +13,7 @@
     </style>
     
     <color name="black">#FF000000</color>
+    <color name="darkgray">#FF102030</color>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
@@ -28,6 +29,10 @@
     
     <style name="ButtonTheme" parent="AppTheme">
         <item name="android:background">@android:drawable/btn_default</item>
+    </style>
+    
+    <style name="StatusTheme" parent="AppTheme">
+        <item name="android:background">@color/darkgray</item>
     </style>
 
 </resources>
