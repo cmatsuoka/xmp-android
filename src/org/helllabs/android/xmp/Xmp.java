@@ -50,6 +50,6 @@ public class Xmp {
 	public native void getSampleData(boolean trigger, int ins, int key, int period, int chn, int width, byte[] buffer);
 	
 	static {
-		System.loadLibrary("xmp");
+		System.loadLibrary("xmp-jni");
 	}
 }

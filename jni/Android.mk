@@ -2,25 +2,15 @@ LOCAL_PATH	:= $(call my-dir)
 #LOCAL_ARM_MODE	:= arm
 
 include $(CLEAR_VARS)
+LOCAL_MODULE := xmp-prebuilt
+LOCAL_SRC_FILES := ../../../libxmp/obj/local/$(TARGET_ARCH_ABI)/libxmp.a
+include $(PREBUILT_STATIC_LIBRARY)
 
-include $(LOCAL_PATH)/src/Makefile
-include $(LOCAL_PATH)/src/loaders/Makefile
-include $(LOCAL_PATH)/src/loaders/prowizard/Makefile
-include $(LOCAL_PATH)/src/depackers/Makefile
-
-SRC_SOURCES	:= $(addprefix src/,$(SRC_OBJS))
-LOADERS_SOURCES := $(addprefix src/loaders/,$(LOADERS_OBJS))
-PROWIZ_SOURCES	:= $(addprefix src/loaders/prowizard/,$(PROWIZ_OBJS))
-DEPACKERS_SOURCES := $(addprefix src/depackers/,$(DEPACKERS_OBJS))
-
-VERCODE		:= `sed -ne 's/^VERCODE\s*=\s*//p' $(LOCAL_PATH)/../../libxmp/Makefile|sed 's/.* //'`
-LOCAL_MODULE    := xmp
-LOCAL_CFLAGS	:= -I$(LOCAL_PATH)/src -DVERSION=$(VERCODE) -O3 -DHAVE_MKSTEMP -DHAVE_FNMATCH -I$(LOCAL_PATH) -I$(LOCAL_PATH)/include
-LOCAL_LDLIBS	:= -Lbuild/platforms/android-3/arch-arm/usr/lib -llog
-LOCAL_SRC_FILES := xmp-jni.c \
-	$(SRC_SOURCES:.o=.c.arm) \
-	$(LOADERS_SOURCES:.o=.c) \
-	$(PROWIZ_SOURCES:.o=.c) \
-	$(DEPACKERS_SOURCES:.o=.c)
+include $(CLEAR_VARS)
+LOCAL_MODULE	:= xmp-jni
+LOCAL_CFLAGS    := -O3 -I$(LOCAL_PATH)/../../../libxmp/include \
+                   -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
+LOCAL_STATIC_LIBRARIES := xmp-prebuilt
+LOCAL_SRC_FILES := xmp-jni.c
 
 include $(BUILD_SHARED_LIBRARY)
