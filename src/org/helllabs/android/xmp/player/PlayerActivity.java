@@ -41,6 +41,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+@SuppressWarnings("PMD.ShortVariable")
 public class PlayerActivity extends Activity {
 	private static final String TAG = PlayerActivity.class.getSimpleName();
 	private ModInterface modPlayer;	/* actual mod player */
@@ -88,7 +89,9 @@ public class PlayerActivity extends Activity {
 			synchronized (modPlayer) {
 				try {
 					modPlayer.registerCallback(playerCallback);
-				} catch (RemoteException e) { }
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't register player callback");
+				}
 
 				if (fileArray != null && fileArray.length > 0) {
 					// Start new queue
@@ -103,18 +106,20 @@ public class PlayerActivity extends Activity {
 						} else {
 							unpause();
 						}
-					} catch (RemoteException e) { }
+					} catch (RemoteException e) {
+						Log.e(TAG, "Can't get module file name");
+					}
 				}
 			}
 		}
 
 		public void onServiceDisconnected(final ComponentName className) {
 			stopUpdate = true;
-			modPlayer = null;
+			modPlayer = null;		// NOPMD
 		}
 	};
 	
-    private PlayerCallback playerCallback = new PlayerCallback.Stub() {	
+    private final PlayerCallback playerCallback = new PlayerCallback.Stub() {	
         public void newModCallback(final String name, final String[] instruments) {
         	synchronized (modPlayer) {
         		Log.i(TAG, "Show module data");
@@ -156,12 +161,13 @@ public class PlayerActivity extends Activity {
     	StringBuffer s = new StringBuffer();
     	
         public void run() {
-        	now = (before + (FRAME_RATE * latency / 1000) + 1) % FRAME_RATE;
+        	now = (before + FRAME_RATE * latency / 1000 + 1) % FRAME_RATE;
   
 			try {
 				synchronized (modPlayer) {
-					if (stopUpdate)
+					if (stopUpdate) {
 						return;
+					}
 
 					modPlayer.getInfo(info[now].values);							
 					info[now].time = modPlayer.time() / 1000;
@@ -202,8 +208,9 @@ public class PlayerActivity extends Activity {
 					}
 					if (info[before].time != oldTime || showElapsed != oldShowElapsed) {
 						int t = info[before].time;
-						if (t < 0)
+						if (t < 0) {
 							t = 0;
+						}
 						
 						s.delete(0, s.length());
 						
@@ -240,11 +247,12 @@ public class PlayerActivity extends Activity {
 					}
 				}
 			} catch (Exception e) {
-				
+				// fail silently
 			} finally {
 				before++;
-				if (before >= FRAME_RATE)
+				if (before >= FRAME_RATE) {
 					before = 0;
+				}
 			}
         }
     };
@@ -260,12 +268,15 @@ public class PlayerActivity extends Activity {
     		
     		do {
     			synchronized (modPlayer) {
-    				if (stopUpdate)
+    				if (stopUpdate) {
     					break;
+    				}
     				
 	    			try {
 						t = modPlayer.time() / 100;
-					} catch (RemoteException e) { }
+					} catch (RemoteException e) {
+						// fail silently
+					}
     			}
 	    			
 	    		if (!paused && screenOn) {
@@ -298,14 +309,15 @@ public class PlayerActivity extends Activity {
 	}
 	
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
+	public void onConfigurationChanged(final Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		if (viewer != null)
+		if (viewer != null) {
 			viewer.setRotation(display.getOrientation());
+		}
 	}
 	
 	@Override
-	protected void onNewIntent(Intent intent) {
+	protected void onNewIntent(final Intent intent) {
 		boolean reconnect = false;
 		
 		Log.i(TAG, "Start player interface");
@@ -324,7 +336,7 @@ public class PlayerActivity extends Activity {
 			loopListMode = false;
 			start = 0;
 		} else {	
-			Bundle extras = intent.getExtras();
+			final Bundle extras = intent.getExtras();
 			if (extras != null) {
 				fileArray = extras.getStringArray("files");	
 				shuffleMode = extras.getBoolean("shuffle");
@@ -335,7 +347,7 @@ public class PlayerActivity extends Activity {
 			}
 		}
 		
-    	Intent service = new Intent(this, PlayerService.class);
+    	final Intent service = new Intent(this, PlayerService.class);
     	if (!reconnect) {
     		Log.i(TAG, "Start service");
     		startService(service);
@@ -386,7 +398,7 @@ public class PlayerActivity extends Activity {
 				loopButton.setImageResource(R.drawable.loop_off);
 			}
 		} catch (RemoteException e) {
-
+			Log.e(TAG, "Can't get loop status");
 		}
 	}
     
@@ -399,14 +411,14 @@ public class PlayerActivity extends Activity {
 		synchronized (this) {
 			try {
 				modPlayer.pause();
-			} catch (RemoteException e) {
-
-			}
 			
-			if (paused) {
-				unpause();
-			} else {
-				pause();
+				if (paused) {
+					unpause();
+				} else {
+					pause();
+				}
+			} catch (RemoteException e) {
+				Log.e(TAG, "Can't pause/unpause module");
 			}
 		}
     }
@@ -436,7 +448,7 @@ public class PlayerActivity extends Activity {
 			}
 			unpause();
 		} catch (RemoteException e) {
-
+			Log.e(TAG, "Can't go to previous module");
 		}
 	}
     
@@ -450,7 +462,9 @@ public class PlayerActivity extends Activity {
 			synchronized (modPlayer) {
 				modPlayer.nextSong();
 			}
-		} catch (RemoteException e) { }
+		} catch (RemoteException e) {
+			Log.e(TAG, "Can't go to next module");
+		}
 		
 		unpause();
     }
@@ -468,7 +482,7 @@ public class PlayerActivity extends Activity {
 		Log.i(TAG, "Create player interface");
 		
         // INITIALIZE RECEIVER by jwei512
-		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		screenReceiver = new ScreenReceiver();
 		registerReceiver(screenReceiver, filter);
@@ -505,7 +519,7 @@ public class PlayerActivity extends Activity {
 		viewerLayout.addView(viewer);
 		viewerLayout.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick(final View view) {
 				synchronized (modPlayer) {
 					if (canChangeViewer) {
 						changeViewer();
@@ -521,7 +535,7 @@ public class PlayerActivity extends Activity {
 		titleFlipper.setInAnimation(this, R.anim.slide_in_right);
 		titleFlipper.setOutAnimation(this, R.anim.slide_out_left);
 
-        Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/Michroma.ttf");
+        final Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/Michroma.ttf");
         
         for (int i = 0; i < 2; i++) {
         	infoName[i].setTypeface(font);
@@ -541,7 +555,7 @@ public class PlayerActivity extends Activity {
 		loopButton.setImageResource(R.drawable.loop_off);
 		
 		elapsedTime.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
+			public void onClick(final View view) {
 				showElapsed ^= true;
 		    }
 		});
@@ -550,19 +564,21 @@ public class PlayerActivity extends Activity {
 		seekBar.setProgress(0);
 		
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			public void onProgressChanged(SeekBar s, int p, boolean b) {
+			public void onProgressChanged(final SeekBar s, final int p, final boolean b) {
 				// do nothing
 			}
 
-			public void onStartTrackingTouch(SeekBar s) {
+			public void onStartTrackingTouch(final SeekBar s) {
 				seeking = true;
 			}
 
-			public void onStopTrackingTouch(SeekBar s) {
+			public void onStopTrackingTouch(final SeekBar s) {
 				if (modPlayer != null) {
 					try {
 						modPlayer.seek(s.getProgress() * 100);
-					} catch (RemoteException e) { }
+					} catch (RemoteException e) {
+						Log.e(TAG, "Can't seek to time");
+					}
 				}
 				seeking = false;
 			}
@@ -571,9 +587,7 @@ public class PlayerActivity extends Activity {
 
 	
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		
+	public void onDestroy() {		
 		if (deleteDialog != null) {
 			deleteDialog.cancel();
 		}
@@ -581,13 +595,17 @@ public class PlayerActivity extends Activity {
 		if (modPlayer != null) {
 			try {
 				modPlayer.unregisterCallback(playerCallback);
-			} catch (RemoteException e) { }
+			} catch (RemoteException e) {
+				Log.e(TAG, "Can't unregister player callback");
+			}
 		}
 		
 		unregisterReceiver(screenReceiver);
 		
 		Log.i(TAG, "Unbind service");
-		unbindService(connection);	
+		unbindService(connection);
+		
+		super.onDestroy();
 	}
 	
 	/*
@@ -598,9 +616,9 @@ public class PlayerActivity extends Activity {
 		// Screen is about to turn off
 		if (ScreenReceiver.wasScreenOn) {
 			screenOn = false;
-		} else {
+		} //else {
 			// Screen state not changed
-		}
+		//}
 		super.onPause();
 	}
 
@@ -623,15 +641,19 @@ public class PlayerActivity extends Activity {
 			synchronized (modPlayer) {
 				try {
 					modPlayer.getModVars(modVars);
-				} catch (RemoteException e) { }
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't get module data");
+				}
 				
-				String name, type;
+				String name;
+				String type;
 				try {
 					name = modPlayer.getModName();
 					type = modPlayer.getModType();
 				} catch (RemoteException e) {
 					name = "";
 					type = "";
+					Log.e(TAG, "Can't get module name and type");
 				}
 				final int time = modVars[0];
 				/*int len = vars[1];
@@ -678,7 +700,9 @@ public class PlayerActivity extends Activity {
 	private void playNewMod(final String[] files, final int start) {      	 
        	try {
 			modPlayer.play(files, start, shuffleMode, loopListMode);
-		} catch (RemoteException e) { }
+		} catch (RemoteException e) {
+			Log.e(TAG, "Can't play module");
+		}
 	}
 	
 	private void stopPlayingMod() {
@@ -692,7 +716,9 @@ public class PlayerActivity extends Activity {
 		synchronized (modPlayer) {
 			try {
 				modPlayer.stop();
-			} catch (RemoteException e1) { }
+			} catch (RemoteException e1) {
+				Log.e(TAG, "Can't stop module");
+			}
 		}
 		
 		paused = false;

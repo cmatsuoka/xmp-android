@@ -4,6 +4,7 @@ import org.helllabs.android.xmp.ModInterface;
 
 import android.content.Context;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -11,7 +12,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+@SuppressWarnings("PMD.ShortVariable")
 public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callback, View.OnClickListener {
+	private static final String TAG = Viewer.class.getSimpleName();
 	protected Context context;
 	protected SurfaceHolder surfaceHolder;
 	protected int canvasHeight, canvasWidth;
@@ -21,11 +24,10 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	protected int rotation;
 	protected int screenSize;
 	private final GestureDetector gestureDetector;
-	private final View.OnTouchListener gestureListener;
 
 	// Touch tracking
 	protected float posX, posY, velX, velY;
-	protected Boolean isDown;
+	protected boolean isDown;
 	private int maxX, maxY;
 	
 	public static class Info {
@@ -57,8 +59,8 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 
 	private class MyGestureDetector extends SimpleOnGestureListener {
 
-		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-			synchronized (isDown) {
+		public boolean onScroll(final MotionEvent e1, final MotionEvent e2, final float distanceX, final float distanceY) {
+			synchronized (this) {
 				posX += distanceX;
 				posY += distanceY;
 
@@ -69,27 +71,26 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 			return true;
 		}
 
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+		public boolean onFling(final MotionEvent e1, final MotionEvent e2, final float velocityX, final float velocityY) {
 			velX = velocityX / 25;
 			velY = velocityY / 25;
 			return true;
 		}
 
-		public boolean onSingleTapUp(MotionEvent e) {
+		public boolean onSingleTapUp(final MotionEvent e) {
 			onClick((int)e.getX(), (int)e.getY());
 			return true;
 		}
 
-		public void onLongPress(MotionEvent e) {
+		public void onLongPress(final MotionEvent e) {
 			onLongClick((int)e.getX(), (int)e.getY());
 		}
 
-		public boolean onDown(MotionEvent e) {
+		public boolean onDown(final MotionEvent e) {
 			velX = velY = 0;		// stop fling
 			return true;
 		}
 	}
-
 
 	protected void updateScroll() {		// Hmpf, reinventing the wheel instead of using Scroller
 		posX -= velX;
@@ -123,7 +124,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 
 		// Gesture detection
 		gestureDetector = new GestureDetector(context, new MyGestureDetector());
-		gestureListener = new View.OnTouchListener() {
+		final View.OnTouchListener gestureListener = new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
 				return gestureDetector.onTouchEvent(event);
 			}
@@ -149,15 +150,15 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		}
 	}
 
-	protected void onLongClick(int x, int y) {
+	protected void onLongClick(final int x, final int y) {
 		// do nothing
 	}
 
-	public void setRotation(int n) {
-		rotation = n;
+	public void setRotation(final int val) {
+		rotation = val;
 	}
 
-	public void update(Info info) {
+	public void update(final Info info) {
 		updateScroll();
 	}
 
@@ -171,20 +172,22 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		for (int i = 0; i < chn; i++) {
 			try {
 				isMuted[i] = modPlayer.mute(i, -1) == 1;
-			} catch (RemoteException e) { }
+			} catch (RemoteException e) {
+				Log.e(TAG, "Can't read channel mute status");
+			}
 		}
 
 		posX = posY = 0;
 	}
 
 	public void setMaxX(final int x) {
-		synchronized (isDown) {
+		synchronized (this) {
 			maxX = x;
 		}
 	}
 
 	public void setMaxY(final int y) {		
-		synchronized (isDown) {
+		synchronized (this) {
 			maxY = y;
 		}
 	}

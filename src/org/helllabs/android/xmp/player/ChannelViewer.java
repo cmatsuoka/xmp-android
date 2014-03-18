@@ -12,9 +12,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.Surface;
 
+@SuppressWarnings("PMD.ShortVariable")
 public class ChannelViewer extends Viewer {
+	private static final String TAG = ChannelViewer.class.getSimpleName(); 
 	private final Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint, scopeMutePaint;
 	private final int fontSize, fontHeight, fontWidth;
 	private final int font2Size, font2Height, font2Width;
@@ -36,7 +39,7 @@ public class ChannelViewer extends Viewer {
 	private int[] keyRow = new int[64];
 	
 	@Override
-	public void setup(ModInterface modPlayer, int[] modVars) {
+	public void setup(final ModInterface modPlayer, final int[] modVars) {
 		super.setup(modPlayer, modVars);
 
 		final int chn = modVars[3];
@@ -44,11 +47,14 @@ public class ChannelViewer extends Viewer {
 		
 		try {
 			insName = modPlayer.getInstruments();
-		} catch (RemoteException e) { }
+		} catch (RemoteException e) {
+			Log.e(TAG, "Can't get instrument name");
+		}
 
 		holdKey = new int[chn];
 		channelNumber = new String[chn];
 		
+		// This is much faster than String.format
 		final char[] c = new char[2];
 		for (int i = 0; i < chn; i++) {
 			Util.to2d(c, i + 1);
@@ -65,19 +71,19 @@ public class ChannelViewer extends Viewer {
 	public void update(Info info) {
 		super.update(info);
 		
-		Canvas c = null;
+		Canvas canvas = null;
 
 		try {
-			c = surfaceHolder.lockCanvas(null);
+			canvas = surfaceHolder.lockCanvas(null);
 			synchronized (surfaceHolder) {
-				doDraw(c, modPlayer, info);
+				doDraw(canvas, modPlayer, info);
 			}
 		} finally {
 			// do this in a finally so that if an exception is thrown
 			// during the above, we don't leave the Surface in an
 			// inconsistent state
-			if (c != null) {
-				surfaceHolder.unlockCanvasAndPost(c);
+			if (canvas != null) {
+				surfaceHolder.unlockCanvasAndPost(canvas);
 			}
 		}
 	}
@@ -107,7 +113,7 @@ public class ChannelViewer extends Viewer {
 		scopeLeft += canvasWidth / cols;
 		
 		if (x >= scopeLeft && x <= scopeLeft + scopeWidth) {
-			int scopeNum = (y + (int)posY - fontHeight) / (4 * fontHeight) + ((chn + 1) / cols);
+			int scopeNum = (y + (int)posY - fontHeight) / (4 * fontHeight) + (chn + 1) / cols;
 			if (scopeNum >= chn) {
 				scopeNum = -1;
 			}	
@@ -118,7 +124,7 @@ public class ChannelViewer extends Viewer {
 	}
 	
 	@Override
-	public void onClick(int x, int y) {
+	public void onClick(final int x, final int y) {
 
 		// Check if clicked on scopes
 		final int n = findScope(x, y);
@@ -126,8 +132,10 @@ public class ChannelViewer extends Viewer {
 		if (n >= 0) {
 			try {
 				modPlayer.mute(n, isMuted[n] ? 0 : 1);
-				isMuted[n] = !isMuted[n];
-			} catch (RemoteException e) { }
+				isMuted[n] ^= true;
+			} catch (RemoteException e) {
+				Log.e(TAG, "Can't mute channel " + n);
+			}
 		} else {
 			super.onClick(x, y);
 		}
@@ -156,14 +164,18 @@ public class ChannelViewer extends Viewer {
 						modPlayer.mute(i, 0);
 						isMuted[i] = false;
 					}
-				} catch (RemoteException e) { }
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't mute channels");
+				}
 			} else {
 				try {
 					for (int i = 0; i < chn; i++) {
 						modPlayer.mute(i, i != n ? 1 : 0);
 						isMuted[i] = i != n;
 					}
-				} catch (RemoteException e) { }
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't unmute channel " + n);
+				}
 			}
 		} else {
 			super.onLongClick(x, y);
@@ -171,7 +183,7 @@ public class ChannelViewer extends Viewer {
 	}
 
 	@Override
-	public void setRotation(int n) {
+	public void setRotation(final int n) {
 		super.setRotation(n);
 		
 		// Should use canvasWidth but it's not updated yet
@@ -278,7 +290,9 @@ public class ChannelViewer extends Viewer {
 
 					modPlayer.getSampleData(key >= 0, ins, holdKey[i], period, i, scopeWidth, buffer);
 	
-				} catch (RemoteException e) { }
+				} catch (RemoteException e) {
+					// fail silently
+				}
 				
 				final int h = scopeHeight / 2;
 				for (int j = 0; j < scopeWidth; j++) {

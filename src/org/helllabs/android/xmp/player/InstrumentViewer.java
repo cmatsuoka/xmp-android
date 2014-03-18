@@ -10,8 +10,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
+import android.util.Log;
 
+@SuppressWarnings("PMD.ShortVariable")
 public class InstrumentViewer extends Viewer {
+	private static final String TAG = InstrumentViewer.class.getSimpleName();
 	private final Paint[] insPaint, barPaint;
 	private final int fontSize, fontHeight, fontWidth;
 	private String[] insName;
@@ -25,7 +28,9 @@ public class InstrumentViewer extends Viewer {
 		
 		try {
 			insName = modPlayer.getInstruments();
-		} catch (RemoteException e) { }
+		} catch (RemoteException e) {
+			Log.e(TAG, "Can't get instrument name");
+		}
 		
 		setMaxY(insNum * fontHeight + fontHeight / 2);
 	}
@@ -105,7 +110,7 @@ public class InstrumentViewer extends Viewer {
 		
 		insPaint = new Paint[8];
 		for (int i = 0; i < 8; i++) {
-			int val = 120 + 10 * i;
+			final int val = 120 + 10 * i;
 			insPaint[i] = new Paint();
 			insPaint[i].setARGB(255, val, val, val);
 			insPaint[i].setTypeface(Typeface.MONOSPACE);

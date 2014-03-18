@@ -13,6 +13,7 @@ import android.os.RemoteException;
 
 // http://developer.android.com/guide/topics/graphics/2d-graphics.html
 
+@SuppressWarnings("PMD.ShortVariable")
 public class PatternViewer extends Viewer {
 	private final Paint headerPaint, headerTextPaint, notePaint, insPaint;
 	private final Paint barPaint, muteNotePaint, muteInsPaint;
@@ -40,13 +41,13 @@ public class PatternViewer extends Viewer {
 		setMaxX((chn * 6 + 2) * fontWidth);
 	}
 
-	@Override
-	public void setRotation(final int val) {
-		super.setRotation(val);
-	}
+	//@Override
+	//public void setRotation(final int val) {
+	// 	super.setRotation(val);
+	//}
 
 	@Override
-	public void update(Info info) {
+	public void update(final Info info) {
 		super.update(info);
 
 		final int row = info.values[2];
@@ -111,7 +112,8 @@ public class PatternViewer extends Viewer {
 		for (int i = 1; i < lines; i++) {
 			final int lineInPattern = i + row - barLine + 1; 
 			final int y = (i + 1) * fontHeight;
-			Paint paint, paint2;
+			Paint paint;
+			Paint paint2;
 			int x;
 
 			if (lineInPattern < 0 || lineInPattern >= numRows) {
@@ -131,7 +133,9 @@ public class PatternViewer extends Viewer {
 					// from a module with pattern data from a newly loaded one.
 
 					modPlayer.getPatternRow(pat, lineInPattern, rowNotes, rowInstruments);
-				} catch (RemoteException e) { }
+				} catch (RemoteException e) {
+					// fail silenty
+				}
 
 				x = (3 + j * 6) * fontWidth - (int)posX;
 
