@@ -2,17 +2,17 @@ package org.helllabs.android.xmp;
 
 
 
-public class Xmp {
-	public static final int XMP_PLAYER_AMP = 0;			/* Amplification factor */
-	public static final int XMP_PLAYER_MIX = 1;			/* Stereo mixing */
-	public static final int XMP_PLAYER_INTERP = 2;		/* Interpolation type */
-	public static final int XMP_PLAYER_DSP = 3;			/* DSP effect flags */
+public class Xmp {	// NOPMD
+	public static final int XMP_PLAYER_AMP = 0;			// Amplification factor
+	public static final int XMP_PLAYER_MIX = 1;			// Stereo mixing
+	public static final int XMP_PLAYER_INTERP = 2;		// Interpolation type
+	public static final int XMP_PLAYER_DSP = 3;			// DSP effect flags
 
-	public static final int XMP_INTERP_NEAREST = 0;		/* Nearest neighbor */
-	public static final int XMP_INTERP_LINEAR = 1;		/* Linear (default) */
-	public static final int XMP_INTERP_SPLINE = 2;		/* Cubic spline */
+	public static final int XMP_INTERP_NEAREST = 0;		// Nearest neighbor		// NOPMD
+	public static final int XMP_INTERP_LINEAR = 1;		// Linear (default)
+	public static final int XMP_INTERP_SPLINE = 2;		// Cubic spline
 	
-	public static final int XMP_DSP_LOWPASS = 1 << 0;	/* Lowpass filter effect */
+	public static final int XMP_DSP_LOWPASS = 1 << 0;	// Lowpass filter effect
 	
 	public static final int XMP_FORMAT_MONO = 1 << 2;
 	

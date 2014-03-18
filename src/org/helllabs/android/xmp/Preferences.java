@@ -22,7 +22,7 @@ public class Preferences extends PreferenceActivity {
 	public static final File DATA_DIR = new File(SD_DIR, "Xmp for Android");
 	public static final File CACHE_DIR = new File(SD_DIR, "Android/data/org.helllabs.android.xmp/cache/");
 
-	public static final String DEFAULT_MEDIA_PATH = SD_DIR.toString() + "/mod";
+	public static final String DEFAULT_MEDIA_PATH = SD_DIR.toString() + "/mod";		// NOPMD
 	public static final String MEDIA_PATH = "media_path";
 	public static final String VOL_BOOST = "vol_boost";
 	public static final String CHANGELOG_VERSION = "changelog_version";
@@ -47,19 +47,19 @@ public class Preferences extends PreferenceActivity {
 	private String oldPath;
 
 	@Override
-	protected void onCreate(Bundle icicle) {
+	protected void onCreate(final Bundle icicle) {
 		super.onCreate(icicle);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		oldPath = prefs.getString(MEDIA_PATH, DEFAULT_MEDIA_PATH);
 		addPreferencesFromResource(R.xml.preferences);
 
-		PreferenceScreen soundScreen = (PreferenceScreen)findPreference("sound_screen");
+		final PreferenceScreen soundScreen = (PreferenceScreen)findPreference("sound_screen");
 		soundScreen.setEnabled(!PlayerService.isAlive);
 
-		Preference clearCache = (Preference)findPreference("clear_cache");
+		final Preference clearCache = (Preference)findPreference("clear_cache");
 		clearCache.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			public boolean onPreferenceClick(Preference preference) {
+			public boolean onPreferenceClick(final Preference preference) {
 				try {
 					deleteCache(CACHE_DIR);
 					Message.toast(getBaseContext(), getString(R.string.cache_clear));
@@ -73,10 +73,9 @@ public class Preferences extends PreferenceActivity {
 
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) { 	
+	public boolean onKeyDown(final int keyCode, final KeyEvent event) { 	
 		if(event.getAction() == KeyEvent.ACTION_DOWN) {
-			switch (keyCode) {
-			case KeyEvent.KEYCODE_BACK: 
+			if (keyCode == KeyEvent.KEYCODE_BACK) { 
 				final String newPath = prefs.getString(MEDIA_PATH, DEFAULT_MEDIA_PATH);
 				setResult(newPath.equals(oldPath) ? RESULT_CANCELED : RESULT_OK);        				
 				finish();   			
@@ -87,12 +86,14 @@ public class Preferences extends PreferenceActivity {
 	}
 
 	public static void deleteCache(final File file) throws IOException {
-		if (!file.exists())
+		if (!file.exists()) {
 			return;
+		}
 
 		if (file.isDirectory()) {
-			for (final File cacheFile : file.listFiles())
+			for (final File cacheFile : file.listFiles()) {
 				deleteCache(cacheFile);
+			}
 		}
 		file.delete();
 	}

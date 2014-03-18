@@ -5,7 +5,7 @@ public class ModInfo {
 	public String type;
 	
 	public ModInfo() {
-		
+		// empty
 	}
 	
 	public ModInfo(final String name, final String type) {

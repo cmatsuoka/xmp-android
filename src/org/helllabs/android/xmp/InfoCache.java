@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.helllabs.android.xmp.browser.FileUtils;
 
 
-public final class InfoCache {
+public final class InfoCache { // NOPMD
 	
 	private InfoCache() {
 		
@@ -65,8 +65,31 @@ public final class InfoCache {
 	public static boolean testModule(final String filename) {
 		return testModule(filename, new ModInfo());
 	}
+	
+	private static boolean checkIfCacheValid(final File file, final File cacheFile, final ModInfo info) throws IOException {
+		boolean ret = false;
+		final BufferedReader reader = new BufferedReader(new FileReader(cacheFile), 512);
+		
+		final String line = reader.readLine();
+		if (line != null) {
+			final int size = Integer.parseInt(line);
+			if (size == file.length()) {
+				info.name = reader.readLine();
+				if (info.name != null) {
+					reader.readLine();				// skip filename
+					info.type = reader.readLine();
+					if (info.type != null) {
+						ret = true;
+					}
+				}
+			}
+		}
 
-	public static boolean testModule(String filename, ModInfo info) {
+		reader.close();
+		return ret;
+	}
+
+	public static boolean testModule(final String filename, final ModInfo info) {	// NOPMD
 		if (!Preferences.CACHE_DIR.isDirectory() && !Preferences.CACHE_DIR.mkdirs()) {
 			// Can't use cache
 			return Xmp.testModule(filename, info);
@@ -75,7 +98,6 @@ public final class InfoCache {
 		final File file = new File(filename);
 		final File cacheFile = new File(Preferences.CACHE_DIR, filename + ".cache");
 		final File skipFile = new File(Preferences.CACHE_DIR, filename + ".skip");
-		String line;
 
 		try {
 			// If cache file exists and size matches, file is mod
@@ -86,24 +108,11 @@ public final class InfoCache {
 					skipFile.delete();
 				}
 
-				final BufferedReader in = new BufferedReader(new FileReader(cacheFile), 512);
-				line = in.readLine();
-				if (line != null) {
-					final int size = Integer.parseInt(line);
-					if (size == file.length()) {
-						info.name = in.readLine();
-						if (info.name != null) {
-							in.readLine();				/* skip filename */
-							info.type = in.readLine();
-							if (info.type != null) {
-								in.close();
-								return true;
-							}
-						}
-					}
+				// Check if our cache data is good
+				if (checkIfCacheValid(file, cacheFile, info)) {
+					return true;
 				}
-
-				in.close();
+				
 				cacheFile.delete();		// Invalid or outdated cache file
 			}
 
