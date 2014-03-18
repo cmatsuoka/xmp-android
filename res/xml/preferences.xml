@@ -153,12 +153,12 @@
       android:summary="@string/preferences_keep_screen_on_summary"
       android:defaultValue="false"/>
     
-    <CheckBoxPreference
+    <!-- <CheckBoxPreference
       android:key="dark_theme"
       android:persistent="true"
       android:title="@string/preferences_dark_theme_title"
       android:summary="@string/preferences_dark_theme_summary"
-      android:defaultValue="false" />
+      android:defaultValue="false" /> -->
     
     <PreferenceCategory
       android:title="@string/preferences_category_experimental">
