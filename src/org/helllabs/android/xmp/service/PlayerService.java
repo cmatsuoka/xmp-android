@@ -2,6 +2,7 @@ package org.helllabs.android.xmp.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Locale;
 
 import org.helllabs.android.xmp.InfoCache;
 import org.helllabs.android.xmp.ModInterface;
@@ -116,7 +117,7 @@ public class PlayerService extends Service {
 		notifier = new Notifier();
 		
 		final XmpPhoneStateListener listener = new XmpPhoneStateListener(this);
-		final TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+		final TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); // NOPMD
 		tm.listen(listener, XmpPhoneStateListener.LISTEN_CALL_STATE);
 		
 		audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
@@ -187,7 +188,7 @@ public class PlayerService extends Service {
 	
 	private class PlayRunnable implements Runnable {
     	public void run() {
-    		final short buffer[] = new short[bufferSize];
+    		final short buffer[] = new short[bufferSize]; // NOPMD
     		returnToPrev = false;
     		
     		do {    			
@@ -212,7 +213,7 @@ public class PlayerService extends Service {
 	       		
 	       		returnToPrev = false;
 
-	       		notifier.notification(xmp.getModName(), queue.index());
+	       		notifier.notification(xmp.getModName(), queue.getIndex());
 	       		isLoaded = true;
 	       		
 	       		// Unmute all channels
@@ -224,7 +225,9 @@ public class PlayerService extends Service {
 	        	for (int j = 0; j < numClients; j++) {
 	        		try {
 	    				callbacks.getBroadcastItem(j).newModCallback(fileName, xmp.getInstruments());
-	    			} catch (RemoteException e) { }
+	    			} catch (RemoteException e) {
+	    				Log.e(TAG, "Error notifying new module to client");
+	    			}
 	        	}
 	        	callbacks.finishBroadcast();
 
@@ -294,7 +297,9 @@ public class PlayerService extends Service {
 	        	for (int j = 0; j < numClients; j++) {
 	        		try {
 	    				callbacks.getBroadcastItem(j).endModCallback();
-	    			} catch (RemoteException e) { }
+	    			} catch (RemoteException e) {
+	    				Log.e(TAG, "Error notifying end of module to client");
+	    			}
 	        	}
 	        	callbacks.finishBroadcast();
 	        	
@@ -332,7 +337,9 @@ public class PlayerService extends Service {
 	    for (int i = 0; i < numClients; i++) {
 	    	try {
 				callbacks.getBroadcastItem(i).endPlayCallback();
-			} catch (RemoteException e) { }
+			} catch (RemoteException e) {
+				Log.e(TAG, "Error notifying end of play to client");
+			}
 	    }	    
 	    callbacks.finishBroadcast();
 
@@ -351,7 +358,7 @@ public class PlayerService extends Service {
     }
 	
 	private class Notifier {
-	    private final NotificationManager nm;
+	    private final NotificationManager nm;	// NOPMD
 	    private final PendingIntent contentIntent;
 	    private static final int NOTIFY_ID = R.layout.player;
 		private String title;
@@ -506,13 +513,13 @@ public class PlayerService extends Service {
 			return xmp.getInstruments();
 		}
 		
-		public void getPatternRow(int pat, int row, byte[] rowNotes, byte[] rowInstruments) {
+		public void getPatternRow(final int pat, final int row, final byte[] rowNotes, final byte[] rowInstruments) {
 			if (isAlive) {
 				xmp.getPatternRow(pat, row, rowNotes, rowInstruments);
 			}
 		}
 		
-		public int mute(int chn, int status) {
+		public int mute(final int chn, final int status) {
 			return xmp.mute(chn, status);
 		}
 
@@ -527,15 +534,15 @@ public class PlayerService extends Service {
 		
 		// Callback
 		
-		public void registerCallback(PlayerCallback cb) {
-        	if (cb != null) {
-            	callbacks.register(cb);
+		public void registerCallback(final PlayerCallback callback) {
+        	if (callback != null) {
+            	callbacks.register(callback);
         	}
         }
         
-        public void unregisterCallback(PlayerCallback cb) {
-            if (cb != null) {
-            	callbacks.unregister(cb);
+        public void unregisterCallback(final PlayerCallback callback) {
+            if (callback != null) {
+            	callbacks.unregister(callback);
             }
         }
 	};

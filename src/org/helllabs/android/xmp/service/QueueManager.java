@@ -5,13 +5,13 @@ import java.util.Arrays;
 
 
 public class QueueManager {
-	private ArrayList<String> array;
-	private RandomIndex ridx;
+	private final ArrayList<String> array;
+	private final RandomIndex ridx;
 	private int index;
-	private boolean shuffleMode;
-	private boolean loopListMode;
+	private final boolean shuffleMode;
+	private final boolean loopListMode;
     
-    public QueueManager(String[] files, int start, boolean shuffle, boolean loop) {
+    public QueueManager(final String[] files, int start, final boolean shuffle, final boolean loop) {
     	if (start >= files.length) {
     		start = files.length - 1;
     	}
@@ -22,11 +22,12 @@ public class QueueManager {
     	loopListMode = loop;
     }
     
-    public void add(String[] files) {
+    public void add(final String[] files) {
     	if (files.length > 0) {
     		ridx.extend(files.length, index + 1);
-    		for (String s : files)
-    			array.add(s);
+    		for (final String name : files) {
+    			array.add(name);
+    		}
     	}
     }
     
@@ -47,17 +48,14 @@ public class QueueManager {
     	return true;
     }
     
-    public int index() {
-    	return index;
-    }
-    
     public void previous() {
     	index -= 2;
     	if (index < -1) {
-    		if (loopListMode)
+    		if (loopListMode) {
     			index += array.size();
-    		else
+    		} else {
     			index = -1;
+    		}
     	}
     }
     
@@ -65,12 +63,16 @@ public class QueueManager {
     	index = -1;
     }
     
-    public void setIndex(int n) {
-    	index = n;
+    public int getIndex() {
+    	return index;
+    }
+    
+    public void setIndex(final int num) {
+    	index = num;
     }
     
     public String getFilename() {
-    	int idx = shuffleMode ? ridx.getIndex(index) : index;
+    	final int idx = shuffleMode ? ridx.getIndex(index) : index;
     	return array.get(idx);
     }
 }

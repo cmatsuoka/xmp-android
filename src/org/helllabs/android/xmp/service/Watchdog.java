@@ -5,18 +5,18 @@ public class Watchdog implements Runnable {
 	private boolean running;
 	private Thread thread;
 	private onTimeoutListener listener;
-	private int timeout;
+	private final int timeout;
 	
-	public Watchdog(int timeout) {
+	public Watchdog(final int timeout) {
 		this.timeout = timeout; 
 	}
 	
 	public interface onTimeoutListener {
-		abstract void onTimeout();
+		void onTimeout();
 	}
 	
-	public void setOnTimeoutListener(onTimeoutListener l) {
-		listener = l;
+	public void setOnTimeoutListener(final onTimeoutListener listener) {
+		this.listener = listener;
 	}
 	
 	public void run() {

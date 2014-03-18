@@ -6,29 +6,29 @@ import java.util.Random;
 
 public class RandomIndex {
 	private int[] idx;
-	private Random random;
+	private final Random random;
 	
-	public RandomIndex(int n) {
-		idx = new int[n];
+	public RandomIndex(final int size) {
+		idx = new int[size];
 		
 		random = new Random();
-		Date date = new Date();
+		final Date date = new Date();
 		random.setSeed(date.getTime());
 		
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < size; i++) {
 			idx[i] = i;
 		}
 		
-		randomize(0, n);
+		randomize(0, size);
 	}
 
-	public void randomize(int start, int length) {
-		int end = start + length;
+	public void randomize(final int start, final int length) {
+		final int end = start + length;
 		for (int i = start; i < end; i++) {				
-			int r = start + random.nextInt(length);
-			int temp = idx[i];
-			idx[i] = idx[r];
-			idx[r] = temp;
+			final int num = start + random.nextInt(length);
+			final int temp = idx[i];
+			idx[i] = idx[num];
+			idx[num] = temp;
 		}
 	}
 	
@@ -36,17 +36,18 @@ public class RandomIndex {
 		randomize(0, idx.length);
 	}
 	
-	public void extend(int amount, int index) {
-		int length = idx.length;
+	public void extend(final int amount, final int index) {
+		final int length = idx.length;
 		int[] newIdx = new int[length + amount];
 		System.arraycopy(idx, 0, newIdx, 0, length);
-		for (int i = length; i < length + amount; i++)
+		for (int i = length; i < length + amount; i++) {
 			newIdx[i] = i;
+		}
 		idx = newIdx;
 		randomize(index, idx.length - index);
 	}
 	
-	public int getIndex(int n) {
-		return idx[n];
+	public int getIndex(final int num) {
+		return idx[num];
 	}
 }

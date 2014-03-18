@@ -7,14 +7,15 @@ import android.util.Log;
 
 
 public class XmpPhoneStateListener extends PhoneStateListener {
-	PlayerService service;
+	private final PlayerService service;
 	
-	public XmpPhoneStateListener(PlayerService service) {
+	public XmpPhoneStateListener(final PlayerService service) {
+		super();
 		this.service = service;
 	}
 	
 	@Override
-	public void onCallStateChanged(int state, String incomingNumber) {
+	public void onCallStateChanged(final int state, final String incomingNumber) {
 		Log.i("Xmp Listener", "Call state changed: " + state);
 		service.autoPause(state != TelephonyManager.CALL_STATE_IDLE);
 	}
