@@ -93,7 +93,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 			}
 		});
 	}
-	
+
 	// Item click	
 	protected void setOnItemClickListener(ListView list) {
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -102,7 +102,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 			public void onItemClick(AdapterView<?> list, View view, int position, long id) {
 				final String filename = modList.get(position).filename;
 				final int mode = Integer.parseInt(prefs.getString(Preferences.PLAYLIST_MODE, "1"));
-				
+
 				/* Test module again if invalid, in case a new file format is added to the
 				 * player library and the file was previously unrecognized and cached as invalid.
 				 */
@@ -132,17 +132,17 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 	public void playModule(final List<PlaylistInfo> list) {
 		playModule(list, 0, shuffleMode);
 	}
-	
+
 	// Play all modules in list with start position, no shuffle
 	public void playModule(final List<PlaylistInfo> list, final int position) {
 		playModule(list, position, false);
 	}
-	
+
 	// Play modules in list starting at the specified one
 	public void playModule(final List<PlaylistInfo> list, int start, final boolean shuffle) {
 		int num = 0;
 		int dir = 0;
-		
+
 		for (final PlaylistInfo info : list) {
 			if ((new File(info.filename).isDirectory())) {
 				dir++;
@@ -153,17 +153,17 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		if (num == 0) {
 			return;
 		}
-		
+
 		if (start < dir) {
 			start = dir;
 		}
-		
+
 		if (start >= (dir + num)) {
 			return;
 		}
 
 		final String[] mods = new String[num];
-		
+
 		int i = 0; // NOPMD
 		for (final PlaylistInfo info : list) {
 			if ((new File(info.filename).isFile())) {
@@ -180,7 +180,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		final String[] mods = { mod };
 		playModule(mods, 0, shuffleMode);
 	}
-	
+
 	// Play all modules in list and honor default shuffle mode
 	public void playModule(final String[] mods) {
 		playModule(mods, 0, shuffleMode);
@@ -194,7 +194,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 				Message.toast(this, "Play only this module");
 			}
 		}
-		
+
 		final Intent intent = new Intent(this, PlayerActivity.class);
 		intent.putExtra("files", mods);
 		intent.putExtra("shuffle", shuffle);
@@ -242,7 +242,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		final String[] list = new String[size];
 		int realSize = 0;
 		boolean invalid = false;
-		
+
 		for (int i = 0; i < size; i++) {
 			final String filename = modList.get(start + i).filename;
 			if (InfoCache.testModule(filename)) {
@@ -251,17 +251,17 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 				invalid = true;
 			}
 		}
-		
+
 		if (invalid) {
 			Message.toast(context, "Only valid files were sent to player");
 		}
-		
+
 		if (realSize > 0) {
 			final Intent service = new Intent(this, PlayerService.class);
-			
+
 			final String[] realList = new String[realSize];
 			System.arraycopy(list,  0, realList, 0, realSize);
-		
+
 			if (PlayerService.isAlive) {
 				addList = realList;		
 				bindService(service, connection, 0);

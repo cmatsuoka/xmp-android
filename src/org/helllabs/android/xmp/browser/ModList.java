@@ -13,13 +13,14 @@ import org.helllabs.android.xmp.ModInfo;
 import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.R;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -34,8 +35,6 @@ import android.widget.TextView;
 public class ModList extends PlaylistActivity {
 	//private boolean isBadDir = false;
 	private boolean isPathMenu;
-	private ProgressDialog progressDialog;
-	private final Handler handler = new Handler();
 	private TextView curPath;
 	private ImageButton upButton;
 	private String currentDir;
@@ -47,6 +46,48 @@ public class ModList extends PlaylistActivity {
 	private Context context;
 	private int textColor;
 	private ListView listView;
+	
+	// Cross-fade
+	private View contentView;
+	private View progressView;
+	private int animationDuration;
+
+	@TargetApi(12)
+	protected void crossfade() {
+
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB_MR1) {
+
+			// Set the content view to 0% opacity but visible, so that it is visible
+			// (but fully transparent) during the animation.
+			contentView.setAlpha(0f);
+			contentView.setVisibility(View.VISIBLE);
+
+			// Animate the content view to 100% opacity, and clear any animation
+			// listener set on the view.
+			contentView.animate()
+				.alpha(1f)
+				.setDuration(animationDuration)
+				.setListener(null);
+
+			// Animate the loading view to 0% opacity. After the animation ends,
+			// set its visibility to GONE as an optimization step (it won't
+			// participate in layout passes, etc.)
+			progressView.animate()
+				.alpha(0f)
+				.setDuration(animationDuration)
+				.setListener(new AnimatorListenerAdapter() {
+					@Override
+					public void onAnimationEnd(Animator animation) {
+						progressView.setVisibility(View.GONE);
+					}
+				});
+		} else {
+			progressView.setVisibility(View.GONE);
+			contentView.setVisibility(View.VISIBLE);
+		}
+	}
+
+
 
 	/*
 	 * Add directory to playlist
@@ -170,6 +211,12 @@ public class ModList extends PlaylistActivity {
 
 		setTitle("File Browser");
 
+		// Set up crossfade
+		contentView = findViewById(R.id.modlist_content);
+		progressView = findViewById(R.id.modlist_spinner);
+		contentView.setVisibility(View.GONE);
+		animationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
 		curPath = (TextView)findViewById(R.id.current_path);
 		registerForContextMenu(curPath);
 
@@ -223,14 +270,14 @@ public class ModList extends PlaylistActivity {
 			alertDialog.setTitle("Path not found");
 			alertDialog.setMessage(media_path + " not found. " +
 					"Create this directory or change the module path.");
-			alertDialog.setButton("Create", new DialogInterface.OnClickListener() {
+			alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Create", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					examples.install(media_path,
 							prefs.getBoolean(Preferences.EXAMPLES, true));
 					updateModlist(media_path);
 				}
 			});
-			alertDialog.setButton2("Back", new DialogInterface.OnClickListener() {
+			alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Back", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					finish();
 				}
@@ -268,72 +315,56 @@ public class ModList extends PlaylistActivity {
 		currentDir = path;
 		curPath.setText(path);
 
-		//isBadDir = false;
-		progressDialog = ProgressDialog.show(this,      
-				"Please wait", "Scanning module files...", true);
-
 		final boolean titlesInBrowser = prefs.getBoolean(Preferences.TITLES_IN_BROWSER, false);
 
 		parentNum = directoryNum = 0;
 		final File modDir = new File(path);
-		new Thread() { 
-			public void run() {
-				/* if (!path.equals("/")) {
-					modList.add(new PlaylistInfo("..", "Parent directory", path + "/..", R.drawable.parent));
-					parentNum++;
-					directoryNum++;
-				} */
 
-				final List<PlaylistInfo> list = new ArrayList<PlaylistInfo>();
-				for (final File file : modDir.listFiles(new DirFilter())) {
-					directoryNum++;
-					list.add(new PlaylistInfo(file.getName(), "Directory",
-							file.getAbsolutePath(), R.drawable.folder));
+		final List<PlaylistInfo> list = new ArrayList<PlaylistInfo>();
+		final File[] dirFiles = modDir.listFiles(new DirFilter());
+		for (final File file : dirFiles) {
+			directoryNum++;
+			list.add(new PlaylistInfo(file.getName(), "Directory",
+					file.getAbsolutePath(), R.drawable.folder));
+		}
+		Collections.sort(list);
+		modList.addAll(list);
+
+		final ModInfo info = new ModInfo();
+
+		list.clear();
+		final File[] modFiles = modDir.listFiles(new ModFilter());
+		for (final File file : modFiles) {
+			final String filename = path + "/" + file.getName();
+			final String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
+					DateFormat.MEDIUM).format(file.lastModified());
+
+			if (titlesInBrowser && !file.isDirectory()) {
+				if (InfoCache.testModule(filename, info)) {
+					list.add(new PlaylistInfo(info.name, info.type, filename));
 				}
-				Collections.sort(list);
-				modList.addAll(list);
-
-				final ModInfo info = new ModInfo();
-
-				list.clear();
-				for (final File file : modDir.listFiles(new ModFilter())) {
-					final String filename = path + "/" + file.getName();
-					final String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
-							DateFormat.MEDIUM).format(file.lastModified());
-
-					if (titlesInBrowser && !file.isDirectory()) {
-						if (InfoCache.testModule(filename, info)) {
-							list.add(new PlaylistInfo(info.name, info.type, filename));
-						}
-					} else {
-						final String name = file.getName();
-						final String comment = date + String.format(" (%d kB)", file.length() / 1024);
-						list.add(new PlaylistInfo(name, comment, filename));
-					}
-				}
-				Collections.sort(list);
-				modList.addAll(list);
-
-				final PlaylistInfoAdapter playlist = new PlaylistInfoAdapter(ModList.this,
-						R.layout.song_item, R.id.info, modList, false);
-
-				/* This one must run in the UI thread */
-				handler.post(new Runnable() {
-					public void run() {
-						listView.setAdapter(playlist);
-					}
-				});
-
-				progressDialog.dismiss();
+			} else {
+				final String name = file.getName();
+				final String comment = date + String.format(" (%d kB)", file.length() / 1024);
+				list.add(new PlaylistInfo(name, comment, filename));
 			}
-		}.start();
+		}
+		Collections.sort(list);
+		modList.addAll(list);
+
+		final PlaylistInfoAdapter playlist = new PlaylistInfoAdapter(ModList.this,
+				R.layout.song_item, R.id.info, modList, false);
+
+		listView.setAdapter(playlist);
+
+		crossfade();
 	}
 
 	// Playlist context menu
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		if (v.equals(curPath)) {
+	public void onCreateContextMenu(final ContextMenu menu, final View view, final ContextMenuInfo menuInfo) {
+		if (view.equals(curPath)) {
 			isPathMenu = true;
 			menu.setHeaderTitle("All files");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
@@ -376,7 +407,7 @@ public class ModList extends PlaylistActivity {
 	}
 
 	@Override
-	public boolean onContextItemSelected(MenuItem item) {
+	public boolean onContextItemSelected(final MenuItem item) {
 		final int id = item.getItemId();
 
 		if (isPathMenu) {
@@ -448,9 +479,9 @@ public class ModList extends PlaylistActivity {
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.msg_select_playlist)
-				.setPositiveButton(android.R.string.ok, listener)
-				.setNegativeButton(android.R.string.cancel, listener)
-				.setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
+		.setPositiveButton(android.R.string.ok, listener)
+		.setNegativeButton(android.R.string.cancel, listener)
+		.setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				playlistSelection = which;
 			}

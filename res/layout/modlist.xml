@@ -1,82 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:gravity="top"
-	android:layout_weight="1.0"
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1.0"
+    android:gravity="top"
+    android:orientation="vertical" >
 
-	<LinearLayout android:id="@+id/status_area"
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		style="@style/StatusTheme">
+    <LinearLayout
+        android:id="@+id/status_area"
+        style="@style/StatusTheme"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
-		<TextView android:id="@+id/current_path"
-			android:layout_weight="1.0"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="12dp"
-			android:layout_marginBottom="12dp"
-			android:layout_marginLeft="2dp"
-			android:longClickable="true"
-			android:focusable="true"
-			android:textSize="16sp"
-			android:textStyle="bold" />
+        <TextView
+            android:id="@+id/current_path"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1.0"
+            android:focusable="true"
+            android:longClickable="true"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-		<ImageButton android:id="@+id/up_button"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="5dp"
-			android:layout_marginRight="2dp"
-			android:layout_marginLeft="2dp"
-			android:contentDescription="@string/button_parent_dir"
-			android:background="@android:color/transparent"
-			android:src="@drawable/parent" />
+        <ImageButton
+            android:id="@+id/up_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/button_parent_dir"
+            android:src="@drawable/parent" />
+    </LinearLayout>
 
-	</LinearLayout>
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0" >
 
-	<LinearLayout android:gravity="top"
-		android:layout_weight="1.0"
-		android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="0dp">
-		
-		<ListView android:id="@+id/modlist_listview"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:fastScrollEnabled="true"
-			android:drawSelectorOnTop="false" />
+        <LinearLayout
+            android:id="@+id/modlist_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="top"
+            android:orientation="vertical" >
 
-		<TextView android:id="@id/android:empty"
-			android:gravity="top"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:text="No modules found." />
-	</LinearLayout>
+            <ListView
+                android:id="@+id/modlist_listview"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:drawSelectorOnTop="false"
+                android:fastScrollEnabled="true" />
 
-	<LinearLayout android:gravity="bottom"
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
-		<ImageButton android:id="@+id/play_all"
-			android:layout_weight="0.34"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			style="@style/ButtonTheme"
-			android:contentDescription="@string/button_play_all" />
-		<ImageButton android:id="@+id/toggle_loop"
-			android:layout_weight="0.33"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			style="@style/ButtonTheme"
-			android:contentDescription="@string/button_toggle_loop" />
-		<ImageButton android:id="@+id/toggle_shuffle"
-			android:layout_weight="0.33"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			style="@style/ButtonTheme"
-			android:contentDescription="@string/button_toggle_shuffle" />
-	</LinearLayout>
+            <TextView
+                android:id="@id/android:empty"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="top"
+                android:text="No modules found." />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/modlist_spinner"
+            style="?android:progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/play_all"
+            style="@style/ButtonTheme"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.34"
+            android:contentDescription="@string/button_play_all" />
+
+        <ImageButton
+            android:id="@+id/toggle_loop"
+            style="@style/ButtonTheme"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:contentDescription="@string/button_toggle_loop" />
+
+        <ImageButton
+            android:id="@+id/toggle_shuffle"
+            style="@style/ButtonTheme"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:contentDescription="@string/button_toggle_shuffle" />
+    </LinearLayout>
 
 </LinearLayout>
