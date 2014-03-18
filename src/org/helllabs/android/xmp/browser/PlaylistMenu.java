@@ -163,7 +163,7 @@ public class PlaylistMenu extends ActionBarActivity {
 				deletePosition = info.position - 1;
 				Message.yesNoDialog(this, "Delete", "Are you sure to delete playlist " +
 						PlaylistUtils.listNoSuffix()[deletePosition] + "?", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
+					public void onClick(final DialogInterface dialog, final int which) {
 						if (which == DialogInterface.BUTTON_POSITIVE) {
 							PlaylistUtils.deleteList(context, deletePosition);
 							updateList();
@@ -188,7 +188,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		alert.input.setText(name);		
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
-			public void onClick(DialogInterface dialog, int whichButton) {
+			public void onClick(final DialogInterface dialog, final int whichButton) {
 				boolean error = false;
 				final String value = alert.input.getText().toString();
 				final File old1 = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX);
@@ -196,9 +196,9 @@ public class PlaylistMenu extends ActionBarActivity {
 				final File new1 = new File(Preferences.DATA_DIR, value + PlaylistUtils.PLAYLIST_SUFFIX);
 				final File new2 = new File(Preferences.DATA_DIR, value + PlaylistUtils.COMMENT_SUFFIX);
 
-				if (old1.renameTo(new1) == false) { 
+				if (!old1.renameTo(new1)) { 
 					error = true;
-				} else if (old2.renameTo(new2) == false) {
+				} else if (!old2.renameTo(new2)) {
 					new1.renameTo(old1);
 					error = true;
 				}
@@ -207,10 +207,12 @@ public class PlaylistMenu extends ActionBarActivity {
 					Message.error(context, getString(R.string.error_rename_playlist));
 				} else {
 					final SharedPreferences.Editor editor = prefs.edit();
-					editor.putBoolean("options_" + value + "_shuffleMode", prefs.getBoolean("options_" + name + "_shuffleMode", true));
-					editor.putBoolean("options_" + value + "_loopMode", prefs.getBoolean("options_" + name + "_loopMode", false));
-					editor.remove("options_" + name + "_shuffleMode");
-					editor.remove("options_" + name + "_loopMode");
+					editor.putBoolean(PlaylistUtils.OPTIONS_PREFIX + value + "_shuffleMode",
+									prefs.getBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_shuffleMode", true));
+					editor.putBoolean(PlaylistUtils.OPTIONS_PREFIX + value + "_loopMode",
+									prefs.getBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_loopMode", false));
+					editor.remove(PlaylistUtils.OPTIONS_PREFIX + name + "_shuffleMode");
+					editor.remove(PlaylistUtils.OPTIONS_PREFIX + name + "_loopMode");
 					editor.commit();
 				}
 
@@ -219,7 +221,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		});  
 
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {  
-			public void onClick(DialogInterface dialog, int whichButton) {  
+			public void onClick(final DialogInterface dialog, final int whichButton) {  
 				// Canceled.  
 			}  
 		});  
@@ -246,7 +248,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		});  
 
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {  
-			public void onClick(DialogInterface dialog, int whichButton) {  
+			public void onClick(final DialogInterface dialog, final int whichButton) {  
 				// Canceled.  
 			}  
 		});  
@@ -262,7 +264,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		alert.input.setText(PlaylistUtils.readComment(context, name));
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
-			public void onClick(DialogInterface dialog, int whichButton) {  
+			public void onClick(final DialogInterface dialog, final int whichButton) {  
 				final String value = alert.input.getText().toString().replace("\n", " ");				
 				final File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.COMMENT_SUFFIX);
 				try {
@@ -278,7 +280,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		});  
 
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {  
-			public void onClick(DialogInterface dialog, int whichButton) {
+			public void onClick(final DialogInterface dialog, final int whichButton) {
 				// Canceled.  
 			}  
 		});  

@@ -89,7 +89,7 @@ public final class InfoCache { // NOPMD
 		return ret;
 	}
 
-	public static boolean testModule(final String filename, final ModInfo info) {	// NOPMD
+	public static boolean testModule(final String filename, final ModInfo info) {
 		if (!Preferences.CACHE_DIR.isDirectory() && !Preferences.CACHE_DIR.mkdirs()) {
 			// Can't use cache
 			return Xmp.testModule(filename, info);

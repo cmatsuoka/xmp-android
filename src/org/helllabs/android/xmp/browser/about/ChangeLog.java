@@ -55,7 +55,8 @@ public class ChangeLog {
 	    	.setIcon(android.R.drawable.ic_menu_info_details)
 	    	.setView(view)
 	    	.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
-	    		public void onClick(DialogInterface dialog, int whichButton) {
+	    		public void onClick(final DialogInterface dialog, final int whichButton) {
+	    			// Do nothing
 	    		}
 	    	}).show();
 	}

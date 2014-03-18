@@ -39,7 +39,6 @@ class PlayListFilter implements FilenameFilter {
 
 public class PlayList extends PlaylistActivity {
 	private static final String TAG = PlayList.class.getSimpleName();
-	private static final String OPTIONS_PREFIX = "options_";
 	private String name;
 	private PlaylistInfoAdapter plist;
 	private Boolean modified;
@@ -79,8 +78,8 @@ public class PlayList extends PlaylistActivity {
 		//	curList.setBackgroundColor(R.color.dark_theme_status_color);
 		//}
 		
-		shuffleMode = prefs.getBoolean(OPTIONS_PREFIX + name + "_shuffleMode", true);
-		loopMode = prefs.getBoolean(OPTIONS_PREFIX + name + "_loopMode", false);
+		shuffleMode = prefs.getBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_shuffleMode", true);
+		loopMode = prefs.getBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_loopMode", false);
 		setupButtons();
 				
 		modified = false;
@@ -99,8 +98,8 @@ public class PlayList extends PlaylistActivity {
 		
 		if (modifiedOptions) {
 			final SharedPreferences.Editor editor = prefs.edit();
-			editor.putBoolean(OPTIONS_PREFIX + name + "_shuffleMode", shuffleMode);
-			editor.putBoolean(OPTIONS_PREFIX + name + "_loopMode", loopMode);
+			editor.putBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_shuffleMode", shuffleMode);
+			editor.putBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_loopMode", loopMode);
 			editor.commit();
 		}
 	}
@@ -119,9 +118,9 @@ public class PlayList extends PlaylistActivity {
 		final List<Integer> invalidList = new ArrayList<Integer>();
 		
 	    try {
-	    	final BufferedReader in = new BufferedReader(new FileReader(file), 512);
+	    	final BufferedReader reader = new BufferedReader(new FileReader(file), 512);
 	    	lineNum = 0;
-	    	while ((line = in.readLine()) != null) {
+	    	while ((line = reader.readLine()) != null) {
 	    		final String[] fields = line.split(":", 3);
 	    		if (InfoCache.fileExists(fields[0])) {
 	    			modList.add(new PlaylistInfo(fields[2], fields[1], fields[0], R.drawable.grabber));
@@ -130,7 +129,7 @@ public class PlayList extends PlaylistActivity {
 	    		}
 	    		lineNum++;
 	    	}
-	    	in.close();
+	    	reader.close();
 	    } catch (IOException e) {
 	    	Log.e(TAG, "Error reading playlist " + file.getPath());
 	    }		
@@ -180,9 +179,9 @@ public class PlayList extends PlaylistActivity {
 	@Override
 	public boolean onContextItemSelected(final MenuItem item) {
 		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-		final int id = item.getItemId();
+		final int itemId = item.getItemId();
 		
-		switch (id) {
+		switch (itemId) {
 		case 0:										// Remove from playlist
 			removeFromPlaylist(name, info.position);
 			updateList();

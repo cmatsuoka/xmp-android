@@ -32,7 +32,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ModList extends PlaylistActivity {
+@SuppressWarnings({"PMD.LongVariable", "PMD.GodClass"})
+public class ModList extends PlaylistActivity {		// NOPMD
 	//private boolean isBadDir = false;
 	private boolean isPathMenu;
 	private TextView curPath;

@@ -31,7 +31,8 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-public abstract class PlaylistActivity extends ActionBarActivity {
+@SuppressWarnings("PMD.GodClass")
+public abstract class PlaylistActivity extends ActionBarActivity {	// NOPMD
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAY_MOD_REQUEST = 669; 
 	protected List<PlaylistInfo> modList = new ArrayList<PlaylistInfo>();
@@ -66,8 +67,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 			}
 		});
 
-		toggleLoopButton.setImageResource(loopMode ?
-				R.drawable.list_loop_on : R.drawable.list_loop_off);
+		toggleLoopButton.setImageResource(loopMode ? R.drawable.list_loop_on : R.drawable.list_loop_off);
 		toggleLoopButton.setOnClickListener(new OnClickListener() {
 			public void onClick(final View view) {
 				loopMode = !loopMode;
@@ -80,8 +80,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 			}
 		});
 
-		toggleShuffleButton.setImageResource(shuffleMode ?
-				R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
+		toggleShuffleButton.setImageResource(shuffleMode ? R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
 		toggleShuffleButton.setOnClickListener(new OnClickListener() {
 			public void onClick(final View view) {
 				shuffleMode = !shuffleMode;
@@ -99,7 +98,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> list, View view, int position, long id) {
+			public void onItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
 				final String filename = modList.get(position).filename;
 				final int mode = Integer.parseInt(prefs.getString(Preferences.PLAYLIST_MODE, "1"));
 
@@ -186,7 +185,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		playModule(mods, 0, shuffleMode);
 	}
 
-	public void playModule(final String[] mods, int start, boolean shuffle) {
+	public void playModule(final String[] mods, final int start, final boolean shuffle) {
 		if (showToasts) {
 			if (mods.length > 1) {
 				Message.toast(this, "Play all modules in list");
@@ -234,7 +233,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		}
 
 		public void onServiceDisconnected(final ComponentName className) {
-			modPlayer = null;
+			modPlayer = null;		// NOPMD
 		}
 	};
 
