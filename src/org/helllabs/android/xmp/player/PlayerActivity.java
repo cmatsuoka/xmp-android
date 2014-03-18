@@ -650,6 +650,10 @@ public class PlayerActivity extends Activity {
 				try {
 					name = modPlayer.getModName();
 					type = modPlayer.getModType();
+					
+					if (name.trim().length() == 0) {
+						name = "<untitled>";
+					}
 				} catch (RemoteException e) {
 					name = "";
 					type = "";

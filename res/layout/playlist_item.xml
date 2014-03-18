@@ -19,6 +19,8 @@
             android:id="@+id/plist_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:textSize="19sp" />
 
         <TextView

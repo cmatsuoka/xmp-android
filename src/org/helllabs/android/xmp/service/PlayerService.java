@@ -2,8 +2,6 @@ package org.helllabs.android.xmp.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Locale;
-
 import org.helllabs.android.xmp.InfoCache;
 import org.helllabs.android.xmp.ModInterface;
 import org.helllabs.android.xmp.PlayerCallback;
