@@ -287,7 +287,7 @@ public class PlaylistMenu extends ActionBarActivity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		switch (requestCode) {
 		case SETTINGS_REQUEST:
 			if (resultCode == RESULT_OK) {
@@ -306,7 +306,7 @@ public class PlaylistMenu extends ActionBarActivity {
 	// Menu
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(final Menu menu) {
 		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.options_menu, menu);
 

@@ -18,8 +18,8 @@ public class PlaylistInfoAdapter extends ArrayAdapter<PlaylistInfo> {
     private final Context context;
     private final boolean useFilename;
 
-    public PlaylistInfoAdapter(final Context context, final int resource, final int textViewResourceId, final List<PlaylistInfo> items, final boolean useFilename) {
-    	super(context, resource, textViewResourceId, items);
+    public PlaylistInfoAdapter(final Context context, final int resource, final int textViewResId, final List<PlaylistInfo> items, final boolean useFilename) {
+    	super(context, resource, textViewResId, items);
     	this.items = items;
     	this.context = context;
     	this.useFilename = useFilename;

@@ -32,12 +32,14 @@ import com.commonsware.cwac.tlv.TouchListView;
 
 
 class PlayListFilter implements FilenameFilter {
-	public boolean accept(File dir, String name) {
+	public boolean accept(final File dir, final String name) {
 		return name.endsWith(PlaylistUtils.PLAYLIST_SUFFIX);
 	}
 }
 
 public class PlayList extends PlaylistActivity {
+	private static final String TAG = PlayList.class.getSimpleName();
+	private static final String OPTIONS_PREFIX = "options_";
 	private String name;
 	private PlaylistInfoAdapter plist;
 	private Boolean modified;
@@ -77,8 +79,8 @@ public class PlayList extends PlaylistActivity {
 		//	curList.setBackgroundColor(R.color.dark_theme_status_color);
 		//}
 		
-		shuffleMode = prefs.getBoolean("options_" + name + "_shuffleMode", true);
-		loopMode = prefs.getBoolean("options_" + name + "_loopMode", false);
+		shuffleMode = prefs.getBoolean(OPTIONS_PREFIX + name + "_shuffleMode", true);
+		loopMode = prefs.getBoolean(OPTIONS_PREFIX + name + "_loopMode", false);
 		setupButtons();
 				
 		modified = false;
@@ -97,8 +99,8 @@ public class PlayList extends PlaylistActivity {
 		
 		if (modifiedOptions) {
 			final SharedPreferences.Editor editor = prefs.edit();
-			editor.putBoolean("options_" + name + "_shuffleMode", shuffleMode);
-			editor.putBoolean("options_" + name + "_loopMode", loopMode);
+			editor.putBoolean(OPTIONS_PREFIX + name + "_shuffleMode", shuffleMode);
+			editor.putBoolean(OPTIONS_PREFIX + name + "_loopMode", loopMode);
 			editor.commit();
 		}
 	}
@@ -110,7 +112,7 @@ public class PlayList extends PlaylistActivity {
 	private void updateList() {
 		modList.clear();
 		
-		final File file = new File(Preferences.DATA_DIR, name + ".playlist");
+		final File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX);
 		String line;
 		int lineNum;
 		
@@ -130,21 +132,22 @@ public class PlayList extends PlaylistActivity {
 	    	}
 	    	in.close();
 	    } catch (IOException e) {
-	    	Log.e("Xmp PlayList", "Error reading playlist " + file.getPath());
+	    	Log.e(TAG, "Error reading playlist " + file.getPath());
 	    }		
 		
 	    if (!invalidList.isEmpty()) {
 	    	final int[] array = new int[invalidList.size()];
 	    	final Iterator<Integer> iterator = invalidList.iterator();
-	    	for (int i = 0; i < array.length; i++)
+	    	for (int i = 0; i < array.length; i++) {
 	    		array[i] = iterator.next().intValue();
+	    	}
 	    	
 			try {
 				FileUtils.removeLineFromFile(file, array);
 			} catch (FileNotFoundException e) {
-
+				Log.e(TAG, "Playlist file " + file.getPath() + " not found");
 			} catch (IOException e) {
-
+				Log.e(TAG, "I/O error removing invalid lines from " + file.getPath());
 			}
 		}
 	    
@@ -202,16 +205,16 @@ public class PlayList extends PlaylistActivity {
 	}
 	
 	public void removeFromPlaylist(final String playlist, final int position) {
-		final File file = new File(Preferences.DATA_DIR, name + ".playlist");
+		final File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX);
 		if (modified) {
 			writeList();
 		}
 		try {
 			FileUtils.removeLineFromFile(file, position);
 		} catch (FileNotFoundException e) {
-
+			Log.e(TAG, "Playlist file " + file.getPath() + " not found");
 		} catch (IOException e) {
-
+			Log.e(TAG, "I/O error removing line from " + file.getPath());
 		}
 	}
 	
@@ -235,8 +238,8 @@ public class PlayList extends PlaylistActivity {
 	};		
 
 	private final void writeList() {		
-		final File file = new File(Preferences.DATA_DIR, name + ".playlist.new");
-		Log.i("Xmp PlayList", "Write playlist " + name);
+		final File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX + ".new");
+		Log.i(TAG, "Write playlist " + name);
 		
 		file.delete();
 		
@@ -253,7 +256,7 @@ public class PlayList extends PlaylistActivity {
 			
 			modified = false;
 		} catch (IOException e) {
-			Log.e("Xmp PlayList", "Error writing playlist " + file.getPath());
+			Log.e(TAG, "Error writing playlist " + file.getPath());
 		}
 	}
 }

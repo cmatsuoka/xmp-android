@@ -30,7 +30,7 @@ public class Examples {
 			return -1;
 		}
 		
-		final AssetManager am = context.getResources().getAssets();
+		final AssetManager am = context.getResources().getAssets();		// NOPMD
 		String assets[];
 		
 		try {
@@ -51,7 +51,7 @@ public class Examples {
 	}
 
 	
-	private int copyAsset(final InputStream in, final String dst) {
+	private int copyAsset(final InputStream in, final String dst) {		// NOPMD
 		final byte[] buf = new byte[1024];
 		int len;
 		

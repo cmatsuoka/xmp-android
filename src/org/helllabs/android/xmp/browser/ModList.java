@@ -94,7 +94,7 @@ public class ModList extends PlaylistActivity {
 	 */
 	private final DialogInterface.OnClickListener addDirToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			PlaylistUtils utils = new PlaylistUtils();
+			final PlaylistUtils utils = new PlaylistUtils();
 
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
@@ -110,7 +110,7 @@ public class ModList extends PlaylistActivity {
 	 */	
 	private final DialogInterface.OnClickListener addCurRecursiveToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			PlaylistUtils utils = new PlaylistUtils();
+			final PlaylistUtils utils = new PlaylistUtils();
 
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
@@ -126,7 +126,7 @@ public class ModList extends PlaylistActivity {
 	 */	
 	private final DialogInterface.OnClickListener addRecursiveToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			PlaylistUtils utils = new PlaylistUtils();
+			final PlaylistUtils utils = new PlaylistUtils();
 
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
@@ -171,7 +171,7 @@ public class ModList extends PlaylistActivity {
 	 * Delete file
 	 */
 	private final DialogInterface.OnClickListener deleteDialogClickListener = new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int which) {
+		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (InfoCache.delete(deleteName)) {
 					updateModlist(currentDir);
@@ -236,7 +236,7 @@ public class ModList extends PlaylistActivity {
 		upButton = (ImageButton)findViewById(R.id.up_button);
 		upButton.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick(final View view) {
 				final File file = new File(currentDir + "/.");
 				String name;
 				if ((name = file.getParentFile().getParent()) == null) {
@@ -248,7 +248,7 @@ public class ModList extends PlaylistActivity {
 
 		upButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public boolean onTouch(final View view, final MotionEvent event) {
 				if(event.getAction() == MotionEvent.ACTION_UP){
 					upButton.setImageResource(R.drawable.parent);
 				} else {
@@ -271,14 +271,14 @@ public class ModList extends PlaylistActivity {
 			alertDialog.setMessage(media_path + " not found. " +
 					"Create this directory or change the module path.");
 			alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Create", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
+				public void onClick(final DialogInterface dialog, final int which) {
 					examples.install(media_path,
 							prefs.getBoolean(Preferences.EXAMPLES, true));
 					updateModlist(media_path);
 				}
 			});
 			alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Back", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
+				public void onClick(final DialogInterface dialog, final int which) {
 					finish();
 				}
 			});
@@ -482,7 +482,7 @@ public class ModList extends PlaylistActivity {
 		.setPositiveButton(android.R.string.ok, listener)
 		.setNegativeButton(android.R.string.cancel, listener)
 		.setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
+			public void onClick(final DialogInterface dialog, final int which) {
 				playlistSelection = which;
 			}
 		})

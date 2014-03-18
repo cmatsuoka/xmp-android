@@ -32,7 +32,7 @@ public final class FileUtils {
 	public static String readFromFile(final File file) throws IOException {
 		String line;
 
-		final BufferedReader in = new BufferedReader(new FileReader(file), 512);
+		final BufferedReader in = new BufferedReader(new FileReader(file), 512);	// NOPMD
 		line = in.readLine();
 		in.close();
 
@@ -50,12 +50,12 @@ public final class FileUtils {
 
 		final File tempFile = new File(file.getAbsolutePath() + ".tmp");
 
-		final BufferedReader br = new BufferedReader(new FileReader(file), 512);
-		final PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+		final BufferedReader reader = new BufferedReader(new FileReader(file), 512);
+		final PrintWriter writer = new PrintWriter(new FileWriter(tempFile));
 
 		String line;
 		boolean flag;
-		for (int lineNum = 0; (line = br.readLine()) != null; lineNum++) {
+		for (int lineNum = 0; (line = reader.readLine()) != null; lineNum++) {
 			flag = false;
 			for (int i = 0; i < num.length; i++) {
 				if (lineNum == num[i]) {
@@ -64,12 +64,12 @@ public final class FileUtils {
 				}
 			}
 			if (!flag) {
-				pw.println(line);
-				pw.flush();
+				writer.println(line);
+				writer.flush();
 			}
 		}
-		pw.close();
-		br.close();
+		writer.close();
+		reader.close();
 
 		// Delete the original file
 		if (!file.delete()) {

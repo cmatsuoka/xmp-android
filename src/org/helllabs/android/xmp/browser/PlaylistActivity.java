@@ -61,7 +61,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 
 		playAllButton.setImageResource(R.drawable.list_play);
 		playAllButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
+			public void onClick(final View view) {
 				playModule(modList);
 			}
 		});
@@ -83,11 +83,11 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		toggleShuffleButton.setImageResource(shuffleMode ?
 				R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
 		toggleShuffleButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
+			public void onClick(final View view) {
 				shuffleMode = !shuffleMode;
-				((ImageButton)v).setImageResource(shuffleMode ?	R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
+				((ImageButton)view).setImageResource(shuffleMode ?	R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
 				if (showToasts) {
-					Message.toast(v.getContext(), shuffleMode ? "Shuffle on" : "Shuffle off");
+					Message.toast(view.getContext(), shuffleMode ? "Shuffle on" : "Shuffle off");
 				}
 				modifiedOptions = true;
 			}
@@ -95,7 +95,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 	}
 
 	// Item click	
-	protected void setOnItemClickListener(ListView list) {
+	protected void setOnItemClickListener(final ListView list) {
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -144,7 +144,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		int dir = 0;
 
 		for (final PlaylistInfo info : list) {
-			if ((new File(info.filename).isDirectory())) {
+			if (new File(info.filename).isDirectory()) {
 				dir++;
 			} else {
 				num++;
@@ -166,7 +166,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 
 		int i = 0; // NOPMD
 		for (final PlaylistInfo info : list) {
-			if ((new File(info.filename).isFile())) {
+			if (new File(info.filename).isFile()) {
 				mods[i++] = info.filename;
 			}
 		}

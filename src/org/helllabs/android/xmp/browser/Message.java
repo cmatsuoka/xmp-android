@@ -12,14 +12,14 @@ public final class Message {
 		
 	}
 	
-	public static void fatalError(final Context context, final String message, final Activity a) {
+	public static void fatalError(final Context context, final String message, final Activity activity) {
 		final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
 		
 		alertDialog.setTitle("Error");
 		alertDialog.setMessage(message);
-		alertDialog.setButton("Exit", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				a.finish();
+		alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Exit", new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int which) {
+				activity.finish();
 			}
 		});
 		alertDialog.show();		
@@ -30,8 +30,8 @@ public final class Message {
 		
 		alertDialog.setTitle("Error");
 		alertDialog.setMessage(message);
-		alertDialog.setButton("Dismiss", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
+		alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Dismiss", new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int which) {
 				//
 			}
 		});
@@ -43,7 +43,7 @@ public final class Message {
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();		
 	}
 	
-	public static void yesNoDialog(final Context context, final String title, final String message, DialogInterface.OnClickListener listener) {
+	public static void yesNoDialog(final Context context, final String title, final String message, final DialogInterface.OnClickListener listener) {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(title)
 			.setMessage(message)
