@@ -16,7 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 public class ChangeLog {
-	private static final String TAG = ChangeLog.class.getSimpleName();
+	private static final String TAG = "ChangeLog";
 	private int versionCode;
 	private final Context context;
 	

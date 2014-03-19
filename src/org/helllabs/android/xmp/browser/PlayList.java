@@ -38,7 +38,7 @@ class PlayListFilter implements FilenameFilter {
 }
 
 public class PlayList extends PlaylistActivity {
-	private static final String TAG = PlayList.class.getSimpleName();
+	private static final String TAG = "PlayList";
 	private String name;
 	private PlaylistInfoAdapter plist;
 	private Boolean modified;

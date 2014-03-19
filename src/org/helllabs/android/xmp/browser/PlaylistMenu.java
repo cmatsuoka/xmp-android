@@ -28,7 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class PlaylistMenu extends ActionBarActivity {
-	private static final String TAG = PlaylistMenu.class.getSimpleName();
+	private static final String TAG = "PlaylistMenu";
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAYLIST_REQUEST = 46;
 	private SharedPreferences prefs;

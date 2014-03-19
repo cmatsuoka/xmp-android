@@ -17,7 +17,7 @@ import android.view.Surface;
 
 @SuppressWarnings("PMD.ShortVariable")
 public class ChannelViewer extends Viewer {
-	private static final String TAG = ChannelViewer.class.getSimpleName(); 
+	private static final String TAG = "ChannelViewer"; 
 	private final Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint, scopeMutePaint;
 	private final int fontSize, fontHeight, fontWidth;
 	private final int font2Size, font2Height, font2Width;

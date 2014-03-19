@@ -14,7 +14,7 @@ import android.os.RemoteException;
 
 @SuppressWarnings("PMD.ShortVariable")
 public class InstrumentViewer extends Viewer {
-	private static final String TAG = InstrumentViewer.class.getSimpleName();
+	private static final String TAG = "InstrumentViewer";
 	private final Paint[] insPaint, barPaint;
 	private final int fontSize, fontHeight, fontWidth;
 	private String[] insName;

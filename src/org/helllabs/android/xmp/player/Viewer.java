@@ -14,7 +14,7 @@ import android.view.View;
 
 @SuppressWarnings("PMD.ShortVariable")
 public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callback, View.OnClickListener {
-	private static final String TAG = Viewer.class.getSimpleName();
+	private static final String TAG = "Viewer";
 	protected Context context;
 	protected SurfaceHolder surfaceHolder;
 	protected int canvasHeight, canvasWidth;

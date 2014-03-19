@@ -8,7 +8,7 @@ import android.telephony.TelephonyManager;
 
 
 public class XmpPhoneStateListener extends PhoneStateListener {
-	private static final String TAG = XmpPhoneStateListener.class.getSimpleName();
+	private static final String TAG = "PhoneStateListener";
 	private final PlayerService service;
 	
 	public XmpPhoneStateListener(final PlayerService service) {

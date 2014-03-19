@@ -32,7 +32,7 @@
 		<activity android:name=".player.PlayerActivity"
 			android:configChanges="keyboardHidden|orientation|screenSize"
 			android:theme="@style/AppTheme.NoActionBar"
-			android:launchMode="singleTask"
+			android:launchMode="singleInstance"
 			android:excludeFromRecents="true">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />

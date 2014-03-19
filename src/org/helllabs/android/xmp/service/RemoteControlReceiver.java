@@ -9,7 +9,7 @@ import android.view.KeyEvent;
 
 
 public class RemoteControlReceiver extends BroadcastReceiver {
-	private static final String TAG = RemoteControlReceiver.class.getSimpleName();
+	private static final String TAG = "RemoteControlReceiver";
 	public static int keyCode = -1;
 
 	@Override

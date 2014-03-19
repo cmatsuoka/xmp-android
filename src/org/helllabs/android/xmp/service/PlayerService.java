@@ -31,7 +31,7 @@ import android.view.KeyEvent;
 
 
 public class PlayerService extends Service {
-	private static final String TAG = PlayerService.class.getSimpleName();
+	private static final String TAG = "PlayerService";
 	private final Xmp xmp = new Xmp();
 	private AudioTrack audio;
 	private Thread playThread;

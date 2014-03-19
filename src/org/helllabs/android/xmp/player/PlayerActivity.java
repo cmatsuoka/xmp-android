@@ -43,7 +43,7 @@ import android.widget.ViewFlipper;
 
 @SuppressWarnings("PMD.ShortVariable")
 public class PlayerActivity extends Activity {
-	private static final String TAG = PlayerActivity.class.getSimpleName();
+	private static final String TAG = "PlayerActivity";
 	private ModInterface modPlayer;	/* actual mod player */
 	private ImageButton playButton;
 	private ImageButton loopButton;

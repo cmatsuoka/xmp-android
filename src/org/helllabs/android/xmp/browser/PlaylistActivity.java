@@ -32,7 +32,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 public abstract class PlaylistActivity extends ActionBarActivity {
-	private static final String TAG = PlaylistActivity.class.getSimpleName();
+	private static final String TAG = "PlaylistActivity";
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAY_MOD_REQUEST = 669; 
 	protected List<PlaylistInfo> modList = new ArrayList<PlaylistInfo>();
@@ -203,7 +203,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		intent.putExtra("shuffle", shuffle);
 		intent.putExtra("loop", loopMode);
 		intent.putExtra("start", start);
-		Log.i(TAG, "Start activity Player");
+		Log.i(TAG, "Start Player activity");
 		startActivityForResult(intent, PLAY_MOD_REQUEST);
 	}
 
