@@ -52,6 +52,7 @@ public class PlayerService extends Service {
 	private final RemoteCallbackList<PlayerCallback> callbacks =
 		new RemoteCallbackList<PlayerCallback>();
 	private boolean autoPaused;			// paused on phone call
+	private boolean previousPaused;		// save previous pause state
     
     // for media buttons
     private AudioManager audioManager;
@@ -551,10 +552,12 @@ public class PlayerService extends Service {
 	public boolean autoPause(final boolean pause) {
 		Log.i(TAG, "Auto pause changed to " + pause + ", previously " + autoPaused);
 		if (pause) {
+			previousPaused = paused;
 			paused = autoPaused = true;
 		} else {
 			if (autoPaused) {
-				paused = autoPaused = false;
+				autoPaused = false;
+				paused = previousPaused;
 			}
 		}	
 		
