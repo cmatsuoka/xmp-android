@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="org.helllabs.android.xmp"
-	android:versionCode="43"
-	android:versionName="3.7.0"
+	android:versionCode="44"
+	android:versionName="3.7.0.1"
 	android:installLocation="auto">
 	
 	<uses-sdk
@@ -32,7 +32,7 @@
 		<activity android:name=".player.PlayerActivity"
 			android:configChanges="keyboardHidden|orientation|screenSize"
 			android:theme="@style/AppTheme.NoActionBar"
-			android:launchMode="singleTop"
+			android:launchMode="singleTask"
 			android:excludeFromRecents="true">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
