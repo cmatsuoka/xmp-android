@@ -1,4 +1,7 @@
-/* Simple interface adaptor for jni */
+/* Simple and ugly interface adaptor for jni
+ * If you need a JNI interface for libxmp, check the Libxmp Java API
+ * at https://github.com/cmatsuoka/libxmp-java
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
