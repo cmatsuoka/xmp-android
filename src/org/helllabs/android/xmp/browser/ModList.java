@@ -196,6 +196,23 @@ public class ModList extends PlaylistActivity {		// NOPMD
 			return !file.isDirectory();
 		}
 	}
+	
+	@Override
+	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
+		String name = modList.get(position).filename;
+        final File file = new File(name);
+
+        if (file.isDirectory()) {
+        	if (file.getName().equals("..")) {
+        		if ((name = file.getParentFile().getParent()) == null) {
+        			name = "/";
+                }
+            }
+            updateModlist(name);
+        } else {
+            super.onListItemClick(list, view, position, id);
+        }
+	}
 
 	@Override
 	public void onCreate(final Bundle icicle) {
@@ -203,7 +220,12 @@ public class ModList extends PlaylistActivity {		// NOPMD
 		setContentView(R.layout.modlist);
 
 		listView = (ListView)findViewById(R.id.modlist_listview);
-		super.setOnItemClickListener(listView);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
+				onListItemClick(list, view, position, id);
+			}		
+		});
 
 		registerForContextMenu(listView);
 		final String media_path = prefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
