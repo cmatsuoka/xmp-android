@@ -483,17 +483,17 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 		goto err;
 	}
 
-	pos = _pos[chn];
-
-	/* In case of new keypress, reset sample */
-	if (trigger == JNI_TRUE) {
-		pos = 0;
-	}
-
 	step = (XMP_PERIOD_BASE << 5) / period;
 	len = xxs->len << 5;
 	lps = xxs->lps << 5;
 	lpe = xxs->lpe << 5;
+
+	pos = _pos[chn];
+
+	/* In case of new keypress, reset sample */
+	if (trigger == JNI_TRUE || pos >= len) {
+		pos = 0;
+	}
 
 	/* Limit is the buffer size or the remaining transient size */
 	if (step == 0) {
