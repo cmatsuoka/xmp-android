@@ -93,11 +93,9 @@ public class ModList extends PlaylistActivity {		// NOPMD
 	 */
 	private final DialogInterface.OnClickListener addDirToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			final PlaylistUtils utils = new PlaylistUtils();
-
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					utils.filesToPlaylist(context, modList.get(fileSelection).filename,
+					PlaylistUtils.filesToPlaylist(context, modList.get(fileSelection).filename,
 							PlaylistUtils.listNoSuffix()[playlistSelection], false);
 				}
 			}
@@ -109,11 +107,9 @@ public class ModList extends PlaylistActivity {		// NOPMD
 	 */	
 	private final DialogInterface.OnClickListener addCurRecursiveToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			final PlaylistUtils utils = new PlaylistUtils();
-
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					utils.filesToPlaylist(context, currentDir,
+					PlaylistUtils.filesToPlaylist(context, currentDir,
 							PlaylistUtils.listNoSuffix()[playlistSelection], true);
 				}
 			}
@@ -125,11 +121,9 @@ public class ModList extends PlaylistActivity {		// NOPMD
 	 */	
 	private final DialogInterface.OnClickListener addRecursiveToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			final PlaylistUtils utils = new PlaylistUtils();
-
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					utils.filesToPlaylist(context, modList.get(fileSelection).filename,
+					PlaylistUtils.filesToPlaylist(context, modList.get(fileSelection).filename,
 							PlaylistUtils.listNoSuffix()[playlistSelection], true);
 				}
 			}

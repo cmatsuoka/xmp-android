@@ -22,22 +22,24 @@ import android.view.View;
 import android.widget.EditText;
 
 
-public class PlaylistUtils {
+public final class PlaylistUtils {
 	public static final String COMMENT_SUFFIX = ".comment";
 	public static final String PLAYLIST_SUFFIX = ".playlist";
 	public static final String OPTIONS_PREFIX = "options_";
-	private ProgressDialog progressDialog;
 	
-	public void newPlaylist(final Context context) {
+	private PlaylistUtils() {
+		
+	}
+	
+	public static void newPlaylist(final Context context) {
 		newPlaylist(context, null);
 	}
 	
-	public void newPlaylist(final Context context, final Runnable runnable) {
+	public static void newPlaylist(final Context context, final Runnable runnable) {
 		final AlertDialog.Builder alert = new AlertDialog.Builder(context);		  
 		alert.setTitle("New playlist");  	
 	    final LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    final View layout = inflater.inflate(R.layout.newlist, null);
-	    final Runnable myRunnable = runnable;
 
 	    alert.setView(layout);
 		  
@@ -54,8 +56,8 @@ public class PlaylistUtils {
 					file2.createNewFile();
 					FileUtils.writeToFile(file2, comment);
 					
-					if (myRunnable != null) {
-						myRunnable.run();
+					if (runnable != null) {
+						runnable.run();
 					}
 				} catch (IOException e) {
 					Message.error(context, context.getString(R.string.error_create_playlist));
@@ -64,7 +66,7 @@ public class PlaylistUtils {
 		});  
 		  
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {  
-			public void onClick(DialogInterface dialog, int whichButton) {  
+			public void onClick(final DialogInterface dialog, final int whichButton) {  
 				// Canceled.  
 			}  
 		});  
@@ -76,7 +78,7 @@ public class PlaylistUtils {
 	 * Send files in directory to the specified playlist
 	 */
 	
-	private void addFiles(final Context context, final String path, final String name, final boolean recursive)
+	private static void addFiles(final Context context, final String path, final String name, final boolean recursive)
 	{
 		final List<String> list = new ArrayList<String>();
 		final ModInfo modInfo = new ModInfo();
@@ -104,7 +106,7 @@ public class PlaylistUtils {
     	}
 	}
 	
-	public void filesToPlaylist(final Context context, final String path, final String name, final boolean recursive) {
+	public static void filesToPlaylist(final Context context, final String path, final String name, final boolean recursive) {
 		final File modDir = new File(path);
 		
 		if (!modDir.isDirectory()) {
@@ -112,10 +114,8 @@ public class PlaylistUtils {
 			return;
 		}
 		
-
-		progressDialog = ProgressDialog.show(context,      
+		final ProgressDialog progressDialog = ProgressDialog.show(context,      
 				"Please wait", "Scanning module files...", true);
-
 		
 		new Thread() { 
 			public void run() { 	
@@ -125,7 +125,7 @@ public class PlaylistUtils {
 		}.start();
 	}
 			
-	public void filesToNewPlaylist(final Context context, final String path, final Runnable runnable) {
+	public static void filesToNewPlaylist(final Context context, final String path, final Runnable runnable) {
 		final File modDir = new File(path);
 		
 		if (!modDir.isDirectory()) {
@@ -172,7 +172,6 @@ public class PlaylistUtils {
 		  
 		alert.show();
 	}
-
 	
 	public static void deleteList(final Context context, final int index) {
 		final String list = listNoSuffix()[index];
@@ -185,7 +184,6 @@ public class PlaylistUtils {
 		editor.remove(OPTIONS_PREFIX + list + "_loopMode");
 		editor.commit();
 	}
-	
 	
 	public static void addToList(final Context context, final String name, final String line) {
 		try {

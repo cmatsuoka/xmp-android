@@ -321,12 +321,11 @@ public class PlaylistMenu extends ActionBarActivity {
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.menu_new_playlist:
-			(new PlaylistUtils()).newPlaylist(this, new Runnable() {
+			PlaylistUtils.newPlaylist(this, new Runnable() {
 				public void run() {
 					updateList();
 				}
 			});
-			updateList();
 			break;
 		case R.id.menu_prefs:		
 			startActivityForResult(new Intent(this, Preferences.class), SETTINGS_REQUEST);
