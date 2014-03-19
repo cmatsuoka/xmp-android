@@ -88,8 +88,6 @@ public class ModList extends PlaylistActivity {		// NOPMD
 		}
 	}
 
-
-
 	/*
 	 * Add directory to playlist
 	 */
@@ -214,6 +212,30 @@ public class ModList extends PlaylistActivity {		// NOPMD
         }
 	}
 
+	private void pathNotFound(final String media_path) {
+		final Examples examples = new Examples(this);
+
+		//isBadDir = true;
+		final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+
+		alertDialog.setTitle("Path not found");
+		alertDialog.setMessage(media_path + " not found. " +
+				"Create this directory or change the module path.");
+		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Create", new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int which) {
+				examples.install(media_path,
+						prefs.getBoolean(Preferences.EXAMPLES, true));
+				updateModlist(media_path);
+			}
+		});
+		alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Back", new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int which) {
+				finish();
+			}
+		});
+		alertDialog.show();
+	}
+	
 	@Override
 	public void onCreate(final Bundle icicle) {
 		super.onCreate(icicle);	
@@ -284,36 +306,15 @@ public class ModList extends PlaylistActivity {		// NOPMD
 		// Check if directory exists
 		final File modDir = new File(media_path);
 
-		if (!modDir.isDirectory()) {
-			final Examples examples = new Examples(this);
-
-			//isBadDir = true;
-			final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-
-			alertDialog.setTitle("Path not found");
-			alertDialog.setMessage(media_path + " not found. " +
-					"Create this directory or change the module path.");
-			alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Create", new DialogInterface.OnClickListener() {
-				public void onClick(final DialogInterface dialog, final int which) {
-					examples.install(media_path,
-							prefs.getBoolean(Preferences.EXAMPLES, true));
-					updateModlist(media_path);
-				}
-			});
-			alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Back", new DialogInterface.OnClickListener() {
-				public void onClick(final DialogInterface dialog, final int which) {
-					finish();
-				}
-			});
-			alertDialog.show();
-			return;
+		if (modDir.isDirectory()) {
+			updateModlist(media_path);	
+		} else {
+			pathNotFound(media_path);
 		}
 
 		shuffleMode = prefs.getBoolean("options_shuffleMode", true);
 		loopMode = prefs.getBoolean("options_loopMode", false);
 		setupButtons();
-
-		updateModlist(media_path);
 	}
 
 	@Override
