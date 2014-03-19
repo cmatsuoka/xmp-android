@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -27,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class PlaylistMenu extends ActionBarActivity {
+	private static final String TAG = PlaylistMenu.class.getSimpleName();
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAYLIST_REQUEST = 46;
 	private SharedPreferences prefs;
@@ -95,10 +97,11 @@ public class PlaylistMenu extends ActionBarActivity {
 	private boolean checkStorage() {
 		final String state = Environment.getExternalStorageState();
 
-		if (Environment.MEDIA_MOUNTED.equals(state)) {
+		if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
 			return true;
 		} else {
-			return Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
+			Log.e(TAG, "External storage state error: " + state);
+			return false;
 		}
 	}
 
