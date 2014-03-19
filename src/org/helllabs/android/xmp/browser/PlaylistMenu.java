@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.browser.about.ChangeLog;
@@ -17,7 +18,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;

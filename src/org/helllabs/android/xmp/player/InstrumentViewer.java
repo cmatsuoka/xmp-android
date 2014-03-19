@@ -1,5 +1,6 @@
 package org.helllabs.android.xmp.player;
 
+import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.ModInterface;
 import org.helllabs.android.xmp.R;
 
@@ -10,7 +11,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
-import android.util.Log;
 
 @SuppressWarnings("PMD.ShortVariable")
 public class InstrumentViewer extends Viewer {

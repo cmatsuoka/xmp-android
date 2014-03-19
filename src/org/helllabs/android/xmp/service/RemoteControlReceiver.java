@@ -1,10 +1,12 @@
 package org.helllabs.android.xmp.service;
 
+import org.helllabs.android.xmp.Log;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.KeyEvent;
+
 
 public class RemoteControlReceiver extends BroadcastReceiver {
 	private static final String TAG = RemoteControlReceiver.class.getSimpleName();

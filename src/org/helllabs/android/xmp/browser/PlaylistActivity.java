@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.helllabs.android.xmp.InfoCache;
+import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.ModInterface;
 import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.R;
@@ -21,7 +22,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,8 +31,8 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-@SuppressWarnings("PMD.GodClass")
-public abstract class PlaylistActivity extends ActionBarActivity {	// NOPMD
+public abstract class PlaylistActivity extends ActionBarActivity {
+	private static final String TAG = PlaylistActivity.class.getSimpleName();
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAY_MOD_REQUEST = 669; 
 	protected List<PlaylistInfo> modList = new ArrayList<PlaylistInfo>();
@@ -203,13 +203,13 @@ public abstract class PlaylistActivity extends ActionBarActivity {	// NOPMD
 		intent.putExtra("shuffle", shuffle);
 		intent.putExtra("loop", loopMode);
 		intent.putExtra("start", start);
-		Log.i("Xmp PlaylistActivity", "Start activity Player");
+		Log.i(TAG, "Start activity Player");
 		startActivityForResult(intent, PLAY_MOD_REQUEST);
 	}
 
 	@Override
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-		Log.i("Xmp PlaylistActivity", "Activity result " + requestCode + "," + resultCode);
+		Log.i(TAG, "Activity result " + requestCode + "," + resultCode);
 		switch (requestCode) {
 		case SETTINGS_REQUEST:
 			update();			

@@ -13,13 +13,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.helllabs.android.xmp.InfoCache;
+import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.R;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;

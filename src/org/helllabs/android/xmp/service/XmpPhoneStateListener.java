@@ -1,12 +1,14 @@
 package org.helllabs.android.xmp.service;
 
 
+import org.helllabs.android.xmp.Log;
+
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 
 public class XmpPhoneStateListener extends PhoneStateListener {
+	private static final String TAG = XmpPhoneStateListener.class.getSimpleName();
 	private final PlayerService service;
 	
 	public XmpPhoneStateListener(final PlayerService service) {
@@ -16,7 +18,7 @@ public class XmpPhoneStateListener extends PhoneStateListener {
 	
 	@Override
 	public void onCallStateChanged(final int state, final String incomingNumber) {
-		Log.i("Xmp Listener", "Call state changed: " + state);
+		Log.i(TAG, "Call state changed: " + state);
 		service.autoPause(state != TelephonyManager.CALL_STATE_IDLE);
 	}
 }

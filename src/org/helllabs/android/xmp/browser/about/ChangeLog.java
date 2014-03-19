@@ -1,5 +1,6 @@
 package org.helllabs.android.xmp.browser.about;
 
+import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Preferences;
 
@@ -11,11 +12,11 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
 public class ChangeLog {
+	private static final String TAG = ChangeLog.class.getSimpleName();
 	private int versionCode;
 	private final Context context;
 	
@@ -41,7 +42,7 @@ public class ChangeLog {
 	        	return -1;
 	        }
 	    } catch (NameNotFoundException e) {
-	        Log.w("Unable to get version code. Will not show changelog", e);
+	        Log.w(TAG, "Unable to get version code");
 	        return -1;
 	    }
 	}

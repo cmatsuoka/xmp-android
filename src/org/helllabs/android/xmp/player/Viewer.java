@@ -1,10 +1,10 @@
 package org.helllabs.android.xmp.player;
 
+import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.ModInterface;
 
 import android.content.Context;
 import android.os.RemoteException;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;

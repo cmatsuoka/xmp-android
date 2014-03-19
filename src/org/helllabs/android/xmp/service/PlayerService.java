@@ -3,6 +3,7 @@ package org.helllabs.android.xmp.service;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.helllabs.android.xmp.InfoCache;
+import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.ModInterface;
 import org.helllabs.android.xmp.PlayerCallback;
 import org.helllabs.android.xmp.R;
@@ -26,7 +27,6 @@ import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.KeyEvent;
 
 

@@ -1,5 +1,6 @@
 package org.helllabs.android.xmp.player;
 
+import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.ModInterface;
 import org.helllabs.android.xmp.PlayerCallback;
 import org.helllabs.android.xmp.Preferences;
@@ -24,7 +25,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Menu;
