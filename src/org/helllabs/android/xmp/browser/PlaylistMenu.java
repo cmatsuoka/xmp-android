@@ -180,7 +180,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		return true;
 	}
 
-	public void renameList(final Context context, final int index) {
+	private void renameList(final Context context, final int index) {
 		final String name = PlaylistUtils.listNoSuffix()[index];
 		final InputDialog alert = new InputDialog(context);		  
 		alert.setTitle("Rename playlist");
@@ -229,7 +229,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		alert.show(); 
 	}
 
-	public void changeDir(final Context context) {
+	private void changeDir(final Context context) {
 		final InputDialog alert = new InputDialog(context);		  
 		alert.setTitle("Change directory");  
 		alert.setMessage("Enter the mod directory:");
@@ -256,7 +256,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		alert.show(); 
 	}
 
-	public void editComment(final Context context, final int index) {
+	private void editComment(final Context context, final int index) {
 		final String name = PlaylistUtils.listNoSuffix()[index];
 		final InputDialog alert = new InputDialog(context);		  
 		alert.setTitle("Edit comment");
