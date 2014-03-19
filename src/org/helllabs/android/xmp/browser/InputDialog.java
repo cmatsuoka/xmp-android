@@ -1,15 +1,14 @@
 package org.helllabs.android.xmp.browser;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.text.method.SingleLineTransformationMethod;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-
 public class InputDialog extends AlertDialog.Builder {
 	public EditText input;
 
-	@SuppressWarnings("deprecation")
 	protected InputDialog(final Context context) {
 		super(context);
 		

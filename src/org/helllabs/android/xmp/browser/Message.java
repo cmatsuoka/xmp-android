@@ -19,6 +19,7 @@ public final class Message {
 		alertDialog.setMessage(message);
 		alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Exit", new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int which) {
+				dialog.dismiss();
 				activity.finish();
 			}
 		});

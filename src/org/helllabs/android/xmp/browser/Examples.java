@@ -50,7 +50,6 @@ public class Examples {
 		return 0;
 	}
 
-	
 	private int copyAsset(final InputStream in, final String dst) {		// NOPMD
 		final byte[] buf = new byte[1024];
 		int len;
