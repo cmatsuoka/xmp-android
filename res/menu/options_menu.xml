@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:id="@+id/menu_new_playlist"
-    android:icon="@drawable/ic_action_new"
-    android:title="@string/menu_new_playlist"
-    android:showAsAction="ifRoom|withText"/>
-  <item android:id="@+id/menu_refresh"
-	android:icon="@drawable/ic_action_refresh"
-	android:title="@string/menu_refresh"
-	android:showAsAction="ifRoom|withText" />
-  <item android:id="@+id/menu_prefs"
-	android:icon="@drawable/ic_action_settings"
-	android:title="@string/menu_prefs"/>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xmp="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/menu_new_playlist"
+        android:icon="@drawable/ic_action_new"
+        xmp:showAsAction="ifRoom|withText"
+        android:title="@string/menu_new_playlist"/>
+    <item
+        android:id="@+id/menu_refresh"
+        android:icon="@drawable/ic_action_refresh"
+        xmp:showAsAction="ifRoom|withText"
+        android:title="@string/menu_refresh"/>
+    <item
+        android:id="@+id/menu_prefs"
+        android:icon="@drawable/ic_action_settings"
+        android:title="@string/menu_prefs"/>
+
 </menu>
