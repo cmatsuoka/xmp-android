@@ -2,18 +2,14 @@ package org.helllabs.android.xmp.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import org.helllabs.android.xmp.InfoCache;
 import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.ModInterface;
 import org.helllabs.android.xmp.PlayerCallback;
-import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.Xmp;
-import org.helllabs.android.xmp.player.PlayerActivity;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
@@ -150,48 +146,87 @@ public class PlayerService extends Service {
     }
 
 	@Override
-	public IBinder onBind(Intent intent) {
+	public IBinder onBind(final Intent intent) {
 		return binder;
 	}
 	
+	private void actionStop() {
+		xmp.stopModule();
+    	paused = false;
+    	stopPlaying = true;
+	}
+	
+	private void actionPause() {
+		paused ^= true;
+	}
+	
+	private void actionPrev() {
+		if (xmp.time() > 2000) {
+			xmp.seek(0);
+		} else {
+			xmp.stopModule();
+			returnToPrev = true;
+			stopPlaying = false;
+		}
+		paused = false;
+	}
+	
+	private void actionNext() {
+		xmp.stopModule();
+		stopPlaying = false;
+		paused = false;
+	}
+	
 	private void checkMediaButtons() {
-		final int key = RemoteControlReceiver.keyCode;
+		final int key = RemoteControlReceiver.getKeyCode();
 		
 		if (key > 0) {
 			switch (key) {
 			case KeyEvent.KEYCODE_MEDIA_NEXT:
 				Log.i(TAG, "Handle KEYCODE_MEDIA_NEXT");
-				xmp.stopModule();
-				stopPlaying = false;
-				paused = false;
+				actionNext();
 				break;
 			case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
 				Log.i(TAG, "Handle KEYCODE_MEDIA_PREVIOUS");
-				if (xmp.time() > 2000) {
-					xmp.seek(0);
-				} else {
-					xmp.stopModule();
-					returnToPrev = true;
-					stopPlaying = false;
-				}
-				paused = false;
+				actionPrev();
 				break;
 			case KeyEvent.KEYCODE_MEDIA_STOP:
 				Log.i(TAG, "Handle KEYCODE_MEDIA_STOP");
-		    	xmp.stopModule();
-		    	paused = false;
-		    	stopPlaying = true;
+		    	actionStop();
 		    	break;
 			case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
 				Log.i(TAG, "Handle KEYCODE_MEDIA_PLAY_PAUSE");
-				paused = !paused;
+				actionPause();
 				break;
 			}
 			
-			RemoteControlReceiver.keyCode = -1;
+			RemoteControlReceiver.setKeyCode(RemoteControlReceiver.NO_KEY);
 		}
 	}
 	
+	private void checkNotificationButtons() {
+		final int key = NotificationActionReceiver.getKeyCode();
+		
+		if (key > 0) {
+			switch (key) {
+			case NotificationActionReceiver.STOP:
+				Log.i(TAG, "Handle notification stop");
+				actionStop();
+				break;
+			case NotificationActionReceiver.PAUSE:
+				Log.i(TAG, "Handle notification pause");
+				actionPause();
+				break;
+			case NotificationActionReceiver.NEXT:
+				Log.i(TAG, "Handle notification next");
+				actionNext();
+				break;
+			}
+		}
+		
+		NotificationActionReceiver.setKeyCode(NotificationActionReceiver.NO_KEY);
+	}
+
 	private class PlayRunnable implements Runnable {
     	public void run() {
     		final short buffer[] = new short[bufferSize]; // NOPMD
@@ -285,6 +320,7 @@ public class PlayerService extends Service {
 	       				try {
 							Thread.sleep(500);
 							checkMediaButtons();
+							checkNotificationButtons();
 						} catch (InterruptedException e) {
 							break;
 						}
@@ -293,6 +329,7 @@ public class PlayerService extends Service {
 	       			
 	       			watchdog.refresh();
 	       			checkMediaButtons();
+	       			checkNotificationButtons();
 	       		}
 
 	       		xmp.endPlayer();
@@ -365,9 +402,9 @@ public class PlayerService extends Service {
 
 	private final ModInterface.Stub binder = new ModInterface.Stub() {
 		public void play(String[] files, int start, boolean shuffle, boolean loopList) {			
-			notifier.notification();
 			queue = new QueueManager(files, start, shuffle, loopList);
 			notifier.setQueue(queue);
+			notifier.clean();
 			returnToPrev = false;
 			stopPlaying = false;
 			paused = false;

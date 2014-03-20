@@ -108,10 +108,13 @@
 		</activity>
 		
 		<service android:name=".service.PlayerService" />
+		
 		<receiver android:name=".service.RemoteControlReceiver" android:enabled="true">
 			<intent-filter android:priority="2147483647">
 				<action android:name="android.intent.action.MEDIA_BUTTON" />
 			</intent-filter>
 		</receiver>
+		
+		<receiver android:name=".service.NotificationActionReceiver" />
 	</application>
 </manifest>

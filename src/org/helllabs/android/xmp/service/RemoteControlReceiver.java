@@ -10,7 +10,8 @@ import android.view.KeyEvent;
 
 public class RemoteControlReceiver extends BroadcastReceiver {
 	private static final String TAG = "RemoteControlReceiver";
-	public static int keyCode = -1;
+	public static final int NO_KEY = -1;
+	private static int keyCode = NO_KEY;
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
@@ -39,5 +40,13 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 			}
 			abortBroadcast();
 		}
+	}
+	
+	public static int getKeyCode() {
+		return keyCode;
+	}
+	
+	public static void setKeyCode(int keyCode) {
+		RemoteControlReceiver.keyCode = keyCode;
 	}
 }
