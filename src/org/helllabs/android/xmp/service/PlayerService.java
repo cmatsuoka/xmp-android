@@ -113,7 +113,7 @@ public class PlayerService extends Service {
 		isLoaded = false;
 		paused = false;
 		
-		notifier = new Notifier();
+		notifier = new Notifier(this);
 		
 		final XmpPhoneStateListener listener = new XmpPhoneStateListener(this);
 		final TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); // NOPMD
@@ -362,58 +362,12 @@ public class PlayerService extends Service {
     	xmp.deinit();
     	audio.release();
     }
-	
-	private class Notifier {
-	    private final NotificationManager nm;	// NOPMD
-	    private final PendingIntent contentIntent;
-	    private static final int NOTIFY_ID = R.layout.player;
-		private String title;
-		private int index;
-
-		public Notifier() {
-			nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-	    	contentIntent = PendingIntent.getActivity(PlayerService.this, 0,
-					new Intent(PlayerService.this, PlayerActivity.class), 0);
-		}
-		
-		private String message() {
-			return queue.size() > 1 ?
-				String.format("%s (%d/%d)", title, index, queue.size()) :
-				title;
-		}
-		
-		public void cancel() {
-			nm.cancel(NOTIFY_ID);
-		}
-		
-		public void notification() {
-			notification(null, null);
-		}
-		
-		public void notification(final String title, final int index) {
-			this.title = title;
-			this.index = index + 1;			
-			notification(message(), message());
-		}
-		
-		public void notification(final String ticker) {
-			notification(ticker, message());
-		}
-		
-		public void notification(final String ticker, final String latest) {
-	        Notification notification = new Notification(
-	        		R.drawable.notification, ticker, System.currentTimeMillis());
-	        notification.setLatestEventInfo(PlayerService.this, getText(R.string.app_name),
-	        		latest, contentIntent);
-	        notification.flags |= Notification.FLAG_ONGOING_EVENT;	        
-	        nm.notify(NOTIFY_ID, notification);				
-		}
-	}
 
 	private final ModInterface.Stub binder = new ModInterface.Stub() {
 		public void play(String[] files, int start, boolean shuffle, boolean loopList) {			
 			notifier.notification();
 			queue = new QueueManager(files, start, shuffle, loopList);
+			notifier.setQueue(queue);
 			returnToPrev = false;
 			stopPlaying = false;
 			paused = false;
