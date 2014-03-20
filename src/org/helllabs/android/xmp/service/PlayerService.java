@@ -132,6 +132,13 @@ public class PlayerService extends Service {
 		});
  		watchdog.start();
     }
+    
+    @Override
+    public int onStartCommand(final Intent intent, final int flags, final int startId) {
+    	// We want this service to continue running until it is explicitly
+        // stopped, so return sticky.
+        return START_STICKY;
+    }
 
     @Override
 	public void onDestroy() {
