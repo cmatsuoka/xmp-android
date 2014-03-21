@@ -51,7 +51,7 @@ public class Notifier {
 				.setContentTitle(context.getString(R.string.app_name))
 				.setContentText(title)
 				.setContentIntent(contentIntent)
-				.setSmallIcon(R.drawable.icon)
+				.setSmallIcon(R.drawable.notification_icon)
 				.setLargeIcon(icon)
 				.setOngoing(true)
 				.build();
@@ -79,7 +79,7 @@ public class Notifier {
 				.setContentInfo(formatIndex(index))
 				.setContentText(title)
 				.setContentIntent(contentIntent)
-				.setSmallIcon(R.drawable.icon)
+				.setSmallIcon(R.drawable.notification_icon)
 				.setLargeIcon(icon)
 				.setOngoing(true)
 				//.setShowWhen(false)
