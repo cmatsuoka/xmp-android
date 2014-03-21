@@ -116,7 +116,7 @@ public final class PlayerService extends Service {
 		remoteControlResponder = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
 		registerRemoteControl();
 		
-		watchdog = new Watchdog(10);
+		watchdog = new Watchdog(5);
  		watchdog.setOnTimeoutListener(new Watchdog.onTimeoutListener() {
 			public void onTimeout() {
 				Log.e(TAG, "Stopped by watchdog");
@@ -129,9 +129,7 @@ public final class PlayerService extends Service {
     
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
-    	// We want this service to continue running until it is explicitly
-        // stopped, so return sticky.
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -367,7 +365,7 @@ public final class PlayerService extends Service {
     		}
     		watchdog.stop();
     		notifier.cancel();
-        	end();
+        	//end();
         	Log.i(TAG, "Stop service");
         	stopSelf();
     	}
