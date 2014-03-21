@@ -15,7 +15,6 @@ public final class Log {
 	public static void w(final String tag, final String message) {
 		android.util.Log.w(TAG, "[" + tag + "] " + message);
 	}
-
 	
 	public static void e(final String tag, final String message) {
 		android.util.Log.e(TAG, "[" + tag + "] " + message);

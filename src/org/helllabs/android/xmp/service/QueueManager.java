@@ -2,10 +2,11 @@ package org.helllabs.android.xmp.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class QueueManager {
-	private final ArrayList<String> array;
+	private final List<String> array;
 	private final RandomIndex ridx;
 	private int index;
 	private final boolean shuffleMode;

@@ -692,10 +692,6 @@
             <ruleset>Migration</ruleset>
         </rule>
         <rule>
-            <name>AbstractNaming</name>
-            <ruleset>Naming</ruleset>
-        </rule>
-        <rule>
             <name>AvoidDollarSigns</name>
             <ruleset>Naming</ruleset>
         </rule>
@@ -741,14 +737,6 @@
         </rule>
         <rule>
             <name>PackageCase</name>
-            <ruleset>Naming</ruleset>
-        </rule>
-        <rule>
-            <name>ShortClassName</name>
-            <ruleset>Naming</ruleset>
-        </rule>
-        <rule>
-            <name>ShortMethodName</name>
             <ruleset>Naming</ruleset>
         </rule>
         <rule>

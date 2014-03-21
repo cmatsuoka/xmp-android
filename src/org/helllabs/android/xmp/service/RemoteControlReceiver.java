@@ -46,7 +46,7 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 		return keyCode;
 	}
 	
-	public static void setKeyCode(int keyCode) {
+	public static void setKeyCode(final int keyCode) {
 		RemoteControlReceiver.keyCode = keyCode;
 	}
 }

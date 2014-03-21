@@ -29,7 +29,7 @@ public class Notifier {
     	contentIntent = PendingIntent.getActivity(context, 0, new Intent(context, PlayerActivity.class), 0);
 	}
 	
-	private String formatIndex(int index) {
+	private String formatIndex(final int index) {
 		return String.format("%d/%d", index + 1, queue.size());
 	}
 	
