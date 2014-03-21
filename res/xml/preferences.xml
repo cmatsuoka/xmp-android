@@ -65,7 +65,7 @@
       android:entries="@array/sampling_rate_array"
       android:entryValues="@array/sampling_rate_values" />
       
-    <org.helllabs.android.xmp.SeekBarPreference
+    <org.helllabs.android.xmp.preferences.SeekBarPreference
       android:key="buffer_ms"
       android:persistent="true"
       android:title="@string/preferences_buffer_ms_title"
@@ -116,7 +116,7 @@
       android:summary="@string/preferences_stereo_summary"
       android:defaultValue="true" />
       
-    <org.helllabs.android.xmp.SeekBarPreference
+    <org.helllabs.android.xmp.preferences.SeekBarPreference
       android:key="pan_separation"
       android:persistent="true"
       android:dependency="stereo"
