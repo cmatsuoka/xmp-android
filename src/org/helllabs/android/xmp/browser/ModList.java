@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.helllabs.android.xmp.InfoCache;
-import org.helllabs.android.xmp.ModInfo;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.preferences.Preferences;
+import org.helllabs.android.xmp.util.InfoCache;
+import org.helllabs.android.xmp.util.ModInfo;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -32,7 +32,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-@SuppressWarnings({"PMD.LongVariable", "PMD.GodClass"})
+
+@SuppressWarnings("PMD.LongVariable")
 public class ModList extends PlaylistActivity {		// NOPMD
 	//private boolean isBadDir = false;
 	private boolean isPathMenu;

@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.helllabs.android.xmp.ModInfo;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.preferences.Preferences;
+import org.helllabs.android.xmp.util.ModInfo;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;

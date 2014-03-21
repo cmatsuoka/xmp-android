@@ -1,4 +1,5 @@
-package org.helllabs.android.xmp;
+package org.helllabs.android.xmp.util;
+
 
 public class ModInfo {
 	public String name;

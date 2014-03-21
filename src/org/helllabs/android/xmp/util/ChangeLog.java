@@ -1,6 +1,5 @@
-package org.helllabs.android.xmp;
+package org.helllabs.android.xmp.util;
 
-import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.preferences.Preferences;
 

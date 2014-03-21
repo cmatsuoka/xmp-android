@@ -3,10 +3,10 @@ package org.helllabs.android.xmp.service;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.helllabs.android.xmp.InfoCache;
-import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.preferences.Preferences;
+import org.helllabs.android.xmp.util.InfoCache;
+import org.helllabs.android.xmp.util.Log;
 
 import android.app.Service;
 import android.content.ComponentName;

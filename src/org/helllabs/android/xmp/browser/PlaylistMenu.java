@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.helllabs.android.xmp.ChangeLog;
-import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.preferences.Preferences;
+import org.helllabs.android.xmp.util.ChangeLog;
+import org.helllabs.android.xmp.util.Log;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 
 public class PlaylistMenu extends ActionBarActivity {
 	private static final String TAG = "PlaylistMenu";

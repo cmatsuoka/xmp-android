@@ -1,4 +1,5 @@
-package org.helllabs.android.xmp;
+package org.helllabs.android.xmp.util;
+
 
 public final class Log {
 	private static final String TAG = "Xmp";

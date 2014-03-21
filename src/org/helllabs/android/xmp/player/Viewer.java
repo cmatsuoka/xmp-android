@@ -1,7 +1,7 @@
 package org.helllabs.android.xmp.player;
 
-import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.service.ModInterface;
+import org.helllabs.android.xmp.util.Log;
 
 import android.content.Context;
 import android.os.RemoteException;

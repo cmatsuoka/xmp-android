@@ -1,8 +1,8 @@
 package org.helllabs.android.xmp.player;
 
-import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.service.ModInterface;
+import org.helllabs.android.xmp.util.Log;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +14,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
 import android.view.Surface;
+
 
 @SuppressWarnings("PMD.ShortVariable")
 public class ChannelViewer extends Viewer {

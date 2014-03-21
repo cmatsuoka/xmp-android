@@ -1,10 +1,11 @@
-package org.helllabs.android.xmp;
+package org.helllabs.android.xmp.util;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.browser.FileUtils;
 import org.helllabs.android.xmp.preferences.Preferences;
 
