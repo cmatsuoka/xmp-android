@@ -26,7 +26,7 @@ import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 
 
-public class PlayerService extends Service {
+public final class PlayerService extends Service {
 	private static final String TAG = "PlayerService";
 	private AudioTrack audio;
 	private Thread playThread;
@@ -123,6 +123,7 @@ public class PlayerService extends Service {
 			public void onTimeout() {
 				Log.e(TAG, "Stopped by watchdog");
 		    	stopSelf();
+		    	return;
 			}
 		});
  		watchdog.start();
@@ -369,11 +370,12 @@ public class PlayerService extends Service {
     		watchdog.stop();
     		notifier.cancel();
         	end();
+        	Log.i(TAG, "Stop service");
         	stopSelf();
     	}
     }
 
-	protected void end() {    	
+	private void end() {    	
 		Log.i(TAG, "End service");
 	    final int numClients = callbacks.beginBroadcast();
 	    for (int i = 0; i < numClients; i++) {
@@ -389,12 +391,12 @@ public class PlayerService extends Service {
     	Xmp.stopModule();
     	paused = false;
 
-    	if (playThread != null && playThread.isAlive()) {
-    		try {
-    			playThread.join();
-    		} catch (InterruptedException e) { }
-    	}
-    	
+//    	if (playThread != null && playThread.isAlive()) {
+//    		try {
+//    			playThread.join();
+//    		} catch (InterruptedException e) { }
+//    	}
+
     	Xmp.deinit();
     	audio.release();
     }

@@ -6,6 +6,7 @@ import org.helllabs.android.xmp.PlayerCallback;
 import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.browser.Message;
+import org.helllabs.android.xmp.browser.PlaylistMenu;
 import org.helllabs.android.xmp.service.PlayerService;
 
 import android.app.Activity;
@@ -82,6 +83,7 @@ public class PlayerActivity extends Activity {
 	private Display display;
 	
 	private final ServiceConnection connection = new ServiceConnection() {
+		
 		public void onServiceConnected(final ComponentName className, final IBinder service) {
 			modPlayer = ModInterface.Stub.asInterface(service);
 			flipperPage = 0;
@@ -319,8 +321,14 @@ public class PlayerActivity extends Activity {
 	@Override
 	protected void onNewIntent(final Intent intent) {
 		boolean reconnect = false;
+		boolean fromHistory = false;
 		
 		Log.i(TAG, "Start player interface");
+		      
+		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0) {
+			Log.i(TAG, "Player started from history");
+		    fromHistory = true;
+		}
 		
 		String path = null;
 		if (intent.getData() != null) {
@@ -330,12 +338,22 @@ public class PlayerActivity extends Activity {
 		fileArray = null;
 		
 		if (path != null) {		// from intent filter
+			Log.i(TAG, "Player started from intent filter");
 			fileArray = new String[1];
 			fileArray[0] = path;
 			shuffleMode = false;
 			loopListMode = false;
 			start = 0;
-		} else {	
+		} else if (fromHistory) {
+    		// Oops. We don't want to start service if launched from history and service is not running
+    		// so run the browser instead.
+    		Log.i(TAG, "Start file browser");
+    		final Intent browserIntent = new Intent(this, PlaylistMenu.class);
+    		browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    		startActivity(browserIntent);
+    		finish();
+    		return;
+    	} else {	
 			final Bundle extras = intent.getExtras();
 			if (extras != null) {
 				fileArray = extras.getStringArray("files");	
@@ -352,9 +370,11 @@ public class PlayerActivity extends Activity {
     		Log.i(TAG, "Start service");
     		startService(service);
     	}
+	    	
     	if (!bindService(service, connection, 0)) {
     		Log.e(TAG, "Can't bind to service");
     		finish();
+    		return;
     	}
 	}
 	
@@ -602,8 +622,12 @@ public class PlayerActivity extends Activity {
 		
 		unregisterReceiver(screenReceiver);
 		
-		Log.i(TAG, "Unbind service");
-		unbindService(connection);
+		try {
+			unbindService(connection);
+			Log.i(TAG, "Unbind service");
+		} catch (IllegalArgumentException e) {
+			Log.i(TAG, "Can't unbind unregistered service");
+		}
 		
 		super.onDestroy();
 	}
