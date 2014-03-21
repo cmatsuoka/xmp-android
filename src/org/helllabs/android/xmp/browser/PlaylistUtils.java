@@ -44,7 +44,7 @@ public final class PlaylistUtils {
 	    alert.setView(layout);
 		  
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
-			public void onClick(DialogInterface dialog, int whichButton) {
+			public void onClick(final DialogInterface dialog, final int whichButton) {
 			    final EditText e1 = (EditText)layout.findViewById(R.id.new_playlist_name);
 				final EditText e2 = (EditText)layout.findViewById(R.id.new_playlist_comment);
 				final String name = e1.getText().toString();

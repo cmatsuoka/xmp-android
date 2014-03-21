@@ -70,7 +70,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		toggleLoopButton.setImageResource(loopMode ? R.drawable.list_loop_on : R.drawable.list_loop_off);
 		toggleLoopButton.setOnClickListener(new OnClickListener() {
 			public void onClick(final View view) {
-				loopMode = !loopMode;
+				loopMode ^= true;
 				((ImageButton)view).setImageResource(loopMode ?
 						R.drawable.list_loop_on : R.drawable.list_loop_off);
 				if (showToasts) {
@@ -83,7 +83,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		toggleShuffleButton.setImageResource(shuffleMode ? R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
 		toggleShuffleButton.setOnClickListener(new OnClickListener() {
 			public void onClick(final View view) {
-				shuffleMode = !shuffleMode;
+				shuffleMode ^= true;
 				((ImageButton)view).setImageResource(shuffleMode ?	R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
 				if (showToasts) {
 					Message.toast(view.getContext(), shuffleMode ? "Shuffle on" : "Shuffle off");

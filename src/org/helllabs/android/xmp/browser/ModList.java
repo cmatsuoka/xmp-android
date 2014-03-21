@@ -79,7 +79,7 @@ public class ModList extends PlaylistActivity {		// NOPMD
 				.setDuration(animationDuration)
 				.setListener(new AnimatorListenerAdapter() {
 					@Override
-					public void onAnimationEnd(Animator animation) {
+					public void onAnimationEnd(final Animator animation) {
 						progressView.setVisibility(View.GONE);
 					}
 				});
@@ -93,7 +93,7 @@ public class ModList extends PlaylistActivity {		// NOPMD
 	 * Add directory to playlist
 	 */
 	private final DialogInterface.OnClickListener addDirToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int which) {
+		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
 					PlaylistUtils.filesToPlaylist(context, modList.get(fileSelection).filename,
@@ -107,7 +107,7 @@ public class ModList extends PlaylistActivity {		// NOPMD
 	 * Recursively add current directory to playlist
 	 */	
 	private final DialogInterface.OnClickListener addCurRecursiveToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int which) {
+		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
 					PlaylistUtils.filesToPlaylist(context, currentDir,
@@ -121,7 +121,7 @@ public class ModList extends PlaylistActivity {		// NOPMD
 	 * Recursively add directory to playlist
 	 */	
 	private final DialogInterface.OnClickListener addRecursiveToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int which) {
+		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
 					PlaylistUtils.filesToPlaylist(context, modList.get(fileSelection).filename,
@@ -135,7 +135,7 @@ public class ModList extends PlaylistActivity {		// NOPMD
 	 * Add Files to playlist
 	 */	
 	private final DialogInterface.OnClickListener addFileToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
-		public void onClick(final DialogInterface dialog, int which) {
+		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
 					boolean invalid = false;
@@ -441,7 +441,7 @@ public class ModList extends PlaylistActivity {		// NOPMD
 				addToQueue(directoryNum, modList.size() - directoryNum);
 				break;
 			case 3:						// Set as default path
-				SharedPreferences.Editor editor = prefs.edit();
+				final SharedPreferences.Editor editor = prefs.edit();
 				editor.putString(Preferences.MEDIA_PATH, currentDir);
 				editor.commit();
 				Message.toast(context, "Set as default module path");
@@ -498,9 +498,9 @@ public class ModList extends PlaylistActivity {		// NOPMD
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.msg_select_playlist)
-		.setPositiveButton(android.R.string.ok, listener)
-		.setNegativeButton(android.R.string.cancel, listener)
-		.setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
+				.setPositiveButton(android.R.string.ok, listener)
+				.setNegativeButton(android.R.string.cancel, listener)
+				.setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int which) {
 				playlistSelection = which;
 			}
