@@ -1,7 +1,7 @@
 package org.helllabs.android.xmp.player;
 
 import org.helllabs.android.xmp.Log;
-import org.helllabs.android.xmp.ModInterface;
+import org.helllabs.android.xmp.service.ModInterface;
 
 import android.content.Context;
 import android.os.RemoteException;
@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+
 
 @SuppressWarnings("PMD.ShortVariable")
 public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callback, View.OnClickListener {

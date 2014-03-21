@@ -1,4 +1,4 @@
-package org.helllabs.android.xmp;
+package org.helllabs.android.xmp.service;
 
 interface PlayerCallback {
 	void newModCallback(String name, in String[] instruments);

@@ -1,7 +1,7 @@
 package org.helllabs.android.xmp.player;
 
-import org.helllabs.android.xmp.ModInterface;
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.service.ModInterface;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.RemoteException;
+
 
 // http://developer.android.com/guide/topics/graphics/2d-graphics.html
 

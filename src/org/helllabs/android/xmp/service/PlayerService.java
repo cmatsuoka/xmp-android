@@ -5,8 +5,6 @@ import java.lang.reflect.Method;
 
 import org.helllabs.android.xmp.InfoCache;
 import org.helllabs.android.xmp.Log;
-import org.helllabs.android.xmp.ModInterface;
-import org.helllabs.android.xmp.PlayerCallback;
 import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.Xmp;
 

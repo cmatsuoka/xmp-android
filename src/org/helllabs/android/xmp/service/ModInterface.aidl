@@ -1,6 +1,7 @@
-package org.helllabs.android.xmp;
+package org.helllabs.android.xmp.service;
 
-import org.helllabs.android.xmp.PlayerCallback;
+import org.helllabs.android.xmp.service.PlayerCallback;
+
 
 interface ModInterface {
 	void play(in String[] files, int start, boolean shuffle, boolean loopList);
