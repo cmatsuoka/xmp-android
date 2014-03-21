@@ -164,8 +164,9 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	}
 
 	public void setup(final ModInterface modPlayer, final int[] modVars) {
+		Log.i(TAG, "Viewer setup");
+		
 		final int chn = modVars[3];
-
 		this.modVars = modVars;
 		this.modPlayer = modPlayer;
 

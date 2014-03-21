@@ -265,6 +265,8 @@ public class PlayerActivity extends Activity {
 	private class ProgressThread extends Thread {
 		@Override
     	public void run() {
+			Log.i(TAG, "Start progress thread");
+			
 			final long frameTime = 1000000000 / FRAME_RATE;
 			long lastTimer = System.nanoTime();
 			long now;
@@ -326,7 +328,7 @@ public class PlayerActivity extends Activity {
 		boolean reconnect = false;
 		boolean fromHistory = false;
 		
-		Log.i(TAG, "Start player interface");
+		Log.i(TAG, "New intent");
 		      
 		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0) {
 			Log.i(TAG, "Player started from history");
@@ -664,6 +666,7 @@ public class PlayerActivity extends Activity {
 	
 	private final Runnable showNewModRunnable = new Runnable() {
 		public void run() {
+			Log.i(TAG, "Show new module");
 			
 			synchronized (modPlayer) {
 				try {

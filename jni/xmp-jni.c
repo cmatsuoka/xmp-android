@@ -60,6 +60,8 @@ Java_org_helllabs_android_xmp_Xmp_loadModule(JNIEnv *env, jobject obj, jstring n
 
 	xmp_get_module_info(ctx, &mi);
 
+	memset(_pos, 0, XMP_MAX_CHANNELS * sizeof (int));
+
 	return res;
 }
 
@@ -506,6 +508,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 	} else {
 		transient_size = (len - pos) / step;
 	}
+
 	if (transient_size < 0) {
 		transient_size = 0;
 	}
@@ -513,6 +516,9 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 	limit = width;
 	if (limit > transient_size) {
 		limit = transient_size;
+	}
+	if (limit > len / step) {
+		limit = len / step;
 	}
 
 	if (xxs->flg & XMP_SAMPLE_16BIT) {
