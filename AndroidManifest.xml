@@ -85,7 +85,7 @@
 			</intent-filter>
 		</activity>
 		
-		<activity android:name=".Preferences" android:theme="@style/AppTheme.NoActionBar" />
+		<activity android:name=".preferences.Preferences" android:theme="@style/AppTheme.NoActionBar" />
 		
 		<activity android:name=".browser.ModList"
 			android:configChanges="keyboardHidden|orientation|screenSize" />
@@ -93,14 +93,14 @@
 		<activity android:name=".browser.PlayList"
 			android:configChanges="keyboardHidden|orientation|screenSize" />
 		
-		<activity android:name=".browser.about.ListFormats" android:theme="@style/AppTheme.NoActionBar">
+		<activity android:name=".preferences.about.ListFormats" android:theme="@style/AppTheme.NoActionBar">
 			<intent-filter>
 				<action android:name="org.helllabs.android.xmp.LIST_FORMATS" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
 		
-		<activity android:name=".browser.about.About" android:theme="@style/AppTheme.NoActionBar">
+		<activity android:name=".preferences.about.About" android:theme="@style/AppTheme.NoActionBar">
 			<intent-filter>
 				<action android:name="org.helllabs.android.xmp.ABOUT" />
 				<category android:name="android.intent.category.DEFAULT" />

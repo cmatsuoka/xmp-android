@@ -1,8 +1,9 @@
-package org.helllabs.android.xmp;
+package org.helllabs.android.xmp.preferences;
 
 import java.io.File;
 import java.io.IOException;
 
+import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.browser.Message;
 import org.helllabs.android.xmp.service.PlayerService;
 

@@ -1,4 +1,4 @@
-package org.helllabs.android.xmp.browser.about;
+package org.helllabs.android.xmp.preferences.about;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;

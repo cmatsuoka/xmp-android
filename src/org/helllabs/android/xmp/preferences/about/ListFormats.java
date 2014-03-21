@@ -1,4 +1,4 @@
-package org.helllabs.android.xmp.browser.about;
+package org.helllabs.android.xmp.preferences.about;
 
 
 import org.helllabs.android.xmp.R;

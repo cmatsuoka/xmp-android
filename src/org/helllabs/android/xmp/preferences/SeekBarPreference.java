@@ -1,10 +1,12 @@
-package org.helllabs.android.xmp;
+package org.helllabs.android.xmp.preferences;
 
 /* The following code was written by Matthew Wiggins 
  * and is released under the APACHE 2.0 license 
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  */
+
+import org.helllabs.android.xmp.R;
 
 import android.content.Context;
 import android.content.res.TypedArray;

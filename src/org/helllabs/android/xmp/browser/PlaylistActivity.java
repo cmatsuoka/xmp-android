@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.helllabs.android.xmp.InfoCache;
 import org.helllabs.android.xmp.Log;
-import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.player.PlayerActivity;
+import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.service.ModInterface;
 import org.helllabs.android.xmp.service.PlayerService;
 

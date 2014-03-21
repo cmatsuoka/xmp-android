@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.helllabs.android.xmp.ModInfo;
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.Preferences;
 import org.helllabs.android.xmp.Xmp;
+import org.helllabs.android.xmp.preferences.Preferences;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;

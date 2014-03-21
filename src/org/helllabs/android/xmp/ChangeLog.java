@@ -1,8 +1,8 @@
-package org.helllabs.android.xmp.browser.about;
+package org.helllabs.android.xmp;
 
 import org.helllabs.android.xmp.Log;
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.Preferences;
+import org.helllabs.android.xmp.preferences.Preferences;
 
 import android.app.AlertDialog;
 import android.content.Context;
