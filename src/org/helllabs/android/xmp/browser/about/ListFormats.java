@@ -9,8 +9,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
 public class ListFormats extends ListActivity {
-	private final Xmp xmp = new Xmp();	
-	private final String[] formats = xmp.getFormats();
+	private final String[] formats = Xmp.getFormats();
 	
 	@Override
     public void onCreate(final Bundle icicle) {

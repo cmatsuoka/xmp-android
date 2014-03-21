@@ -28,7 +28,6 @@ import android.view.KeyEvent;
 
 public class PlayerService extends Service {
 	private static final String TAG = "PlayerService";
-	private final Xmp xmp = new Xmp();
 	private AudioTrack audio;
 	private Thread playThread;
 	private SharedPreferences prefs;
@@ -103,7 +102,7 @@ public class PlayerService extends Service {
 				bufferSize,
 				AudioTrack.MODE_STREAM);
 
-		xmp.init();
+		Xmp.init();
 
 		isAlive = false;
 		isLoaded = false;
@@ -151,7 +150,7 @@ public class PlayerService extends Service {
 	}
 	
 	private void actionStop() {
-		xmp.stopModule();
+		Xmp.stopModule();
     	paused = false;
     	stopPlaying = true;
 	}
@@ -161,10 +160,10 @@ public class PlayerService extends Service {
 	}
 	
 	private void actionPrev() {
-		if (xmp.time() > 2000) {
-			xmp.seek(0);
+		if (Xmp.time() > 2000) {
+			Xmp.seek(0);
 		} else {
-			xmp.stopModule();
+			Xmp.stopModule();
 			returnToPrev = true;
 			stopPlaying = false;
 		}
@@ -172,7 +171,7 @@ public class PlayerService extends Service {
 	}
 	
 	private void actionNext() {
-		xmp.stopModule();
+		Xmp.stopModule();
 		stopPlaying = false;
 		paused = false;
 	}
@@ -244,7 +243,7 @@ public class PlayerService extends Service {
     			}
     			
 	    		Log.i(TAG, "Load " + fileName);
-	       		if (xmp.loadModule(fileName) < 0) {
+	       		if (Xmp.loadModule(fileName) < 0) {
 	       			Log.e(TAG, "Error loading " + fileName);
 	       			if (returnToPrev) {
 	       				queue.previous();
@@ -254,18 +253,18 @@ public class PlayerService extends Service {
 	       		
 	       		returnToPrev = false;
 
-	       		notifier.notification(xmp.getModName(), queue.getIndex());
+	       		notifier.notification(Xmp.getModName(), queue.getIndex());
 	       		isLoaded = true;
 	       		
 	       		// Unmute all channels
 	       		for (int i = 0; i < 64; i++) {
-	       			xmp.mute(i, 0);
+	       			Xmp.mute(i, 0);
 	       		}
 		       		    	
 	        	int numClients = callbacks.beginBroadcast();
 	        	for (int j = 0; j < numClients; j++) {
 	        		try {
-	    				callbacks.getBroadcastItem(j).newModCallback(fileName, xmp.getInstruments());
+	    				callbacks.getBroadcastItem(j).newModCallback(fileName, Xmp.getInstruments());
 	    			} catch (RemoteException e) {
 	    				Log.e(TAG, "Error notifying new module to client");
 	    			}
@@ -293,25 +292,25 @@ public class PlayerService extends Service {
 	        	}
 
 	       		audio.play();
-	       		xmp.startPlayer(0, sampleRate, sampleFormat);
-	        	xmp.setPlayer(Xmp.XMP_PLAYER_AMP, Integer.parseInt(volBoost));
-	        	xmp.setPlayer(Xmp.XMP_PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));
-	        	xmp.setPlayer(Xmp.XMP_PLAYER_INTERP, interpType);
-	        	xmp.setPlayer(Xmp.XMP_PLAYER_DSP, dsp);
+	       		Xmp.startPlayer(0, sampleRate, sampleFormat);
+	        	Xmp.setPlayer(Xmp.XMP_PLAYER_AMP, Integer.parseInt(volBoost));
+	        	Xmp.setPlayer(Xmp.XMP_PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));
+	        	Xmp.setPlayer(Xmp.XMP_PLAYER_INTERP, interpType);
+	        	Xmp.setPlayer(Xmp.XMP_PLAYER_DSP, dsp);
 	        		        	
 	       		updateData = true;
 	    		
 	    		int count;
 	    		int loopCount = 0;
 	    		
-	       		while (xmp.playFrame() == 0) {
-	       			count = xmp.getLoopCount();
+	       		while (Xmp.playFrame() == 0) {
+	       			count = Xmp.getLoopCount();
 	       			if (!looped && count != loopCount) {
 	       				break;
 	       			}
 	       			loopCount = count;
 	       			
-	       			final int size = xmp.getBuffer(buffer);
+	       			final int size = Xmp.getBuffer(buffer);
 	       			audio.write(buffer, 0, size);
 	       			
 	       			while (paused) {
@@ -332,7 +331,7 @@ public class PlayerService extends Service {
 	       			checkNotificationButtons();
 	       		}
 
-	       		xmp.endPlayer();
+	       		Xmp.endPlayer();
 	       		
 	       		isLoaded = false;
 	       		
@@ -346,7 +345,7 @@ public class PlayerService extends Service {
 	        	}
 	        	callbacks.finishBroadcast();
 	        	
-	       		xmp.releaseModule();
+	       		Xmp.releaseModule();
        		
 	       		audio.stop();
 	       		
@@ -364,7 +363,7 @@ public class PlayerService extends Service {
 	       		}
     		} while (!stopPlaying && queue.next());
 
-    		synchronized (xmp) {
+    		synchronized (this) {
     			updateData = false;		// stop getChannelData update
     		}
     		watchdog.stop();
@@ -387,7 +386,7 @@ public class PlayerService extends Service {
 	    callbacks.finishBroadcast();
 
 	    isAlive = false;
-    	xmp.stopModule();
+    	Xmp.stopModule();
     	paused = false;
 
     	if (playThread != null && playThread.isAlive()) {
@@ -396,7 +395,7 @@ public class PlayerService extends Service {
     		} catch (InterruptedException e) { }
     	}
     	
-    	xmp.deinit();
+    	Xmp.deinit();
     	audio.release();
     }
 
@@ -429,7 +428,7 @@ public class PlayerService extends Service {
 		}
 	    
 	    public void stop() {
-	    	xmp.stopModule();
+	    	Xmp.stopModule();
 	    	paused = false;
 	    	stopPlaying = true;
 	    }
@@ -439,53 +438,53 @@ public class PlayerService extends Service {
 	    }
 	    
 	    public void getInfo(int[] values) {
-	    	xmp.getInfo(values);
+	    	Xmp.getInfo(values);
 	    }
 	
 		public void seek(int seconds) {
-			xmp.seek(seconds);
+			Xmp.seek(seconds);
 		}
 		
 		public int time() {
-			return xmp.time();
+			return Xmp.time();
 		}
 		
 		public void getModVars(int[] vars) {
-			xmp.getModVars(vars);
+			Xmp.getModVars(vars);
 		}
 		
 		public String getModName() {
-			return xmp.getModName();
+			return Xmp.getModName();
 		}
 		
 		public String getModType() {
-			return xmp.getModType();
+			return Xmp.getModType();
 		}
 		
 		public void getChannelData(int[] volumes, int[] finalvols, int[] pans, int[] instruments, int[] keys, int[] periods) {
-			synchronized (xmp) {
+			synchronized (this) {
 				if (updateData) {
-					xmp.getChannelData(volumes, finalvols, pans, instruments, keys, periods);
+					Xmp.getChannelData(volumes, finalvols, pans, instruments, keys, periods);
 				}
 			}
 		}
 		
 		public void getSampleData(boolean trigger, int ins, int key, int period, int chn, int width, byte[] buffer) {
-			synchronized (xmp) {
+			synchronized (this) {
 				if (updateData) {
-					xmp.getSampleData(trigger, ins, key, period, chn, width, buffer);
+					Xmp.getSampleData(trigger, ins, key, period, chn, width, buffer);
 				}
 			}
 		}
 		
 		public void nextSong() {
-			xmp.stopModule();
+			Xmp.stopModule();
 			stopPlaying = false;
 			paused = false;
 		}
 		
 		public void prevSong() {
-			xmp.stopModule();
+			Xmp.stopModule();
 			returnToPrev = true;
 			stopPlaying = false;
 			paused = false;
@@ -507,17 +506,17 @@ public class PlayerService extends Service {
 		}
 		
 		public String[] getInstruments() {
-			return xmp.getInstruments();
+			return Xmp.getInstruments();
 		}
 		
 		public void getPatternRow(final int pat, final int row, final byte[] rowNotes, final byte[] rowInstruments) {
 			if (isAlive) {
-				xmp.getPatternRow(pat, row, rowNotes, rowInstruments);
+				Xmp.getPatternRow(pat, row, rowNotes, rowInstruments);
 			}
 		}
 		
 		public int mute(final int chn, final int status) {
-			return xmp.mute(chn, status);
+			return Xmp.mute(chn, status);
 		}
 
 		
