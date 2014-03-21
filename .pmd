@@ -324,10 +324,6 @@
             <ruleset>Controversial</ruleset>
         </rule>
         <rule>
-            <name>UnnecessaryParentheses</name>
-            <ruleset>Controversial</ruleset>
-        </rule>
-        <rule>
             <name>UseConcurrentHashMap</name>
             <ruleset>Controversial</ruleset>
         </rule>
@@ -429,10 +425,6 @@
         </rule>
         <rule>
             <name>FinalFieldCouldBeStatic</name>
-            <ruleset>Design</ruleset>
-        </rule>
-        <rule>
-            <name>GodClass</name>
             <ruleset>Design</ruleset>
         </rule>
         <rule>
@@ -949,6 +941,10 @@
         </rule>
         <rule>
             <name>UnnecessaryFinalModifier</name>
+            <ruleset>Unnecessary</ruleset>
+        </rule>
+        <rule>
+            <name>UnnecessaryParentheses</name>
             <ruleset>Unnecessary</ruleset>
         </rule>
         <rule>
