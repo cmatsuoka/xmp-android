@@ -85,6 +85,8 @@ public class PlayerActivity extends Activity {
 	private final ServiceConnection connection = new ServiceConnection() {
 		
 		public void onServiceConnected(final ComponentName className, final IBinder service) {
+			Log.i(TAG, "Service connected");
+			
 			modPlayer = ModInterface.Stub.asInterface(service);
 			flipperPage = 0;
 
@@ -118,6 +120,7 @@ public class PlayerActivity extends Activity {
 		public void onServiceDisconnected(final ComponentName className) {
 			stopUpdate = true;
 			modPlayer = null;		// NOPMD
+			Log.i(TAG, "Service disconnected");
 		}
 	};
 	
