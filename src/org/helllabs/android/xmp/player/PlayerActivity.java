@@ -84,12 +84,12 @@ public class PlayerActivity extends Activity {
 	private Viewer instrumentViewer;
 	private Viewer channelViewer;
 	private Viewer patternViewer;
-	
+
 	private final ServiceConnection connection = new ServiceConnection() {
-		
+
 		public void onServiceConnected(final ComponentName className, final IBinder service) {
 			Log.i(TAG, "Service connected");
-			
+
 			modPlayer = ModInterface.Stub.asInterface(service);
 			flipperPage = 0;
 
@@ -126,31 +126,31 @@ public class PlayerActivity extends Activity {
 			Log.i(TAG, "Service disconnected");
 		}
 	};
-	
-    private final PlayerCallback playerCallback = new PlayerCallback.Stub() {
-    	
-    	@Override
-        public void newModCallback(final String name, final String[] instruments) throws RemoteException {
-        	synchronized (modPlayer) {
-        		Log.i(TAG, "Show module data");
-        		showNewMod(name);
-        		canChangeViewer = true;
-        	}
-        }
-        
-        @Override
-        public void endModCallback() throws RemoteException {
-        	synchronized (modPlayer) {
-        		Log.i(TAG, "End of module");
-        		stopUpdate = true;
-        		canChangeViewer = false;
-        	}
-        }
-        
-        @Override
-        public void endPlayCallback() throws RemoteException {
-       		Log.i(TAG, "End progress thread");
-       		stopUpdate = true;
+
+	private final PlayerCallback playerCallback = new PlayerCallback.Stub() {
+
+		@Override
+		public void newModCallback(final String name, final String[] instruments) throws RemoteException {
+			synchronized (modPlayer) {
+				Log.i(TAG, "Show module data");
+				showNewMod(name);
+				canChangeViewer = true;
+			}
+		}
+
+		@Override
+		public void endModCallback() throws RemoteException {
+			synchronized (modPlayer) {
+				Log.i(TAG, "End of module");
+				stopUpdate = true;
+				canChangeViewer = false;
+			}
+		}
+
+		@Override
+		public void endPlayCallback() throws RemoteException {
+			Log.i(TAG, "End progress thread");
+			stopUpdate = true;
 
 			if (progressThread != null && progressThread.isAlive()) {
 				try {
@@ -158,126 +158,126 @@ public class PlayerActivity extends Activity {
 				} catch (InterruptedException e) { }
 			}
 			finish();
-        }
+		}
 
 		@Override
 		public void pauseCallback() throws RemoteException {
 			handler.post(setPauseStateRunnable);
 		}
-    };
+	};
 
-    private final Runnable setPauseStateRunnable = new Runnable() {
-    	
-    	@Override
-    	public void run() {
-    		try {
-    			// Set pause status according to external state
-    			if (modPlayer.isPaused()) {
-    				pause();
-    			} else {
-    				unpause();
-    			}
-    		} catch (RemoteException e) {
-    			Log.e(TAG, "Can't get pause status");
-    		}
-    	}
-    };
-    
-    private final Runnable updateInfoRunnable = new Runnable() {
-    	int oldSpd = -1;
-    	int oldBpm = -1;
-    	int oldPos = -1;
-    	int oldPat = -1;
-    	int oldTime = -1;
-    	int before, now;
-    	boolean oldShowElapsed;
-    	final char[] c = new char[2];
-    	StringBuffer s = new StringBuffer();
-    	
-    	@Override
-        public void run() {
-        	now = (before + FRAME_RATE * latency / 1000 + 1) % FRAME_RATE;
-  
+	private final Runnable setPauseStateRunnable = new Runnable() {
+
+		@Override
+		public void run() {
+			try {
+				// Set pause status according to external state
+				if (modPlayer.isPaused()) {
+					pause();
+				} else {
+					unpause();
+				}
+			} catch (RemoteException e) {
+				Log.e(TAG, "Can't get pause status");
+			}
+		}
+	};
+
+	private final Runnable updateInfoRunnable = new Runnable() {
+		int oldSpd = -1;
+		int oldBpm = -1;
+		int oldPos = -1;
+		int oldPat = -1;
+		int oldTime = -1;
+		int before, now;
+		boolean oldShowElapsed;
+		final char[] c = new char[2];
+		StringBuffer s = new StringBuffer();
+
+		@Override
+		public void run() {
+			now = (before + FRAME_RATE * latency / 1000 + 1) % FRAME_RATE;
+
 			try {
 				synchronized (modPlayer) {
 					if (stopUpdate) {
 						return;
 					}
 
-					modPlayer.getInfo(info[now].values);							
-					info[now].time = modPlayer.time() / 1000;
-					
-					if (info[before].values[0] < 0) {
-						throw new Exception();
-					}
-	
-					if (info[before].values[5] != oldSpd || info[before].values[6] != oldBpm
-							|| info[before].values[0] != oldPos || info[before].values[1] != oldPat)
-					{
-						// Ugly code to avoid expensive String.format()
-						
-						s.delete(0, s.length());
-						
-						s.append("Speed:");
-						Util.to02X(c, info[before].values[5]);
-						s.append(c);
-						
-						s.append(" BPM:");
-						Util.to02X(c, info[before].values[6]);
-						s.append(c);
-						
-						s.append(" Pos:");
-						Util.to02X(c, info[before].values[0]);
-						s.append(c);
-						
-						s.append(" Pat:");
-						Util.to02X(c, info[before].values[1]);
-						s.append(c);
-						
-						infoStatus.setText(s);
-	
-						oldSpd = info[before].values[5];
-						oldBpm = info[before].values[6];
-						oldPos = info[before].values[0];
-						oldPat = info[before].values[1];
-					}
-					
-					if (info[before].time != oldTime || showElapsed != oldShowElapsed) {
-						int t = info[before].time;
-						if (t < 0) {
-							t = 0;
-						}
-						
-						s.delete(0, s.length());
-						
-						if (showElapsed) {	
-							Util.to2d(c, t / 60);
-							s.append(c);
-							s.append(':');
-							Util.to02d(c, t % 60);
-							s.append(c);
-							
-							elapsedTime.setText(s);
-						} else {
-							t = totalTime - t;
-							
-							s.append('-');
-							Util.to2d(c, t / 60);
-							s.append(c);
-							s.append(':');
-							Util.to02d(c, t % 60);
-							s.append(c);
-							
-							elapsedTime.setText(s);
-						}
-	
-						oldTime = info[before].time;
-						oldShowElapsed = showElapsed;
-					}
-	
 					if (!paused) {
+						modPlayer.getInfo(info[now].values);							
+						info[now].time = modPlayer.time() / 1000;
+
+						if (info[before].values[0] < 0) {
+							throw new Exception();
+						}
+
+						if (info[before].values[5] != oldSpd || info[before].values[6] != oldBpm
+								|| info[before].values[0] != oldPos || info[before].values[1] != oldPat)
+						{
+							// Ugly code to avoid expensive String.format()
+
+							s.delete(0, s.length());
+
+							s.append("Speed:");
+							Util.to02X(c, info[before].values[5]);
+							s.append(c);
+
+							s.append(" BPM:");
+							Util.to02X(c, info[before].values[6]);
+							s.append(c);
+
+							s.append(" Pos:");
+							Util.to02X(c, info[before].values[0]);
+							s.append(c);
+
+							s.append(" Pat:");
+							Util.to02X(c, info[before].values[1]);
+							s.append(c);
+
+							infoStatus.setText(s);
+
+							oldSpd = info[before].values[5];
+							oldBpm = info[before].values[6];
+							oldPos = info[before].values[0];
+							oldPat = info[before].values[1];
+						}
+
+						if (info[before].time != oldTime || showElapsed != oldShowElapsed) {
+							int t = info[before].time;
+							if (t < 0) {
+								t = 0;
+							}
+
+							s.delete(0, s.length());
+
+							if (showElapsed) {	
+								Util.to2d(c, t / 60);
+								s.append(c);
+								s.append(':');
+								Util.to02d(c, t % 60);
+								s.append(c);
+
+								elapsedTime.setText(s);
+							} else {
+								t = totalTime - t;
+
+								s.append('-');
+								Util.to2d(c, t / 60);
+								s.append(c);
+								s.append(':');
+								Util.to02d(c, t % 60);
+								s.append(c);
+
+								elapsedTime.setText(s);
+							}
+
+							oldTime = info[before].time;
+							oldShowElapsed = showElapsed;
+						}
+
 						modPlayer.getChannelData(info[now].volumes, info[now].finalvols, info[now].pans,
-												info[now].instruments, info[now].keys, info[now].periods);
+								info[now].instruments, info[now].keys, info[now].periods);
 					}
 
 					synchronized(viewerLayout) {
@@ -294,63 +294,63 @@ public class PlayerActivity extends Activity {
 					}
 				}
 			}
-        }
-    };
-    
+		}
+	};
+
 	private class ProgressThread extends Thread {
-		
+
 		@Override
-    	public void run() {
+		public void run() {
 			Log.i(TAG, "Start progress thread");
-			
+
 			final long frameTime = 1000000000 / FRAME_RATE;
 			long lastTimer = System.nanoTime();
 			long now;
-					
-    		int t = 0;
-    		
-    		do {
-    			synchronized (modPlayer) {
-    				if (stopUpdate) {
-    					break;
-    				}
-    				
-	    			try {
+
+			int t = 0;
+
+			do {
+				synchronized (modPlayer) {
+					if (stopUpdate) {
+						break;
+					}
+
+					try {
 						t = modPlayer.time() / 100;
 					} catch (RemoteException e) {
 						// fail silently
 					}
-    			}
-	    			
-	    		if (/* !paused && */ screenOn) {
-	    			if (!seeking && t >= 0) {
-	    				seekBar.setProgress(t);
-	    			}
+				}
+
+				if (/* !paused && */ screenOn) {
+					if (!paused && !seeking && t >= 0) {
+						seekBar.setProgress(t);
+					}
 					handler.post(updateInfoRunnable);
 				}
-    			  			
-	    		try {
-	    			while ((now = System.nanoTime()) - lastTimer < frameTime && !stopUpdate) {
-	    				sleep(10);
-	    			}
-	    			lastTimer = now;
-	    		} catch (InterruptedException e) { }
-    		} while (t >= 0 && !stopUpdate);
-    		
-    		seekBar.setProgress(0);
-    	}
-    };
+
+				try {
+					while ((now = System.nanoTime()) - lastTimer < frameTime && !stopUpdate) {
+						sleep(10);
+					}
+					lastTimer = now;
+				} catch (InterruptedException e) { }
+			} while (t >= 0 && !stopUpdate);
+
+			seekBar.setProgress(0);
+		}
+	};
 
 	private void pause() {
 		paused = true;
 		playButton.setImageResource(R.drawable.play);
 	}
-	
+
 	private void unpause() {
 		paused = false;
 		playButton.setImageResource(R.drawable.pause);
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(final Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
@@ -358,26 +358,26 @@ public class PlayerActivity extends Activity {
 			viewer.setRotation(display.getOrientation());
 		}
 	}
-	
+
 	@Override
 	protected void onNewIntent(final Intent intent) {
 		boolean reconnect = false;
 		boolean fromHistory = false;
-		
+
 		Log.i(TAG, "New intent");
-		
+
 		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0) {
 			Log.i(TAG, "Player started from history");
-		    fromHistory = true;
+			fromHistory = true;
 		}
-		
+
 		String path = null;
 		if (intent.getData() != null) {
 			path = intent.getData().getPath();
 		}
 
 		fileArray = null;
-		
+
 		if (path != null) {		// from intent filter
 			Log.i(TAG, "Player started from intent filter");
 			fileArray = new String[1];
@@ -386,15 +386,15 @@ public class PlayerActivity extends Activity {
 			loopListMode = false;
 			start = 0;
 		} else if (fromHistory) {
-    		// Oops. We don't want to start service if launched from history and service is not running
-    		// so run the browser instead.
-    		Log.i(TAG, "Start file browser");
-    		final Intent browserIntent = new Intent(this, PlaylistMenu.class);
-    		browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    		startActivity(browserIntent);
-    		finish();
-    		return;
-    	} else {	
+			// Oops. We don't want to start service if launched from history and service is not running
+			// so run the browser instead.
+			Log.i(TAG, "Start file browser");
+			final Intent browserIntent = new Intent(this, PlaylistMenu.class);
+			browserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(browserIntent);
+			finish();
+			return;
+		} else {	
 			final Bundle extras = intent.getExtras();
 			if (extras != null) {
 				fileArray = extras.getStringArray("files");	
@@ -405,53 +405,53 @@ public class PlayerActivity extends Activity {
 				reconnect = true;
 			}
 		}
-		
-    	final Intent service = new Intent(this, PlayerService.class);
-    	if (!reconnect) {
-    		Log.i(TAG, "Start service");
-    		startService(service);
-    	}
-	    	
-    	if (!bindService(service, connection, 0)) {
-    		Log.e(TAG, "Can't bind to service");
-    		finish();
-    		return;
-    	}
-	}
-	
-    //private void setFont(final TextView name, final String path, final int res) {
-    //    final Typeface typeface = Typeface.createFromAsset(this.getAssets(), path); 
-    //    name.setTypeface(typeface); 
-    //}
 
-    private void changeViewer() {
-    	currentViewer++;
-    	currentViewer %= 3;
-    	
-    	synchronized(viewerLayout) {
-    		viewerLayout.removeAllViews();
-    		switch (currentViewer) {
-    		case 0:
-    			viewer = instrumentViewer;
-    			break;
-    		case 1:
-    			viewer = channelViewer;
-    			break;
-    		case 2:
-    			viewer = patternViewer;
-    			break;
-    		}
-    			
-    		viewerLayout.addView(viewer);   		
-    		viewer.setup(modPlayer, modVars);
-    		viewer.setRotation(display.getOrientation());
-    	}
-    }
-    
- 
-    // Click listeners
-       
-    public void loopButtonListener(final View view) {
+		final Intent service = new Intent(this, PlayerService.class);
+		if (!reconnect) {
+			Log.i(TAG, "Start service");
+			startService(service);
+		}
+
+		if (!bindService(service, connection, 0)) {
+			Log.e(TAG, "Can't bind to service");
+			finish();
+			return;
+		}
+	}
+
+	//private void setFont(final TextView name, final String path, final int res) {
+	//    final Typeface typeface = Typeface.createFromAsset(this.getAssets(), path); 
+	//    name.setTypeface(typeface); 
+	//}
+
+	private void changeViewer() {
+		currentViewer++;
+		currentViewer %= 3;
+
+		synchronized(viewerLayout) {
+			viewerLayout.removeAllViews();
+			switch (currentViewer) {
+			case 0:
+				viewer = instrumentViewer;
+				break;
+			case 1:
+				viewer = channelViewer;
+				break;
+			case 2:
+				viewer = patternViewer;
+				break;
+			}
+
+			viewerLayout.addView(viewer);   		
+			viewer.setup(modPlayer, modVars);
+			viewer.setRotation(display.getOrientation());
+		}
+	}
+
+
+	// Click listeners
+
+	public void loopButtonListener(final View view) {
 		try {
 			if (modPlayer.toggleLoop()) {
 				loopButton.setImageResource(R.drawable.loop_on);
@@ -462,17 +462,17 @@ public class PlayerActivity extends Activity {
 			Log.e(TAG, "Can't get loop status");
 		}
 	}
-    
+
 	public void playButtonListener(final View view) {
 		//Debug.startMethodTracing("xmp");				
 		if (modPlayer == null) {
 			return;
 		}
-		
+
 		synchronized (this) {
 			try {
 				modPlayer.pause();
-			
+
 				if (paused) {
 					unpause();
 				} else {
@@ -482,22 +482,22 @@ public class PlayerActivity extends Activity {
 				Log.e(TAG, "Can't pause/unpause module");
 			}
 		}
-    }
+	}
 
-    public void stopButtonListener(final View view) {
+	public void stopButtonListener(final View view) {
 		//Debug.stopMethodTracing();
 		if (modPlayer == null) {
 			return;
 		}
-		
+
 		stopPlayingMod();
-    }
-    
-    public void backButtonListener(final View view) {
+	}
+
+	public void backButtonListener(final View view) {
 		if (modPlayer == null) {
 			return;
 		}
-		
+
 		try {
 			if (modPlayer.time() > 3000) {
 				modPlayer.seek(0);
@@ -512,12 +512,12 @@ public class PlayerActivity extends Activity {
 			Log.e(TAG, "Can't go to previous module");
 		}
 	}
-    
+
 	public void forwardButtonListener(final View view) {				
 		if (modPlayer == null) {
 			return;
 		}
-		
+
 		try {
 			stopUpdate = true;
 			synchronized (modPlayer) {
@@ -526,47 +526,47 @@ public class PlayerActivity extends Activity {
 		} catch (RemoteException e) {
 			Log.e(TAG, "Can't go to next module");
 		}
-		
+
 		unpause();
-    }
-	
+	}
+
 	// Life cycle
-	
+
 	@Override
 	public void onCreate(final Bundle icicle) {
 		super.onCreate(icicle);
 		setContentView(R.layout.player);
-		
+
 		activity = this;
 		display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		
+
 		Log.i(TAG, "Create player interface");
-		
-        // INITIALIZE RECEIVER by jwei512
+
+		// INITIALIZE RECEIVER by jwei512
 		final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		screenReceiver = new ScreenReceiver();
 		registerReceiver(screenReceiver, filter);
-		
+
 		screenOn = true;
-		
+
 		if (PlayerService.isLoaded) {
 			canChangeViewer = true;
 		}
-		
+
 		setResult(RESULT_OK);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		final boolean showInfoLine = prefs.getBoolean(Preferences.SHOW_INFO_LINE, true);
 		showElapsed = true;
-		
+
 		latency = prefs.getInt(Preferences.BUFFER_MS, 500);
 		if (latency > 1000) {
 			latency = 1000;
 		}
 
 		onNewIntent(getIntent());
-    	
+
 		infoName[0] = (TextView)findViewById(R.id.info_name_0);
 		infoType[0] = (TextView)findViewById(R.id.info_type_0);
 		infoName[1] = (TextView)findViewById(R.id.info_name_1);
@@ -588,42 +588,42 @@ public class PlayerActivity extends Activity {
 				}
 			}
 		});		
-			
+
 		if (prefs.getBoolean(Preferences.KEEP_SCREEN_ON, false)) {
 			titleFlipper.setKeepScreenOn(true);
 		}
-		
+
 		titleFlipper.setInAnimation(this, R.anim.slide_in_right);
 		titleFlipper.setOutAnimation(this, R.anim.slide_out_left);
 
-        final Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/Michroma.ttf");
-        
-        for (int i = 0; i < 2; i++) {
-        	infoName[i].setTypeface(font);
-        	infoName[i].setIncludeFontPadding(false);
-        	infoType[i].setTypeface(font);
-        	infoType[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-        }
-		
+		final Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/Michroma.ttf");
+
+		for (int i = 0; i < 2; i++) {
+			infoName[i].setTypeface(font);
+			infoName[i].setIncludeFontPadding(false);
+			infoType[i].setTypeface(font);
+			infoType[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+		}
+
 		if (!showInfoLine) {
 			infoStatus.setVisibility(LinearLayout.GONE);
 			elapsedTime.setVisibility(LinearLayout.GONE);
 		}
-		
+
 		playButton = (ImageButton)findViewById(R.id.play);
 		loopButton = (ImageButton)findViewById(R.id.loop);
-		
+
 		loopButton.setImageResource(R.drawable.loop_off);
-		
+
 		elapsedTime.setOnClickListener(new OnClickListener() {
 			public void onClick(final View view) {
 				showElapsed ^= true;
-		    }
+			}
 		});
-		
+
 		seekBar = (SeekBar)findViewById(R.id.seek);
 		seekBar.setProgress(0);
-		
+
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			public void onProgressChanged(final SeekBar s, final int p, final boolean b) {
 				// do nothing
@@ -644,19 +644,19 @@ public class PlayerActivity extends Activity {
 				seeking = false;
 			}
 		});
-		
+
 		instrumentViewer = new InstrumentViewer(this);
 		channelViewer = new ChannelViewer(this);
 		patternViewer = new PatternViewer(this);
 	}
 
-	
+
 	@Override
 	public void onDestroy() {		
 		if (deleteDialog != null) {
 			deleteDialog.cancel();
 		}
-		
+
 		if (modPlayer != null) {
 			try {
 				modPlayer.unregisterCallback(playerCallback);
@@ -664,19 +664,19 @@ public class PlayerActivity extends Activity {
 				Log.e(TAG, "Can't unregister player callback");
 			}
 		}
-		
+
 		unregisterReceiver(screenReceiver);
-		
+
 		try {
 			unbindService(connection);
 			Log.i(TAG, "Unbind service");
 		} catch (IllegalArgumentException e) {
 			Log.i(TAG, "Can't unbind unregistered service");
 		}
-		
+
 		super.onDestroy();
 	}
-	
+
 	/*
 	 * Stop screen updates when screen is off
 	 */
@@ -686,7 +686,7 @@ public class PlayerActivity extends Activity {
 		if (ScreenReceiver.wasScreenOn) {
 			screenOn = false;
 		} //else {
-			// Screen state not changed
+		// Screen state not changed
 		//}
 		super.onPause();
 	}
@@ -703,24 +703,24 @@ public class PlayerActivity extends Activity {
 		}
 		handler.post(showNewModRunnable);
 	}
-	
+
 	private final Runnable showNewModRunnable = new Runnable() {
 		public void run() {
 			Log.i(TAG, "Show new module");
-			
+
 			synchronized (modPlayer) {
 				try {
 					modPlayer.getModVars(modVars);
 				} catch (RemoteException e) {
 					Log.e(TAG, "Can't get module data");
 				}
-				
+
 				String name;
 				String type;
 				try {
 					name = modPlayer.getModName();
 					type = modPlayer.getModType();
-					
+
 					if (name.trim().length() == 0) {
 						name = "<untitled>";
 					}
@@ -735,58 +735,58 @@ public class PlayerActivity extends Activity {
 				int chn = vars[3];
 				int ins = vars[4];
 				int smp = vars[5];*/
-				
+
 				totalTime = time / 1000;
-		       	seekBar.setProgress(0);
-		       	seekBar.setMax(time / 100);
-		        
-		       	flipperPage = (flipperPage + 1) % 2;
-	
+				seekBar.setProgress(0);
+				seekBar.setMax(time / 100);
+
+				flipperPage = (flipperPage + 1) % 2;
+
 				infoName[flipperPage].setText(name);
-			    infoType[flipperPage].setText(type);
-	
-		       	titleFlipper.showNext();
-	
-		       	viewer.setup(modPlayer, modVars);
+				infoType[flipperPage].setText(type);
+
+				titleFlipper.showNext();
+
+				viewer.setup(modPlayer, modVars);
 				viewer.setRotation(display.getOrientation());
-		       	
-		       	/*infoMod.setText(String.format("Channels: %d\n" +
+
+				/*infoMod.setText(String.format("Channels: %d\n" +
 		       			"Length: %d, Patterns: %d\n" +
 		       			"Instruments: %d, Samples: %d\n" +
 		       			"Estimated play time: %dmin%02ds",
 		       			chn, len, pat, ins, smp,
 		       			((time + 500) / 60000), ((time + 500) / 1000) % 60));*/
-				
+
 				info = new Viewer.Info[FRAME_RATE];
 				for (int i = 0; i < FRAME_RATE; i++) {
 					info[i] = new Viewer.Info();
 				}
-				
+
 				stopUpdate = false;
-		       	if (progressThread == null || !progressThread.isAlive()) {
-		       		progressThread = new ProgressThread();
-		       		progressThread.start();
-		       	}
+				if (progressThread == null || !progressThread.isAlive()) {
+					progressThread = new ProgressThread();
+					progressThread.start();
+				}
 			}
 		}
 	};
-	
+
 	private void playNewMod(final String[] files, final int start) {      	 
-       	try {
+		try {
 			modPlayer.play(files, start, shuffleMode, loopListMode);
 		} catch (RemoteException e) {
 			Log.e(TAG, "Can't play module");
 		}
 	}
-	
+
 	private void stopPlayingMod() {
 		stopUpdate = true;
-		
+
 		if (finishing) {
 			return;
 		}
 		finishing = true;
-		
+
 		synchronized (modPlayer) {
 			try {
 				modPlayer.stop();
@@ -794,7 +794,7 @@ public class PlayerActivity extends Activity {
 				Log.e(TAG, "Can't stop module");
 			}
 		}
-		
+
 		paused = false;
 
 		if (progressThread != null && progressThread.isAlive()) {
@@ -803,7 +803,7 @@ public class PlayerActivity extends Activity {
 			} catch (InterruptedException e) { }
 		}
 	}
-	
+
 	private final DialogInterface.OnClickListener deleteDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
@@ -818,19 +818,19 @@ public class PlayerActivity extends Activity {
 				} catch (RemoteException e) {
 					Message.toast(activity, "Can\'t connect service");
 				}
-	        }
-	    }
+			}
+		}
 	};
-		
+
 	// Menu
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		if (prefs.getBoolean(Preferences.ENABLE_DELETE, false)) {
 			final MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.player_menu, menu);
 		}
-	    return true;
+		return true;
 	}
 
 	@Override
