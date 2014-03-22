@@ -248,14 +248,6 @@
             <ruleset>Code Size</ruleset>
         </rule>
         <rule>
-            <name>TooManyFields</name>
-            <ruleset>Code Size</ruleset>
-        </rule>
-        <rule>
-            <name>TooManyMethods</name>
-            <ruleset>Code Size</ruleset>
-        </rule>
-        <rule>
             <name>CommentContent</name>
             <ruleset>Comments</ruleset>
         </rule>

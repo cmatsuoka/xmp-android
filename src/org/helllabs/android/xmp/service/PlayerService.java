@@ -121,7 +121,6 @@ public final class PlayerService extends Service {
 			public void onTimeout() {
 				Log.e(TAG, "Stopped by watchdog");
 		    	stopSelf();
-		    	return;
 			}
 		});
  		watchdog.start();
@@ -420,7 +419,7 @@ public final class PlayerService extends Service {
 			isAlive = true;
 		}
 		
-		public void add(String[] files) {	
+		public void add(final String[] files) {	
 			queue.add(files);
 			notifier.notification("Added to play queue");			
 		}
@@ -432,14 +431,14 @@ public final class PlayerService extends Service {
 	    }
 	    
 	    public void pause() {
-	    	paused = !paused;
+	    	paused ^= true;
 	    }
 	    
-	    public void getInfo(int[] values) {
+	    public void getInfo(final int[] values) {
 	    	Xmp.getInfo(values);
 	    }
 	
-		public void seek(int seconds) {
+		public void seek(final int seconds) {
 			Xmp.seek(seconds);
 		}
 		
@@ -447,7 +446,7 @@ public final class PlayerService extends Service {
 			return Xmp.time();
 		}
 		
-		public void getModVars(int[] vars) {
+		public void getModVars(final int[] vars) {
 			Xmp.getModVars(vars);
 		}
 		
@@ -489,7 +488,7 @@ public final class PlayerService extends Service {
 		}
 
 		public boolean toggleLoop() throws RemoteException {
-			looped = !looped;
+			looped ^= true;
 			return looped;
 		}
 		
