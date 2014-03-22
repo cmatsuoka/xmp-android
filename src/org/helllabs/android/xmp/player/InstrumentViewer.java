@@ -21,6 +21,32 @@ public class InstrumentViewer extends Viewer {
 	private String[] insName;
 	private final Rect rect = new Rect();
 	
+	public InstrumentViewer(final Context context) {
+		super(context);
+		
+		fontSize = getResources().getDimensionPixelSize(R.dimen.instrumentview_font_size);
+		
+		insPaint = new Paint[8];
+		for (int i = 0; i < 8; i++) {
+			final int val = 120 + 10 * i;
+			insPaint[i] = new Paint();
+			insPaint[i].setARGB(255, val, val, val);
+			insPaint[i].setTypeface(Typeface.MONOSPACE);
+			insPaint[i].setTextSize(fontSize);
+			insPaint[i].setAntiAlias(true);
+		}
+		
+		barPaint = new Paint[8];
+		for (int i = 0; i < 8; i++) {
+			final int val = 15 * i;
+			barPaint[i] = new Paint();
+			barPaint[i].setARGB(255, val /4, val / 2, val);
+		}
+
+		fontWidth = (int)insPaint[0].measureText("X");
+		fontHeight = fontSize * 14 / 10;
+	}
+	
 	@Override
 	public void setup(final ModInterface modPlayer, final int[] modVars) {
 		super.setup(modPlayer, modVars);
@@ -102,31 +128,5 @@ public class InstrumentViewer extends Viewer {
 			
 			canvas.drawText(insName[i], 0, y, insPaint[maxVol]);
 		}
-	}
-	
-	public InstrumentViewer(final Context context) {
-		super(context);
-		
-		fontSize = getResources().getDimensionPixelSize(R.dimen.instrumentview_font_size);
-		
-		insPaint = new Paint[8];
-		for (int i = 0; i < 8; i++) {
-			final int val = 120 + 10 * i;
-			insPaint[i] = new Paint();
-			insPaint[i].setARGB(255, val, val, val);
-			insPaint[i].setTypeface(Typeface.MONOSPACE);
-			insPaint[i].setTextSize(fontSize);
-			insPaint[i].setAntiAlias(true);
-		}
-		
-		barPaint = new Paint[8];
-		for (int i = 0; i < 8; i++) {
-			final int val = 15 * i;
-			barPaint[i] = new Paint();
-			barPaint[i].setARGB(255, val /4, val / 2, val);
-		}
-
-		fontWidth = (int)insPaint[0].measureText("X");
-		fontHeight = fontSize * 14 / 10;
 	}
 }

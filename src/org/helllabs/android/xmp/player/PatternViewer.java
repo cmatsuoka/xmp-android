@@ -30,6 +30,61 @@ public class PatternViewer extends Viewer {
 		"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "
 	};
 
+	public PatternViewer(final Context context) {
+		super(context);
+
+		fontSize = getResources().getDimensionPixelSize(R.dimen.patternview_font_size);
+
+		notePaint = new Paint();
+		notePaint.setARGB(255, 140, 140, 160);
+		notePaint.setTypeface(Typeface.MONOSPACE);
+		notePaint.setTextSize(fontSize);
+		notePaint.setAntiAlias(true);
+
+		insPaint = new Paint();
+		insPaint.setARGB(255, 160, 80, 80);
+		insPaint.setTypeface(Typeface.MONOSPACE);
+		insPaint.setTextSize(fontSize);
+		insPaint.setAntiAlias(true);
+
+		muteNotePaint = new Paint();
+		muteNotePaint.setARGB(255, 60, 60, 60);
+		muteNotePaint.setTypeface(Typeface.MONOSPACE);
+		muteNotePaint.setTextSize(fontSize);
+		muteNotePaint.setAntiAlias(true);
+
+		muteInsPaint = new Paint();
+		muteInsPaint.setARGB(255, 80, 40, 40);
+		muteInsPaint.setTypeface(Typeface.MONOSPACE);
+		muteInsPaint.setTextSize(fontSize);
+		muteInsPaint.setAntiAlias(true);
+
+		headerTextPaint = new Paint();
+		headerTextPaint.setARGB(255, 220, 220, 220);
+		headerTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
+		headerTextPaint.setTextSize(fontSize);
+		headerTextPaint.setAntiAlias(true);
+
+		headerPaint = new Paint();
+		headerPaint.setARGB(255, 140, 140, 220);
+
+		barPaint = new Paint();
+		barPaint.setARGB(255, 40, 40, 40);
+
+		fontWidth = (int)notePaint.measureText("X");
+		fontHeight = fontSize * 12 / 10;
+
+		for (int i = 0; i < 120; i++) {
+			allNotes[i] = new String(NOTES[i % 12] + (i / 12));
+		}
+
+		final char[] c = new char[2];
+		for (int i = 0; i < 256; i++) {
+			Util.to02X(c, i);
+			hexByte[i] = new String(c);
+		}
+	}
+	
 	@Override
 	public void setup(final ModInterface modPlayer, final int[] modVars) {
 		super.setup(modPlayer, modVars);
@@ -167,61 +222,6 @@ public class PatternViewer extends Viewer {
 					canvas.drawText("--", x, y, paint2);
 				}
 			}
-		}
-	}
-
-	public PatternViewer(final Context context) {
-		super(context);
-
-		fontSize = getResources().getDimensionPixelSize(R.dimen.patternview_font_size);
-
-		notePaint = new Paint();
-		notePaint.setARGB(255, 140, 140, 160);
-		notePaint.setTypeface(Typeface.MONOSPACE);
-		notePaint.setTextSize(fontSize);
-		notePaint.setAntiAlias(true);
-
-		insPaint = new Paint();
-		insPaint.setARGB(255, 160, 80, 80);
-		insPaint.setTypeface(Typeface.MONOSPACE);
-		insPaint.setTextSize(fontSize);
-		insPaint.setAntiAlias(true);
-
-		muteNotePaint = new Paint();
-		muteNotePaint.setARGB(255, 60, 60, 60);
-		muteNotePaint.setTypeface(Typeface.MONOSPACE);
-		muteNotePaint.setTextSize(fontSize);
-		muteNotePaint.setAntiAlias(true);
-
-		muteInsPaint = new Paint();
-		muteInsPaint.setARGB(255, 80, 40, 40);
-		muteInsPaint.setTypeface(Typeface.MONOSPACE);
-		muteInsPaint.setTextSize(fontSize);
-		muteInsPaint.setAntiAlias(true);
-
-		headerTextPaint = new Paint();
-		headerTextPaint.setARGB(255, 220, 220, 220);
-		headerTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
-		headerTextPaint.setTextSize(fontSize);
-		headerTextPaint.setAntiAlias(true);
-
-		headerPaint = new Paint();
-		headerPaint.setARGB(255, 140, 140, 220);
-
-		barPaint = new Paint();
-		barPaint.setARGB(255, 40, 40, 40);
-
-		fontWidth = (int)notePaint.measureText("X");
-		fontHeight = fontSize * 12 / 10;
-
-		for (int i = 0; i < 120; i++) {
-			allNotes[i] = new String(NOTES[i % 12] + (i / 12));
-		}
-
-		final char[] c = new char[2];
-		for (int i = 0; i < 256; i++) {
-			Util.to02X(c, i);
-			hexByte[i] = new String(c);
 		}
 	}
 }

@@ -39,6 +39,53 @@ public class ChannelViewer extends Viewer {
 	private int panLeft;
 	private int panWidth;
 	private int[] keyRow = new int[Xmp.MAX_CHANNELS];
+
+	public ChannelViewer(final Context context) {
+		super(context);
+
+		fontSize = getResources().getDimensionPixelSize(R.dimen.channelview_font_size);
+		final int font2Size = getResources().getDimensionPixelSize(R.dimen.channelview_channel_font_size);
+
+		scopePaint = new Paint();
+		scopePaint.setARGB(255, 40, 40, 40);
+
+		scopeLinePaint = new Paint();
+		scopeLinePaint.setARGB(255, 80, 160, 80);
+		scopeLinePaint.setStrokeWidth(0);
+		scopeLinePaint.setAntiAlias(false);
+		
+		scopeMutePaint = new Paint();
+		scopeMutePaint.setARGB(255, 60, 0, 0);
+		
+		meterPaint = new Paint();
+		meterPaint.setARGB(255, 40, 80, 160);
+
+		insPaint = new Paint();
+		insPaint.setARGB(255, 140, 140, 160);
+		insPaint.setTypeface(Typeface.MONOSPACE);
+		insPaint.setTextSize(fontSize);
+		insPaint.setAntiAlias(true);
+
+		numPaint = new Paint();
+		numPaint.setARGB(255, 220, 220, 220);
+		numPaint.setTypeface(Typeface.MONOSPACE);
+		numPaint.setTextSize(font2Size);
+		numPaint.setAntiAlias(true);
+
+		fontWidth = (int)insPaint.measureText("X");
+		fontHeight = fontSize * 12 / 10;
+
+		font2Width = (int)numPaint.measureText("X");
+		font2Height = font2Size * 12 / 10;
+
+		scopeWidth = 8 * fontWidth;
+		scopeHeight = 3 * fontHeight;
+		scopeLeft = 2 * font2Width + 2 * fontWidth;
+		volLeft = scopeLeft + scopeWidth + fontWidth * 2;
+		
+		buffer = new byte[Xmp.MAX_CHANNELS][scopeWidth];
+		bufferXY = new float[scopeWidth * 2];
+	}
 	
 	@Override
 	public void setup(final ModInterface modPlayer, final int[] modVars) {
@@ -328,52 +375,5 @@ public class ChannelViewer extends Viewer {
 			rect.set(x + panX, volY1, x + panX + fontWidth / 2, volY2);
 			canvas.drawRect(rect, meterPaint);
 		}
-	}
-
-	public ChannelViewer(final Context context) {
-		super(context);
-
-		fontSize = getResources().getDimensionPixelSize(R.dimen.channelview_font_size);
-		final int font2Size = getResources().getDimensionPixelSize(R.dimen.channelview_channel_font_size);
-
-		scopePaint = new Paint();
-		scopePaint.setARGB(255, 40, 40, 40);
-
-		scopeLinePaint = new Paint();
-		scopeLinePaint.setARGB(255, 80, 160, 80);
-		scopeLinePaint.setStrokeWidth(0);
-		scopeLinePaint.setAntiAlias(false);
-		
-		scopeMutePaint = new Paint();
-		scopeMutePaint.setARGB(255, 60, 0, 0);
-		
-		meterPaint = new Paint();
-		meterPaint.setARGB(255, 40, 80, 160);
-
-		insPaint = new Paint();
-		insPaint.setARGB(255, 140, 140, 160);
-		insPaint.setTypeface(Typeface.MONOSPACE);
-		insPaint.setTextSize(fontSize);
-		insPaint.setAntiAlias(true);
-
-		numPaint = new Paint();
-		numPaint.setARGB(255, 220, 220, 220);
-		numPaint.setTypeface(Typeface.MONOSPACE);
-		numPaint.setTextSize(font2Size);
-		numPaint.setAntiAlias(true);
-
-		fontWidth = (int)insPaint.measureText("X");
-		fontHeight = fontSize * 12 / 10;
-
-		font2Width = (int)numPaint.measureText("X");
-		font2Height = font2Size * 12 / 10;
-
-		scopeWidth = 8 * fontWidth;
-		scopeHeight = 3 * fontHeight;
-		scopeLeft = 2 * font2Width + 2 * fontWidth;
-		volLeft = scopeLeft + scopeWidth + fontWidth * 2;
-		
-		buffer = new byte[Xmp.MAX_CHANNELS][scopeWidth];
-		bufferXY = new float[scopeWidth * 2];
 	}
 }
