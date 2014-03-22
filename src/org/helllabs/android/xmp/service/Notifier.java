@@ -62,38 +62,60 @@ public class Notifier {
 		return PendingIntent.getBroadcast(context, 0, intent, 0);
 	}
 	
+	public void tickerNotification(final String title, final int index) {
+		notification(title, index, true, false);
+	}
+	
+	public void pauseNotification(final String title, final int index) {
+		notification(title, index, false, true);
+	}
+	
+	public void unpauseNotification(final String title, final int index) {
+		notification(title, index, false, false);
+	}
+		
 	// Notification with player buttons
-	public void notification(final String title, final int index) {
+	private void notification(String title, final int index, final boolean ticker, final boolean paused) {
 		final Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon);
+		
+		if (title.trim().length() == 0) {
+			title = "<untitled>";
+		}
 		
 		final PendingIntent stopIntent = makePendingIntent(ACTION_STOP);
 		final PendingIntent pauseIntent = makePendingIntent(ACTION_PAUSE);
 		final PendingIntent nextIntent = makePendingIntent(ACTION_NEXT);
 		final String indexText = formatIndex(index);
 		
-		String tickerText;
-		if (queue.size() > 1) {
-			tickerText = title + " " + indexText;
-		} else {
-			tickerText = title;
-		}
-		
-		final Notification notification = new NotificationCompat.Builder(context)
+		final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 				.setContentTitle(context.getString(R.string.app_name))
 				.setContentInfo(indexText)
-				.setContentText(title)
 				.setContentIntent(contentIntent)
 				.setSmallIcon(R.drawable.notification_icon)
 				.setLargeIcon(icon)
-				.setTicker(tickerText)
 				.setOngoing(true)
 				//.setShowWhen(false)
-				.addAction(R.drawable.ic_action_stop, "Stop", stopIntent)
-				.addAction(R.drawable.ic_action_pause, "Pause", pauseIntent)
-				.addAction(R.drawable.ic_action_next, "Next", nextIntent)
-				.build();
+				.addAction(R.drawable.ic_action_stop, "Stop", stopIntent);
 		
-		((Service)context).startForeground(NOTIFY_ID, notification);
+		if (ticker) {
+			if (queue.size() > 1) {
+				builder.setTicker(title + " " + indexText);
+			} else  {
+				builder.setTicker(title);
+			}
+		}
+		
+		if (paused) {
+			builder.addAction(R.drawable.ic_action_play, "Play", pauseIntent);
+			builder.setContentText(title + " (paused)");
+		} else {
+			builder.addAction(R.drawable.ic_action_pause, "Pause", pauseIntent);
+			builder.setContentText(title);
+		}
+		
+		builder.addAction(R.drawable.ic_action_next, "Next", nextIntent);
+				
+		((Service)context).startForeground(NOTIFY_ID, builder.build());
 		//nm.notify(NOTIFY_ID, notification);
 	}
 	

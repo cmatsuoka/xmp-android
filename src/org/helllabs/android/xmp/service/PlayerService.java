@@ -146,6 +146,15 @@ public final class PlayerService extends Service {
 		return binder;
 	}
 	
+	private void doPauseAndNotify() {
+		paused ^= true;
+		if (paused) {
+			notifier.pauseNotification(Xmp.getModName(), queue.getIndex());
+		} else {
+			notifier.unpauseNotification(Xmp.getModName(), queue.getIndex());
+		}
+	}
+	
 	private void actionStop() {
 		Xmp.stopModule();
     	paused = false;
@@ -153,7 +162,7 @@ public final class PlayerService extends Service {
 	}
 	
 	private void actionPause() {
-		paused ^= true;
+		doPauseAndNotify();
 		
 		// Notify clients that we paused
 	    final int numClients = callbacks.beginBroadcast();
@@ -261,7 +270,7 @@ public final class PlayerService extends Service {
 	       		
 	       		returnToPrev = false;
 
-	       		notifier.notification(Xmp.getModName(), queue.getIndex());
+	       		notifier.tickerNotification(Xmp.getModName(), queue.getIndex());
 	       		isLoaded = true;
 	       		
 	       		// Unmute all channels
@@ -443,7 +452,7 @@ public final class PlayerService extends Service {
 	    }
 	    
 	    public void pause() {
-	    	paused ^= true;
+	    	doPauseAndNotify();
 	    }
 	    
 	    public void getInfo(final int[] values) {
@@ -559,11 +568,14 @@ public final class PlayerService extends Service {
 		Log.i(TAG, "Auto pause changed to " + pause + ", previously " + autoPaused);
 		if (pause) {
 			previousPaused = paused;
-			paused = autoPaused = true;
+			autoPaused = true;
+			paused = false;				// set to complement, flip on doPause()
+			doPauseAndNotify();
 		} else {
 			if (autoPaused) {
 				autoPaused = false;
-				paused = previousPaused;
+				paused = !previousPaused;	// set to complement, flip on doPause()
+				doPauseAndNotify();
 			}
 		}	
 		
