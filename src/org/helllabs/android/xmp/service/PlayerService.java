@@ -22,6 +22,7 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 
 public final class PlayerService extends Service {
@@ -411,7 +412,7 @@ public final class PlayerService extends Service {
 		public void play(final String[] files, final int start, final boolean shuffle, final boolean loopList) {			
 			queue = new QueueManager(files, start, shuffle, loopList);
 			notifier.setQueue(queue);
-			notifier.clean();
+			//notifier.clean();
 			returnToPrev = false;
 			stopPlaying = false;
 			paused = false;
@@ -432,7 +433,7 @@ public final class PlayerService extends Service {
 		
 		public void add(final String[] files) {	
 			queue.add(files);
-			notifier.notification("Added to play queue");			
+			//notifier.notification("Added to play queue");			
 		}
 	    
 	    public void stop() {
