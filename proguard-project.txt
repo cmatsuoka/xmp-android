@@ -23,6 +23,6 @@
     public *;
 }
 
--keep public class org.helllabs.android.xmp.ModInfo {
+-keep public class org.helllabs.android.xmp.util.ModInfo {
     public *;
 }
