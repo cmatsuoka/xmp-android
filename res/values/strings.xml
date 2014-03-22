@@ -23,7 +23,7 @@
     <string name="preferences_dark_theme_title">Use dark theme</string>
     <string name="preferences_category_sound">Sound settings</string>
     <string name="preferences_category_files">Playlist settings</string>
-    <string name="changelog_text">• Fix channel viewer crash\n• Fix service to run in foreground\n• Fix service lifecycle issues\n
+    <string name="changelog_text">• Fix channel viewer crash\n• Fix viewer display when paused\n• Fix service lifecycle issues\n• Code refactoring and optimization
 \nVersion 3.7.1:\n• Add notification actions (Android 4.1 and newer)\n• Fix action bar menu items\n• Fix intent filter to handle module files\n• Fix thread leak issues\n• (Hopefully) Fix launch from history issues\n 
 \nVersion 3.7.0:\n• Update player engine to libxmp 4.2.5\n• Remove support to incomplete formats\n• Add support to His Master\'s Noise format\n• Improved MED, OKT and MDL support\n• Fix XM envelope and delay effect\n• Code refactoring and optimization\n
 \nVersion 3.6.2:\n• Update player engine to libxmp 4.1.6-pre\n• Improve interface accessibility\n• Fix media buttons broadcast receiver\n• Fix IT and XM portamento and envelopes\n• Fix OctaMED synth and effects\n• Fix Oktalyzer sample mapping\n• Fix ThePlayer 5.0a/6.0a pattern decoding\n• Code refactoring and optimization\n
