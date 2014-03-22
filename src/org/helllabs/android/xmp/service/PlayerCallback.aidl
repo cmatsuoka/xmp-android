@@ -4,4 +4,5 @@ interface PlayerCallback {
 	void newModCallback(String name, in String[] instruments);
 	void endModCallback();
 	void endPlayCallback();
+	void pauseCallback();
 }

@@ -153,6 +153,17 @@ public final class PlayerService extends Service {
 	
 	private void actionPause() {
 		paused ^= true;
+		
+		// Notify clients that we paused
+	    final int numClients = callbacks.beginBroadcast();
+	    for (int i = 0; i < numClients; i++) {
+	    	try {
+				callbacks.getBroadcastItem(i).pauseCallback();
+			} catch (RemoteException e) {
+				Log.e(TAG, "Error notifying pause to client");
+			}
+	    }	    
+	    callbacks.finishBroadcast();
 	}
 	
 	private void actionPrev() {

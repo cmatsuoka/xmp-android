@@ -124,8 +124,10 @@ public class PlayerActivity extends Activity {
 		}
 	};
 	
-    private final PlayerCallback playerCallback = new PlayerCallback.Stub() {	
-        public void newModCallback(final String name, final String[] instruments) {
+    private final PlayerCallback playerCallback = new PlayerCallback.Stub() {
+    	
+    	@Override
+        public void newModCallback(final String name, final String[] instruments) throws RemoteException {
         	synchronized (modPlayer) {
         		Log.i(TAG, "Show module data");
         		showNewMod(name);
@@ -133,7 +135,8 @@ public class PlayerActivity extends Activity {
         	}
         }
         
-        public void endModCallback() {
+        @Override
+        public void endModCallback() throws RemoteException {
         	synchronized (modPlayer) {
         		Log.i(TAG, "End of module");
         		stopUpdate = true;
@@ -141,7 +144,8 @@ public class PlayerActivity extends Activity {
         	}
         }
         
-        public void endPlayCallback() {
+        @Override
+        public void endPlayCallback() throws RemoteException {
        		Log.i(TAG, "End progress thread");
        		stopUpdate = true;
 
@@ -152,8 +156,30 @@ public class PlayerActivity extends Activity {
 			}
 			finish();
         }
+
+		@Override
+		public void pauseCallback() throws RemoteException {
+			handler.post(setPauseStateRunnable);
+		}
     };
-      
+
+    private final Runnable setPauseStateRunnable = new Runnable() {
+    	
+    	@Override
+    	public void run() {
+    		try {
+    			// Set pause status according to external state
+    			if (modPlayer.isPaused()) {
+    				pause();
+    			} else {
+    				unpause();
+    			}
+    		} catch (RemoteException e) {
+    			Log.e(TAG, "Can't get pause status");
+    		}
+    	}
+    };
+    
     private final Runnable updateInfoRunnable = new Runnable() {
     	int oldSpd = -1;
     	int oldBpm = -1;
@@ -165,6 +191,7 @@ public class PlayerActivity extends Activity {
     	final char[] c = new char[2];
     	StringBuffer s = new StringBuffer();
     	
+    	@Override
         public void run() {
         	now = (before + FRAME_RATE * latency / 1000 + 1) % FRAME_RATE;
   
@@ -305,12 +332,12 @@ public class PlayerActivity extends Activity {
     	}
     };
 
-	public void pause() {
+	private void pause() {
 		paused = true;
 		playButton.setImageResource(R.drawable.play);
 	}
 	
-	public void unpause() {
+	private void unpause() {
 		paused = false;
 		playButton.setImageResource(R.drawable.pause);
 	}
