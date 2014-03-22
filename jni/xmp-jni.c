@@ -496,7 +496,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 	pos = _pos[chn];
 
 	/* In case of new keypress, reset sample */
-	if (trigger == JNI_TRUE || pos >= len) {
+	if (trigger == JNI_TRUE || (pos >> 5) >= xxs->len) {
 		pos = 0;
 	}
 
