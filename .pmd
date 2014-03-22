@@ -256,10 +256,6 @@
             <ruleset>Comments</ruleset>
         </rule>
         <rule>
-            <name>CommentSize</name>
-            <ruleset>Comments</ruleset>
-        </rule>
-        <rule>
             <name>AtLeastOneConstructor</name>
             <ruleset>Controversial</ruleset>
         </rule>

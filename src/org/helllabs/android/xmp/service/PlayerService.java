@@ -408,7 +408,7 @@ public final class PlayerService extends Service {
     }
 
 	private final ModInterface.Stub binder = new ModInterface.Stub() {
-		public void play(String[] files, int start, boolean shuffle, boolean loopList) {			
+		public void play(final String[] files, final int start, final boolean shuffle, final boolean loopList) {			
 			queue = new QueueManager(files, start, shuffle, loopList);
 			notifier.setQueue(queue);
 			notifier.clean();

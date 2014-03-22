@@ -1,12 +1,12 @@
 package org.helllabs.android.xmp.preferences.about;
 
-
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Xmp;
 
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+
 
 public class ListFormats extends ListActivity {
 	private final String[] formats = Xmp.getFormats();
