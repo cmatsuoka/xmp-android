@@ -81,6 +81,9 @@ public class PlayerActivity extends Activity {
 	private int currentViewer;
 	private boolean canChangeViewer;
 	private Display display;
+	private Viewer instrumentViewer;
+	private Viewer channelViewer;
+	private Viewer patternViewer;
 	
 	private final ServiceConnection connection = new ServiceConnection() {
 		
@@ -429,13 +432,13 @@ public class PlayerActivity extends Activity {
     		viewerLayout.removeAllViews();
     		switch (currentViewer) {
     		case 0:
-    			viewer = new InstrumentViewer(activity);
+    			viewer = instrumentViewer;
     			break;
     		case 1:
-    			viewer = new ChannelViewer(activity);
+    			viewer = channelViewer;
     			break;
     		case 2:
-    			viewer = new PatternViewer(activity);
+    			viewer = patternViewer;
     			break;
     		}
     			
@@ -641,6 +644,10 @@ public class PlayerActivity extends Activity {
 				seeking = false;
 			}
 		});
+		
+		instrumentViewer = new InstrumentViewer(this);
+		channelViewer = new ChannelViewer(this);
+		patternViewer = new PatternViewer(this);
 	}
 
 	
