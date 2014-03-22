@@ -238,6 +238,7 @@ public class PlayerActivity extends Activity {
 						oldPos = info[before].values[0];
 						oldPat = info[before].values[1];
 					}
+					
 					if (info[before].time != oldTime || showElapsed != oldShowElapsed) {
 						int t = info[before].time;
 						if (t < 0) {
@@ -271,25 +272,30 @@ public class PlayerActivity extends Activity {
 						oldShowElapsed = showElapsed;
 					}
 	
-					modPlayer.getChannelData(info[now].volumes, info[now].finalvols, info[now].pans,
-							info[now].instruments, info[now].keys, info[now].periods);
+					if (!paused) {
+						modPlayer.getChannelData(info[now].volumes, info[now].finalvols, info[now].pans,
+												info[now].instruments, info[now].keys, info[now].periods);
+					}
 
 					synchronized(viewerLayout) {
-						viewer.update(info[before]);
+						viewer.update(info[before], paused);
 					}
 				}
 			} catch (Exception e) {
 				// fail silently
 			} finally {
-				before++;
-				if (before >= FRAME_RATE) {
-					before = 0;
+				if (!paused) {
+					before++;
+					if (before >= FRAME_RATE) {
+						before = 0;
+					}
 				}
 			}
         }
     };
     
 	private class ProgressThread extends Thread {
+		
 		@Override
     	public void run() {
 			Log.i(TAG, "Start progress thread");
@@ -313,7 +319,7 @@ public class PlayerActivity extends Activity {
 					}
     			}
 	    			
-	    		if (!paused && screenOn) {
+	    		if (/* !paused && */ screenOn) {
 	    			if (!seeking && t >= 0) {
 	    				seekBar.setProgress(t);
 	    			}
@@ -356,7 +362,7 @@ public class PlayerActivity extends Activity {
 		boolean fromHistory = false;
 		
 		Log.i(TAG, "New intent");
-		      
+		
 		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0) {
 			Log.i(TAG, "Player started from history");
 		    fromHistory = true;

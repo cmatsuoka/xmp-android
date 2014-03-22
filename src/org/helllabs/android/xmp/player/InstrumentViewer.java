@@ -42,8 +42,8 @@ public class InstrumentViewer extends Viewer {
 	//}
 
 	@Override
-	public void update(final Info info) {
-		super.update(info);
+	public void update(final Info info, final boolean paused) {
+		super.update(info, paused);
 		
 		Canvas canvas = null;
 		

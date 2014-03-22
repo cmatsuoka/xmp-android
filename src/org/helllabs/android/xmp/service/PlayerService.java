@@ -75,7 +75,7 @@ public final class PlayerService extends Service {
    		
    		final boolean stereo = prefs.getBoolean(Preferences.STEREO, true);
    		if (!stereo) {
-   			sampleFormat |= Xmp.XMP_FORMAT_MONO;
+   			sampleFormat |= Xmp.FORMAT_MONO;
    		}
    		
    		bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
@@ -280,30 +280,30 @@ public final class PlayerService extends Service {
 
 	        	final String volBoost = prefs.getString(Preferences.VOL_BOOST, "1");
 	        	
-	       		final int[] interpTypes = { Xmp.XMP_INTERP_NEAREST, Xmp.XMP_INTERP_LINEAR, Xmp.XMP_INTERP_SPLINE };
+	       		final int[] interpTypes = { Xmp.INTERP_NEAREST, Xmp.INTERP_LINEAR, Xmp.INTERP_SPLINE };
 	       		final int temp = Integer.parseInt(prefs.getString(Preferences.INTERP_TYPE, "1"));
 	       		int interpType;
 	       		if (temp >= 1 && temp <= 2) {
 	       			interpType = interpTypes[temp];
 	       		} else {
-	       			interpType = Xmp.XMP_INTERP_LINEAR;
+	       			interpType = Xmp.INTERP_LINEAR;
 	       		}
 	       		
 	        	int dsp = 0;
 	        	if (prefs.getBoolean(Preferences.FILTER, true)) {
-	        		dsp |= Xmp.XMP_DSP_LOWPASS;
+	        		dsp |= Xmp.DSP_LOWPASS;
 	        	}
 	        	
 	        	if (!prefs.getBoolean(Preferences.INTERPOLATE, true)) {
-	        		interpType = Xmp.XMP_INTERP_NEAREST;
+	        		interpType = Xmp.INTERP_NEAREST;
 	        	}
 
 	       		audio.play();
 	       		Xmp.startPlayer(0, sampleRate, sampleFormat);
-	        	Xmp.setPlayer(Xmp.XMP_PLAYER_AMP, Integer.parseInt(volBoost));
-	        	Xmp.setPlayer(Xmp.XMP_PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));
-	        	Xmp.setPlayer(Xmp.XMP_PLAYER_INTERP, interpType);
-	        	Xmp.setPlayer(Xmp.XMP_PLAYER_DSP, dsp);
+	        	Xmp.setPlayer(Xmp.PLAYER_AMP, Integer.parseInt(volBoost));
+	        	Xmp.setPlayer(Xmp.PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));
+	        	Xmp.setPlayer(Xmp.PLAYER_INTERP, interpType);
+	        	Xmp.setPlayer(Xmp.PLAYER_DSP, dsp);
 	        		        	
 	       		updateData = true;
 	    		

@@ -244,10 +244,6 @@
             <ruleset>Code Size</ruleset>
         </rule>
         <rule>
-            <name>NPathComplexity</name>
-            <ruleset>Code Size</ruleset>
-        </rule>
-        <rule>
             <name>CommentContent</name>
             <ruleset>Comments</ruleset>
         </rule>

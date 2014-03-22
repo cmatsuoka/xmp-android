@@ -48,8 +48,8 @@ public class PatternViewer extends Viewer {
 	//}
 
 	@Override
-	public void update(final Info info) {
-		super.update(info);
+	public void update(final Info info, final boolean paused) {
+		super.update(info, paused);
 
 		final int row = info.values[2];
 		final int ord = info.values[0];

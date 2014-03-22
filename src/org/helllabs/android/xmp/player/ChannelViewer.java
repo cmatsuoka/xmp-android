@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp.player;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.service.ModInterface;
 import org.helllabs.android.xmp.util.Log;
 
@@ -21,10 +22,10 @@ public class ChannelViewer extends Viewer {
 	private static final String TAG = "ChannelViewer"; 
 	private final Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint, scopeMutePaint;
 	private final int fontSize, fontHeight, fontWidth;
-	private final int font2Size, font2Height, font2Width;
+	private final int font2Height, font2Width;
 	private String[] insName, insNameTrim;		
 	private final Rect rect = new Rect();
-	private final byte[] buffer;
+	private final byte[][] buffer;		// keep several buffers to hold data in pause
 	private float[] bufferXY;
 	private int[] holdKey;
 	private String[] channelNumber;
@@ -37,7 +38,7 @@ public class ChannelViewer extends Viewer {
 	private int volWidth;
 	private int panLeft;
 	private int panWidth;
-	private int[] keyRow = new int[64];
+	private int[] keyRow = new int[Xmp.MAX_CHANNELS];
 	
 	@Override
 	public void setup(final ModInterface modPlayer, final int[] modVars) {
@@ -64,15 +65,15 @@ public class ChannelViewer extends Viewer {
 	}
 
 	@Override
-	public void update(Info info) {
-		super.update(info);
+	public void update(final Info info, final boolean paused) {
+		super.update(info, paused);
 		
 		Canvas canvas = null;
 
 		try {
 			canvas = surfaceHolder.lockCanvas(null);
 			synchronized (surfaceHolder) {
-				doDraw(canvas, modPlayer, info);
+				doDraw(canvas, modPlayer, info, paused);
 			}
 		} finally {
 			// do this in a finally so that if an exception is thrown
@@ -232,7 +233,7 @@ public class ChannelViewer extends Viewer {
 		}
 	}
 	
-	private void doDraw(final Canvas canvas, final ModInterface modPlayer, final Info info) {
+	private void doDraw(final Canvas canvas, final ModInterface modPlayer, final Info info, final boolean paused) {
 		final int numChannels = modVars[3];
 		final int numInstruments = modVars[4];
 		final int row = info.values[2];
@@ -278,22 +279,25 @@ public class ChannelViewer extends Viewer {
 			} else {
 				canvas.drawRect(rect, scopePaint);
 	
-				try {	
-					// Be very careful here!
-					// Our variables are latency-compensated but sample data is current
-					// so caution is needed to avoid retrieving data using old variables
-					// from a module with sample data from a newly loaded one.
+				if (!paused) {
+					try {	
+				
+						// Be very careful here!
+						// Our variables are latency-compensated but sample data is current
+						// so caution is needed to avoid retrieving data using old variables
+						// from a module with sample data from a newly loaded one.
 
-					modPlayer.getSampleData(key >= 0, ins, holdKey[chn], period, chn, scopeWidth, buffer);
+						modPlayer.getSampleData(key >= 0, ins, holdKey[chn], period, chn, scopeWidth, buffer[chn]);
 	
-				} catch (RemoteException e) {
-					// fail silently
+					} catch (RemoteException e) {
+						// fail silently
+					}
 				}
 				
 				final int h = scopeHeight / 2;
 				for (int j = 0; j < scopeWidth; j++) {
 					bufferXY[j * 2] = x + scopeLeft + j;
-					bufferXY[j * 2 + 1] = y + h + buffer[j] * h * finalvol / (64 * 180);
+					bufferXY[j * 2 + 1] = y + h + buffer[chn][j] * h * finalvol / (64 * 180);
 				}
 				
 				// Using drawPoints() instead of drawing each point saves a lot of CPU
@@ -330,7 +334,7 @@ public class ChannelViewer extends Viewer {
 		super(context);
 
 		fontSize = getResources().getDimensionPixelSize(R.dimen.channelview_font_size);
-		font2Size = getResources().getDimensionPixelSize(R.dimen.channelview_channel_font_size);
+		final int font2Size = getResources().getDimensionPixelSize(R.dimen.channelview_channel_font_size);
 
 		scopePaint = new Paint();
 		scopePaint.setARGB(255, 40, 40, 40);
@@ -369,7 +373,7 @@ public class ChannelViewer extends Viewer {
 		scopeLeft = 2 * font2Width + 2 * fontWidth;
 		volLeft = scopeLeft + scopeWidth + fontWidth * 2;
 		
-		buffer = new byte[scopeWidth];
+		buffer = new byte[Xmp.MAX_CHANNELS][scopeWidth];
 		bufferXY = new float[scopeWidth * 2];
 	}
 }

@@ -5,18 +5,26 @@ import org.helllabs.android.xmp.util.ModInfo;
 
 public final class Xmp {
 	
-	public static final int XMP_PLAYER_AMP = 0;			// Amplification factor
-	public static final int XMP_PLAYER_MIX = 1;			// Stereo mixing
-	public static final int XMP_PLAYER_INTERP = 2;		// Interpolation type
-	public static final int XMP_PLAYER_DSP = 3;			// DSP effect flags
+	// Sample format flags
+	public static final int FORMAT_MONO = 1 << 2;
+	
+	// player parameters
+	public static final int PLAYER_AMP = 0;			// Amplification factor
+	public static final int PLAYER_MIX = 1;			// Stereo mixing
+	public static final int PLAYER_INTERP = 2;		// Interpolation type
+	public static final int PLAYER_DSP = 3;			// DSP effect flags
 
-	public static final int XMP_INTERP_NEAREST = 0;		// Nearest neighbor		// NOPMD
-	public static final int XMP_INTERP_LINEAR = 1;		// Linear (default)
-	public static final int XMP_INTERP_SPLINE = 2;		// Cubic spline
+	// Interpolation types
+	public static final int INTERP_NEAREST = 0;		// Nearest neighbor
+	public static final int INTERP_LINEAR = 1;		// Linear (default)
+	public static final int INTERP_SPLINE = 2;		// Cubic spline
 	
-	public static final int XMP_DSP_LOWPASS = 1 << 0;	// Lowpass filter effect
+	// DSP effect types
+	public static final int DSP_LOWPASS = 1 << 0;	// Lowpass filter effect
 	
-	public static final int XMP_FORMAT_MONO = 1 << 2;
+	// Limits
+	public static final int MAX_CHANNELS = 64;		// Max number of channels in module
+
 	
 	private Xmp() {
 		

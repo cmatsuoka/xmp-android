@@ -41,7 +41,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		public int[] keys = new int[64];
 		public int[] periods = new int[64];
 	};
-
+	
 	private void limitPosition() {
 		if (posX > maxX - canvasWidth) {
 			posX = maxX - canvasWidth;
@@ -159,7 +159,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		rotation = val;
 	}
 
-	public void update(final Info info) {
+	public void update(final Info info, final boolean paused) {
 		updateScroll();
 	}
 
