@@ -3,7 +3,6 @@ package org.helllabs.android.xmp.service;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.player.PlayerActivity;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -22,11 +21,13 @@ public class Notifier {
     public static final String ACTION_NEXT = "next";
 	private QueueManager queue;
 	private final Context context;
+	private final long when;
 
 	public Notifier(final Context context) {
     	this.context = context;
 		//nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
     	contentIntent = PendingIntent.getActivity(context, 0, new Intent(context, PlayerActivity.class), 0);
+    	when = System.currentTimeMillis();
 	}
 	
 	private String formatIndex(final int index) {
@@ -94,6 +95,7 @@ public class Notifier {
 				.setSmallIcon(R.drawable.notification_icon)
 				.setLargeIcon(icon)
 				.setOngoing(true)
+				.setWhen(when)
 				//.setShowWhen(false)
 				.addAction(R.drawable.ic_action_stop, "Stop", stopIntent);
 		
