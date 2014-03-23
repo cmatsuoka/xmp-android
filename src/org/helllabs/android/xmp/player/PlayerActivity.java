@@ -84,6 +84,7 @@ public class PlayerActivity extends Activity {
 	private Viewer instrumentViewer;
 	private Viewer channelViewer;
 	private Viewer patternViewer;
+	private int playTime;
 
 	private final ServiceConnection connection = new ServiceConnection() {
 
@@ -196,6 +197,9 @@ public class PlayerActivity extends Activity {
 
 		@Override
 		public void run() {
+			if (!paused && !seeking && playTime >= 0) {
+				seekBar.setProgress(playTime);
+			}
 			now = (before + FRAME_RATE * latency / 1000 + 1) % FRAME_RATE;
 
 			try {
@@ -307,7 +311,7 @@ public class PlayerActivity extends Activity {
 			long lastTimer = System.nanoTime();
 			long now;
 
-			int t = 0;
+			playTime = 0;
 
 			do {
 				synchronized (modPlayer) {
@@ -316,16 +320,14 @@ public class PlayerActivity extends Activity {
 					}
 
 					try {
-						t = modPlayer.time() / 100;
+						playTime = modPlayer.time() / 100;
 					} catch (RemoteException e) {
 						// fail silently
 					}
 				}
 
 				if (/* !paused && */ screenOn) {
-					if (!paused && !seeking && t >= 0) {
-						seekBar.setProgress(t);
-					}
+					
 					handler.post(updateInfoRunnable);
 				}
 
@@ -335,7 +337,7 @@ public class PlayerActivity extends Activity {
 					}
 					lastTimer = now;
 				} catch (InterruptedException e) { }
-			} while (t >= 0 && !stopUpdate);
+			} while (playTime >= 0 && !stopUpdate);
 
 			seekBar.setProgress(0);
 		}
@@ -637,6 +639,7 @@ public class PlayerActivity extends Activity {
 				if (modPlayer != null) {
 					try {
 						modPlayer.seek(s.getProgress() * 100);
+						playTime = modPlayer.time() / 100;
 					} catch (RemoteException e) {
 						Log.e(TAG, "Can't seek to time");
 					}

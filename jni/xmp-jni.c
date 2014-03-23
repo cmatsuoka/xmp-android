@@ -206,7 +206,9 @@ Java_org_helllabs_android_xmp_Xmp_restartModule(JNIEnv *env, jobject obj)
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_seek(JNIEnv *env, jobject obj, jint time)
 {
-	return xmp_seek_time(ctx, time);
+	int ret = xmp_seek_time(ctx, time);
+	fi.time = time;
+	return ret;
 }
 
 JNIEXPORT jint JNICALL
