@@ -112,7 +112,11 @@ public class Notifier {
 			builder.setContentText(title + " (paused)");
 		} else {
 			builder.addAction(R.drawable.ic_action_pause, "Pause", pauseIntent);
-			builder.setContentText(title);
+			if (android.os.Build.VERSION.SDK_INT < 11) {
+				builder.setContentText(title + " " + indexText);
+			} else {
+				builder.setContentText(title);
+			}
 		}
 		
 		builder.addAction(R.drawable.ic_action_next, "Next", nextIntent);
