@@ -185,15 +185,15 @@ public class PlayerActivity extends Activity {
 	};
 
 	private final Runnable updateInfoRunnable = new Runnable() {
-		int oldSpd = -1;
-		int oldBpm = -1;
-		int oldPos = -1;
-		int oldPat = -1;
-		int oldTime = -1;
-		int before, now;
-		boolean oldShowElapsed;
-		final char[] c = new char[2];
-		StringBuffer s = new StringBuffer();
+		private int oldSpd = -1;
+		private int oldBpm = -1;
+		private int oldPos = -1;
+		private int oldPat = -1;
+		private int oldTime = -1;
+		private int before, now;
+		private boolean oldShowElapsed;
+		private final char[] c = new char[2];
+		private StringBuilder s = new StringBuilder();
 
 		@Override
 		public void run() {
