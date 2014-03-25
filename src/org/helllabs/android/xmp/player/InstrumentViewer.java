@@ -75,8 +75,10 @@ public class InstrumentViewer extends Viewer {
 		
 		try {
 			canvas = surfaceHolder.lockCanvas(null);
-			synchronized (surfaceHolder) {
-				doDraw(canvas, modPlayer, info);
+			if (canvas != null) {
+				synchronized (surfaceHolder) {
+					doDraw(canvas, modPlayer, info);
+				}
 			}
 		} finally {
 			// do this in a finally so that if an exception is thrown

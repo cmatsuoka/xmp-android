@@ -119,8 +119,10 @@ public class ChannelViewer extends Viewer {
 
 		try {
 			canvas = surfaceHolder.lockCanvas(null);
-			synchronized (surfaceHolder) {
-				doDraw(canvas, modPlayer, info, paused);
+			if (canvas != null) {
+				synchronized (surfaceHolder) {
+					doDraw(canvas, modPlayer, info, paused);
+				}
 			}
 		} finally {
 			// do this in a finally so that if an exception is thrown
