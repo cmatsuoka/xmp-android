@@ -85,6 +85,7 @@ public class PlayerActivity extends Activity {
 	private Viewer channelViewer;
 	private Viewer patternViewer;
 	private int playTime;
+	private final Object playerLock = new Object();		// for sync
 
 	private final ServiceConnection connection = new ServiceConnection() {
 
@@ -94,7 +95,7 @@ public class PlayerActivity extends Activity {
 			modPlayer = ModInterface.Stub.asInterface(service);
 			flipperPage = 0;
 
-			synchronized (modPlayer) {
+			synchronized (playerLock) {
 				try {
 					modPlayer.registerCallback(playerCallback);
 				} catch (RemoteException e) {
@@ -132,7 +133,7 @@ public class PlayerActivity extends Activity {
 
 		@Override
 		public void newModCallback(final String name, final String[] instruments) throws RemoteException {
-			synchronized (modPlayer) {
+			synchronized (playerLock) {
 				Log.i(TAG, "Show module data");
 				showNewMod(name);
 				canChangeViewer = true;
@@ -141,7 +142,7 @@ public class PlayerActivity extends Activity {
 
 		@Override
 		public void endModCallback() throws RemoteException {
-			synchronized (modPlayer) {
+			synchronized (playerLock) {
 				Log.i(TAG, "End of module");
 				stopUpdate = true;
 				canChangeViewer = false;
@@ -203,7 +204,7 @@ public class PlayerActivity extends Activity {
 			now = (before + FRAME_RATE * latency / 1000 + 1) % FRAME_RATE;
 
 			try {
-				synchronized (modPlayer) {
+				synchronized (playerLock) {
 					if (stopUpdate) {
 						return;
 					}
@@ -284,7 +285,7 @@ public class PlayerActivity extends Activity {
 								info[now].instruments, info[now].keys, info[now].periods);
 					}
 
-					synchronized(viewerLayout) {
+					synchronized (viewerLayout) {
 						viewer.update(info[before], paused);
 					}
 				}
@@ -314,7 +315,7 @@ public class PlayerActivity extends Activity {
 			playTime = 0;
 
 			do {
-				synchronized (modPlayer) {
+				synchronized (playerLock) {
 					if (stopUpdate) {
 						break;
 					}
@@ -430,7 +431,7 @@ public class PlayerActivity extends Activity {
 		currentViewer++;
 		currentViewer %= 3;
 
-		synchronized(viewerLayout) {
+		synchronized (viewerLayout) {
 			viewerLayout.removeAllViews();
 			switch (currentViewer) {
 			case 0:
@@ -505,7 +506,7 @@ public class PlayerActivity extends Activity {
 				modPlayer.seek(0);
 			} else {
 				stopUpdate = true;
-				synchronized (modPlayer) {
+				synchronized (playerLock) {
 					modPlayer.prevSong();
 				}
 			}
@@ -522,7 +523,7 @@ public class PlayerActivity extends Activity {
 
 		try {
 			stopUpdate = true;
-			synchronized (modPlayer) {
+			synchronized (playerLock) {
 				modPlayer.nextSong();
 			}
 		} catch (RemoteException e) {
@@ -583,7 +584,7 @@ public class PlayerActivity extends Activity {
 		viewerLayout.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(final View view) {
-				synchronized (modPlayer) {
+				synchronized (playerLock) {
 					if (canChangeViewer) {
 						changeViewer();
 					}
@@ -711,7 +712,7 @@ public class PlayerActivity extends Activity {
 		public void run() {
 			Log.i(TAG, "Show new module");
 
-			synchronized (modPlayer) {
+			synchronized (playerLock) {
 				try {
 					modPlayer.getModVars(modVars);
 				} catch (RemoteException e) {
@@ -790,7 +791,7 @@ public class PlayerActivity extends Activity {
 		}
 		finishing = true;
 
-		synchronized (modPlayer) {
+		synchronized (playerLock) {
 			try {
 				modPlayer.stop();
 			} catch (RemoteException e1) {
