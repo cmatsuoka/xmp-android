@@ -198,105 +198,108 @@ public class PlayerActivity extends Activity {
 
 		@Override
 		public void run() {
-			if (!paused && !seeking && playTime >= 0) {
-				seekBar.setProgress(playTime);
-			}
+			boolean p = paused;
+			
+			
 			now = (before + FRAME_RATE * latency / 1000 + 1) % FRAME_RATE;
 
-			try {
+			if (!p) {
+				
+				// update seekbar
+				if (!seeking && playTime >= 0) {
+					seekBar.setProgress(playTime);
+				}
+				
+				// get current frame info
 				synchronized (playerLock) {
-					if (stopUpdate) {
-						return;
-					}
-
-					if (!paused) {
+					try {
 						modPlayer.getInfo(info[now].values);							
 						info[now].time = modPlayer.time() / 1000;
 
-						if (info[before].values[0] < 0) {
-							throw new Exception();
-						}
-
-						if (info[before].values[5] != oldSpd || info[before].values[6] != oldBpm
-								|| info[before].values[0] != oldPos || info[before].values[1] != oldPat)
-						{
-							// Ugly code to avoid expensive String.format()
-
-							s.delete(0, s.length());
-
-							s.append("Speed:");
-							Util.to02X(c, info[before].values[5]);
-							s.append(c);
-
-							s.append(" BPM:");
-							Util.to02X(c, info[before].values[6]);
-							s.append(c);
-
-							s.append(" Pos:");
-							Util.to02X(c, info[before].values[0]);
-							s.append(c);
-
-							s.append(" Pat:");
-							Util.to02X(c, info[before].values[1]);
-							s.append(c);
-
-							infoStatus.setText(s);
-
-							oldSpd = info[before].values[5];
-							oldBpm = info[before].values[6];
-							oldPos = info[before].values[0];
-							oldPat = info[before].values[1];
-						}
-
-						if (info[before].time != oldTime || showElapsed != oldShowElapsed) {
-							int t = info[before].time;
-							if (t < 0) {
-								t = 0;
-							}
-
-							s.delete(0, s.length());
-
-							if (showElapsed) {	
-								Util.to2d(c, t / 60);
-								s.append(c);
-								s.append(':');
-								Util.to02d(c, t % 60);
-								s.append(c);
-
-								elapsedTime.setText(s);
-							} else {
-								t = totalTime - t;
-
-								s.append('-');
-								Util.to2d(c, t / 60);
-								s.append(c);
-								s.append(':');
-								Util.to02d(c, t % 60);
-								s.append(c);
-
-								elapsedTime.setText(s);
-							}
-
-							oldTime = info[before].time;
-							oldShowElapsed = showElapsed;
-						}
-
 						modPlayer.getChannelData(info[now].volumes, info[now].finalvols, info[now].pans,
 								info[now].instruments, info[now].keys, info[now].periods);
-					}
-
-					synchronized (viewerLayout) {
-						viewer.update(info[before], paused);
+					} catch (Exception e) {
+						// fail silently
 					}
 				}
-			} catch (Exception e) {
-				// fail silently
-			} finally {
-				if (!paused) {
-					before++;
-					if (before >= FRAME_RATE) {
-						before = 0;
+
+				// display frame info
+				if (info[before].values[5] != oldSpd || info[before].values[6] != oldBpm
+						|| info[before].values[0] != oldPos || info[before].values[1] != oldPat)
+				{
+					// Ugly code to avoid expensive String.format()
+
+					s.delete(0, s.length());
+
+					s.append("Speed:");
+					Util.to02X(c, info[before].values[5]);
+					s.append(c);
+
+					s.append(" BPM:");
+					Util.to02X(c, info[before].values[6]);
+					s.append(c);
+
+					s.append(" Pos:");
+					Util.to02X(c, info[before].values[0]);
+					s.append(c);
+
+					s.append(" Pat:");
+					Util.to02X(c, info[before].values[1]);
+					s.append(c);
+
+					infoStatus.setText(s);
+
+					oldSpd = info[before].values[5];
+					oldBpm = info[before].values[6];
+					oldPos = info[before].values[0];
+					oldPat = info[before].values[1];
+				}
+
+				// display playback time
+				if (info[before].time != oldTime || showElapsed != oldShowElapsed) {
+					int t = info[before].time;
+					if (t < 0) {
+						t = 0;
 					}
+
+					s.delete(0, s.length());
+
+					if (showElapsed) {	
+						Util.to2d(c, t / 60);
+						s.append(c);
+						s.append(':');
+						Util.to02d(c, t % 60);
+						s.append(c);
+
+						elapsedTime.setText(s);
+					} else {
+						t = totalTime - t;
+
+						s.append('-');
+						Util.to2d(c, t / 60);
+						s.append(c);
+						s.append(':');
+						Util.to02d(c, t % 60);
+						s.append(c);
+
+						elapsedTime.setText(s);
+					}
+
+					oldTime = info[before].time;
+					oldShowElapsed = showElapsed;
+				}
+			} // !p
+
+			// always call viewer update (for scrolls during pause)
+			synchronized (viewerLayout) {
+				viewer.update(info[before], p);
+			}
+
+			// update latency compensation
+			if (!p) {
+				before++;
+				if (before >= FRAME_RATE) {
+					before = 0;
 				}
 			}
 		}
@@ -328,7 +331,7 @@ public class PlayerActivity extends Activity {
 				}
 
 				if (/* !paused && */ screenOn) {
-					
+
 					handler.post(updateInfoRunnable);
 				}
 
