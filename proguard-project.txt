@@ -26,3 +26,7 @@
 -keep public class org.helllabs.android.xmp.util.ModInfo {
     public *;
 }
+
+# Keep source file and line number information in crash reports
+-renamesourcefileattribute MyApplication
+-keepattributes SourceFile,LineNumberTable
