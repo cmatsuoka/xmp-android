@@ -486,7 +486,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 	}
 
 	xxs = &mi.mod->xxs[sub->sid];
-	if (xxs == NULL || xxs->flg & XMP_SAMPLE_SYNTH) {
+	if (xxs == NULL || xxs->flg & XMP_SAMPLE_SYNTH || xxs->len == 0) {
 		goto err;
 	}
 
@@ -527,9 +527,11 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 	 * limit < ((xxs->len << 5) - pos) / step + 1
 	 * limit < (len - pos) / step + 1
 	 */
-
-	if (limit > (len - pos) / step) {
-		limit = (len - pos) / step;
+	if (step > 0) {
+		int x = (len - pos) / step;
+		if (limit > x) {
+			limit = x;
+		}
 	}
 
 	if (xxs->flg & XMP_SAMPLE_16BIT) {
