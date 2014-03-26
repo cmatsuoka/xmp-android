@@ -243,6 +243,15 @@ public final class PlayerService extends Service {
 		NotificationActionReceiver.setKeyCode(NotificationActionReceiver.NO_KEY);
 	}
 
+	int playFrame() {
+		// Synchronize frame play with data gathering so we don't change playing variables
+		// in the middle of e.g. sample data reading, which results in a segfault in C code
+		
+		synchronized (this) {
+			return Xmp.playFrame();
+		}
+	}
+	
 	private class PlayRunnable implements Runnable {
     	public void run() {
     		final short buffer[] = new short[bufferSize]; // NOPMD
@@ -320,7 +329,7 @@ public final class PlayerService extends Service {
 	    		int count;
 	    		int loopCount = 0;
 	    		
-	       		while (Xmp.playFrame() == 0) {
+	       		while (playFrame() == 0) {
 	       			count = Xmp.getLoopCount();
 	       			if (!looped && count != loopCount) {
 	       				break;
