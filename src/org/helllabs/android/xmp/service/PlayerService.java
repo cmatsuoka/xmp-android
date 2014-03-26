@@ -22,7 +22,6 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
-import android.widget.Toast;
 
 
 public final class PlayerService extends Service {
@@ -40,7 +39,7 @@ public final class PlayerService extends Service {
 	private boolean paused;
 	private boolean looped;
 	private int startIndex;
-	private Boolean updateData;
+	private boolean updateData;
 	private String fileName;			// currently playing file
 	private QueueManager queue;
 	private final RemoteCallbackList<PlayerCallback> callbacks =
@@ -247,7 +246,7 @@ public final class PlayerService extends Service {
 		// Synchronize frame play with data gathering so we don't change playing variables
 		// in the middle of e.g. sample data reading, which results in a segfault in C code
 		
-		synchronized (this) {
+		synchronized (TAG) {
 			return Xmp.playFrame();
 		}
 	}
@@ -389,7 +388,7 @@ public final class PlayerService extends Service {
 	       		}
     		} while (!stopPlaying && queue.next());
 
-    		synchronized (this) {
+    		synchronized (TAG) {
     			updateData = false;		// stop getChannelData update
     		}
     		watchdog.stop();
@@ -489,16 +488,16 @@ public final class PlayerService extends Service {
 		}
 		
 		public void getChannelData(int[] volumes, int[] finalvols, int[] pans, int[] instruments, int[] keys, int[] periods) {
-			synchronized (this) {
-				if (updateData) {
+			if (updateData) {
+				synchronized (TAG) {
 					Xmp.getChannelData(volumes, finalvols, pans, instruments, keys, periods);
 				}
 			}
 		}
 		
 		public void getSampleData(boolean trigger, int ins, int key, int period, int chn, int width, byte[] buffer) {
-			synchronized (this) {
-				if (updateData) {
+			if (updateData) {
+				synchronized (TAG) {
 					Xmp.getSampleData(trigger, ins, key, period, chn, width, buffer);
 				}
 			}

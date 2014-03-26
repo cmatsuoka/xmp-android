@@ -520,24 +520,10 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 		limit = transient_size;
 	}
 
-	/* (pos + (step * (limit - 1))) >> 5 < xxs->len
-	 * (pos + (step * (limit - 1))) < (xxs->len << 5)
-	 * (step * (limit - 1)) < (xxs->len << 5) - pos
-	 * (limit - 1) < ((xxs->len << 5) - pos) / step
-	 * limit < ((xxs->len << 5) - pos) / step + 1
-	 * limit < (len - pos) / step + 1
-	 */
-	if (step > 0) {
-		int x = (len - pos) / step;
-		if (limit > x) {
-			limit = x;
-		}
-	}
-
 	if (xxs->flg & XMP_SAMPLE_16BIT) {
 		/* transient */
 		for (i = 0; i < limit; i++) {
-			_buffer[i] = ((short *)&xxs->data)[pos >> 5] >> 8;
+			_buffer[i] = ((short *)xxs->data)[pos >> 5] >> 8;
 			pos += step;
 		}
 

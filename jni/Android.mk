@@ -12,5 +12,6 @@ LOCAL_CFLAGS    := -O3 -I$(LOCAL_PATH)/../../../libxmp/include \
                    -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
 LOCAL_STATIC_LIBRARIES := xmp-prebuilt
 LOCAL_SRC_FILES := xmp-jni.c
+#LOCAL_LDLIBS	:= -llog
 
 include $(BUILD_SHARED_LIBRARY)
