@@ -101,7 +101,7 @@ public class Notifier {
 		
 		if (ticker) {
 			if (queue.size() > 1) {
-				builder.setTicker(title + " " + indexText);
+				builder.setTicker(title + " (" + indexText + ")");
 			} else  {
 				builder.setTicker(title);
 			}
@@ -113,7 +113,7 @@ public class Notifier {
 		} else {
 			builder.addAction(R.drawable.ic_action_pause, "Pause", pauseIntent);
 			if (android.os.Build.VERSION.SDK_INT < 11) {
-				builder.setContentText(title + " " + indexText);
+				builder.setContentText(title + " (" + indexText + ")");
 			} else {
 				builder.setContentText(title);
 			}
