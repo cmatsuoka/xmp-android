@@ -11,7 +11,7 @@
     <EditTextPreference
       android:key="media_path"
       android:persistent="true"
-      android:title="@string/preferences_media_path_title"
+      android:title="@string/pref_media_path_title"
       android:summary="@string/preferences_media_path_summary"
       android:defaultValue="/sdcard/mod" />
       
@@ -159,6 +159,13 @@
       android:title="@string/preferences_dark_theme_title"
       android:summary="@string/preferences_dark_theme_summary"
       android:defaultValue="false" /> -->
+      
+    <CheckBoxPreference 
+      android:key="pause_on_headset_unplug"
+      android:persistent="true"
+      android:title="@string/preferences_pause_on_headset_unplug_title"
+      android:summary="@string/preferences_pause_on_headset_unplug_summary"
+      android:defaultValue="true"/>
     
     <PreferenceCategory
       android:title="@string/preferences_category_experimental">
