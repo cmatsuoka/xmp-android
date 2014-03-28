@@ -43,6 +43,7 @@ public class Preferences extends PreferenceActivity {
 	public static final String TITLES_IN_BROWSER = "titles_in_browser";
 	public static final String ENABLE_DELETE = "enable_delete";
 	public static final String KEEP_SCREEN_ON = "keep_screen_on";
+	public static final String HEADSET_PAUSE = "headset_pause";
 
 	private SharedPreferences prefs;
 	private String oldPath;

@@ -126,6 +126,18 @@
       android:defaultValue="70"
       android:text="%"
       android:max="100" />
+    
+    <PreferenceCategory
+      android:title="@string/pref_category_player_control">
+    
+    <CheckBoxPreference 
+      android:key="headset_pause"
+      android:persistent="true"
+      android:title="@string/pref_headset_pause_title"
+      android:summary="@string/pref_headset_pause_summary"
+      android:defaultValue="true"/>
+    
+    </PreferenceCategory>
    
   </PreferenceScreen>
   
@@ -159,13 +171,6 @@
       android:title="@string/preferences_dark_theme_title"
       android:summary="@string/preferences_dark_theme_summary"
       android:defaultValue="false" /> -->
-      
-    <CheckBoxPreference 
-      android:key="pause_on_headset_unplug"
-      android:persistent="true"
-      android:title="@string/pref_pause_on_headset_unplug_title"
-      android:summary="@string/pref_pause_on_headset_unplug_summary"
-      android:defaultValue="true"/>
     
     <PreferenceCategory
       android:title="@string/pref_category_experimental">

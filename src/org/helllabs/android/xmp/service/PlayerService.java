@@ -44,9 +44,14 @@ public final class PlayerService extends Service {
 	private QueueManager queue;
 	private final RemoteCallbackList<PlayerCallback> callbacks =
 		new RemoteCallbackList<PlayerCallback>();
+	
+	// Telephony autopause
 	private boolean autoPaused;			// paused on phone call
 	private boolean previousPaused;		// save previous pause state
+	
+	// Headset autopause
 	private HeadsetPlugReceiver headsetPlugReceiver;
+	private boolean headsetPause;
     
     // remote control
 	private MediaButtons mediaButtons;
@@ -63,10 +68,12 @@ public final class PlayerService extends Service {
     	
    		prefs = PreferenceManager.getDefaultSharedPreferences(this);
    		
-   		// For listening to headset changes, the broadcast receiver cannot be
-   		// declared in the manifest, it must be dynamically registered. 
-   		headsetPlugReceiver = new HeadsetPlugReceiver();
-   		registerReceiver(headsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+   		if (prefs.getBoolean(Preferences.HEADSET_PAUSE, true)) {
+   			// For listening to headset changes, the broadcast receiver cannot be
+   			// declared in the manifest, it must be dynamically registered. 
+   			headsetPlugReceiver = new HeadsetPlugReceiver();
+   			registerReceiver(headsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+   		}
    		
    		final int bufferMs = prefs.getInt(Preferences.BUFFER_MS, 500);
    		sampleRate = Integer.parseInt(prefs.getString(Preferences.SAMPLING_RATE, "44100"));
@@ -131,7 +138,9 @@ public final class PlayerService extends Service {
 
     @Override
 	public void onDestroy() {
-    	unregisterReceiver(headsetPlugReceiver);
+    	if (headsetPlugReceiver != null) {
+    		unregisterReceiver(headsetPlugReceiver);
+    	}
     	mediaButtons.unregister();
     	watchdog.stop();
     	notifier.cancel();
@@ -194,7 +203,7 @@ public final class PlayerService extends Service {
 	private void checkMediaButtons() {
 		final int key = RemoteControlReceiver.getKeyCode();
 		
-		if (key > 0) {
+		if (key != RemoteControlReceiver.NO_KEY) {
 			switch (key) {
 			case KeyEvent.KEYCODE_MEDIA_NEXT:
 				Log.i(TAG, "Handle KEYCODE_MEDIA_NEXT");
@@ -211,6 +220,7 @@ public final class PlayerService extends Service {
 			case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
 				Log.i(TAG, "Handle KEYCODE_MEDIA_PLAY_PAUSE");
 				actionPause();
+				headsetPause = false;
 				break;
 			}
 			
@@ -221,7 +231,7 @@ public final class PlayerService extends Service {
 	private void checkNotificationButtons() {
 		final int key = NotificationActionReceiver.getKeyCode();
 		
-		if (key > 0) {
+		if (key != NotificationActionReceiver.NO_KEY) {
 			switch (key) {
 			case NotificationActionReceiver.STOP:
 				Log.i(TAG, "Handle notification stop");
@@ -230,15 +240,54 @@ public final class PlayerService extends Service {
 			case NotificationActionReceiver.PAUSE:
 				Log.i(TAG, "Handle notification pause");
 				actionPause();
+				headsetPause = false;
 				break;
 			case NotificationActionReceiver.NEXT:
 				Log.i(TAG, "Handle notification next");
 				actionNext();
 				break;
 			}
+
+			NotificationActionReceiver.setKeyCode(NotificationActionReceiver.NO_KEY);
 		}
+	}
+	
+	private void checkHeadsetState() {
+		final int state = HeadsetPlugReceiver.getState();
 		
-		NotificationActionReceiver.setKeyCode(NotificationActionReceiver.NO_KEY);
+		if (state != HeadsetPlugReceiver.NO_STATE) {
+			switch (state) {
+			case HeadsetPlugReceiver.HEADSET_UNPLUGGED:
+				Log.i(TAG, "Handle headset unplugged");
+				
+				// If not already paused
+				if (!paused && !autoPaused) {
+					headsetPause = true;
+					actionPause();
+				} else {
+					Log.i(TAG, "Already paused");
+				}
+				break;
+			case HeadsetPlugReceiver.HEADSET_PLUGGED:
+				Log.i(TAG, "Handle headset plugged");
+				
+				// If paused by headset unplug
+				if (headsetPause) {
+					// Don't unpause if we're paused due to phone call
+					if (!autoPaused) {
+						actionPause();
+					} else {
+						Log.i(TAG, "Paused by phone state, don't unpause");
+					}
+					headsetPause = false;
+				} else {
+					Log.i(TAG, "Manual pause, don't unpause");
+				}
+				break;
+			}
+			
+			HeadsetPlugReceiver.setState(HeadsetPlugReceiver.NO_STATE);
+		}
 	}
 
 	private int playFrame() {
@@ -342,16 +391,19 @@ public final class PlayerService extends Service {
 	       				watchdog.refresh();
 	       				try {
 							Thread.sleep(500);
-							checkMediaButtons();
-							checkNotificationButtons();
 						} catch (InterruptedException e) {
 							break;
 						}
+	       				
+	       				checkMediaButtons();
+						checkHeadsetState();
+						checkNotificationButtons();
 	       			}
 	       			audio.play();
 	       			
 	       			watchdog.refresh();
 	       			checkMediaButtons();
+	       			checkHeadsetState();
 	       			checkNotificationButtons();
 	       		}
 
@@ -454,6 +506,7 @@ public final class PlayerService extends Service {
 	    
 	    public void pause() {
 	    	doPauseAndNotify();
+	    	headsetPause = false;
 	    }
 	    
 	    public void getInfo(final int[] values) {
@@ -573,7 +626,7 @@ public final class PlayerService extends Service {
 			paused = false;				// set to complement, flip on doPause()
 			doPauseAndNotify();
 		} else {
-			if (autoPaused) {
+			if (autoPaused && !headsetPause) {
 				autoPaused = false;
 				paused = !previousPaused;	// set to complement, flip on doPause()
 				doPauseAndNotify();
@@ -582,73 +635,4 @@ public final class PlayerService extends Service {
 		
 		return autoPaused;
 	}
-	
-/*
-	// for media buttons
-	// see http://android-developers.blogspot.com/2010/06/allowing-applications-to-play-nicer.html
-	
-	private static void initializeRemoteControlRegistrationMethods() {
-		try {
-			if (registerMediaButtonEventReceiver == null) {
-				registerMediaButtonEventReceiver = AudioManager.class
-						.getMethod("registerMediaButtonEventReceiver",
-								new Class[] { ComponentName.class });
-			}
-			if (unregisterMediaButtonEventReceiver == null) {
-				unregisterMediaButtonEventReceiver = AudioManager.class
-						.getMethod("unregisterMediaButtonEventReceiver",
-								new Class[] { ComponentName.class });
-			}
-			// success, this device will take advantage of better remote
-			// control event handling
-		} catch (NoSuchMethodException nsme) {
-			// failure, still using the legacy behavior, but this app
-			// is future-proof!
-		}
-	}
-
-	private void registerRemoteControl() {
-		try {
-			if (registerMediaButtonEventReceiver == null) {
-				return;
-			}
-			registerMediaButtonEventReceiver.invoke(audioManager, remoteControlResponder);
-		} catch (InvocationTargetException ite) {
-			// unpack original exception when possible
-			final Throwable cause = ite.getCause();
-			if (cause instanceof RuntimeException) {
-				throw (RuntimeException) cause;
-			} else if (cause instanceof Error) {
-				throw (Error) cause;
-			} else {
-				// unexpected checked exception; wrap and re-throw
-				throw new RuntimeException(ite);
-			}
-		} catch (IllegalAccessException ie) {
-			Log.e(TAG, "Unexpected " + ie);
-		}
-	}
-
-	private void unregisterRemoteControl() {
-		try {
-			if (unregisterMediaButtonEventReceiver == null) {
-				return;
-			}
-			unregisterMediaButtonEventReceiver.invoke(audioManager,	remoteControlResponder);
-		} catch (InvocationTargetException ite) {
-			// unpack original exception when possible
-			final Throwable cause = ite.getCause();
-			if (cause instanceof RuntimeException) {
-				throw (RuntimeException) cause;
-			} else if (cause instanceof Error) {
-				throw (Error) cause;
-			} else {
-				// unexpected checked exception; wrap and re-throw
-				throw new RuntimeException(ite);
-			}
-		} catch (IllegalAccessException ie) {
-			Log.e(TAG, "Unexpected " + ie);
-		}
-	}
-	*/
 }
