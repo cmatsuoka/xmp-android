@@ -12,7 +12,6 @@
     <string name="pref_pan_separation_summary">Set the mixer stereo separation</string>
     <string name="pref_stereo_summary">Mix channels to stereo</string>
     <string name="pref_stereo_title">Stereo output</string>
-    <string name="pref_category_mixer">Mixer tweaks</string>
     <string name="pref_filter_summary">Enable IT lowpass filter effect</string>
     <string name="pref_filter_title">Resonant filters</string>
     <string name="pref_interpolate_summary">Interpolate samples</string>
@@ -41,10 +40,6 @@
     <string name="pref_examples_title">Install modules</string>
     <string name="pref_examples_summary">Install example music files when creating modules directory</string>
     <string name="pref_category_interface">Interface settings</string>
-    <string name="pref_loop_list_summary">Play files again after playlist ends</string>
-    <string name="pref_loop_list_title">Loop playlists</string>
-    <string name="pref_shuffle_title">Shuffle mode</string>
-    <string name="pref_shuffle_summary">Play files in random order</string>
     <string name="pref_sampling_rate_summary">Set the mixer sampling rate</string>
     <string name="pref_sampling_rate_title">Sampling rate</string>
     <string name="pref_list_formats_title">Known formats</string>
@@ -82,6 +77,8 @@
     <string name="msg_file_deleted">File deleted</string>
     <string name="msg_cant_delete">Can\'t delete file</string>
     <string name="msg_select_playlist">Select playlist</string>
+    <string name="msg_no_modules">No modules found.</string>
+    <string name="msg_empty_playlist">Empty playlist.</string>
     <string name="menu_new_playlist">New playlist</string>
     <string name="error_storage">Can\'t access external storage.</string>
     <string name="pref_use_filename_title">File names in playlist</string>
@@ -89,7 +86,6 @@
     <string name="pref_enable_delete_title">Enable file delete</string>
     <string name="pref_enable_delete_summary">Display a menu option to delete the currently playing file</string>
     <string name="pref_category_experimental">Experimental (be careful)</string>
-    <string name="msg_delete">Delete</string>
     <string name="menu_delete">Delete</string>
     <string name="pref_keep_screen_on_summary">Prevent screen from sleeping during replay</string>
     <string name="pref_keep_screen_on_title">Keep screen on</string>

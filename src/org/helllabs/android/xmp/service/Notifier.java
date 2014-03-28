@@ -4,6 +4,7 @@ import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.player.PlayerActivity;
 import org.helllabs.android.xmp.service.receiver.NotificationActionReceiver;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 
 
+@SuppressLint("DefaultLocale")
 public class Notifier {
 	//private final NotificationManager nm;	// NOPMD
     private final PendingIntent contentIntent;
