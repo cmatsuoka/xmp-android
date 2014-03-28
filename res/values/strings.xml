@@ -23,17 +23,17 @@
     <string name="pref_category_sound">Sound settings</string>
     <string name="pref_category_files">Playlist settings</string>
     <string name="pref_category_player_control">Player control</string>
-    <string name="changelog_text">• Update player engine to libxmp 4.2.6\n• Fix MED synth instrument volume\n• Fix OctaMED MMD2 instrument transposition\n• Fix segfault in NDK data retrieval\n• Fix race condition at end of replay\n• Fix notification order\n• Fix index in Android 2.x notification\n 
+    <string name="changelog_text">• Automatically pause when headset unplugged\n
+\nVersion 3.7.3:\n• Update player engine to libxmp 4.2.6\n• Fix MED synth instrument volume\n• Fix OctaMED MMD2 instrument transposition\n• Fix segfault in NDK data retrieval\n• Fix race condition at end of replay\n• Fix notification order\n• Fix index in Android 2.x notification\n 
 \nVersion 3.7.2:\n• Fix channel viewer crash\n• Fix viewer display when paused\n• Fix service lifecycle issues\n• Fix notification ticker text\n• Fix playlist reordering persistence\n• Code refactoring and optimization\n
 \nVersion 3.7.1:\n• Add notification actions (Android 4.1 and newer)\n• Fix action bar menu items\n• Fix intent filter to handle module files\n• Fix thread leak issues\n• (Hopefully) Fix launch from history issues\n 
 \nVersion 3.7.0:\n• Update player engine to libxmp 4.2.5\n• Remove support to incomplete formats\n• Add support to His Master\'s Noise format\n• Improved MED, OKT and MDL support\n• Fix XM envelope and delay effect\n• Code refactoring and optimization\n
 \nVersion 3.6.2:\n• Update player engine to libxmp 4.1.6-pre\n• Improve interface accessibility\n• Fix media buttons broadcast receiver\n• Fix IT and XM portamento and envelopes\n• Fix OctaMED synth and effects\n• Fix Oktalyzer sample mapping\n• Fix ThePlayer 5.0a/6.0a pattern decoding\n• Code refactoring and optimization\n
 \nVersion 3.6.1:\n• Update player engine to libxmp 4.1.2\n• Fix handling of XM keyoff event\n• Fix loss of precision in portamento\n• Fix MTM sample fine tuning\n
 \nVersion 3.6.0:\n• Update player engine to libxmp 4.1.0\n• Improve precision of IT lowpass filter\n• Fix IT portamento after note cut\n• Fix IT envelopes with no envelope points\n• Fix IT vibrato rate\n• Fix XM invalid instrument event reading\n• Fix MED portamento and pitch slides\n• Fix Stonecracker depacker\n 
-\nVersion 3.5.0:\n• Update player engine to libxmp 4.0.4\n• Add zoo depacker\n• Fix IT pan effects\n• Fix IT volume column slide to note\n• Fix IT vibrato effect\n• Fix MED BPM tempo setting\n• Fix global volume slides\n 
-\nVersion 3.4.4:\n• Update player engine to libxmp 4.0.2\n• Fix IT instrument vibrato depth and sweep\n• Fix IT volume column vibrato\n• Fix IT past note effects\n• Fix IT note fadeout\n• Fix global volume slides\n
+\nVersion 3.5.0:\n• Update player engine to libxmp 4.0.4\n• Add zoo depacker\n• Fix IT pan effects\n• Fix IT volume column slide to note\n• Fix IT vibrato effect\n• Fix MED BPM tempo setting\n• Fix global volume slides\n
     </string>
-    <string name="changelog_title">New in version 3.7.3</string>
+    <string name="changelog_title">New in version 3.8.0</string>
     <string name="changelog">Changelog</string>
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
     <string name="menu_refresh">Rescan</string>
