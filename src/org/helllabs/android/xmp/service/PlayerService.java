@@ -2,12 +2,16 @@ package org.helllabs.android.xmp.service;
 
 import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.preferences.Preferences;
+import org.helllabs.android.xmp.service.receiver.HeadsetPlugReceiver;
+import org.helllabs.android.xmp.service.receiver.NotificationActionReceiver;
+import org.helllabs.android.xmp.service.receiver.RemoteControlReceiver;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
 
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -42,6 +46,7 @@ public final class PlayerService extends Service {
 		new RemoteCallbackList<PlayerCallback>();
 	private boolean autoPaused;			// paused on phone call
 	private boolean previousPaused;		// save previous pause state
+	private HeadsetPlugReceiver headsetPlugReceiver;
     
     // remote control
 	private MediaButtons mediaButtons;
@@ -57,6 +62,11 @@ public final class PlayerService extends Service {
     	Log.i(TAG, "Create service");
     	
    		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+   		
+   		// For listening to headset changes, the broadcast receiver cannot be
+   		// declared in the manifest, it must be dynamically registered. 
+   		headsetPlugReceiver = new HeadsetPlugReceiver();
+   		registerReceiver(headsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
    		
    		final int bufferMs = prefs.getInt(Preferences.BUFFER_MS, 500);
    		sampleRate = Integer.parseInt(prefs.getString(Preferences.SAMPLING_RATE, "44100"));
@@ -121,6 +131,7 @@ public final class PlayerService extends Service {
 
     @Override
 	public void onDestroy() {
+    	unregisterReceiver(headsetPlugReceiver);
     	mediaButtons.unregister();
     	watchdog.stop();
     	notifier.cancel();

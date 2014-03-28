@@ -3,6 +3,7 @@ package org.helllabs.android.xmp.service;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.helllabs.android.xmp.service.receiver.RemoteControlReceiver;
 import org.helllabs.android.xmp.util.Log;
 
 import android.content.ComponentName;

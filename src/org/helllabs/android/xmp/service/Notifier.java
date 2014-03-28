@@ -2,6 +2,7 @@ package org.helllabs.android.xmp.service;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.player.PlayerActivity;
+import org.helllabs.android.xmp.service.receiver.NotificationActionReceiver;
 
 import android.app.PendingIntent;
 import android.app.Service;
