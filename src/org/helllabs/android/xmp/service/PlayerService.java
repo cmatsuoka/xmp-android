@@ -43,7 +43,7 @@ public final class PlayerService extends Service {
 	private boolean autoPaused;			// paused on phone call
 	private boolean previousPaused;		// save previous pause state
     
-    // for media buttons
+    // remote control
 	private MediaButtons mediaButtons;
     
 	public static boolean isAlive;
@@ -230,11 +230,11 @@ public final class PlayerService extends Service {
 		NotificationActionReceiver.setKeyCode(NotificationActionReceiver.NO_KEY);
 	}
 
-	int playFrame() {
+	private int playFrame() {
 		// Synchronize frame play with data gathering so we don't change playing variables
 		// in the middle of e.g. sample data reading, which results in a segfault in C code
 		
-		synchronized (TAG) {
+		synchronized (playThread) {
 			return Xmp.playFrame();
 		}
 	}
@@ -376,7 +376,7 @@ public final class PlayerService extends Service {
 	       		}
     		} while (!stopPlaying && queue.next());
 
-    		synchronized (TAG) {
+    		synchronized (playThread) {
     			updateData = false;		// stop getChannelData update
     		}
     		watchdog.stop();
@@ -402,12 +402,6 @@ public final class PlayerService extends Service {
 	    isAlive = false;
     	Xmp.stopModule();
     	paused = false;
-
-//    	if (playThread != null && playThread.isAlive()) {
-//    		try {
-//    			playThread.join();
-//    		} catch (InterruptedException e) { }
-//    	}
 
     	Xmp.deinit();
     	audio.release();
@@ -477,7 +471,7 @@ public final class PlayerService extends Service {
 		
 		public void getChannelData(int[] volumes, int[] finalvols, int[] pans, int[] instruments, int[] keys, int[] periods) {
 			if (updateData) {
-				synchronized (TAG) {
+				synchronized (playThread) {
 					Xmp.getChannelData(volumes, finalvols, pans, instruments, keys, periods);
 				}
 			}
@@ -485,7 +479,7 @@ public final class PlayerService extends Service {
 		
 		public void getSampleData(boolean trigger, int ins, int key, int period, int chn, int width, byte[] buffer) {
 			if (updateData) {
-				synchronized (TAG) {
+				synchronized (playThread) {
 					Xmp.getSampleData(trigger, ins, key, period, chn, width, buffer);
 				}
 			}
