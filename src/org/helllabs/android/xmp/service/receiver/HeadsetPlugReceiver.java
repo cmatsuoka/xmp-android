@@ -12,6 +12,7 @@ public class HeadsetPlugReceiver extends BroadcastReceiver {
 	public static final int HEADSET_UNPLUGGED = 0;
 	public static final int HEADSET_PLUGGED = 1;
 	public static final int NO_STATE = -1;
+	private static boolean skip = true;
 	private static int state = NO_STATE;
 
 	@Override
@@ -20,6 +21,12 @@ public class HeadsetPlugReceiver extends BroadcastReceiver {
 		Log.i(TAG, "Action " + action);
 		
 		if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+			
+			if (skip) {
+				skip = false;
+				return;
+			}
+			
 			final int headsetState = intent.getIntExtra("state", -1);
 			if (headsetState == 0) {
 				Log.i(TAG, "Headset unplugged");
