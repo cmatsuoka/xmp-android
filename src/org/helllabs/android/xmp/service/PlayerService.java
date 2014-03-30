@@ -387,6 +387,7 @@ public final class PlayerService extends Service {
 	       			audio.write(buffer, 0, size);
 	       			
 	       			while (paused) {
+	       				audio.flush();
 	       				audio.pause();
 	       				watchdog.refresh();
 	       				try {
