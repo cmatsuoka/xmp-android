@@ -12,7 +12,7 @@ public class HeadsetPlugReceiver extends BroadcastReceiver {
 	public static final int HEADSET_UNPLUGGED = 0;
 	public static final int HEADSET_PLUGGED = 1;
 	public static final int NO_STATE = -1;
-	private static boolean skip = true;
+	private boolean skip = true;
 	private static int state = NO_STATE;
 
 	@Override
