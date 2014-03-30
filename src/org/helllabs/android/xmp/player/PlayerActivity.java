@@ -71,7 +71,7 @@ public class PlayerActivity extends Activity {
 	private int totalTime;
 	private boolean screenOn;
 	private Activity activity;
-	private AlertDialog deleteDialog;
+	//private AlertDialog deleteDialog;
 	private BroadcastReceiver screenReceiver;
 	private Viewer viewer;
 	private Viewer.Info[] info;
@@ -198,8 +198,7 @@ public class PlayerActivity extends Activity {
 
 		@Override
 		public void run() {
-			boolean p = paused;
-			
+			final boolean p = paused;
 			
 			now = (before + FRAME_RATE * latency / 1000 + 1) % FRAME_RATE;
 
@@ -660,9 +659,9 @@ public class PlayerActivity extends Activity {
 
 	@Override
 	public void onDestroy() {		
-		if (deleteDialog != null) {
-			deleteDialog.cancel();
-		}
+		//if (deleteDialog != null) {
+		//	deleteDialog.cancel();
+		//}
 
 		if (modPlayer != null) {
 			try {
@@ -705,9 +704,9 @@ public class PlayerActivity extends Activity {
 	}
 
 	private void showNewMod(final String fileName) {
-		if (deleteDialog != null) {
-			deleteDialog.cancel();
-		}
+		//if (deleteDialog != null) {
+		//	deleteDialog.cancel();
+		//}
 		handler.post(showNewModRunnable);
 	}
 
