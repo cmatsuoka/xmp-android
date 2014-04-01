@@ -104,7 +104,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 			switch (mode) {
 			case 1:								// play all starting at this one
 			default:
-				playModule(modList, position);
+				playModule(modList, position, shuffleMode, shuffleMode);
 				break;
 			case 2:								// play this one
 				playModule(filename);
@@ -132,17 +132,21 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 	abstract public void update();
 
 	// Play all modules in list and honor default shuffle mode
-	public void playModule(final List<PlaylistInfo> list) {
+	protected void playModule(final List<PlaylistInfo> list) {
 		playModule(list, 0, shuffleMode);
 	}
 
 	// Play all modules in list with start position, no shuffle
-	public void playModule(final List<PlaylistInfo> list, final int position) {
+	protected void playModule(final List<PlaylistInfo> list, final int position) {
 		playModule(list, position, false);
+	}
+	
+	protected void playModule(final List<PlaylistInfo> list, final int start, final boolean shuffle) {
+		playModule(list, start, false, false);
 	}
 
 	// Play modules in list starting at the specified one
-	public void playModule(final List<PlaylistInfo> list, int start, final boolean shuffle) {
+	protected void playModule(final List<PlaylistInfo> list, int start, final boolean shuffle, final boolean keepFirst) {
 		int num = 0;
 		int dir = 0;
 
@@ -174,22 +178,22 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 			}
 		}
 		if (i > 0) {
-			playModule(mods, start - dir, shuffle);
+			playModule(mods, start - dir, shuffle, keepFirst);
 		}
 	}
 
 	// Play this module
-	public void playModule(final String mod) {
+	protected void playModule(final String mod) {
 		final String[] mods = { mod };
-		playModule(mods, 0, shuffleMode);
+		playModule(mods, 0, shuffleMode, false);
 	}
 
 	// Play all modules in list and honor default shuffle mode
-	public void playModule(final String[] mods) {
-		playModule(mods, 0, shuffleMode);
+	protected void playModule(final String[] mods) {
+		playModule(mods, 0, shuffleMode, false);
 	}
 
-	public void playModule(final String[] mods, final int start, final boolean shuffle) {
+	protected void playModule(final String[] mods, final int start, final boolean shuffle, final boolean keepFirst) {
 		if (showToasts) {
 			if (mods.length > 1) {
 				Message.toast(this, "Play all modules in list");
@@ -203,6 +207,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		intent.putExtra("shuffle", shuffle);
 		intent.putExtra("loop", loopMode);
 		intent.putExtra("start", start);
+		intent.putExtra("keepFirst", keepFirst);
 		Log.i(TAG, "Start Player activity");
 		startActivityForResult(intent, PLAY_MOD_REQUEST);
 	}

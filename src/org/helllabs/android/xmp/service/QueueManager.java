@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.helllabs.android.xmp.util.Log;
+
 
 public class QueueManager {
 	private final List<String> array;
@@ -11,14 +13,24 @@ public class QueueManager {
 	private int index;
 	private final boolean shuffleMode;
 	private final boolean loopListMode;
+	private int randomStart = 0;
     
-    public QueueManager(final String[] files, int start, final boolean shuffle, final boolean loop) {
+    public QueueManager(final String[] files, int start, final boolean shuffle, final boolean loop, final boolean keepFirst) {
     	if (start >= files.length) {
     		start = files.length - 1;
     	}
+    	
+    	if (keepFirst) {
+    		final String temp = files[0];
+    		files[0] = files[start];
+    		files[start] = temp;
+    		start = 0;
+    		randomStart = 1;
+    	}
+    	
     	index = start;
     	array = new ArrayList<String>(Arrays.asList(files));
-    	ridx = new RandomIndex(files.length);
+    	ridx = new RandomIndex(randomStart, files.length);
     	shuffleMode = shuffle;
     	loopListMode = loop;
     }

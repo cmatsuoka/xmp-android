@@ -53,6 +53,7 @@ public class PlayerActivity extends Activity {
 	private boolean seeking;
 	private boolean shuffleMode;
 	private boolean loopListMode;
+	private boolean keepFirst;
 	private boolean paused;
 	private boolean finishing;
 	private boolean showElapsed;
@@ -389,6 +390,7 @@ public class PlayerActivity extends Activity {
 			fileArray[0] = path;
 			shuffleMode = false;
 			loopListMode = false;
+			keepFirst = false;
 			start = 0;
 		} else if (fromHistory) {
 			// Oops. We don't want to start service if launched from history and service is not running
@@ -405,6 +407,7 @@ public class PlayerActivity extends Activity {
 				fileArray = extras.getStringArray("files");	
 				shuffleMode = extras.getBoolean("shuffle");
 				loopListMode = extras.getBoolean("loop");
+				keepFirst = extras.getBoolean("keepFirst");
 				start = extras.getInt("start");
 			} else {
 				reconnect = true;
@@ -779,7 +782,7 @@ public class PlayerActivity extends Activity {
 
 	private void playNewMod(final String[] files, final int start) {      	 
 		try {
-			modPlayer.play(files, start, shuffleMode, loopListMode);
+			modPlayer.play(files, start, shuffleMode, loopListMode, keepFirst);
 		} catch (RemoteException e) {
 			Log.e(TAG, "Can't play module");
 		}

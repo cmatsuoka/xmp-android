@@ -8,7 +8,7 @@ public class RandomIndex {
 	private int[] idx;
 	private final Random random;
 	
-	public RandomIndex(final int size) {
+	public RandomIndex(final int start, final int size) {
 		idx = new int[size];
 		
 		random = new Random();
@@ -19,7 +19,7 @@ public class RandomIndex {
 			idx[i] = i;
 		}
 		
-		randomize(0, size);
+		randomize(start, size - start);
 	}
 
 	public void randomize(final int start, final int length) {
