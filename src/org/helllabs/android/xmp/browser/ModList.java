@@ -341,10 +341,12 @@ public class ModList extends PlaylistActivity {		// NOPMD
 
 		final List<PlaylistInfo> list = new ArrayList<PlaylistInfo>();
 		final File[] dirFiles = modDir.listFiles(new DirFilter());
-		for (final File file : dirFiles) {
-			directoryNum++;
-			list.add(new PlaylistInfo(file.getName(), "Directory",
-					file.getAbsolutePath(), R.drawable.folder));
+		if (dirFiles != null) {
+			for (final File file : dirFiles) {
+				directoryNum++;
+				list.add(new PlaylistInfo(file.getName(), "Directory",
+						file.getAbsolutePath(), R.drawable.folder));
+			}
 		}
 		Collections.sort(list);
 		modList.addAll(list);
