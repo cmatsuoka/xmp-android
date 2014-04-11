@@ -82,7 +82,7 @@ public class Notifier {
 	private void notification(String title, final int index, final boolean ticker, final boolean paused) {
 		final Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon);
 		
-		if (title.trim().length() == 0) {
+		if (title != null && title.trim().length() == 0) {
 			title = "<untitled>";
 		}
 		
