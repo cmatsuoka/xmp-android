@@ -483,7 +483,7 @@ public final class PlayerService extends Service {
 			if (isAlive) {
 				Log.i(TAG, "Use existing player thread");
 				restartList = true;
-				startIndex = start;
+				startIndex = keepFirst ? 0 : start;
 				nextSong();
 			} else {
 				Log.i(TAG, "Start player thread");
