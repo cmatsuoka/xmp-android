@@ -25,6 +25,7 @@ interface ModInterface {
 	void getPatternRow(int pat, int row, out byte[] rowNotes, out byte[] rowInstruments);
 	int mute(int chn, int status);
 	boolean deleteFile();
+	boolean setSequence(int seq);
 	
 	void registerCallback(PlayerCallback cb);
 	void unregisterCallback(PlayerCallback cb);

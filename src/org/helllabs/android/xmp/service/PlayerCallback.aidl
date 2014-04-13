@@ -5,4 +5,5 @@ interface PlayerCallback {
 	void endModCallback();
 	void endPlayCallback();
 	void pauseCallback();
+	void newSequenceCallback();
 }

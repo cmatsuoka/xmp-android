@@ -137,6 +137,13 @@
       android:summary="@string/pref_headset_pause_summary"
       android:defaultValue="true"/>
     
+    <CheckBoxPreference 
+      android:key="all_sequences"
+      android:persistent="true"
+      android:title="@string/pref_all_sequences_title"
+      android:summary="@string/pref_all_sequences_summary"
+      android:defaultValue="false"/>
+    
     </PreferenceCategory>
    
   </PreferenceScreen>
@@ -164,13 +171,6 @@
       android:title="@string/pref_keep_screen_on_title"
       android:summary="@string/pref_keep_screen_on_summary"
       android:defaultValue="false"/>
-    
-    <!-- <CheckBoxPreference
-      android:key="dark_theme"
-      android:persistent="true"
-      android:title="@string/preferences_dark_theme_title"
-      android:summary="@string/preferences_dark_theme_summary"
-      android:defaultValue="false" /> -->
     
     <PreferenceCategory
       android:title="@string/pref_category_experimental">

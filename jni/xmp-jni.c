@@ -25,6 +25,7 @@ static int _finalvol[XMP_MAX_CHANNELS];
 static int _last_key[XMP_MAX_CHANNELS];
 static int _pos[XMP_MAX_CHANNELS];
 static int _decay = 4;
+static int _sequence;
 
 #define MAX_BUFFER_SIZE 256
 static char _buffer[MAX_BUFFER_SIZE];
@@ -61,6 +62,7 @@ Java_org_helllabs_android_xmp_Xmp_loadModule(JNIEnv *env, jobject obj, jstring n
 	xmp_get_module_info(ctx, &mi);
 
 	memset(_pos, 0, XMP_MAX_CHANNELS * sizeof (int));
+	_sequence = 0;
 
 	return res;
 }
@@ -278,16 +280,17 @@ Java_org_helllabs_android_xmp_Xmp_getLoopCount(JNIEnv *env, jobject obj)
 JNIEXPORT void JNICALL
 Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray vars)
 {
-	int v[6];
+	int v[7];
 
-	v[0] = mi.seq_data[0].duration;
+	v[0] = mi.seq_data[_sequence].duration;
 	v[1] = mi.mod->len;
 	v[2] = mi.mod->pat;
 	v[3] = mi.mod->chn;
 	v[4] = mi.mod->ins;
 	v[5] = mi.mod->smp;
+	v[6] = mi.num_sequences;
 
-	(*env)->SetIntArrayRegion(env, vars, 0, 6, v);
+	(*env)->SetIntArrayRegion(env, vars, 0, 7, v);
 }
 
 JNIEXPORT jstring JNICALL
@@ -575,3 +578,20 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 	memset(_buffer, 0, width);
 	(*env)->SetByteArrayRegion(env, buffer, 0, width, _buffer);
 }
+
+JNIEXPORT jboolean JNICALL
+Java_org_helllabs_android_xmp_Xmp_setSequence(JNIEnv *env, jobject obj, jint seq)
+{
+	if (seq >= mi.num_sequences)
+		return JNI_FALSE;
+
+	if (mi.seq_data[_sequence].duration <= 0)
+		return JNI_FALSE;
+
+	_sequence = seq;
+
+	xmp_set_position(ctx, mi.seq_data[_sequence].entry_point);
+
+	return JNI_TRUE;
+}
+

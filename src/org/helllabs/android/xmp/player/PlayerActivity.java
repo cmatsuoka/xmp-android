@@ -10,7 +10,6 @@ import org.helllabs.android.xmp.service.PlayerService;
 import org.helllabs.android.xmp.util.Log;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -41,6 +40,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
+
 
 @SuppressWarnings("PMD.ShortVariable")
 public class PlayerActivity extends Activity {
@@ -166,6 +166,15 @@ public class PlayerActivity extends Activity {
 		@Override
 		public void pauseCallback() throws RemoteException {
 			handler.post(setPauseStateRunnable);
+		}
+		
+		@Override
+		public void newSequenceCallback() throws RemoteException {
+			synchronized (playerLock) {
+				Log.i(TAG, "Show new sequence");
+				showNewSequence();
+				canChangeViewer = true;
+			}
 		}
 	};
 
@@ -705,6 +714,29 @@ public class PlayerActivity extends Activity {
 		super.onResume();
 		screenOn = true;
 	}
+	
+	private void showNewSequence() {
+		synchronized (playerLock) {
+			try {
+				modPlayer.getModVars(modVars);
+			} catch (RemoteException e) {
+				Log.e(TAG, "Can't get new sequence data");
+			}
+			
+			handler.post(showNewSequenceRunnable);
+		}
+	}
+	
+	private final Runnable showNewSequenceRunnable = new Runnable() {
+		public void run() {
+			final int time = modVars[0];
+			totalTime = time / 1000;
+			seekBar.setProgress(0);
+			seekBar.setMax(time / 100);
+			Message.toast(activity, "New sequence duration: " +
+						String.format("%d:%02d", time / 60000, (time / 1000) % 60));
+		}
+	};
 
 	private void showNewMod(final String fileName) {
 		//if (deleteDialog != null) {
@@ -712,7 +744,7 @@ public class PlayerActivity extends Activity {
 		//}
 		handler.post(showNewModRunnable);
 	}
-
+	
 	private final Runnable showNewModRunnable = new Runnable() {
 		public void run() {
 			Log.i(TAG, "Show new module");
@@ -722,6 +754,7 @@ public class PlayerActivity extends Activity {
 					modPlayer.getModVars(modVars);
 				} catch (RemoteException e) {
 					Log.e(TAG, "Can't get module data");
+					return;
 				}
 
 				String name;

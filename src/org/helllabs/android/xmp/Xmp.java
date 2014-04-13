@@ -59,6 +59,7 @@ public final class Xmp {
 	public static native void getChannelData(int[] volumes, int[] finalvols, int[] pans, int[] instruments, int[] keys, int[] periods);
 	public static native void getPatternRow(int pat, int row, byte[] rowNotes, byte[] rowInstruments);
 	public static native void getSampleData(boolean trigger, int ins, int key, int period, int chn, int width, byte[] buffer);
+	public static native boolean setSequence(int seq);
 	
 	static {
 		System.loadLibrary("xmp-jni");
