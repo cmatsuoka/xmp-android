@@ -26,6 +26,11 @@ import android.view.KeyEvent;
 
 public final class PlayerService extends Service {
 	private static final String TAG = "PlayerService";
+	private static final int CMD_NONE = 0;
+	private static final int CMD_NEXT = 1;
+	private static final int CMD_PREV = 2;
+	private static final int CMD_STOP = 3;
+	private static final int CMD_RESTART = 4;
 	private AudioTrack audio;
 	private Thread playThread;
 	private SharedPreferences prefs;
@@ -33,9 +38,10 @@ public final class PlayerService extends Service {
 	private int bufferSize;
 	private int sampleRate, sampleFormat;
 	private Notifier notifier;
-	private boolean stopPlaying;
-	private boolean restartList;
-	private boolean returnToPrev;
+	private int cmd;
+	//private boolean stopPlaying;
+	//private boolean restartList;
+	//private boolean returnToPrev;
 	private boolean paused;
 	private boolean looped;
 	private int startIndex;
@@ -165,7 +171,7 @@ public final class PlayerService extends Service {
 	private void actionStop() {
 		Xmp.stopModule();
 		paused = false;
-		stopPlaying = true;
+		cmd = CMD_STOP;
 	}
 
 	private void actionPause() {
@@ -188,16 +194,15 @@ public final class PlayerService extends Service {
 			Xmp.seek(0);
 		} else {
 			Xmp.stopModule();
-			returnToPrev = true;
-			stopPlaying = false;
+			cmd = CMD_PREV;
 		}
 		paused = false;
 	}
 
 	private void actionNext() {
 		Xmp.stopModule();
-		stopPlaying = false;
 		paused = false;
+		cmd = CMD_NEXT;
 	}
 
 	private void checkMediaButtons() {
@@ -302,29 +307,31 @@ public final class PlayerService extends Service {
 	private class PlayRunnable implements Runnable {
 		public void run() {
 			final short buffer[] = new short[bufferSize]; // NOPMD
-			returnToPrev = false;
+			cmd = CMD_NONE;
 
 			do {    			
 				fileName = queue.getFilename();		// Used in reconnection
 
+				// If this file is unrecognized, and we're going backwards, go to previous
 				if (!InfoCache.testModule(fileName)) {
 					Log.w(TAG, fileName + ": unrecognized format");
-					if (returnToPrev) {
+					if (cmd == CMD_PREV) {
 						queue.previous();
 					}
 					continue;
 				}
 
+				// Ditto if we can't load the module
 				Log.i(TAG, "Load " + fileName);
 				if (Xmp.loadModule(fileName) < 0) {
 					Log.e(TAG, "Error loading " + fileName);
-					if (returnToPrev) {
+					if (cmd == CMD_PREV) {
 						queue.previous();
 					}
 					continue;
 				}
 
-				returnToPrev = false;
+				cmd = CMD_NONE;
 
 				notifier.tickerNotification(Xmp.getModName(), queue.getIndex());
 				isLoaded = true;
@@ -379,6 +386,7 @@ public final class PlayerService extends Service {
 				int sequence = 0;
 				boolean playNewSequence;
 				final boolean allSequences = prefs.getBoolean(Preferences.ALL_SEQUENCES, false);
+				Xmp.setSequence(sequence);
 
 				do {
 					while (playFrame() == 0) {
@@ -415,7 +423,7 @@ public final class PlayerService extends Service {
 					
 					// Subsong explorer
 					playNewSequence = false;
-					if (allSequences && !stopPlaying) {
+					if (allSequences && cmd == CMD_NONE) {
 						sequence++;
 						loopCount = Xmp.getLoopCount();
 						
@@ -454,19 +462,17 @@ public final class PlayerService extends Service {
 
 				audio.stop();
 
-				if (restartList) {
+				if (cmd == CMD_RESTART) {
 					//queue.restart();
 					queue.setIndex(startIndex - 1);
-					restartList = false;
+					cmd = CMD_NONE;
 					continue;
-				}
-
-				if (returnToPrev) {
+				} else if (cmd == CMD_PREV) {
 					queue.previous();
 					//returnToPrev = false;
 					continue;
 				}
-			} while (!stopPlaying && queue.next());
+			} while (cmd != CMD_STOP && queue.next());
 
 			synchronized (playThread) {
 				updateData = false;		// stop getChannelData update
@@ -504,18 +510,16 @@ public final class PlayerService extends Service {
 			queue = new QueueManager(files, start, shuffle, loopList, keepFirst);
 			notifier.setQueue(queue);
 			//notifier.clean();
-			returnToPrev = false;
-			stopPlaying = false;
+			cmd = CMD_NONE;
 			paused = false;
 
 			if (isAlive) {
 				Log.i(TAG, "Use existing player thread");
-				restartList = true;
+				cmd = CMD_RESTART;
 				startIndex = keepFirst ? 0 : start;
 				nextSong();
 			} else {
 				Log.i(TAG, "Start player thread");
-				restartList = false;
 				playThread = new Thread(new PlayRunnable());
 				playThread.start();
 			}
@@ -530,7 +534,7 @@ public final class PlayerService extends Service {
 		public void stop() {
 			Xmp.stopModule();
 			paused = false;
-			stopPlaying = true;
+			cmd = CMD_STOP;
 		}
 
 		public void pause() {
@@ -580,14 +584,13 @@ public final class PlayerService extends Service {
 
 		public void nextSong() {
 			Xmp.stopModule();
-			stopPlaying = false;
+			cmd = CMD_NEXT;
 			paused = false;
 		}
 
 		public void prevSong() {
 			Xmp.stopModule();
-			returnToPrev = true;
-			stopPlaying = false;
+			cmd = CMD_PREV;
 			paused = false;
 		}
 
