@@ -552,7 +552,11 @@ public class PlayerActivity extends Activity {
 	@Override
 	public void onCreate(final Bundle icicle) {
 		super.onCreate(icicle);
-		setContentView(R.layout.player);
+		setContentView(R.layout.player_main);
+		
+		final LinearLayout contentView = (LinearLayout)findViewById(R.id.content_view);
+		
+		getLayoutInflater().inflate(R.layout.player, contentView, true);
 
 		activity = this;
 		display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
