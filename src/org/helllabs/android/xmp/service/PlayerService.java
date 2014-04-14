@@ -39,6 +39,7 @@ public final class PlayerService extends Service {
 	private int sampleRate, sampleFormat;
 	private Notifier notifier;
 	private int cmd;
+	private boolean canRelease;
 	private boolean paused;
 	private boolean looped;
 	private int startIndex;
@@ -379,7 +380,7 @@ public final class PlayerService extends Service {
 
 				int count;
 				int loopCount = 0;
-				
+
 				int sequence = 0;
 				boolean playNewSequence;
 				final boolean allSequences = prefs.getBoolean(Preferences.ALL_SEQUENCES, false);
@@ -417,17 +418,17 @@ public final class PlayerService extends Service {
 						checkHeadsetState();
 						checkNotificationButtons();
 					}
-					
+
 					// Subsong explorer
 					playNewSequence = false;
 					if (allSequences && cmd == CMD_NONE) {
 						sequence++;
 						loopCount = Xmp.getLoopCount();
-						
+
 						Log.i(TAG, "Play sequence " + sequence);
 						if (Xmp.setSequence(sequence)) {
 							playNewSequence = true;
-						
+
 							numClients = callbacks.beginBroadcast();
 							for (int j = 0; j < numClients; j++) {
 								try {
@@ -446,14 +447,27 @@ public final class PlayerService extends Service {
 				isLoaded = false;
 
 				numClients = callbacks.beginBroadcast();
-				for (int j = 0; j < numClients; j++) {
+				if (numClients > 0) {
+					canRelease = false;
+
+					for (int j = 0; j < numClients; j++) {
+						try {
+							callbacks.getBroadcastItem(j).endModCallback();
+						} catch (RemoteException e) {
+							Log.e(TAG, "Error notifying end of module to client");
+						}
+					}
+					callbacks.finishBroadcast();
+
+					// if we have clients, make sure we can release module
 					try {
-						callbacks.getBroadcastItem(j).endModCallback();
-					} catch (RemoteException e) {
-						Log.e(TAG, "Error notifying end of module to client");
+						while (!canRelease) {
+							Thread.sleep(100);
+						}
+					} catch (InterruptedException e) {
+						Log.e(TAG, "Sleep interrupted: " + e);
 					}
 				}
-				callbacks.finishBroadcast();
 
 				Xmp.releaseModule();
 
@@ -602,6 +616,10 @@ public final class PlayerService extends Service {
 
 		public boolean setSequence(int seq) {
 			return Xmp.setSequence(seq);
+		}
+
+		public void allowRelease() {
+			canRelease = true;
 		}
 
 		// for Reconnection

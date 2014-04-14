@@ -340,7 +340,7 @@ public class PlayerActivity extends Activity {
 				}
 
 				if (/* !paused && */ screenOn) {
-
+					// also show information when paused so scrolls work
 					handler.post(updateInfoRunnable);
 				}
 
@@ -353,6 +353,11 @@ public class PlayerActivity extends Activity {
 			} while (playTime >= 0 && !stopUpdate);
 
 			seekBar.setProgress(0);
+			try {
+				modPlayer.allowRelease();		// finished playing, we can release the module
+			} catch (RemoteException e) {
+				Log.e(TAG, "Can't allow module release");
+			}
 		}
 	};
 
@@ -519,8 +524,8 @@ public class PlayerActivity extends Activity {
 			if (modPlayer.time() > 3000) {
 				modPlayer.seek(0);
 			} else {
-				stopUpdate = true;
 				synchronized (playerLock) {
+					stopUpdate = true;
 					modPlayer.prevSong();
 				}
 			}
@@ -536,8 +541,8 @@ public class PlayerActivity extends Activity {
 		}
 
 		try {
-			stopUpdate = true;
 			synchronized (playerLock) {
+				stopUpdate = true;
 				modPlayer.nextSong();
 			}
 		} catch (RemoteException e) {
