@@ -39,9 +39,6 @@ public final class PlayerService extends Service {
 	private int sampleRate, sampleFormat;
 	private Notifier notifier;
 	private int cmd;
-	//private boolean stopPlaying;
-	//private boolean restartList;
-	//private boolean returnToPrev;
 	private boolean paused;
 	private boolean looped;
 	private int startIndex;
