@@ -142,7 +142,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 	}
 	
 	protected void playModule(final List<PlaylistInfo> list, final int start, final boolean shuffle) {
-		playModule(list, start, false, false);
+		playModule(list, start, shuffle, false);
 	}
 
 	// Play modules in list starting at the specified one
