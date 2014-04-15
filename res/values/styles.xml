@@ -46,13 +46,17 @@
         <item name="android:textColor">@color/lightgray</item>
     </style>
     
-     <style name="SidebarDetailsTheme" parent="AppTheme">
+    <style name="SidebarDetailsTheme" parent="AppTheme">
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingRight">4dp</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/lightgray</item>
     </style>
-    
+
+    <style name="SidebarSequenceTheme" parent="AppTheme">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/lightgray</item>
+    </style>
     
     <style name="SidebarSectionTheme" parent="AppTheme">
         <item name="android:textSize">16sp</item>

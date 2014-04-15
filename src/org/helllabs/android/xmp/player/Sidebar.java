@@ -58,9 +58,13 @@ public class Sidebar {
 	}
 
 	public void addSequence(final int num, final int duration) {
-		final RadioButton button = new RadioButton(activity);
-		final String text = num == 0 ? "main" : Integer.toString(num);
-		button.setText(String.format("%s (%d:%02d)", text, duration / 60000, (duration / 1000) % 60));
+		//final RadioButton button = new RadioButton(activity);
+		// Can't get it styled this way, see http://stackoverflow.com/questions/3142067/android-set-style-in-code
+		
+		final RadioButton button = (RadioButton)activity.getLayoutInflater().inflate(R.layout.sequence_item, null);
+		
+		final String text = num == 0 ? "main song" : "subsong " + Integer.toString(num);
+		button.setText(String.format("%2d:%02d (%s)", duration / 60000, (duration / 1000) % 60, text));
 		button.setId(num);
 		seqGroup.addView(button, num, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 	}
