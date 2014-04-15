@@ -420,6 +420,7 @@ public final class PlayerService extends Service {
 					}
 
 					// Subsong explorer
+					// Do all this if we've exited normally and explorer is active
 					playNewSequence = false;
 					if (allSequences && cmd == CMD_NONE) {
 						sequence++;
@@ -446,12 +447,14 @@ public final class PlayerService extends Service {
 
 				isLoaded = false;
 
+				// notify end of module to our clients
 				numClients = callbacks.beginBroadcast();
 				if (numClients > 0) {
 					canRelease = false;
 
 					for (int j = 0; j < numClients; j++) {
 						try {
+							Log.e(TAG, "call endModCallback()");
 							callbacks.getBroadcastItem(j).endModCallback();
 						} catch (RemoteException e) {
 							Log.e(TAG, "Error notifying end of module to client");

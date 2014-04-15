@@ -350,7 +350,7 @@ public class PlayerActivity extends Activity {
 					}
 					lastTimer = now;
 				} catch (InterruptedException e) { }
-			} while (playTime >= 0 && !stopUpdate);
+			} while (playTime >= 0);
 
 			seekBar.setProgress(0);
 			try {
@@ -525,7 +525,6 @@ public class PlayerActivity extends Activity {
 				modPlayer.seek(0);
 			} else {
 				synchronized (playerLock) {
-					stopUpdate = true;
 					modPlayer.prevSong();
 				}
 			}
@@ -542,7 +541,6 @@ public class PlayerActivity extends Activity {
 
 		try {
 			synchronized (playerLock) {
-				stopUpdate = true;
 				modPlayer.nextSong();
 			}
 		} catch (RemoteException e) {
@@ -831,8 +829,6 @@ public class PlayerActivity extends Activity {
 	}
 
 	private void stopPlayingMod() {
-		stopUpdate = true;
-
 		if (finishing) {
 			return;
 		}
