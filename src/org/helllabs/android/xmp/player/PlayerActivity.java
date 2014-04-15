@@ -755,6 +755,7 @@ public class PlayerActivity extends Activity {
 						String.format("%d:%02d", time / 60000, (time / 1000) % 60));
 			
 			final int sequence = modVars[7];
+			sidebar.selectSequence(sequence);
 		}
 	};
 
