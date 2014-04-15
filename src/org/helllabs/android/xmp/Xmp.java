@@ -60,6 +60,7 @@ public final class Xmp {
 	public static native void getPatternRow(int pat, int row, byte[] rowNotes, byte[] rowInstruments);
 	public static native void getSampleData(boolean trigger, int ins, int key, int period, int chn, int width, byte[] buffer);
 	public static native boolean setSequence(int seq);
+	public static native void getSeqVars(int[] vars);
 	
 	static {
 		System.loadLibrary("xmp-jni");

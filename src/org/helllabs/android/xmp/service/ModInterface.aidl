@@ -27,6 +27,7 @@ interface ModInterface {
 	boolean deleteFile();
 	boolean setSequence(int seq);
 	void allowRelease();
+	void getSeqVars(out int[] vars);
 	
 	void registerCallback(PlayerCallback cb);
 	void unregisterCallback(PlayerCallback cb);

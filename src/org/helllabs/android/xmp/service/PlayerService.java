@@ -624,6 +624,10 @@ public final class PlayerService extends Service {
 		public void allowRelease() {
 			canRelease = true;
 		}
+		
+		public void getSeqVars(final int[] vars) {
+			Xmp.getSeqVars(vars);
+		}
 
 		// for Reconnection
 

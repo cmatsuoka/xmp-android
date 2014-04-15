@@ -77,6 +77,7 @@ public class PlayerActivity extends Activity {
 	private Viewer viewer;
 	private Viewer.Info[] info;
 	private final int[] modVars = new int[10];
+	private final int[] seqVars = new int[16];		// this is MAX_SEQUENCES defined in common.h
 	private static final int FRAME_RATE = 25;
 	private boolean stopUpdate;
 	private int currentViewer;
@@ -761,6 +762,7 @@ public class PlayerActivity extends Activity {
 			synchronized (playerLock) {
 				try {
 					modPlayer.getModVars(modVars);
+					modPlayer.getSeqVars(seqVars);
 				} catch (RemoteException e) {
 					Log.e(TAG, "Can't get module data");
 					return;
@@ -791,7 +793,7 @@ public class PlayerActivity extends Activity {
 				sidebar.setDetails(pat, ins, smp, chn);
 				sidebar.clearSequences();
 				for (int i = 0; i < numSeq; i++) {
-					sidebar.addSequence(i, 100000);
+					sidebar.addSequence(i, seqVars[i]);
 				}
 				sidebar.selectSequence(0);
 

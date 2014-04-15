@@ -596,3 +596,19 @@ Java_org_helllabs_android_xmp_Xmp_setSequence(JNIEnv *env, jobject obj, jint seq
 	return JNI_TRUE;
 }
 
+JNIEXPORT void JNICALL
+Java_org_helllabs_android_xmp_Xmp_getSeqVars(JNIEnv *env, jobject obj, jintArray vars)
+{
+	int i, num, v[16];
+
+	num = mi.num_sequences;
+	if (num > 16) {
+		num = 16;
+	}
+
+	for (i = 0; i < num; i++) {
+		v[i] = mi.seq_data[i].duration;
+	}
+
+	(*env)->SetIntArrayRegion(env, vars, 0, num, v);
+}
