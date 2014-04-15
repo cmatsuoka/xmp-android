@@ -280,7 +280,7 @@ Java_org_helllabs_android_xmp_Xmp_getLoopCount(JNIEnv *env, jobject obj)
 JNIEXPORT void JNICALL
 Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray vars)
 {
-	int v[7];
+	int v[8];
 
 	v[0] = mi.seq_data[_sequence].duration;
 	v[1] = mi.mod->len;
@@ -289,8 +289,9 @@ Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray
 	v[4] = mi.mod->ins;
 	v[5] = mi.mod->smp;
 	v[6] = mi.num_sequences;
+	v[7] = _sequence;
 
-	(*env)->SetIntArrayRegion(env, vars, 0, 7, v);
+	(*env)->SetIntArrayRegion(env, vars, 0, 8, v);
 }
 
 JNIEXPORT jstring JNICALL

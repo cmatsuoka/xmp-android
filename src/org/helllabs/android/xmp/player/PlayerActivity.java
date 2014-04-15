@@ -87,6 +87,7 @@ public class PlayerActivity extends Activity {
 	private Viewer patternViewer;
 	private int playTime;
 	private final Object playerLock = new Object();		// for sync
+	private Sidebar sidebar;
 
 	private final ServiceConnection connection = new ServiceConnection() {
 
@@ -557,9 +558,7 @@ public class PlayerActivity extends Activity {
 		super.onCreate(icicle);
 		setContentView(R.layout.player_main);
 		
-		final LinearLayout contentView = (LinearLayout)findViewById(R.id.content_view);
-		
-		getLayoutInflater().inflate(R.layout.player, contentView, true);
+		sidebar = new Sidebar(this);
 
 		activity = this;
 		display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -742,6 +741,9 @@ public class PlayerActivity extends Activity {
 			seekBar.setMax(time / 100);
 			Message.toast(activity, "New sequence duration: " +
 						String.format("%d:%02d", time / 60000, (time / 1000) % 60));
+			
+			final int sequence = modVars[7];
+			sidebar.selectSequence(sequence);
 		}
 	};
 
@@ -779,11 +781,19 @@ public class PlayerActivity extends Activity {
 					Log.e(TAG, "Can't get module name and type");
 				}
 				final int time = modVars[0];
-				/*int len = vars[1];
-				int pat = vars[2];
-				int chn = vars[3];
-				int ins = vars[4];
-				int smp = vars[5];*/
+				/*int len = vars[1]; */
+				final int pat = modVars[2];
+				final int chn = modVars[3];
+				final int ins = modVars[4];
+				final int smp = modVars[5];
+				final int numSeq = modVars[6];
+				
+				sidebar.setDetails(pat, ins, smp, chn);
+				sidebar.clearSequences();
+				for (int i = 0; i < numSeq; i++) {
+					sidebar.addSequence(i, 100000);
+				}
+				sidebar.selectSequence(0);
 
 				totalTime = time / 1000;
 				seekBar.setProgress(0);

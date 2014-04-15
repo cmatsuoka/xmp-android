@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -14,6 +14,11 @@
     
     <color name="black">#FF000000</color>
     <color name="darkgray">#FF102030</color>
+    <color name="gray">#FF282828</color>
+    <color name="lightgray">#FFc0c0c0</color>
+    <color name="white">#FFF0F0F0</color>
+    
+    <color name="section_background">#FF202020</color>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
@@ -33,6 +38,26 @@
     
     <style name="StatusTheme" parent="AppTheme">
         <item name="android:background">@color/darkgray</item>
+    </style>
+    
+    <style name="SidebarTheme" parent="AppTheme">
+        <item name="android:padding">4dp</item>
+        <item name="android:background">@color/gray</item>
+        <item name="android:textColor">@color/lightgray</item>
+    </style>
+    
+     <style name="SidebarDetailsTheme" parent="AppTheme">
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/lightgray</item>
+    </style>
+    
+    
+    <style name="SidebarSectionTheme" parent="AppTheme">
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@drawable/section_background</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
 </resources>
