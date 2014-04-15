@@ -48,6 +48,7 @@ public final class PlayerService extends Service {
 	private QueueManager queue;
 	private final RemoteCallbackList<PlayerCallback> callbacks =
 			new RemoteCallbackList<PlayerCallback>();
+	private int sequenceNumber;
 
 	// Telephony autopause
 	private boolean autoPaused;			// paused on phone call
@@ -302,6 +303,18 @@ public final class PlayerService extends Service {
 		}
 	}
 
+	private void notifyNewSequence() {
+		final int numClients = callbacks.beginBroadcast();
+		for (int j = 0; j < numClients; j++) {
+			try {
+				callbacks.getBroadcastItem(j).newSequenceCallback();
+			} catch (RemoteException e) {
+				Log.e(TAG, "Error notifying end of module to client");
+			}
+		}
+		callbacks.finishBroadcast();
+	}
+
 	private class PlayRunnable implements Runnable {
 		public void run() {
 			final short buffer[] = new short[bufferSize]; // NOPMD
@@ -381,10 +394,10 @@ public final class PlayerService extends Service {
 				int count;
 				int loopCount = 0;
 
-				int sequence = 0;
+				sequenceNumber = 0;
 				boolean playNewSequence;
 				final boolean allSequences = prefs.getBoolean(Preferences.ALL_SEQUENCES, false);
-				Xmp.setSequence(sequence);
+				Xmp.setSequence(sequenceNumber);
 
 				do {
 					while (playFrame() == 0) {
@@ -423,22 +436,13 @@ public final class PlayerService extends Service {
 					// Do all this if we've exited normally and explorer is active
 					playNewSequence = false;
 					if (allSequences && cmd == CMD_NONE) {
-						sequence++;
+						sequenceNumber++;
 						loopCount = Xmp.getLoopCount();
 
-						Log.i(TAG, "Play sequence " + sequence);
-						if (Xmp.setSequence(sequence)) {
+						Log.i(TAG, "Play sequence " + sequenceNumber);
+						if (Xmp.setSequence(sequenceNumber)) {
 							playNewSequence = true;
-
-							numClients = callbacks.beginBroadcast();
-							for (int j = 0; j < numClients; j++) {
-								try {
-									callbacks.getBroadcastItem(j).newSequenceCallback();
-								} catch (RemoteException e) {
-									Log.e(TAG, "Error notifying end of module to client");
-								}
-							}
-							callbacks.finishBroadcast();
+							notifyNewSequence();
 						}
 					}
 				} while (playNewSequence);
@@ -470,6 +474,8 @@ public final class PlayerService extends Service {
 					} catch (InterruptedException e) {
 						Log.e(TAG, "Sleep interrupted: " + e);
 					}
+				} else {
+					callbacks.finishBroadcast();
 				}
 
 				Xmp.releaseModule();
@@ -618,13 +624,18 @@ public final class PlayerService extends Service {
 		}
 
 		public boolean setSequence(int seq) {
-			return Xmp.setSequence(seq);
+			final boolean ret = Xmp.setSequence(seq);
+			if (ret) {
+				sequenceNumber = seq;
+				notifyNewSequence();
+			}
+			return ret;
 		}
 
 		public void allowRelease() {
 			canRelease = true;
 		}
-		
+
 		public void getSeqVars(final int[] vars) {
 			Xmp.getSeqVars(vars);
 		}

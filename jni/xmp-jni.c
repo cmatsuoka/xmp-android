@@ -589,6 +589,9 @@ Java_org_helllabs_android_xmp_Xmp_setSequence(JNIEnv *env, jobject obj, jint seq
 	if (mi.seq_data[_sequence].duration <= 0)
 		return JNI_FALSE;
 
+	if (_sequence == seq)
+		return JNI_FALSE;
+
 	_sequence = seq;
 
 	xmp_set_position(ctx, mi.seq_data[_sequence].entry_point);

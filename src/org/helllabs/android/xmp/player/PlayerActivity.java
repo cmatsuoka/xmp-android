@@ -722,6 +722,17 @@ public class PlayerActivity extends Activity {
 		screenOn = true;
 	}
 	
+	public void playNewSequence(int num) {
+		synchronized (playerLock) {
+			try {
+				Log.i(TAG, "Set sequence " + num);
+				modPlayer.setSequence(num);
+			} catch (RemoteException e) {
+				Log.e(TAG, "Can't set sequence " + num);
+			}
+		}
+	}
+	
 	private void showNewSequence() {
 		synchronized (playerLock) {
 			try {
@@ -744,7 +755,6 @@ public class PlayerActivity extends Activity {
 						String.format("%d:%02d", time / 60000, (time / 1000) % 60));
 			
 			final int sequence = modVars[7];
-			sidebar.selectSequence(sequence);
 		}
 	};
 
