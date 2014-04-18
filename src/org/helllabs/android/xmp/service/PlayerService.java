@@ -158,13 +158,17 @@ public final class PlayerService extends Service {
 		return binder;
 	}
 
-	private void doPauseAndNotify() {
-		paused ^= true;
+	private void updateNotification() {
 		if (paused) {
 			notifier.pauseNotification(Xmp.getModName(), queue.getIndex());
 		} else {
 			notifier.unpauseNotification(Xmp.getModName(), queue.getIndex());
-		}
+		}		
+	}
+	
+	private void doPauseAndNotify() {
+		paused ^= true;
+		updateNotification();
 	}
 
 	private void actionStop() {
@@ -551,6 +555,7 @@ public final class PlayerService extends Service {
 
 		public void add(final String[] files) {	
 			queue.add(files);
+			updateNotification();
 			//notifier.notification("Added to play queue");			
 		}
 
