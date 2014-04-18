@@ -18,7 +18,6 @@ import android.preference.PreferenceScreen;
 import android.view.KeyEvent;
 
 public class Preferences extends PreferenceActivity {
-	// Workaround for NOOKcolor reporting bogus sdcard directory
 	public static final File SD_DIR = Environment.getExternalStorageDirectory();
 	public static final File DATA_DIR = new File(SD_DIR, "Xmp for Android");
 	public static final File CACHE_DIR = new File(SD_DIR, "Android/data/org.helllabs.android.xmp/cache/");

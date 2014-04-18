@@ -175,7 +175,6 @@ public class PlayerActivity extends Activity {
 			synchronized (playerLock) {
 				Log.i(TAG, "Show new sequence");
 				showNewSequence();
-				canChangeViewer = true;
 			}
 		}
 	};
