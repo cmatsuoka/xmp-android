@@ -10,7 +10,7 @@
         style="@style/SidebarSectionTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Module details" />
+        android:text="@string/sidebar_details" />
 
     <android.support.v7.widget.GridLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             style="@style/SidebarDetailsTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Patterns:" />
+            android:text="@string/sidebar_patterns" />
 
         <TextView
             android:id="@+id/sidebar_num_pat"
@@ -34,7 +34,7 @@
             style="@style/SidebarDetailsTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Instruments:" />
+            android:text="@string/sidebar_instruments" />
 
         <TextView
             android:id="@+id/sidebar_num_ins"
@@ -47,7 +47,7 @@
             style="@style/SidebarDetailsTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Samples:" />
+            android:text="@string/sidebar_samples" />
 
         <TextView
             android:id="@+id/sidebar_num_smp"
@@ -60,7 +60,7 @@
             style="@style/SidebarDetailsTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Channels:" />
+            android:text="@string/sidebar_channels" />
 
         <TextView
             android:id="@+id/sidebar_num_chn"

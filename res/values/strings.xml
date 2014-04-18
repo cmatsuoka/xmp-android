@@ -102,4 +102,10 @@
     <string name="button_play_pause">Play or pause</string>
     <string name="button_stop">Stop</string>
     <string name="button_next">Next pattern</string>
+    <string name="sidebar_details">Module details</string>
+    <string name="sidebar_patterns">Patterns:</string>
+    <string name="sidebar_instruments">Instruments:</string>
+    <string name="sidebar_samples">Samples:</string>
+    <string name="sidebar_channels">Channels:</string>
+    <string name="sidebar_subsongs">Subsongs</string>
 </resources>
