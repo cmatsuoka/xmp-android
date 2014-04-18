@@ -62,7 +62,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:mimeType="*/*" android:scheme="file" android:host="*" />
+                <data android:mimeType="*/*" />
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:host="*" />
                 <data android:pathPattern=".*\\.mod" />
                 <data android:pathPattern=".*\\.s3m" />
                 <data android:pathPattern=".*\\.it" />
@@ -83,7 +86,8 @@
                 <data android:pathPattern=".*\\.amf" />
                 <data android:pathPattern=".*\\.imf" />
 
-                <!-- http://stackoverflow.com/questions/3400072/ -->
+                <!-- Ugly! http://stackoverflow.com/questions/3400072/ -->
+                
                 <data android:pathPattern=".*\\..*\\.mod" />
                 <data android:pathPattern=".*\\..*\\.s3m" />
                 <data android:pathPattern=".*\\..*\\.it" />
@@ -103,6 +107,27 @@
                 <data android:pathPattern=".*\\..*\\.669" />
                 <data android:pathPattern=".*\\..*\\.amf" />
                 <data android:pathPattern=".*\\..*\\.imf" />
+                
+                <data android:pathPattern=".*\\..*\\..*\\.mod" />
+                <data android:pathPattern=".*\\..*\\..*\\.s3m" />
+                <data android:pathPattern=".*\\..*\\..*\\.it" />
+                <data android:pathPattern=".*\\..*\\..*\\.xm" />
+                
+                <data android:pathPattern=".*\\.MOD" />
+                <data android:pathPattern=".*\\.S3M" />
+                <data android:pathPattern=".*\\.IT" />
+                <data android:pathPattern=".*\\.XM" />
+                
+                <data android:pathPattern=".*\\..*\\.MOD" />
+                <data android:pathPattern=".*\\..*\\.S3M" />
+                <data android:pathPattern=".*\\..*\\.IT" />
+                <data android:pathPattern=".*\\..*\\.XM" />
+                
+                <data android:pathPattern=".*\\..*\\..*\\.MOD" />
+                <data android:pathPattern=".*\\..*\\..*\\.S3M" />
+                <data android:pathPattern=".*\\..*\\..*\\.IT" />
+                <data android:pathPattern=".*\\..*\\..*\\.XM" />
+                
             </intent-filter>
         </activity>
         <activity
