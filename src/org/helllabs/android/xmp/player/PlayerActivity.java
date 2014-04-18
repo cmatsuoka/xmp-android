@@ -79,9 +79,9 @@ public class PlayerActivity extends Activity {
 	private final int[] modVars = new int[10];
 	private final int[] seqVars = new int[16];		// this is MAX_SEQUENCES defined in common.h
 	private static final int FRAME_RATE = 25;
-	private boolean stopUpdate;
+	private static boolean stopUpdate;				// this MUST be static (volatile doesn't work!)
+	private static boolean canChangeViewer;
 	private int currentViewer;
-	private boolean canChangeViewer;
 	private Display display;
 	private Viewer instrumentViewer;
 	private Viewer channelViewer;
@@ -331,6 +331,7 @@ public class PlayerActivity extends Activity {
 			do {
 				synchronized (playerLock) {
 					if (stopUpdate) {
+						Log.i(TAG, "Stop update");
 						break;
 					}
 
@@ -429,7 +430,7 @@ public class PlayerActivity extends Activity {
 				reconnect = true;
 			}
 		}
-
+		
 		final Intent service = new Intent(this, PlayerService.class);
 		if (!reconnect) {
 			Log.i(TAG, "Start service");

@@ -30,7 +30,6 @@ public final class PlayerService extends Service {
 	private static final int CMD_NEXT = 1;
 	private static final int CMD_PREV = 2;
 	private static final int CMD_STOP = 3;
-	private static final int CMD_RESTART = 4;
 	private AudioTrack audio;
 	private Thread playThread;
 	private SharedPreferences prefs;
@@ -39,6 +38,7 @@ public final class PlayerService extends Service {
 	private int sampleRate, sampleFormat;
 	private Notifier notifier;
 	private int cmd;
+	private boolean restart;
 	private boolean canRelease;
 	private boolean paused;
 	private boolean looped;
@@ -333,7 +333,7 @@ public final class PlayerService extends Service {
 				}
 
 				// Ditto if we can't load the module
-				Log.i(TAG, "Load " + fileName);
+				Log.w(TAG, "Load " + fileName);
 				if (Xmp.loadModule(fileName) < 0) {
 					Log.e(TAG, "Error loading " + fileName);
 					if (cmd == CMD_PREV) {
@@ -439,7 +439,7 @@ public final class PlayerService extends Service {
 						sequenceNumber++;
 						loopCount = Xmp.getLoopCount();
 
-						Log.i(TAG, "Play sequence " + sequenceNumber);
+						Log.w(TAG, "Play sequence " + sequenceNumber);
 						if (Xmp.setSequence(sequenceNumber)) {
 							playNewSequence = true;
 							notifyNewSequence();
@@ -458,7 +458,7 @@ public final class PlayerService extends Service {
 
 					for (int j = 0; j < numClients; j++) {
 						try {
-							Log.e(TAG, "call endModCallback()");
+							Log.w(TAG, "Call end of module callback");
 							callbacks.getBroadcastItem(j).endModCallback();
 						} catch (RemoteException e) {
 							Log.e(TAG, "Error notifying end of module to client");
@@ -478,14 +478,17 @@ public final class PlayerService extends Service {
 					callbacks.finishBroadcast();
 				}
 
+				Log.w(TAG, "Release module");
 				Xmp.releaseModule();
 
 				audio.stop();
 
-				if (cmd == CMD_RESTART) {
-					//queue.restart();
+				// Used when current files are replaced by a new set
+				if (restart) {
+					Log.i(TAG, "Restart");
 					queue.setIndex(startIndex - 1);
 					cmd = CMD_NONE;
+					restart = false;
 					continue;
 				} else if (cmd == CMD_PREV) {
 					queue.previous();
@@ -535,7 +538,7 @@ public final class PlayerService extends Service {
 
 			if (isAlive) {
 				Log.i(TAG, "Use existing player thread");
-				cmd = CMD_RESTART;
+				restart = true;
 				startIndex = keepFirst ? 0 : start;
 				nextSong();
 			} else {
