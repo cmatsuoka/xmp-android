@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp.player;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.XmpApplication;
 import org.helllabs.android.xmp.browser.Message;
 import org.helllabs.android.xmp.browser.PlaylistMenu;
 import org.helllabs.android.xmp.preferences.Preferences;
@@ -420,11 +421,14 @@ public class PlayerActivity extends Activity {
 		} else {	
 			final Bundle extras = intent.getExtras();
 			if (extras != null) {
-				fileArray = extras.getStringArray("files");	
+				//fileArray = extras.getStringArray("files");
+				final XmpApplication app = (XmpApplication)getApplication();
+				fileArray = app.getFileArray();
 				shuffleMode = extras.getBoolean("shuffle");
 				loopListMode = extras.getBoolean("loop");
 				keepFirst = extras.getBoolean("keepFirst");
 				start = extras.getInt("start");
+				app.clearFileArray();
 			} else {
 				reconnect = true;
 			}

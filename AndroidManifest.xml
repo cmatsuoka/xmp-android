@@ -19,6 +19,7 @@
         android:required="false" />
 
     <application
+        android:name="XmpApplication"
         android:allowBackup="true"
         android:description="@string/app_description"
         android:icon="@drawable/icon"

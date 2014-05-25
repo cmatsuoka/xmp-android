@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.XmpApplication;
 import org.helllabs.android.xmp.player.PlayerActivity;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.service.ModInterface;
@@ -203,7 +204,8 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		}
 
 		final Intent intent = new Intent(this, PlayerActivity.class);
-		intent.putExtra("files", mods);
+		//intent.putExtra("files", mods);
+		((XmpApplication)getApplication()).setFileArray(mods);
 		intent.putExtra("shuffle", shuffle);
 		intent.putExtra("loop", loopMode);
 		intent.putExtra("start", start);
