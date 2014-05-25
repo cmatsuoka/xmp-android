@@ -13,7 +13,6 @@ import android.graphics.Typeface;
 import android.os.RemoteException;
 
 
-@SuppressWarnings("PMD.ShortVariable")
 public class InstrumentViewer extends Viewer {
 	private static final String TAG = "InstrumentViewer";
 	private final Paint[] insPaint, barPaint;

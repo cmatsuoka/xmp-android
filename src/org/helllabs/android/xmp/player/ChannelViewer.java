@@ -17,7 +17,6 @@ import android.os.RemoteException;
 import android.view.Surface;
 
 
-@SuppressWarnings("PMD.ShortVariable")
 public class ChannelViewer extends Viewer {
 	private static final String TAG = "ChannelViewer"; 
 	private final Paint scopePaint, scopeLinePaint, insPaint, meterPaint, numPaint, scopeMutePaint;

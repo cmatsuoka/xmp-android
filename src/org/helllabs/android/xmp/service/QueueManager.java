@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.helllabs.android.xmp.util.Log;
-
 
 public class QueueManager {
 	private final List<String> array;
@@ -13,7 +11,7 @@ public class QueueManager {
 	private int index;
 	private final boolean shuffleMode;
 	private final boolean loopListMode;
-	private int randomStart = 0;
+	private int randomStart;
     
     public QueueManager(final String[] files, int start, final boolean shuffle, final boolean loop, final boolean keepFirst) {
     	if (start >= files.length) {

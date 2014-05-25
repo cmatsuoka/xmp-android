@@ -49,7 +49,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		listView.setOnItemClickListener(
 				new AdapterView.OnItemClickListener() {
 					@Override
-					public void onItemClick(AdapterView<?> l, View view, int position, long id) { // NOPMD
+					public void onItemClick(AdapterView<?> l, View view, int position, long id) {
 						if (position == 0) {
 							final Intent intent = new Intent(PlaylistMenu.this, ModList.class);
 							startActivityForResult(intent, PLAYLIST_REQUEST);

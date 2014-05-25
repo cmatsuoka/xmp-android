@@ -10,7 +10,7 @@ import org.helllabs.android.xmp.browser.FileUtils;
 import org.helllabs.android.xmp.preferences.Preferences;
 
 
-public final class InfoCache { // NOPMD
+public final class InfoCache {
 	
 	private InfoCache() {
 		

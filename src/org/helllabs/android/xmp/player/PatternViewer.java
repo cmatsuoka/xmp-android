@@ -14,7 +14,6 @@ import android.os.RemoteException;
 
 // http://developer.android.com/guide/topics/graphics/2d-graphics.html
 
-@SuppressWarnings("PMD.ShortVariable")
 public class PatternViewer extends Viewer {
 	private final Paint headerPaint, headerTextPaint, notePaint, insPaint;
 	private final Paint barPaint, muteNotePaint, muteInsPaint;

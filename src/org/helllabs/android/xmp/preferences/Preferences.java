@@ -22,7 +22,7 @@ public class Preferences extends PreferenceActivity {
 	public static final File DATA_DIR = new File(SD_DIR, "Xmp for Android");
 	public static final File CACHE_DIR = new File(SD_DIR, "Android/data/org.helllabs.android.xmp/cache/");
 
-	public static final String DEFAULT_MEDIA_PATH = SD_DIR.toString() + "/mod";		// NOPMD
+	public static final String DEFAULT_MEDIA_PATH = SD_DIR.toString() + "/mod";
 	public static final String MEDIA_PATH = "media_path";
 	public static final String VOL_BOOST = "vol_boost";
 	public static final String CHANGELOG_VERSION = "changelog_version";

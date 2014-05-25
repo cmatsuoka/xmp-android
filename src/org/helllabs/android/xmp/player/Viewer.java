@@ -13,7 +13,6 @@ import android.view.SurfaceView;
 import android.view.View;
 
 
-@SuppressWarnings("PMD.ShortVariable")
 public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callback, View.OnClickListener {
 	private static final String TAG = "Viewer";
 	protected Context context;
@@ -126,7 +125,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		// Gesture detection
 		gestureDetector = new GestureDetector(context, new MyGestureDetector());
 		final View.OnTouchListener gestureListener = new View.OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
+			public boolean onTouch(final View v, final MotionEvent event) {
 				return gestureDetector.onTouchEvent(event);
 			}
 		};

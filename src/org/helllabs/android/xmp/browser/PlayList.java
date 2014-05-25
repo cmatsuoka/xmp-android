@@ -231,7 +231,7 @@ public class PlayList extends PlaylistActivity {
 
 	private final TouchListView.RemoveListener onRemove = new TouchListView.RemoveListener() {
 		@Override
-		public void remove(int which) {
+		public void remove(final int which) {
 			plist.remove(plist.getItem(which));
 		}
 	};		

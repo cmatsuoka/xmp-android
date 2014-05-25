@@ -212,10 +212,6 @@
             <ruleset>Clone Implementation</ruleset>
         </rule>
         <rule>
-            <name>CyclomaticComplexity</name>
-            <ruleset>Code Size</ruleset>
-        </rule>
-        <rule>
             <name>ExcessiveClassLength</name>
             <ruleset>Code Size</ruleset>
         </rule>
@@ -700,10 +696,6 @@
             <ruleset>Naming</ruleset>
         </rule>
         <rule>
-            <name>LongVariable</name>
-            <ruleset>Naming</ruleset>
-        </rule>
-        <rule>
             <name>MethodNamingConventions</name>
             <ruleset>Naming</ruleset>
         </rule>
@@ -721,10 +713,6 @@
         </rule>
         <rule>
             <name>PackageCase</name>
-            <ruleset>Naming</ruleset>
-        </rule>
-        <rule>
-            <name>ShortVariable</name>
             <ruleset>Naming</ruleset>
         </rule>
         <rule>

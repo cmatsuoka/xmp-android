@@ -32,7 +32,7 @@ public final class FileUtils {
 	public static String readFromFile(final File file) throws IOException {
 		String line;
 
-		final BufferedReader in = new BufferedReader(new FileReader(file), 512);	// NOPMD
+		final BufferedReader in = new BufferedReader(new FileReader(file), 512);
 		line = in.readLine();
 		in.close();
 

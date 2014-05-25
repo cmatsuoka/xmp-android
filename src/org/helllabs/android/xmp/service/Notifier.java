@@ -16,7 +16,7 @@ import android.support.v4.app.NotificationCompat;
 
 @SuppressLint("DefaultLocale")
 public class Notifier {
-	//private final NotificationManager nm;	// NOPMD
+	//private final NotificationManager nm;
     private final PendingIntent contentIntent;
     private static final int NOTIFY_ID = R.layout.player;
     public static final String ACTION_STOP = "stop";

@@ -43,7 +43,6 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 
-@SuppressWarnings("PMD.ShortVariable")
 public class PlayerActivity extends Activity {
 	private static final String TAG = "PlayerActivity";
 	private ModInterface modPlayer;	/* actual mod player */
@@ -128,7 +127,7 @@ public class PlayerActivity extends Activity {
 
 		public void onServiceDisconnected(final ComponentName className) {
 			stopUpdate = true;
-			modPlayer = null;		// NOPMD
+			modPlayer = null;
 			Log.i(TAG, "Service disconnected");
 		}
 	};

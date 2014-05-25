@@ -33,8 +33,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-@SuppressWarnings("PMD.LongVariable")
-public class ModList extends PlaylistActivity {		// NOPMD
+public class ModList extends PlaylistActivity {
 	//private boolean isBadDir = false;
 	private boolean isPathMenu;
 	private TextView curPath;

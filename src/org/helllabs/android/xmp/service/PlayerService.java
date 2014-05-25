@@ -120,7 +120,7 @@ public final class PlayerService extends Service {
 		notifier = new Notifier(this);
 
 		final XmpPhoneStateListener listener = new XmpPhoneStateListener(this);
-		final TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); // NOPMD
+		final TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		tm.listen(listener, XmpPhoneStateListener.LISTEN_CALL_STATE);
 
 		mediaButtons = new MediaButtons(this);
@@ -321,7 +321,7 @@ public final class PlayerService extends Service {
 
 	private class PlayRunnable implements Runnable {
 		public void run() {
-			final short buffer[] = new short[bufferSize]; // NOPMD
+			final short buffer[] = new short[bufferSize];
 			cmd = CMD_NONE;
 
 			do {    			

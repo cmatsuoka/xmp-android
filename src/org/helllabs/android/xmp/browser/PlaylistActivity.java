@@ -172,7 +172,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 
 		final String[] mods = new String[num];
 
-		int i = 0; // NOPMD
+		int i = 0;
 		for (final PlaylistInfo info : list) {
 			if (new File(info.filename).isFile()) {
 				mods[i++] = info.filename;
@@ -244,7 +244,7 @@ public abstract class PlaylistActivity extends ActionBarActivity {
 		}
 
 		public void onServiceDisconnected(final ComponentName className) {
-			modPlayer = null;		// NOPMD
+			modPlayer = null;
 		}
 	};
 
