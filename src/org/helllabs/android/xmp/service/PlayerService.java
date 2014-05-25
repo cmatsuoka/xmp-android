@@ -471,9 +471,11 @@ public final class PlayerService extends Service {
 					callbacks.finishBroadcast();
 
 					// if we have clients, make sure we can release module
+					int timeout = 0;
 					try {
-						while (!canRelease) {
+						while (!canRelease && timeout < 20) {
 							Thread.sleep(100);
+							timeout++;
 						}
 					} catch (InterruptedException e) {
 						Log.e(TAG, "Sleep interrupted: " + e);
