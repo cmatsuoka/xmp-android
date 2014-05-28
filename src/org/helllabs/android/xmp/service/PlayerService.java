@@ -127,7 +127,7 @@ public final class PlayerService extends Service {
 		mediaButtons.register();
 
 		watchdog = new Watchdog(5);
-		watchdog.setOnTimeoutListener(new Watchdog.onTimeoutListener() {
+		watchdog.setOnTimeoutListener(new Watchdog.OnTimeoutListener() {
 			public void onTimeout() {
 				Log.e(TAG, "Stopped by watchdog");
 				stopSelf();
