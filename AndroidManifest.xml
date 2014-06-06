@@ -88,7 +88,7 @@
                 <data android:pathPattern=".*\\.imf" />
 
                 <!-- Ugly! http://stackoverflow.com/questions/3400072/ -->
-                
+
                 <data android:pathPattern=".*\\..*\\.mod" />
                 <data android:pathPattern=".*\\..*\\.s3m" />
                 <data android:pathPattern=".*\\..*\\.it" />
@@ -108,27 +108,22 @@
                 <data android:pathPattern=".*\\..*\\.669" />
                 <data android:pathPattern=".*\\..*\\.amf" />
                 <data android:pathPattern=".*\\..*\\.imf" />
-                
                 <data android:pathPattern=".*\\..*\\..*\\.mod" />
                 <data android:pathPattern=".*\\..*\\..*\\.s3m" />
                 <data android:pathPattern=".*\\..*\\..*\\.it" />
                 <data android:pathPattern=".*\\..*\\..*\\.xm" />
-                
                 <data android:pathPattern=".*\\.MOD" />
                 <data android:pathPattern=".*\\.S3M" />
                 <data android:pathPattern=".*\\.IT" />
                 <data android:pathPattern=".*\\.XM" />
-                
                 <data android:pathPattern=".*\\..*\\.MOD" />
                 <data android:pathPattern=".*\\..*\\.S3M" />
                 <data android:pathPattern=".*\\..*\\.IT" />
                 <data android:pathPattern=".*\\..*\\.XM" />
-                
                 <data android:pathPattern=".*\\..*\\..*\\.MOD" />
                 <data android:pathPattern=".*\\..*\\..*\\.S3M" />
                 <data android:pathPattern=".*\\..*\\..*\\.IT" />
                 <data android:pathPattern=".*\\..*\\..*\\.XM" />
-                
             </intent-filter>
         </activity>
         <activity
@@ -136,6 +131,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".player.CommentActivity"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".browser.ModList"

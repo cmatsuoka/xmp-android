@@ -1,9 +1,14 @@
 package org.helllabs.android.xmp.player;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.util.Log;
 
+import android.content.Intent;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -17,6 +22,7 @@ public class Sidebar {
 	private final TextView numInsText;
 	private final TextView numSmpText;
 	private final TextView numChnText;
+	private final Button commentButton;
 	private final RadioGroup seqGroup;
 	private final RadioGroup.OnCheckedChangeListener seqGroupListener;
 
@@ -34,6 +40,14 @@ public class Sidebar {
 		numInsText = (TextView)activity.findViewById(R.id.sidebar_num_ins);
 		numSmpText = (TextView)activity.findViewById(R.id.sidebar_num_smp);
 		numChnText = (TextView)activity.findViewById(R.id.sidebar_num_chn);
+		
+		commentButton = (Button)activity.findViewById(R.id.sidebar_comment);
+		commentButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(final View view) {
+				commentClick();	
+			}		
+		});
 
 		seqGroup = (RadioGroup)activity.findViewById(R.id.sidebar_sequences);
 		seqGroupListener = new RadioGroup.OnCheckedChangeListener() {
@@ -81,6 +95,19 @@ public class Sidebar {
 		
 	
 	}
-
+	
+	private void commentClick() {
+		final String comment = Xmp.getComment();
+		if (comment != null) {
+			final Intent intent = new Intent(activity, CommentActivity.class);
+			intent.putExtra("comment", comment);
+			activity.startActivity(intent);		
+		}
+		
+	}
+	
+	public void showCommentButton(final boolean show) {
+		commentButton.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
 
 }

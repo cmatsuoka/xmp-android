@@ -15,10 +15,9 @@ public class CommentActivity extends Activity {
 		setContentView(R.layout.comment);
 		
 		commentText = (TextView)findViewById(R.id.comment_text);
-	}
-	
-	public void setComment(final String comment) {
+		
+		final Bundle bundle = getIntent().getExtras();
+		final String comment = bundle.getString("comment");
 		commentText.setText(comment);
 	}
-
 }

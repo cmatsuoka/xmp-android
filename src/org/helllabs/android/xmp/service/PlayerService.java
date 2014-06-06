@@ -670,6 +670,9 @@ public final class PlayerService extends Service {
 			return Xmp.mute(chn, status);
 		}
 
+		public boolean hasComment() {
+			return Xmp.getComment() != null;
+		}
 
 		// File management
 
