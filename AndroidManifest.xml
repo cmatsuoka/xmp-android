@@ -135,6 +135,9 @@
             android:name=".preferences.Preferences"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".player.CommentActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".browser.ModList"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
