@@ -348,6 +348,15 @@ Java_org_helllabs_android_xmp_Xmp_getModType(JNIEnv *env, jobject obj)
 	return (*env)->NewStringUTF(env, mi.mod->type);
 }
 
+JNIEXPORT jstring JNICALL
+Java_org_helllabs_android_xmp_Xmp_getComment(JNIEnv *env, jobject obj)
+{
+	if (mi.mod->comment)
+		return (*env)->NewStringUTF(env, mi.mod->type);
+	else
+		return NULL;
+}
+
 JNIEXPORT jobjectArray JNICALL
 Java_org_helllabs_android_xmp_Xmp_getInstruments(JNIEnv *env, jobject obj)
 {

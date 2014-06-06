@@ -54,6 +54,7 @@ public final class Xmp {
 	public static native String getVersion();
 	public static native String getModName();
 	public static native String getModType();
+	public static native String getComment();
 	public static native String[] getFormats();
 	public static native String[] getInstruments();
 	public static native void getChannelData(int[] volumes, int[] finalvols, int[] pans, int[] instruments, int[] keys, int[] periods);
