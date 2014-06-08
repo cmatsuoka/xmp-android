@@ -804,6 +804,12 @@ public class PlayerActivity extends Activity {
 				final int smp = modVars[5];
 				final int numSeq = modVars[6];
 				
+				try {
+					sidebar.showCommentButton(modPlayer.hasComment());
+				} catch (RemoteException e) {
+					// do nothing
+				}
+				
 				sidebar.setDetails(pat, ins, smp, chn);
 				sidebar.clearSequences();
 				for (int i = 0; i < numSeq; i++) {

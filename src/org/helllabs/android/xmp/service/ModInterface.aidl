@@ -28,6 +28,7 @@ interface ModInterface {
 	boolean setSequence(int seq);
 	void allowRelease();
 	void getSeqVars(out int[] vars);
+	boolean hasComment();
 	
 	void registerCallback(PlayerCallback cb);
 	void unregisterCallback(PlayerCallback cb);
