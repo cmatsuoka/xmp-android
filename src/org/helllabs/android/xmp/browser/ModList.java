@@ -324,7 +324,10 @@ public class ModList extends PlaylistActivity {
 	}
 
 	public void update() {
-		updateModlist(currentDir);
+		final String dir = currentDir;
+		if (dir != null) {
+			updateModlist(currentDir);
+		}
 	}
 
 	public void updateModlist(final String path) {
@@ -354,23 +357,26 @@ public class ModList extends PlaylistActivity {
 
 		list.clear();
 		final File[] modFiles = modDir.listFiles(new ModFilter());
-		for (final File file : modFiles) {
-			final String filename = path + "/" + file.getName();
-			final String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
-					DateFormat.MEDIUM).format(file.lastModified());
+		
+		if (modFiles != null) {
+			for (final File file : modFiles) {
+				final String filename = path + "/" + file.getName();
+				final String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
+						DateFormat.MEDIUM).format(file.lastModified());
 
-			if (titlesInBrowser && !file.isDirectory()) {
-				if (InfoCache.testModule(filename, info)) {
-					list.add(new PlaylistInfo(info.name, info.type, filename));
+				if (titlesInBrowser && !file.isDirectory()) {
+					if (InfoCache.testModule(filename, info)) {
+						list.add(new PlaylistInfo(info.name, info.type, filename));
+					}
+				} else {
+					final String name = file.getName();
+					final String comment = date + String.format(" (%d kB)", file.length() / 1024);
+					list.add(new PlaylistInfo(name, comment, filename));
 				}
-			} else {
-				final String name = file.getName();
-				final String comment = date + String.format(" (%d kB)", file.length() / 1024);
-				list.add(new PlaylistInfo(name, comment, filename));
 			}
+			Collections.sort(list);
+			modList.addAll(list);
 		}
-		Collections.sort(list);
-		modList.addAll(list);
 
 		final PlaylistInfoAdapter playlist = new PlaylistInfoAdapter(ModList.this,
 				R.layout.song_item, R.id.info, modList, false);
