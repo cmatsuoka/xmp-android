@@ -326,7 +326,7 @@ public class ModList extends PlaylistActivity {
 	public void update() {
 		final String dir = currentDir;
 		if (dir != null) {
-			updateModlist(currentDir);
+			updateModlist(dir);
 		}
 	}
 
