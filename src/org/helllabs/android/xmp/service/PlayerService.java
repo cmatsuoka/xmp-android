@@ -328,9 +328,12 @@ public final class PlayerService extends Service {
 				fileName = queue.getFilename();		// Used in reconnection
 
 				// If this file is unrecognized, and we're going backwards, go to previous
-				if (!InfoCache.testModule(fileName)) {
+				if (fileName == null || !InfoCache.testModule(fileName)) {
 					Log.w(TAG, fileName + ": unrecognized format");
 					if (cmd == CMD_PREV) {
+						if (queue.getIndex() < 0) {
+							break;
+						}
 						queue.previous();
 					}
 					continue;
@@ -341,6 +344,9 @@ public final class PlayerService extends Service {
 				if (Xmp.loadModule(fileName) < 0) {
 					Log.e(TAG, "Error loading " + fileName);
 					if (cmd == CMD_PREV) {
+						if (queue.getIndex() < 0) {
+							break;
+						}
 						queue.previous();
 					}
 					continue;
