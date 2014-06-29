@@ -71,19 +71,25 @@ public final class InfoCache {
 	private static boolean checkIfCacheValid(final File file, final File cacheFile, final ModInfo info) throws IOException {
 		boolean ret = false;
 		final BufferedReader reader = new BufferedReader(new FileReader(cacheFile), 512);
-		
+
 		final String line = reader.readLine();
 		if (line != null) {
-			final int size = Integer.parseInt(line);
-			if (size == file.length()) {
-				info.name = reader.readLine();
-				if (info.name != null) {
-					reader.readLine();				// skip filename
-					info.type = reader.readLine();
-					if (info.type != null) {
-						ret = true;
+			try {
+				final int size = Integer.parseInt(line);
+
+				if (size == file.length()) {
+					info.name = reader.readLine();
+					if (info.name != null) {
+						reader.readLine();				// skip filename
+						info.type = reader.readLine();
+						if (info.type != null) {
+							ret = true;
+						}
 					}
 				}
+			} catch (NumberFormatException e) {
+				// Someone had binary contents in the cache file, breaking parseInt()
+				ret = false;
 			}
 		}
 
