@@ -499,6 +499,13 @@ public class ModList extends PlaylistActivity {
 	}
 
 	protected void addToPlaylist(final int start, final int num, final DialogInterface.OnClickListener listener) {
+		
+		// Return if no playlists exist
+		if (PlaylistUtils.list().length <= 0) {
+			Message.toast(this, getString(R.string.msg_no_playlists));
+			return;
+		}
+		
 		fileSelection = start;
 		fileNum = num;
 		playlistSelection = 0;

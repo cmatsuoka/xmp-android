@@ -80,6 +80,7 @@
     <string name="msg_select_playlist">Select playlist</string>
     <string name="msg_no_modules">No modules found.</string>
     <string name="msg_empty_playlist">Empty playlist.</string>
+    <string name="msg_no_playlists">No playlists found.</string>
     <string name="menu_new_playlist">New playlist</string>
     <string name="error_storage">Can\'t access external storage.</string>
     <string name="pref_use_filename_title">File names in playlist</string>
