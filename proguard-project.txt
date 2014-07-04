@@ -27,6 +27,9 @@
     public *;
 }
 
+-keep public class * extends android.app.Application
+
 # Keep source file and line number information in crash reports
 -renamesourcefileattribute MyApplication
 -keepattributes SourceFile,LineNumberTable
+
