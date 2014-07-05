@@ -55,7 +55,6 @@ public class PlayerActivity extends Activity {
 	private boolean loopListMode;
 	private boolean keepFirst;
 	private boolean paused;
-	private boolean finishing;
 	private boolean showElapsed;
 	private final TextView[] infoName = new TextView[2];
 	private final TextView[] infoType = new TextView[2];
@@ -523,10 +522,23 @@ public class PlayerActivity extends Activity {
 
 	public void stopButtonListener(final View view) {
 		//Debug.stopMethodTracing();
+
 		synchronized (playerLock) {
-			if (modPlayer != null) {
-				stopPlayingMod();
+			if (modPlayer != null) {	
+				try {
+					modPlayer.stop();
+				} catch (RemoteException e1) {
+					Log.e(TAG, "Can't stop module");
+				}
 			}
+		}
+
+		paused = false;
+
+		if (progressThread != null && progressThread.isAlive()) {
+			try {
+				progressThread.join();
+			} catch (InterruptedException e) { }
 		}
 	}
 
@@ -866,31 +878,6 @@ public class PlayerActivity extends Activity {
 					Log.e(TAG, "Can't play module");
 				}
 			}
-		}
-	}
-
-	private void stopPlayingMod() {
-		if (finishing) {
-			return;
-		}
-		finishing = true;
-
-		synchronized (playerLock) {
-			if (modPlayer != null) {
-				try {
-					modPlayer.stop();
-				} catch (RemoteException e1) {
-					Log.e(TAG, "Can't stop module");
-				}
-			}
-		}
-
-		paused = false;
-
-		if (progressThread != null && progressThread.isAlive()) {
-			try {
-				progressThread.join();
-			} catch (InterruptedException e) { }
 		}
 	}
 
