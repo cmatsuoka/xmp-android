@@ -95,10 +95,10 @@ public class PlayerActivity extends Activity {
 		public void onServiceConnected(final ComponentName className, final IBinder service) {
 			Log.i(TAG, "Service connected");
 
-			modPlayer = ModInterface.Stub.asInterface(service);
-			flipperPage = 0;
-
 			synchronized (playerLock) {
+				modPlayer = ModInterface.Stub.asInterface(service);
+				flipperPage = 0;
+
 				try {
 					modPlayer.registerCallback(playerCallback);
 				} catch (RemoteException e) {
@@ -183,15 +183,19 @@ public class PlayerActivity extends Activity {
 
 		@Override
 		public void run() {
-			try {
-				// Set pause status according to external state
-				if (modPlayer.isPaused()) {
-					pause();
-				} else {
-					unpause();
+			synchronized (playerLock) {
+				if (modPlayer != null) {
+					try {
+						// Set pause status according to external state
+						if (modPlayer.isPaused()) {
+							pause();
+						} else {
+							unpause();
+						}
+					} catch (RemoteException e) {
+						Log.e(TAG, "Can't get pause status");
+					}
 				}
-			} catch (RemoteException e) {
-				Log.e(TAG, "Can't get pause status");
 			}
 		}
 	};
@@ -222,14 +226,16 @@ public class PlayerActivity extends Activity {
 				
 				// get current frame info
 				synchronized (playerLock) {
-					try {
-						modPlayer.getInfo(info[now].values);							
-						info[now].time = modPlayer.time() / 1000;
+					if (modPlayer != null) {
+						try {
+							modPlayer.getInfo(info[now].values);							
+							info[now].time = modPlayer.time() / 1000;
 
-						modPlayer.getChannelData(info[now].volumes, info[now].finalvols, info[now].pans,
-								info[now].instruments, info[now].keys, info[now].periods);
-					} catch (Exception e) {
-						// fail silently
+							modPlayer.getChannelData(info[now].volumes, info[now].finalvols, info[now].pans,
+									info[now].instruments, info[now].keys, info[now].periods);
+						} catch (RemoteException e) {
+							// fail silently
+						}
 					}
 				}
 
@@ -334,10 +340,12 @@ public class PlayerActivity extends Activity {
 						break;
 					}
 
-					try {
-						playTime = modPlayer.time() / 100;
-					} catch (RemoteException e) {
-						// fail silently
+					if (modPlayer != null) {
+						try {
+							playTime = modPlayer.time() / 100;
+						} catch (RemoteException e) {
+							// fail silently
+						}
 					}
 				}
 
@@ -479,80 +487,77 @@ public class PlayerActivity extends Activity {
 	// Click listeners
 
 	public void loopButtonListener(final View view) {
-		try {
-			if (modPlayer.toggleLoop()) {
-				loopButton.setImageResource(R.drawable.loop_on);
-			} else {
-				loopButton.setImageResource(R.drawable.loop_off);
+		synchronized (playerLock) {
+			if (modPlayer != null) {
+				try {
+					if (modPlayer.toggleLoop()) {
+						loopButton.setImageResource(R.drawable.loop_on);
+					} else {
+						loopButton.setImageResource(R.drawable.loop_off);
+					}
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't get loop status");
+				}
 			}
-		} catch (RemoteException e) {
-			Log.e(TAG, "Can't get loop status");
 		}
 	}
 
 	public void playButtonListener(final View view) {
 		//Debug.startMethodTracing("xmp");				
-		if (modPlayer == null) {
-			return;
-		}
-
 		synchronized (this) {
-			try {
-				modPlayer.pause();
+			if (modPlayer != null) {
+				try {
+					modPlayer.pause();
 
-				if (paused) {
-					unpause();
-				} else {
-					pause();
+					if (paused) {
+						unpause();
+					} else {
+						pause();
+					}
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't pause/unpause module");
 				}
-			} catch (RemoteException e) {
-				Log.e(TAG, "Can't pause/unpause module");
 			}
 		}
 	}
 
 	public void stopButtonListener(final View view) {
 		//Debug.stopMethodTracing();
-		if (modPlayer == null) {
-			return;
+		synchronized (playerLock) {
+			if (modPlayer != null) {
+				stopPlayingMod();
+			}
 		}
-
-		stopPlayingMod();
 	}
 
 	public void backButtonListener(final View view) {
-		if (modPlayer == null) {
-			return;
-		}
-
-		try {
-			if (modPlayer.time() > 3000) {
-				modPlayer.seek(0);
-			} else {
-				synchronized (playerLock) {
-					modPlayer.prevSong();
+		synchronized (playerLock) {
+			if (modPlayer != null) {
+				try {
+					if (modPlayer.time() > 3000) {
+						modPlayer.seek(0);
+					} else {
+						modPlayer.prevSong();
+					}
+					unpause();
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't go to previous module");
 				}
 			}
-			unpause();
-		} catch (RemoteException e) {
-			Log.e(TAG, "Can't go to previous module");
 		}
 	}
 
-	public void forwardButtonListener(final View view) {				
-		if (modPlayer == null) {
-			return;
-		}
-
-		try {
-			synchronized (playerLock) {
-				modPlayer.nextSong();
+	public void forwardButtonListener(final View view) {
+		synchronized (playerLock) {
+			if (modPlayer != null) {
+				try {
+					modPlayer.nextSong();
+					unpause();
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't go to next module");
+				}
 			}
-		} catch (RemoteException e) {
-			Log.e(TAG, "Can't go to next module");
 		}
-
-		unpause();
 	}
 
 	// Life cycle
@@ -685,11 +690,13 @@ public class PlayerActivity extends Activity {
 		//	deleteDialog.cancel();
 		//}
 
-		if (modPlayer != null) {
-			try {
-				modPlayer.unregisterCallback(playerCallback);
-			} catch (RemoteException e) {
-				Log.e(TAG, "Can't unregister player callback");
+		synchronized (playerLock) {
+			if (modPlayer != null) {
+				try {
+					modPlayer.unregisterCallback(playerCallback);
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't unregister player callback");
+				}
 			}
 		}
 
@@ -727,24 +734,28 @@ public class PlayerActivity extends Activity {
 	
 	public void playNewSequence(int num) {
 		synchronized (playerLock) {
-			try {
-				Log.i(TAG, "Set sequence " + num);
-				modPlayer.setSequence(num);
-			} catch (RemoteException e) {
-				Log.e(TAG, "Can't set sequence " + num);
+			if (modPlayer != null) {
+				try {
+					Log.i(TAG, "Set sequence " + num);
+					modPlayer.setSequence(num);
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't set sequence " + num);
+				}
 			}
 		}
 	}
 	
 	private void showNewSequence() {
 		synchronized (playerLock) {
-			try {
-				modPlayer.getModVars(modVars);
-			} catch (RemoteException e) {
-				Log.e(TAG, "Can't get new sequence data");
+			if (modPlayer != null) {
+				try {
+					modPlayer.getModVars(modVars);
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't get new sequence data");
+				}
+
+				handler.post(showNewSequenceRunnable);
 			}
-			
-			handler.post(showNewSequenceRunnable);
 		}
 	}
 	
@@ -846,11 +857,15 @@ public class PlayerActivity extends Activity {
 		}
 	};
 
-	private void playNewMod(final String[] files, final int start) {      	 
-		try {
-			modPlayer.play(files, start, shuffleMode, loopListMode, keepFirst);
-		} catch (RemoteException e) {
-			Log.e(TAG, "Can't play module");
+	private void playNewMod(final String[] files, final int start) {
+		synchronized (playerLock) {
+			if (modPlayer != null) {
+				try {
+					modPlayer.play(files, start, shuffleMode, loopListMode, keepFirst);
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't play module");
+				}
+			}
 		}
 	}
 
@@ -861,10 +876,12 @@ public class PlayerActivity extends Activity {
 		finishing = true;
 
 		synchronized (playerLock) {
-			try {
-				modPlayer.stop();
-			} catch (RemoteException e1) {
-				Log.e(TAG, "Can't stop module");
+			if (modPlayer != null) {
+				try {
+					modPlayer.stop();
+				} catch (RemoteException e1) {
+					Log.e(TAG, "Can't stop module");
+				}
 			}
 		}
 
