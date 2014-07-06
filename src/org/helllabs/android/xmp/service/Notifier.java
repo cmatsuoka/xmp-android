@@ -19,9 +19,9 @@ public class Notifier {
 	//private final NotificationManager nm;
     private final PendingIntent contentIntent;
     private static final int NOTIFY_ID = R.layout.player;
-    public static final String ACTION_STOP = "stop";
-    public static final String ACTION_PAUSE = "pause";
-    public static final String ACTION_NEXT = "next";
+    public static final String ACTION_STOP = "org.helllabs.android.xmp.STOP";
+    public static final String ACTION_PAUSE = "org.helllabs.android.xmp.PAUSE";
+    public static final String ACTION_NEXT = "org.helllabs.android.xmp.NEXT";
 	private QueueManager queue;
 	private final Context context;
 	private final long when;
