@@ -135,10 +135,10 @@
             android:name=".preferences.Preferences"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".browser.ModList"
+            android:name=".browser.FilelistActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
-            android:name=".browser.PlayList"
+            android:name=".browser.PlaylistActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name=".preferences.about.ListFormats"
