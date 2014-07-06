@@ -125,9 +125,11 @@ public class PlayerActivity extends Activity {
 		}
 
 		public void onServiceDisconnected(final ComponentName className) {
-			stopUpdate = true;
-			modPlayer = null;
-			Log.i(TAG, "Service disconnected");
+			synchronized (playerLock) {
+				stopUpdate = true;
+				modPlayer = null;
+				Log.i(TAG, "Service disconnected");
+			}
 		}
 	};
 
@@ -153,15 +155,17 @@ public class PlayerActivity extends Activity {
 
 		@Override
 		public void endPlayCallback() throws RemoteException {
-			Log.i(TAG, "End progress thread");
-			stopUpdate = true;
+			synchronized (playerLock) {
+				Log.i(TAG, "End progress thread");
+				stopUpdate = true;
 
-			if (progressThread != null && progressThread.isAlive()) {
-				try {
-					progressThread.join();
-				} catch (InterruptedException e) { }
+				if (progressThread != null && progressThread.isAlive()) {
+					try {
+						progressThread.join();
+					} catch (InterruptedException e) { }
+				}
+				finish();
 			}
-			finish();
 		}
 
 		@Override
