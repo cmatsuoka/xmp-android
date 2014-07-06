@@ -467,22 +467,26 @@ public class PlayerActivity extends Activity {
 		currentViewer %= 3;
 
 		synchronized (viewerLayout) {
-			viewerLayout.removeAllViews();
-			switch (currentViewer) {
-			case 0:
-				viewer = instrumentViewer;
-				break;
-			case 1:
-				viewer = channelViewer;
-				break;
-			case 2:
-				viewer = patternViewer;
-				break;
-			}
+			synchronized (playerLock) {
+				if (modPlayer != null) {
+					viewerLayout.removeAllViews();
+					switch (currentViewer) {
+					case 0:
+						viewer = instrumentViewer;
+						break;
+					case 1:
+						viewer = channelViewer;
+						break;
+					case 2:
+						viewer = patternViewer;
+						break;
+					}
 
-			viewerLayout.addView(viewer);   		
-			viewer.setup(modPlayer, modVars);
-			viewer.setRotation(display.getOrientation());
+					viewerLayout.addView(viewer);   		
+					viewer.setup(modPlayer, modVars);
+					viewer.setRotation(display.getOrientation());
+				}
+			}
 		}
 	}
 
