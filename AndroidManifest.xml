@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.helllabs.android.xmp"
     android:installLocation="auto"
-    android:versionCode="52"
-    android:versionName="3.9.1" >
+    android:versionCode="53"
+    android:versionName="3.9.2" >
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -134,10 +134,10 @@
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".browser.ModList"
+            android:name=".browser.FilelistActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
-            android:name=".browser.PlayList"
+            android:name=".browser.PlaylistActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name=".preferences.about.ListFormats"

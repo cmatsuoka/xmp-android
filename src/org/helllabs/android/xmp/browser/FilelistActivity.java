@@ -33,7 +33,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class ModList extends PlaylistActivity {
+public class FilelistActivity extends BasePlaylistActivity {
 	//private boolean isBadDir = false;
 	private boolean isPathMenu;
 	private TextView curPath;
@@ -378,7 +378,7 @@ public class ModList extends PlaylistActivity {
 			modList.addAll(list);
 		}
 
-		final PlaylistInfoAdapter playlist = new PlaylistInfoAdapter(ModList.this,
+		final PlaylistInfoAdapter playlist = new PlaylistInfoAdapter(FilelistActivity.this,
 				R.layout.song_item, R.id.info, modList, false);
 
 		listView.setAdapter(playlist);

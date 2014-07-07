@@ -568,9 +568,7 @@ public final class PlayerService extends Service {
 		}
 
 		public void stop() {
-			Xmp.stopModule();
-			paused = false;
-			cmd = CMD_STOP;
+			actionStop();
 		}
 
 		public void pause() {

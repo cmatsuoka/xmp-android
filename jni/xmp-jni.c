@@ -26,6 +26,7 @@ static int _last_key[XMP_MAX_CHANNELS];
 static int _pos[XMP_MAX_CHANNELS];
 static int _decay = 4;
 static int _sequence;
+static int _mod_is_loaded;
 
 #define MAX_BUFFER_SIZE 256
 static char _buffer[MAX_BUFFER_SIZE];
@@ -63,6 +64,7 @@ Java_org_helllabs_android_xmp_Xmp_loadModule(JNIEnv *env, jobject obj, jstring n
 
 	memset(_pos, 0, XMP_MAX_CHANNELS * sizeof (int));
 	_sequence = 0;
+	_mod_is_loaded = 1;
 
 	return res;
 }
@@ -129,6 +131,7 @@ Java_org_helllabs_android_xmp_Xmp_testModule(JNIEnv *env, jobject obj, jstring n
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_releaseModule(JNIEnv *env, jobject obj)
 {
+	_mod_is_loaded = 0;
 	xmp_release_module(ctx);
 	return 0;
 }
@@ -282,6 +285,9 @@ Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray
 {
 	int v[8];
 
+	if (!_mod_is_loaded)
+		return;
+
 	v[0] = mi.seq_data[_sequence].duration;
 	v[1] = mi.mod->len;
 	v[2] = mi.mod->pat;
@@ -403,6 +409,9 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 	int chn = mi.mod->chn;
 	int i;
 
+	if (!_mod_is_loaded)
+		return;
+
 	for (i = 0; i < chn; i++) {
                 struct xmp_channel_info *ci = &fi.channel_info[i];
 
@@ -454,7 +463,10 @@ Java_org_helllabs_android_xmp_Xmp_getPatternRow(JNIEnv *env, jobject obj, jint p
 	int chn;
 	int i;
 
-	if (mi.mod == NULL || pat > mi.mod->pat || row > mi.mod->xxp[pat]->rows)
+	if (!_mod_is_loaded)
+		return;
+
+	if (pat > mi.mod->pat || row > mi.mod->xxp[pat]->rows)
 		return;
 
  	xxp = mi.mod->xxp[pat];
@@ -480,6 +492,9 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 	int i, pos, transient_size;
 	int limit;
 	int step, len, lps, lpe;
+ 
+	if (!_mod_is_loaded)
+		return;
 
 	if (width > MAX_BUFFER_SIZE) {
 		width = MAX_BUFFER_SIZE;
@@ -612,6 +627,9 @@ JNIEXPORT void JNICALL
 Java_org_helllabs_android_xmp_Xmp_getSeqVars(JNIEnv *env, jobject obj, jintArray vars)
 {
 	int i, num, v[16];
+
+	if (!_mod_is_loaded)
+		return;
 
 	num = mi.num_sequences;
 	if (num > 16) {

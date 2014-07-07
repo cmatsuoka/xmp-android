@@ -15,7 +15,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -124,7 +123,8 @@ public final class PlaylistUtils {
 			}
 		}.start();
 	}
-			
+	
+	/*
 	public static void filesToNewPlaylist(final Context context, final String path, final Runnable runnable) {
 		final File modDir = new File(path);
 		
@@ -172,6 +172,7 @@ public final class PlaylistUtils {
 		  
 		alert.show();
 	}
+	*/
 	
 	public static void deleteList(final Context context, final int index) {
 		final String list = listNoSuffix()[index];

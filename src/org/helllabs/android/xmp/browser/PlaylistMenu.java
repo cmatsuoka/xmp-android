@@ -51,10 +51,10 @@ public class PlaylistMenu extends ActionBarActivity {
 					@Override
 					public void onItemClick(AdapterView<?> l, View view, int position, long id) {
 						if (position == 0) {
-							final Intent intent = new Intent(PlaylistMenu.this, ModList.class);
+							final Intent intent = new Intent(PlaylistMenu.this, FilelistActivity.class);
 							startActivityForResult(intent, PLAYLIST_REQUEST);
 						} else {
-							final Intent intent = new Intent(PlaylistMenu.this, PlayList.class);
+							final Intent intent = new Intent(PlaylistMenu.this, PlaylistActivity.class);
 							intent.putExtra("name", PlaylistUtils.listNoSuffix()[position -1]);
 							startActivityForResult(intent, PLAYLIST_REQUEST);
 						}
