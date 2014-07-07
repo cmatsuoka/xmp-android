@@ -169,7 +169,7 @@ public class PlaylistMenu extends ActionBarActivity {
 						PlaylistUtils.listNoSuffix()[deletePosition] + "?", new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int which) {
 						if (which == DialogInterface.BUTTON_POSITIVE) {
-							PlaylistUtils.deleteList(context, deletePosition);
+							Playlist.delete(context, PlaylistUtils.listNoSuffix()[deletePosition]);
 							updateList();
 						}
 					}
@@ -193,31 +193,10 @@ public class PlaylistMenu extends ActionBarActivity {
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {
-				boolean error = false;
 				final String value = alert.input.getText().toString();
-				final File old1 = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX);
-				final File old2 = new File(Preferences.DATA_DIR, name + PlaylistUtils.COMMENT_SUFFIX);
-				final File new1 = new File(Preferences.DATA_DIR, value + PlaylistUtils.PLAYLIST_SUFFIX);
-				final File new2 = new File(Preferences.DATA_DIR, value + PlaylistUtils.COMMENT_SUFFIX);
-
-				if (!old1.renameTo(new1)) { 
-					error = true;
-				} else if (!old2.renameTo(new2)) {
-					new1.renameTo(old1);
-					error = true;
-				}
-
-				if (error) {
+				
+				if (!Playlist.rename(context, name, value)) {
 					Message.error(context, getString(R.string.error_rename_playlist));
-				} else {
-					final SharedPreferences.Editor editor = prefs.edit();
-					editor.putBoolean(PlaylistUtils.OPTIONS_PREFIX + value + "_shuffleMode",
-									prefs.getBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_shuffleMode", true));
-					editor.putBoolean(PlaylistUtils.OPTIONS_PREFIX + value + "_loopMode",
-									prefs.getBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_loopMode", false));
-					editor.remove(PlaylistUtils.OPTIONS_PREFIX + name + "_shuffleMode");
-					editor.remove(PlaylistUtils.OPTIONS_PREFIX + name + "_loopMode");
-					editor.commit();
 				}
 
 				updateList();

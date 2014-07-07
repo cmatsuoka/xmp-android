@@ -174,6 +174,7 @@ public final class PlaylistUtils {
 	}
 	*/
 	
+	/*
 	public static void deleteList(final Context context, final int index) {
 		final String list = listNoSuffix()[index];
 		(new File(Preferences.DATA_DIR, list + PLAYLIST_SUFFIX)).delete();
@@ -185,6 +186,7 @@ public final class PlaylistUtils {
 		editor.remove(OPTIONS_PREFIX + list + "_loopMode");
 		editor.commit();
 	}
+	*/
 	
 	public static void addToList(final Context context, final String name, final String line) {
 		try {
