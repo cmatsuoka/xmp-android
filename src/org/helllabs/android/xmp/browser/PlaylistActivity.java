@@ -40,7 +40,7 @@ class PlayListFilter implements FilenameFilter {
 public class PlaylistActivity extends BasePlaylistActivity {
 	private static final String TAG = "PlayList";
 	private String name;
-	private PlaylistInfoAdapter plist;
+	private PlaylistItemAdapter plist;
 	private Boolean modified;
 	private TouchListView listView;
 	
@@ -123,7 +123,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 	    	while ((line = reader.readLine()) != null) {
 	    		final String[] fields = line.split(":", 3);
 	    		if (InfoCache.fileExists(fields[0])) {
-	    			modList.add(new PlaylistInfo(fields[2], fields[1], fields[0], R.drawable.grabber));
+	    			modList.add(new PlaylistItem(fields[2], fields[1], fields[0], R.drawable.grabber));
 	    		} else {
 	    			invalidList.add(lineNum);
 	    		}
@@ -150,7 +150,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 			}
 		}
 	    
-	    plist = new PlaylistInfoAdapter(PlaylistActivity.this,
+	    plist = new PlaylistItemAdapter(PlaylistActivity.this,
     				R.layout.playlist_item, R.id.plist_info, modList,
     				prefs.getBoolean(Preferences.USE_FILENAME, false));
         
@@ -222,7 +222,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 	private final TouchListView.DropListener onDrop = new TouchListView.DropListener() {
 		@Override
 		public void drop(final int from, final int to) {
-			final PlaylistInfo item = plist.getItem(from);
+			final PlaylistItem item = plist.getItem(from);
 			plist.remove(item);
 			plist.insert(item, to);
 			modified = true;
@@ -244,7 +244,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		
 		try {
 			final BufferedWriter out = new BufferedWriter(new FileWriter(file), 512);
-			for (final PlaylistInfo info : modList) {
+			for (final PlaylistItem info : modList) {
 				out.write(String.format("%s:%s:%s\n", info.filename, info.comment, info.name));
 			}
 			out.close();

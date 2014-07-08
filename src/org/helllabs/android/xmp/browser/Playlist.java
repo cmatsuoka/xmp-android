@@ -1,9 +1,11 @@
 package org.helllabs.android.xmp.browser;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.preferences.Preferences;
 
 import android.content.Context;
@@ -16,7 +18,9 @@ public class Playlist {
 	public static final String OPTIONS_PREFIX = "options_";
 	private String mName;
 	private String mComment;
-	private List<String> mList = new ArrayList<String>();
+	private boolean mListChanged;
+	private boolean mCommentChanged;
+	private List<PlaylistItem> mList = new ArrayList<PlaylistItem>();
 
 	private static class ListFile extends File {
 		public ListFile(final String name) {
@@ -30,20 +34,48 @@ public class Playlist {
 		}
 	}
 	
-	public Playlist(String name, String comment) {
+	public Playlist(String name) {
 		this.mName = name;
-		this.mComment = comment;
+		
+		final File file = new ListFile(mName);
+		if (file.exists()) {
+			//mComment = FileUtils.readFromFile(new CommentFile(name));
+				
+			// read file contents
+		} else {
+			mListChanged = true;
+			mCommentChanged = true;
+		}
 	}	
 	
-	void commit() {
-		
+	public void commit() throws IOException {
+		if (mListChanged) {
+			commitList();
+		}
+		if (mCommentChanged) {
+			commitComment();
+		}
+	}
+	
+	private void commitList() throws IOException {
+		final File file = new ListFile(mName);
+		file.createNewFile();
+		FileUtils.writeToFile(file, (String[])mList.toArray());
+		mListChanged = false;
+	}
+	
+	private void commitComment() throws IOException {
+		final File file = new CommentFile(mName);
+		file.createNewFile();
+		FileUtils.writeToFile(file, mComment);
+		mCommentChanged = false;
 	}
 	
 	private static String optionName(final String name, final String option) {
 		return PlaylistUtils.OPTIONS_PREFIX + name + option;
 	}
 	
-	static boolean rename(final Context context, final String oldName, final String newName) {
+	public static boolean rename(final Context context, final String oldName, final String newName) {
 		final File old1 = new ListFile(oldName);
 		final File old2 = new CommentFile(oldName);
 		final File new1 = new ListFile(newName);
@@ -73,7 +105,7 @@ public class Playlist {
 		return true;
 	}
 	
-	static void delete(Context context, final String name) {		
+	public static void delete(Context context, final String name) {		
 		(new ListFile(name)).delete();
 		(new CommentFile(name)).delete();
 
@@ -84,17 +116,17 @@ public class Playlist {
 		editor.commit();
 	}
 	
-	void add(final String line) {
-		mList.add(line);
+	public void add(final PlaylistItem item) {
+		mList.add(item);
 	}
 	
-	void add(final String[] lines) {
-		for (final String line : lines) {
-			add(line);
+	public void add(final PlaylistItem[] items) {
+		for (final PlaylistItem item : items) {
+			add(item);
 		}
 	}
 	
-	void remove(int index) {
+	public void remove(int index) {
 		mList.remove(index);
 	}
 	

@@ -36,7 +36,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private static final String TAG = "PlaylistActivity";
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAY_MOD_REQUEST = 669; 
-	protected List<PlaylistInfo> modList = new ArrayList<PlaylistInfo>();
+	protected List<PlaylistItem> modList = new ArrayList<PlaylistItem>();
 	protected boolean shuffleMode = true;
 	protected boolean loopMode;
 	protected boolean modifiedOptions;
@@ -133,25 +133,25 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	abstract public void update();
 
 	// Play all modules in list and honor default shuffle mode
-	protected void playModule(final List<PlaylistInfo> list) {
+	protected void playModule(final List<PlaylistItem> list) {
 		playModule(list, 0, shuffleMode);
 	}
 
 	// Play all modules in list with start position, no shuffle
-	protected void playModule(final List<PlaylistInfo> list, final int position) {
+	protected void playModule(final List<PlaylistItem> list, final int position) {
 		playModule(list, position, false);
 	}
 	
-	protected void playModule(final List<PlaylistInfo> list, final int start, final boolean shuffle) {
+	protected void playModule(final List<PlaylistItem> list, final int start, final boolean shuffle) {
 		playModule(list, start, shuffle, false);
 	}
 
 	// Play modules in list starting at the specified one
-	protected void playModule(final List<PlaylistInfo> list, int start, final boolean shuffle, final boolean keepFirst) {
+	protected void playModule(final List<PlaylistItem> list, int start, final boolean shuffle, final boolean keepFirst) {
 		int num = 0;
 		int dir = 0;
 
-		for (final PlaylistInfo info : list) {
+		for (final PlaylistItem info : list) {
 			if (new File(info.filename).isDirectory()) {
 				dir++;
 			} else {
@@ -173,7 +173,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		final String[] mods = new String[num];
 
 		int i = 0;
-		for (final PlaylistInfo info : list) {
+		for (final PlaylistItem info : list) {
 			if (new File(info.filename).isFile()) {
 				mods[i++] = info.filename;
 			}

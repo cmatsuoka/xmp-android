@@ -13,12 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class PlaylistInfoAdapter extends ArrayAdapter<PlaylistInfo> {
-    private final List<PlaylistInfo> items;
+public class PlaylistItemAdapter extends ArrayAdapter<PlaylistItem> {
+    private final List<PlaylistItem> items;
     private final Context context;
     private final boolean useFilename;
 
-    public PlaylistInfoAdapter(final Context context, final int resource, final int textViewResId, final List<PlaylistInfo> items, final boolean useFilename) {
+    public PlaylistItemAdapter(final Context context, final int resource, final int textViewResId, final List<PlaylistItem> items, final boolean useFilename) {
     	super(context, resource, textViewResId, items);
     	this.items = items;
     	this.context = context;
@@ -32,7 +32,7 @@ public class PlaylistInfoAdapter extends ArrayAdapter<PlaylistInfo> {
     		final LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     		view = inflater.inflate(R.layout.playlist_item, null);
     	}
-    	final PlaylistInfo info = items.get(position);
+    	final PlaylistItem info = items.get(position);
     	           
     	if (info != null) {                		
     		final TextView titleText = (TextView)view.findViewById(R.id.plist_title);

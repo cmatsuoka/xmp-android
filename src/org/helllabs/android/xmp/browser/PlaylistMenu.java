@@ -109,17 +109,17 @@ public class PlaylistMenu extends ActionBarActivity {
 	private void updateList() {
 		mediaPath = prefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 
-		final List<PlaylistInfo> list = new ArrayList<PlaylistInfo>();
+		final List<PlaylistItem> list = new ArrayList<PlaylistItem>();
 
 		list.clear();
-		list.add(new PlaylistInfo("File browser", "Files in " + mediaPath,
+		list.add(new PlaylistItem("File browser", "Files in " + mediaPath,
 				R.drawable.browser));
 
 		for (final String name : PlaylistUtils.listNoSuffix()) {
-			list.add(new PlaylistInfo(name, PlaylistUtils.readComment(this, name), R.drawable.list));
+			list.add(new PlaylistItem(name, PlaylistUtils.readComment(this, name), R.drawable.list));
 		}
 
-		final PlaylistInfoAdapter playlist = new PlaylistInfoAdapter(PlaylistMenu.this,
+		final PlaylistItemAdapter playlist = new PlaylistItemAdapter(PlaylistMenu.this,
 				R.layout.playlist_item, R.id.plist_info, list, false);
 
 		listView.setAdapter(playlist);

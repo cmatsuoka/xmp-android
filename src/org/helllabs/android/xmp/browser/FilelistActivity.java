@@ -139,7 +139,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				if (playlistSelection >= 0) {
 					boolean invalid = false;
 					for (int i = fileSelection; i < fileSelection + fileNum; i++) {
-						final PlaylistInfo info = modList.get(i);
+						final PlaylistItem info = modList.get(i);
 						final ModInfo modInfo = new ModInfo();
 						if (InfoCache.testModule(info.filename, modInfo)) {
 							final String line = info.filename + ":" + modInfo.type + ":" + modInfo.name;
@@ -341,12 +341,12 @@ public class FilelistActivity extends BasePlaylistActivity {
 		parentNum = directoryNum = 0;
 		final File modDir = new File(path);
 
-		final List<PlaylistInfo> list = new ArrayList<PlaylistInfo>();
+		final List<PlaylistItem> list = new ArrayList<PlaylistItem>();
 		final File[] dirFiles = modDir.listFiles(new DirFilter());
 		if (dirFiles != null) {
 			for (final File file : dirFiles) {
 				directoryNum++;
-				list.add(new PlaylistInfo(file.getName(), "Directory",
+				list.add(new PlaylistItem(file.getName(), "Directory",
 						file.getAbsolutePath(), R.drawable.folder));
 			}
 		}
@@ -366,19 +366,19 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 				if (titlesInBrowser && !file.isDirectory()) {
 					if (InfoCache.testModule(filename, info)) {
-						list.add(new PlaylistInfo(info.name, info.type, filename));
+						list.add(new PlaylistItem(info.name, info.type, filename));
 					}
 				} else {
 					final String name = file.getName();
 					final String comment = date + String.format(" (%d kB)", file.length() / 1024);
-					list.add(new PlaylistInfo(name, comment, filename));
+					list.add(new PlaylistItem(name, comment, filename));
 				}
 			}
 			Collections.sort(list);
 			modList.addAll(list);
 		}
 
-		final PlaylistInfoAdapter playlist = new PlaylistInfoAdapter(FilelistActivity.this,
+		final PlaylistItemAdapter playlist = new PlaylistItemAdapter(FilelistActivity.this,
 				R.layout.song_item, R.id.info, modList, false);
 
 		listView.setAdapter(playlist);
