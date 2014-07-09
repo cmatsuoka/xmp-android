@@ -55,28 +55,23 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		listView.setDropListener(onDrop);
 		listView.setRemoveListener(onRemove);
 		
-		//final View curList = (View)findViewById(R.id.current_list);
+		name = extras.getString("name");
+		
+		update();
+		
 		final TextView curListName = (TextView)findViewById(R.id.current_list_name);
 		final TextView curListDesc = (TextView)findViewById(R.id.current_list_description);
-		
-		name = extras.getString("name");
+	
 		curListName.setText(name);
-		curListDesc.setText(Playlist.readComment(this, name));
+		curListDesc.setText(playlist.getComment());
 		registerForContextMenu(listView);
 		
-		// Set status area background color		
-		//if (prefs.getBoolean(Preferences.DARK_THEME, false)) {
-		//	curList.setBackgroundColor(R.color.dark_theme_status_color);
-		//}
-		
-		shuffleMode = prefs.getBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_shuffleMode", true);
-		loopMode = prefs.getBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_loopMode", false);
+		shuffleMode = playlist.getShuffleMode();
+		loopMode = playlist.getLoopMode();
 		setupButtons();
 				
 		modified = false;
 		modifiedOptions = false;
-		
-		updateList();
 	}
 	
 	@Override
@@ -92,13 +87,8 @@ public class PlaylistActivity extends BasePlaylistActivity {
 	}
 	
 	public void update() {
-		updateList();
-	}
-	
-	private void updateList() {
 		try {
 			playlist = new Playlist(this, name);
-		
 			adapter = new PlaylistItemAdapter(PlaylistActivity.this, R.layout.playlist_item,
 					R.id.plist_info, playlist.getList(), prefs.getBoolean(Preferences.USE_FILENAME, false));
         
@@ -140,7 +130,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 			} catch (IOException e) {
 				Message.toast(this, getString(R.string.error_write_to_playlist));
 			}
-			updateList();
+			update();
 			break;
 		case 1:										// Add to play queue
 			addToQueue(info.position, 1);
