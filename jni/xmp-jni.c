@@ -345,13 +345,15 @@ Java_org_helllabs_android_xmp_Xmp_getFormats(JNIEnv *env, jobject obj)
 JNIEXPORT jstring JNICALL
 Java_org_helllabs_android_xmp_Xmp_getModName(JNIEnv *env, jobject obj)
 {
-	return (*env)->NewStringUTF(env, mi.mod->name);
+	char *s = _mod_is_loaded ? mi.mod->name : "";
+	return (*env)->NewStringUTF(env, s);
 }
 
 JNIEXPORT jstring JNICALL
 Java_org_helllabs_android_xmp_Xmp_getModType(JNIEnv *env, jobject obj)
 {
-	return (*env)->NewStringUTF(env, mi.mod->type);
+	char *s = _mod_is_loaded ? mi.mod->type : "";
+	return (*env)->NewStringUTF(env, s);
 }
 
 JNIEXPORT jobjectArray JNICALL
