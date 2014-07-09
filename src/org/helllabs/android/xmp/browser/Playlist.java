@@ -68,6 +68,7 @@ public class Playlist {
 		
 		final File file = new ListFile(name);
 		if (file.exists()) {
+			Log.i(TAG, "Read playlist " + name);
 			final String comment = FileUtils.readFromFile(new CommentFile(name));
 				
 			// read list contents
@@ -77,6 +78,7 @@ public class Playlist {
 				mLoopMode = readLoopModePref(name);
 			}
 		} else {
+			Log.i(TAG, "New playlist " + name);
 			mShuffleMode = DEFAULT_SHUFFLE_MODE;
 			mLoopMode = DEFAULT_LOOP_MODE;
 			mListChanged = true;
@@ -90,6 +92,7 @@ public class Playlist {
 	 * @throws IOException
 	 */
 	public void commit() throws IOException {
+		Log.i(TAG, "Commit playlist " + mName);
 		if (mListChanged) {
 			writeList(mName);
 			mListChanged = false;
@@ -140,7 +143,9 @@ public class Playlist {
 	 * @param index The index of the item to be removed
 	 */
 	public void remove(final int index) {
+		Log.i(TAG, "Remove item #" + index + ": " + mList.get(index).name);
 		mList.remove(index);
+		mListChanged = true;
 	}
 	
 
@@ -308,9 +313,9 @@ public class Playlist {
 	    return true;
 	}
 	
-	private final void writeList(final String name) {		
+	private final void writeList(final String name) {
+		Log.i(TAG, "Write list");
 		final File file = new ListFile(name,  ".new");
-		Log.i(TAG, "Write playlist " + name);
 		file.delete();
 		
 		try {
@@ -329,6 +334,7 @@ public class Playlist {
 	}
 
 	private final void writeComment(final String name) {
+		Log.i(TAG, "Write comment");
 		final File file = new CommentFile(name,  ".new");
 		file.delete();		
 		try {
