@@ -256,10 +256,6 @@
             <ruleset>Controversial</ruleset>
         </rule>
         <rule>
-            <name>AvoidPrefixingMethodParameters</name>
-            <ruleset>Controversial</ruleset>
-        </rule>
-        <rule>
             <name>AvoidUsingVolatile</name>
             <ruleset>Controversial</ruleset>
         </rule>
