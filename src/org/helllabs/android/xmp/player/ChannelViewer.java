@@ -91,6 +91,7 @@ public class ChannelViewer extends Viewer {
 		super.setup(modPlayer, modVars);
 
 		final int chn = modVars[3];
+		final int ins = modVars[4];
 		this.modPlayer = modPlayer;
 		
 		try {
@@ -98,7 +99,14 @@ public class ChannelViewer extends Viewer {
 		} catch (RemoteException e) {
 			Log.e(TAG, "Can't get instrument name");
 		}
-
+		
+		if (insName == null) {
+			insName = new String[ins];
+			for (int i = 0; i < ins; i++) {
+				insName[i] = "";
+			}
+		}
+		
 		holdKey = new int[chn];
 		channelNumber = new String[chn];
 		

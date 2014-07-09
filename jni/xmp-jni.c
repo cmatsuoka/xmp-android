@@ -364,6 +364,10 @@ Java_org_helllabs_android_xmp_Xmp_getInstruments(JNIEnv *env, jobject obj)
 	jobjectArray stringArray;
 	int i;
 	char buf[80];
+	int ins;
+
+	if (!_mod_is_loaded)
+		return NULL;
 
 	stringClass = (*env)->FindClass(env,"java/lang/String");
 	if (stringClass == NULL)
