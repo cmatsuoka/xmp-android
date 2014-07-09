@@ -47,6 +47,7 @@ public final class PlaylistUtils {
 				try {
 					final Playlist playlist = new Playlist(context, name);
 					playlist.setComment(comment);
+					playlist.commit();
 					
 					if (runnable != null) {
 						runnable.run();
