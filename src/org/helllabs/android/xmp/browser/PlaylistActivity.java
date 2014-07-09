@@ -1,23 +1,13 @@
 package org.helllabs.android.xmp.browser;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.preferences.Preferences;
-import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
@@ -40,9 +30,10 @@ class PlayListFilter implements FilenameFilter {
 public class PlaylistActivity extends BasePlaylistActivity {
 	private static final String TAG = "PlayList";
 	private String name;
-	private PlaylistItemAdapter plist;
+	private PlaylistItemAdapter adapter;
 	private Boolean modified;
 	private TouchListView listView;
+	private Playlist playlist;
 	
 	@Override
 	public void onCreate(final Bundle icicle) {
@@ -84,24 +75,20 @@ public class PlaylistActivity extends BasePlaylistActivity {
 				
 		modified = false;
 		modifiedOptions = false;
-
+		
 		updateList();
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
-		
-		if (modified) {			
-			writeList();
+
+		try {
+			playlist.commit();
+		} catch (IOException e) {
+			Message.toast(this, getString(R.string.error_write_to_playlist));
 		}
-		
-		if (modifiedOptions) {
-			final SharedPreferences.Editor editor = prefs.edit();
-			editor.putBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_shuffleMode", shuffleMode);
-			editor.putBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_loopMode", loopMode);
-			editor.commit();
-		}
+
 	}
 	
 	public void update() {
@@ -109,52 +96,16 @@ public class PlaylistActivity extends BasePlaylistActivity {
 	}
 	
 	private void updateList() {
-		modList.clear();
+		try {
+			playlist = new Playlist(this, name);
 		
-		final File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX);
-		String line;
-		int lineNum;
-		
-		final List<Integer> invalidList = new ArrayList<Integer>();
-		
-	    try {
-	    	final BufferedReader reader = new BufferedReader(new FileReader(file), 512);
-	    	lineNum = 0;
-	    	while ((line = reader.readLine()) != null) {
-	    		final String[] fields = line.split(":", 3);
-	    		if (InfoCache.fileExists(fields[0])) {
-	    			modList.add(new PlaylistItem(fields[2], fields[1], fields[0], R.drawable.grabber));
-	    		} else {
-	    			invalidList.add(lineNum);
-	    		}
-	    		lineNum++;
-	    	}
-	    	reader.close();
-	    } catch (IOException e) {
-	    	Log.e(TAG, "Error reading playlist " + file.getPath());
-	    }		
-		
-	    if (!invalidList.isEmpty()) {
-	    	final int[] array = new int[invalidList.size()];
-	    	final Iterator<Integer> iterator = invalidList.iterator();
-	    	for (int i = 0; i < array.length; i++) {
-	    		array[i] = iterator.next().intValue();
-	    	}
-	    	
-			try {
-				FileUtils.removeLineFromFile(file, array);
-			} catch (FileNotFoundException e) {
-				Log.e(TAG, "Playlist file " + file.getPath() + " not found");
-			} catch (IOException e) {
-				Log.e(TAG, "I/O error removing invalid lines from " + file.getPath());
-			}
-		}
-	    
-	    plist = new PlaylistItemAdapter(PlaylistActivity.this,
-    				R.layout.playlist_item, R.id.plist_info, modList,
-    				prefs.getBoolean(Preferences.USE_FILENAME, false));
+			adapter = new PlaylistItemAdapter(PlaylistActivity.this, R.layout.playlist_item,
+					R.id.plist_info, playlist.getList(), prefs.getBoolean(Preferences.USE_FILENAME, false));
         
-	    listView.setAdapter(plist);
+			listView.setAdapter(adapter);
+		} catch (IOException e) {
+			Log.e(TAG, "Can't update playlist " + name);
+		}
 	}
 	
 	// Playlist context menu
@@ -183,7 +134,12 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		
 		switch (itemId) {
 		case 0:										// Remove from playlist
-			removeFromPlaylist(name, info.position);
+			playlist.remove(info.position);
+			try {
+				playlist.commit();
+			} catch (IOException e) {
+				Message.toast(this, getString(R.string.error_write_to_playlist));
+			}
 			updateList();
 			break;
 		case 1:										// Add to play queue
@@ -203,28 +159,15 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		return true;
 	}
 	
-	public void removeFromPlaylist(final String playlist, final int position) {
-		final File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX);
-		if (modified) {
-			writeList();
-		}
-		try {
-			FileUtils.removeLineFromFile(file, position);
-		} catch (FileNotFoundException e) {
-			Log.e(TAG, "Playlist file " + file.getPath() + " not found");
-		} catch (IOException e) {
-			Log.e(TAG, "I/O error removing line from " + file.getPath());
-		}
-	}
 	
 	// List reorder
 	
 	private final TouchListView.DropListener onDrop = new TouchListView.DropListener() {
 		@Override
 		public void drop(final int from, final int to) {
-			final PlaylistItem item = plist.getItem(from);
-			plist.remove(item);
-			plist.insert(item, to);
+			final PlaylistItem item = adapter.getItem(from);
+			adapter.remove(item);
+			adapter.insert(item, to);
 			modified = true;
 		}
 	};
@@ -232,30 +175,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 	private final TouchListView.RemoveListener onRemove = new TouchListView.RemoveListener() {
 		@Override
 		public void remove(final int which) {
-			plist.remove(plist.getItem(which));
+			adapter.remove(adapter.getItem(which));
 		}
 	};		
-
-	private final void writeList() {		
-		final File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX + ".new");
-		Log.i(TAG, "Write playlist " + name);
-		
-		file.delete();
-		
-		try {
-			final BufferedWriter out = new BufferedWriter(new FileWriter(file), 512);
-			for (final PlaylistItem info : modList) {
-				out.write(String.format("%s:%s:%s\n", info.filename, info.comment, info.name));
-			}
-			out.close();
-			
-			final File oldFile = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX);
-			oldFile.delete();
-			file.renameTo(oldFile);
-			
-			modified = false;
-		} catch (IOException e) {
-			Log.e(TAG, "Error writing playlist " + file.getPath());
-		}
-	}
 }

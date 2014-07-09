@@ -72,18 +72,13 @@ public class PlaylistMenu extends ActionBarActivity {
 			updateList();
 		} else {
 			if (Preferences.DATA_DIR.mkdirs()) {
-				final String name = getString(R.string.empty_playlist);
-				File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX);
 				try {
-					file.createNewFile();
-					file = new File(Preferences.DATA_DIR, name + PlaylistUtils.COMMENT_SUFFIX);
-					file.createNewFile();
-					FileUtils.writeToFile(file, getString(R.string.empty_comment));
-					updateList();
+					final Playlist playlist = new Playlist(this, getString(R.string.empty_playlist));
+					playlist.setComment(getString(R.string.empty_comment));
+					playlist.commit();
 				} catch (IOException e) {
 					Message.error(this, getString(R.string.error_create_playlist));
-					return;
-				}				
+				}			
 			} else {
 				Message.fatalError(this, getString(R.string.error_datadir), PlaylistMenu.this);
 			}

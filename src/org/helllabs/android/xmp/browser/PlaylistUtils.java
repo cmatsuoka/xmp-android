@@ -48,12 +48,10 @@ public final class PlaylistUtils {
 				final EditText e2 = (EditText)layout.findViewById(R.id.new_playlist_comment);
 				final String name = e1.getText().toString();
 				final String comment = e2.getText().toString();
-				final File file1 = new File(Preferences.DATA_DIR, name + ".playlist");
-				final File file2 = new File(Preferences.DATA_DIR, name + ".comment");
+				
 				try {
-					file1.createNewFile();
-					file2.createNewFile();
-					FileUtils.writeToFile(file2, comment);
+					final Playlist playlist = new Playlist(context, name);
+					playlist.setComment(comment);
 					
 					if (runnable != null) {
 						runnable.run();
@@ -124,70 +122,6 @@ public final class PlaylistUtils {
 		}.start();
 	}
 	
-	/*
-	public static void filesToNewPlaylist(final Context context, final String path, final Runnable runnable) {
-		final File modDir = new File(path);
-		
-		if (!modDir.isDirectory()) {
-			Message.error(context, context.getString(R.string.error_exist_dir));
-			return;
-		}
-		
-		final AlertDialog.Builder alert = new AlertDialog.Builder(context);		  
-		alert.setTitle("New playlist");  	
-	    final LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    final View layout = inflater.inflate(R.layout.newlist, null);
-	    final Handler handler = new Handler();
-
-	    alert.setView(layout);
-		  
-		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
-			public void onClick(final DialogInterface dialog, final int whichButton) {
-			    final EditText e1 = (EditText)layout.findViewById(R.id.new_playlist_name);
-				final EditText e2 = (EditText)layout.findViewById(R.id.new_playlist_comment);
-				final String name = e1.getText().toString();
-				final String comment = e2.getText().toString();
-				final File file1 = new File(Preferences.DATA_DIR, name + PLAYLIST_SUFFIX);
-				final File file2 = new File(Preferences.DATA_DIR, name + COMMENT_SUFFIX);
-				try {
-					file1.createNewFile();
-					file2.createNewFile();
-					FileUtils.writeToFile(file2, comment);
-				} catch (IOException e) {
-					Message.error(context, context.getString(R.string.error_create_playlist));
-				}
-				
-				filesToPlaylist(context, path, name, false);
-				if (runnable != null) {
-					handler.post(runnable);
-				}
-			}  
-		});  
-		  
-		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {  
-			public void onClick(final DialogInterface dialog, final int whichButton) {  
-				// Canceled.  
-			}  
-		});  
-		  
-		alert.show();
-	}
-	*/
-	
-	/*
-	public static void deleteList(final Context context, final int index) {
-		final String list = listNoSuffix()[index];
-		(new File(Preferences.DATA_DIR, list + PLAYLIST_SUFFIX)).delete();
-		(new File(Preferences.DATA_DIR, list + COMMENT_SUFFIX)).delete();
-
-		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		final SharedPreferences.Editor editor = prefs.edit();
-		editor.remove(OPTIONS_PREFIX + list + "_shuffleMode");
-		editor.remove(OPTIONS_PREFIX + list + "_loopMode");
-		editor.commit();
-	}
-	*/
-	
 	public static void addToList(final Context context, final String name, final String line) {
 		try {
 			FileUtils.writeToFile(new File(Preferences.DATA_DIR, name + PLAYLIST_SUFFIX), line);
@@ -203,7 +137,7 @@ public final class PlaylistUtils {
 		} catch (IOException e) {
 			Message.error(context, context.getString(R.string.error_write_to_playlist));
 		}
-	}	
+	}
 	
 	public static String readComment(final Context context, final String name) {
 		String comment = null;

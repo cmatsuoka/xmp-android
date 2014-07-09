@@ -512,10 +512,6 @@
             <ruleset>Design</ruleset>
         </rule>
         <rule>
-            <name>UseSingleton</name>
-            <ruleset>Design</ruleset>
-        </rule>
-        <rule>
             <name>UseVarargs</name>
             <ruleset>Design</ruleset>
         </rule>
