@@ -47,6 +47,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private Context context;
 	private int textColor;
 	private ListView listView;
+	protected List<PlaylistItem> modList = new ArrayList<PlaylistItem>();
 	
 	// Cross-fade
 	private View contentView;
@@ -86,6 +87,11 @@ public class FilelistActivity extends BasePlaylistActivity {
 			progressView.setVisibility(View.GONE);
 			contentView.setVisibility(View.VISIBLE);
 		}
+	}
+
+	@Override
+	protected List<PlaylistItem> getModList() {
+		return modList;
 	}
 
 	/*

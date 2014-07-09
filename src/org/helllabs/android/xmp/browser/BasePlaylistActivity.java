@@ -1,7 +1,6 @@
 package org.helllabs.android.xmp.browser;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
@@ -36,7 +35,6 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private static final String TAG = "PlaylistActivity";
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAY_MOD_REQUEST = 669; 
-	protected List<PlaylistItem> modList = new ArrayList<PlaylistItem>();
 	protected boolean shuffleMode = true;
 	protected boolean loopMode;
 	protected boolean modifiedOptions;
@@ -55,7 +53,9 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		showToasts = prefs.getBoolean(Preferences.SHOW_TOAST, true);
 	}
-
+	
+	protected abstract List<PlaylistItem> getModList();
+	
 	protected void setupButtons() {
 		final ImageButton playAllButton = (ImageButton)findViewById(R.id.play_all);
 		final ImageButton toggleLoopButton = (ImageButton)findViewById(R.id.toggle_loop);
@@ -64,7 +64,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		playAllButton.setImageResource(R.drawable.list_play);
 		playAllButton.setOnClickListener(new OnClickListener() {
 			public void onClick(final View view) {
-				playModule(modList);
+				playModule(getModList());
 			}
 		});
 
@@ -95,7 +95,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	}
 
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
-		final String filename = modList.get(position).filename;
+		final String filename = getModList().get(position).filename;
 		final int mode = Integer.parseInt(prefs.getString(Preferences.PLAYLIST_MODE, "1"));
 
 		/* Test module again if invalid, in case a new file format is added to the
@@ -105,7 +105,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			switch (mode) {
 			case 1:								// play all starting at this one
 			default:
-				playModule(modList, position, shuffleMode, shuffleMode);
+				playModule(getModList(), position, shuffleMode, shuffleMode);
 				break;
 			case 2:								// play this one
 				playModule(filename);
@@ -254,7 +254,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		boolean invalid = false;
 
 		for (int i = 0; i < size; i++) {
-			final String filename = modList.get(start + i).filename;
+			final String filename = getModList().get(start + i).filename;
 			if (InfoCache.testModule(filename)) {
 				list[realSize++] = filename;
 			} else {
