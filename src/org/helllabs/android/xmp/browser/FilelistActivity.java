@@ -142,8 +142,9 @@ public class FilelistActivity extends BasePlaylistActivity {
 						final PlaylistItem info = modList.get(i);
 						final ModInfo modInfo = new ModInfo();
 						if (InfoCache.testModule(info.filename, modInfo)) {
-							final String line = info.filename + ":" + modInfo.type + ":" + modInfo.name;
-							PlaylistUtils.addToList(context, PlaylistUtils.listNoSuffix()[playlistSelection], line);
+							info.name = modInfo.name;
+							info.comment = modInfo.type;
+							Playlist.addToList(context, PlaylistUtils.listNoSuffix()[playlistSelection], info);
 						} else {
 							invalid = true;
 						}

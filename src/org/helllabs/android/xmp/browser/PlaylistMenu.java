@@ -111,7 +111,7 @@ public class PlaylistMenu extends ActionBarActivity {
 				R.drawable.browser));
 
 		for (final String name : PlaylistUtils.listNoSuffix()) {
-			list.add(new PlaylistItem(name, PlaylistUtils.readComment(this, name), R.drawable.list));
+			list.add(new PlaylistItem(name, Playlist.readComment(this, name), R.drawable.list));
 		}
 
 		final PlaylistItemAdapter playlist = new PlaylistItemAdapter(PlaylistMenu.this,
@@ -239,7 +239,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		final InputDialog alert = new InputDialog(context);		  
 		alert.setTitle("Edit comment");
 		alert.setMessage("Enter the new comment for " + name + ":");  
-		alert.input.setText(PlaylistUtils.readComment(context, name));
+		alert.input.setText(Playlist.readComment(context, name));
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {  

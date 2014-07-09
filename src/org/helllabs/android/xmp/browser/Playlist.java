@@ -91,10 +91,12 @@ public class Playlist {
 	 */
 	public void commit() throws IOException {
 		if (mListChanged) {
-			commitList();
+			writeList(mName);
+			mListChanged = false;
 		}
 		if (mCommentChanged) {
-			commitComment();
+			writeComment(mName);
+			mCommentChanged = false;
 		}
 		
 		boolean saveModes = false;
@@ -200,6 +202,63 @@ public class Playlist {
 		editor.commit();
 	}
 	
+	/**
+	 * Add an item to the specified playlist file.
+	 * 
+	 * @param context The context we're running in
+	 * @param name The playlist name
+	 * @param item The playlist item to add
+	 */
+	public static void addToList(final Context context, final String name, PlaylistItem item) {
+		try {
+			FileUtils.writeToFile(new File(Preferences.DATA_DIR, name + PLAYLIST_SUFFIX), item.toString());
+		} catch (IOException e) {
+			Message.error(context, context.getString(R.string.error_write_to_playlist));
+		}
+	}
+	
+	/**
+	 * Add a list of items to the specified playlist file.
+	 * 
+	 * @param context The context we're running in
+	 * @param name The playlist name
+	 * @param items The list of playlist items to add
+	 */
+	public static void addToList(final Context context, final String name, final List<PlaylistItem> items) {
+		final String[] lines = new String[items.size()];
+		
+		int i = 0;
+		for (final PlaylistItem item : items) {
+			lines[i++] = item.toString();
+		}
+		try {
+			FileUtils.writeToFile(new File(Preferences.DATA_DIR, name + PLAYLIST_SUFFIX), lines);
+		} catch (IOException e) {
+			Message.error(context, context.getString(R.string.error_write_to_playlist));
+		}
+	}
+	
+	/**
+	 * Read comment from a playlist file.
+	 * 
+	 * @param context The context we're running in
+	 * @param name The playlist name
+	 * 
+	 * @return The playlist comment
+	 */
+	public static String readComment(final Context context, final String name) {
+		String comment = null;
+		try {
+			comment = FileUtils.readFromFile(new CommentFile(name));
+		} catch (IOException e) {
+			Message.error(context, context.getString(R.string.error_read_comment));
+		}	    
+	    if (comment == null || comment.trim().length() == 0) {
+	    	comment = context.getString(R.string.no_comment);
+	    }
+		return comment;		
+	}
+	
 	
 	// Helper methods
 	
@@ -256,8 +315,8 @@ public class Playlist {
 		
 		try {
 			final BufferedWriter out = new BufferedWriter(new FileWriter(file), 512);
-			for (final PlaylistItem info : mList) {
-				out.write(String.format("%s:%s:%s\n", info.filename, info.comment, info.name));
+			for (final PlaylistItem item : mList) {
+				out.write(item.toString());
 			}
 			out.close();
 			
@@ -268,30 +327,10 @@ public class Playlist {
 			Log.e(TAG, "Error writing playlist file " + file.getPath());
 		}
 	}
-	
+
 	private final void writeComment(final String name) {
 		final File file = new CommentFile(name,  ".new");
-		file.delete();//	/**
-//		 * Add a new item to the playlist.
-//		 * 
-//		 * @param item The item to be added
-//		 */
-//		public void add(final PlaylistItem item) {
-//			mList.add(item);
-//		}
-	//	
-//		/**
-//		 * Add new items to the playlist.
-//		 * 
-//		 * @param items The items to be added
-//		 */
-//		public void add(final PlaylistItem[] items) {
-//			for (final PlaylistItem item : items) {
-//				add(item);
-//			}
-//		}
-
-		
+		file.delete();		
 		try {
 			FileUtils.writeToFile(file, mComment);
 			final File oldFile = new CommentFile(name);
@@ -300,19 +339,6 @@ public class Playlist {
 		} catch (IOException e) {
 			Log.e(TAG, "Error writing comment file " + file.getPath());
 		}
-	}
-	
-	private void commitList() throws IOException {
-		writeList(mName);
-		mListChanged = false;
-	}
-	
-	private void commitComment() throws IOException {
-		writeComment(mName);
-		final File file = new CommentFile(mName);
-		file.createNewFile();
-		FileUtils.writeToFile(file, mComment);
-		mCommentChanged = false;
 	}
 		
 	private static String optionName(final String name, final String option) {

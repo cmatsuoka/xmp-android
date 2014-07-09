@@ -14,8 +14,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -77,7 +75,7 @@ public final class PlaylistUtils {
 	
 	private static void addFiles(final Context context, final String path, final String name, final boolean recursive)
 	{
-		final List<String> list = new ArrayList<String>();
+		final List<PlaylistItem> list = new ArrayList<PlaylistItem>();
 		final ModInfo modInfo = new ModInfo();
 		final File modDir = new File(path);
 		
@@ -94,12 +92,12 @@ public final class PlaylistUtils {
     		if (!Xmp.testModule(filename, modInfo)) {
     			continue;
     		}
-    		list.add(filename + ":" + modInfo.type + ":" + modInfo.name);
+    		list.add(new PlaylistItem(modInfo.name, modInfo.type, filename));
     		num++;
     	}
     	
     	if (num > 0) {
-    		addToList(context, name, list.toArray(new String[num]));
+    		Playlist.addToList(context, name, list);
     	}
 	}
 	
@@ -120,36 +118,6 @@ public final class PlaylistUtils {
                 progressDialog.dismiss();
 			}
 		}.start();
-	}
-	
-	public static void addToList(final Context context, final String name, final String line) {
-		try {
-			FileUtils.writeToFile(new File(Preferences.DATA_DIR, name + PLAYLIST_SUFFIX), line);
-		} catch (IOException e) {
-			Message.error(context, context.getString(R.string.error_write_to_playlist));
-		}
-			
-	}
-	
-	public static void addToList(final Context context, final String name, final String[] lines) {
-		try {
-			FileUtils.writeToFile(new File(Preferences.DATA_DIR, name + PLAYLIST_SUFFIX), lines);
-		} catch (IOException e) {
-			Message.error(context, context.getString(R.string.error_write_to_playlist));
-		}
-	}
-	
-	public static String readComment(final Context context, final String name) {
-		String comment = null;
-		try {
-			comment = FileUtils.readFromFile(new File(Preferences.DATA_DIR, name + COMMENT_SUFFIX));
-		} catch (IOException e) {
-			Message.error(context, context.getString(R.string.error_read_comment));
-		}	    
-	    if (comment == null || comment.trim().length() == 0) {
-	    	comment = context.getString(R.string.no_comment);
-	    }
-		return comment;		
 	}
 	
 	public static String[] list() {		

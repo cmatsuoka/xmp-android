@@ -1,7 +1,7 @@
 package org.helllabs.android.xmp.browser;
 
 public class PlaylistItem implements Comparable<PlaylistItem> {
-	public final String name;
+	public String name;
 	public String comment;
 	public String filename;
 	public int imageRes;
@@ -24,6 +24,10 @@ public class PlaylistItem implements Comparable<PlaylistItem> {
 		this.comment = comment;
 		this.filename = filename;
 		this.imageRes = imageRes;
+	}
+	
+	public String toString() {
+		return String.format("%s:%s:%s\n", filename, comment, name);
 	}
 	
 	// Comparable

@@ -61,7 +61,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		
 		name = extras.getString("name");
 		curListName.setText(name);
-		curListDesc.setText(PlaylistUtils.readComment(this, name));
+		curListDesc.setText(Playlist.readComment(this, name));
 		registerForContextMenu(listView);
 		
 		// Set status area background color		
