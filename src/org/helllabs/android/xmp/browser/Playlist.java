@@ -30,7 +30,7 @@ public class Playlist {
 	private static final boolean DEFAULT_SHUFFLE_MODE = true;
 	private static final boolean DEFAULT_LOOP_MODE = false;
 	
-	private String mName;
+	private final String mName;
 	private String mComment;
 	private boolean mListChanged;
 	private boolean mCommentChanged;
@@ -61,7 +61,7 @@ public class Playlist {
 		}
 	}
 	
-	public Playlist(Context context, String name) throws IOException {
+	public Playlist(final Context context, final String name) throws IOException {
 		mName = name;
 		mList = new ArrayList<PlaylistItem>();
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -139,7 +139,7 @@ public class Playlist {
 	 * 
 	 * @param index The index of the item to be removed
 	 */
-	public void remove(int index) {
+	public void remove(final int index) {
 		mList.remove(index);
 	}
 	
@@ -191,7 +191,7 @@ public class Playlist {
 	 * @param context The context the playlist is being created in
 	 * @param name The playlist name
 	 */
-	public static void delete(Context context, final String name) {		
+	public static void delete(final Context context, final String name) {		
 		(new ListFile(name)).delete();
 		(new CommentFile(name)).delete();
 
@@ -209,7 +209,7 @@ public class Playlist {
 	 * @param name The playlist name
 	 * @param item The playlist item to add
 	 */
-	public static void addToList(final Context context, final String name, PlaylistItem item) {
+	public static void addToList(final Context context, final String name, final PlaylistItem item) {
 		try {
 			FileUtils.writeToFile(new File(Preferences.DATA_DIR, name + PLAYLIST_SUFFIX), item.toString());
 		} catch (IOException e) {
@@ -368,15 +368,15 @@ public class Playlist {
 		return mList;
 	}
 	
-	public boolean getLoopMode() {
+	public boolean isLoopMode() {
 		return mLoopMode;
 	}
 	
-	public boolean getShuffleMode() {
+	public boolean isShuffleMode() {
 		return mShuffleMode;
 	}
 	
-	public void setComment(String comment) {
+	public void setComment(final String comment) {
 		mComment = comment;
 	}
 	

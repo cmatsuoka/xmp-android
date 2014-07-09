@@ -66,8 +66,8 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		curListDesc.setText(playlist.getComment());
 		registerForContextMenu(listView);
 		
-		shuffleMode = playlist.getShuffleMode();
-		loopMode = playlist.getLoopMode();
+		shuffleMode = playlist.isShuffleMode();
+		loopMode = playlist.isLoopMode();
 		setupButtons();
 				
 		modified = false;

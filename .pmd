@@ -240,10 +240,6 @@
             <ruleset>Comments</ruleset>
         </rule>
         <rule>
-            <name>CommentRequired</name>
-            <ruleset>Comments</ruleset>
-        </rule>
-        <rule>
             <name>AssignmentInOperand</name>
             <ruleset>Controversial</ruleset>
         </rule>
