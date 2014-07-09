@@ -302,7 +302,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			startActivity(intent);
 			return true;
 		case R.id.menu_new_playlist:
-			PlaylistUtils.newPlaylist(this);
+			PlaylistUtils.newPlaylistDialog(this);
 			break;
 		case R.id.menu_prefs:		
 			startActivityForResult(new Intent(this, Preferences.class), SETTINGS_REQUEST);

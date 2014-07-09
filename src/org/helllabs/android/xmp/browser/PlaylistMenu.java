@@ -244,7 +244,7 @@ public class PlaylistMenu extends ActionBarActivity {
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {  
 				final String value = alert.input.getText().toString().replace("\n", " ");				
-				final File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.COMMENT_SUFFIX);
+				final File file = new File(Preferences.DATA_DIR, name + Playlist.COMMENT_SUFFIX);
 				try {
 					file.delete();
 					file.createNewFile();
@@ -299,7 +299,7 @@ public class PlaylistMenu extends ActionBarActivity {
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.menu_new_playlist:
-			PlaylistUtils.newPlaylist(this, new Runnable() {
+			PlaylistUtils.newPlaylistDialog(this, new Runnable() {
 				public void run() {
 					updateList();
 				}

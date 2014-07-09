@@ -23,7 +23,7 @@ import com.commonsware.cwac.tlv.TouchListView;
 
 class PlayListFilter implements FilenameFilter {
 	public boolean accept(final File dir, final String name) {
-		return name.endsWith(PlaylistUtils.PLAYLIST_SUFFIX);
+		return name.endsWith(Playlist.PLAYLIST_SUFFIX);
 	}
 }
 
@@ -31,7 +31,6 @@ public class PlaylistActivity extends BasePlaylistActivity {
 	private static final String TAG = "PlayList";
 	private String name;
 	private PlaylistItemAdapter adapter;
-	private Boolean modified;
 	private TouchListView listView;
 	private Playlist playlist;
 	
@@ -70,7 +69,6 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		loopMode = playlist.isLoopMode();
 		setupButtons();
 				
-		modified = false;
 		modifiedOptions = false;
 	}
 	
@@ -158,7 +156,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 			final PlaylistItem item = adapter.getItem(from);
 			adapter.remove(item);
 			adapter.insert(item, to);
-			modified = true;
+			playlist.setListChanged(true);
 		}
 	};
 

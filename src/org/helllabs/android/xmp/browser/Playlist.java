@@ -22,8 +22,8 @@ import android.preference.PreferenceManager;
 
 public class Playlist {
 	private static final String TAG = "Playlist";
-	private static final String COMMENT_SUFFIX = ".comment";
-	private static final String PLAYLIST_SUFFIX = ".playlist";
+	public static final String COMMENT_SUFFIX = ".comment";
+	public static final String PLAYLIST_SUFFIX = ".playlist";
 	private static final String OPTIONS_PREFIX = "options_";
 	private static final String SHUFFLE_MODE = "_shuffleMode";
 	private static final String LOOP_MODE = "_loopMode";
@@ -386,5 +386,9 @@ public class Playlist {
 	
 	public void setShuffleMode(final boolean shuffleMode) {
 		mShuffleMode = shuffleMode;
+	}
+	
+	public void setListChanged(boolean listChanged) {
+		mListChanged = listChanged;
 	}
 }

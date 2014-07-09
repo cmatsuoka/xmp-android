@@ -20,19 +20,16 @@ import android.widget.EditText;
 
 
 public final class PlaylistUtils {
-	public static final String COMMENT_SUFFIX = ".comment";
-	public static final String PLAYLIST_SUFFIX = ".playlist";
-	public static final String OPTIONS_PREFIX = "options_";
 	
 	private PlaylistUtils() {
 		
 	}
 	
-	public static void newPlaylist(final Context context) {
-		newPlaylist(context, null);
+	public static void newPlaylistDialog(final Context context) {
+		newPlaylistDialog(context, null);
 	}
 	
-	public static void newPlaylist(final Context context, final Runnable runnable) {
+	public static void newPlaylistDialog(final Context context, final Runnable runnable) {
 		final AlertDialog.Builder alert = new AlertDialog.Builder(context);		  
 		alert.setTitle("New playlist");  	
 	    final LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -127,7 +124,7 @@ public final class PlaylistUtils {
 	public static String[] listNoSuffix() {
 		String[] pList = list();
 		for (int i = 0; i < pList.length; i++) {
-			pList[i] = pList[i].substring(0, pList[i].lastIndexOf(PLAYLIST_SUFFIX));
+			pList[i] = pList[i].substring(0, pList[i].lastIndexOf(Playlist.PLAYLIST_SUFFIX));
 		}
 		return pList;
 	}
