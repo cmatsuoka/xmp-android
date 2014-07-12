@@ -25,15 +25,15 @@
     <string name="pref_category_sound">Sound settings</string>
     <string name="pref_category_files">Playlist settings</string>
     <string name="pref_category_player_control">Player control</string>
-    <string name="changelog_text">• Fix notification actions in KitKat\n• Fix asynchronous native call crashes\n• Fix add to nonexistent playlist\n• Fix application not found crash\n• Fix thread synchronization issues\n
+    <string name="changelog_text">• Fix crash on module data retrieval\n• Fix OctaMED decimal volume decoding\n• Fix MED4 sampled instrument octave range\n• Fix mishandling of MED4 effect FFD\n• Fix MED synth waveform command CHD\n• Fix XM stray notes after invalid event\n• Fix crash on high transpose values\n 
+\nVersion 3.9.2:\n• Fix notification actions in KitKat\n• Fix asynchronous native call crashes\n• Fix add to nonexistent playlist\n• Fix application not found crash\n• Fix thread synchronization issues\n
 \nVersion 3.9.1:\n• Increase module list size limit\n• Fix crash on service disconnection\n• Fix crash in cache parsing\n• Fix crash in mod list update\n• Fix crash in empty module list\n
 \nVersion 3.9.0:\n• Add option to play hidden patterns\n• Add subsong selection drawer\n• Fix playlist shuffle mode\n• Fix native crash at end of replay\n• Misc minor fixes\n
 \nVersion 3.8.0:\n• Update player engine to libxmp 4.2.7\n• Automatically pause if headset unplugged\n• Honor shuffle mode in playlists\n• Add support to OctaMED multi-samples\n• Add support to OctaMED hold effect\n• Add support to XM ADPCM samples\n• Fix IT tempo slide effect\n• Fix XM set pan effect\n• Fix misc interface crashes\n
 \nVersion 3.7.3:\n• Update player engine to libxmp 4.2.6\n• Fix MED synth instrument volume\n• Fix OctaMED MMD2 instrument transposition\n• Fix segfault in NDK data retrieval\n• Fix race condition at end of replay\n• Fix notification order\n• Fix index in Android 2.x notification\n 
 \nVersion 3.7.2:\n• Fix channel viewer crash\n• Fix viewer display when paused\n• Fix service lifecycle issues\n• Fix notification ticker text\n• Fix playlist reordering persistence\n• Code refactoring and optimization\n
-\nVersion 3.7.1:\n• Add notification actions (Android 4.1 and newer)\n• Fix action bar menu items\n• Fix intent filter to handle module files\n• Fix thread leak issues\n• (Hopefully) Fix launch from history issues\n
     </string>
-    <string name="changelog_title">New in version 3.9.2</string>
+    <string name="changelog_title">New in version 3.9.3</string>
     <string name="changelog">Changelog</string>
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
     <string name="menu_refresh">Rescan</string>
