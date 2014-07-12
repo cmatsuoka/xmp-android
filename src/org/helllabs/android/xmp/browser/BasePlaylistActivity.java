@@ -35,12 +35,9 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private static final String TAG = "PlaylistActivity";
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAY_MOD_REQUEST = 669; 
-	protected boolean shuffleMode = true;
-	protected boolean loopMode;
-	protected boolean modifiedOptions;
-	protected SharedPreferences prefs;
+	protected SharedPreferences mPrefs;
 	protected String deleteName;
-	private boolean showToasts;
+	private boolean mShowToasts;
 	private ModInterface modPlayer;
 	private String[] addList;
 	private Context context;
@@ -50,11 +47,15 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		super.onCreate(icicle);
 
 		context = this;
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		showToasts = prefs.getBoolean(Preferences.SHOW_TOAST, true);
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		mShowToasts = mPrefs.getBoolean(Preferences.SHOW_TOAST, true);
 	}
 	
 	protected abstract List<PlaylistItem> getModList();
+	protected abstract void setShuffleMode(boolean shuffleMode);
+	protected abstract void setLoopMode(boolean loopMode);
+	protected abstract boolean isShuffleMode();
+	protected abstract boolean isLoopMode();
 	
 	protected void setupButtons() {
 		final ImageButton playAllButton = (ImageButton)findViewById(R.id.play_all);
@@ -68,35 +69,37 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			}
 		});
 
-		toggleLoopButton.setImageResource(loopMode ? R.drawable.list_loop_on : R.drawable.list_loop_off);
+		toggleLoopButton.setImageResource(isLoopMode() ? R.drawable.list_loop_on : R.drawable.list_loop_off);
 		toggleLoopButton.setOnClickListener(new OnClickListener() {
 			public void onClick(final View view) {
+				boolean loopMode = isLoopMode();
 				loopMode ^= true;
 				((ImageButton)view).setImageResource(loopMode ?
 						R.drawable.list_loop_on : R.drawable.list_loop_off);
-				if (showToasts) {
+				if (mShowToasts) {
 					Message.toast(view.getContext(), loopMode ? "Loop on" : "Loop off");
 				}
-				modifiedOptions = true;
+				setLoopMode(loopMode);
 			}
 		});
 
-		toggleShuffleButton.setImageResource(shuffleMode ? R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
+		toggleShuffleButton.setImageResource(isShuffleMode() ? R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
 		toggleShuffleButton.setOnClickListener(new OnClickListener() {
 			public void onClick(final View view) {
+				boolean shuffleMode = isShuffleMode();
 				shuffleMode ^= true;
 				((ImageButton)view).setImageResource(shuffleMode ?	R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
-				if (showToasts) {
+				if (mShowToasts) {
 					Message.toast(view.getContext(), shuffleMode ? "Shuffle on" : "Shuffle off");
 				}
-				modifiedOptions = true;
+				setShuffleMode(shuffleMode);
 			}
 		});
 	}
 
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
 		final String filename = getModList().get(position).filename;
-		final int mode = Integer.parseInt(prefs.getString(Preferences.PLAYLIST_MODE, "1"));
+		final int mode = Integer.parseInt(mPrefs.getString(Preferences.PLAYLIST_MODE, "1"));
 
 		/* Test module again if invalid, in case a new file format is added to the
 		 * player library and the file was previously unrecognized and cached as invalid.
@@ -105,7 +108,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			switch (mode) {
 			case 1:								// play all starting at this one
 			default:
-				playModule(getModList(), position, shuffleMode, shuffleMode);
+				playModule(getModList(), position, isShuffleMode(), isShuffleMode());
 				break;
 			case 2:								// play this one
 				playModule(filename);
@@ -134,7 +137,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 
 	// Play all modules in list and honor default shuffle mode
 	protected void playModule(final List<PlaylistItem> list) {
-		playModule(list, 0, shuffleMode);
+		playModule(list, 0, isShuffleMode());
 	}
 
 	// Play all modules in list with start position, no shuffle
@@ -186,16 +189,16 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	// Play this module
 	protected void playModule(final String mod) {
 		final String[] mods = { mod };
-		playModule(mods, 0, shuffleMode, false);
+		playModule(mods, 0, isShuffleMode(), false);
 	}
 
 	// Play all modules in list and honor default shuffle mode
 	protected void playModule(final String[] mods) {
-		playModule(mods, 0, shuffleMode, false);
+		playModule(mods, 0, isShuffleMode(), false);
 	}
 
 	protected void playModule(final String[] mods, final int start, final boolean shuffle, final boolean keepFirst) {
-		if (showToasts) {
+		if (mShowToasts) {
 			if (mods.length > 1) {
 				Message.toast(this, "Play all modules in list");
 			} else {
@@ -207,7 +210,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		//intent.putExtra("files", mods);
 		((XmpApplication)getApplication()).setFileArray(mods);
 		intent.putExtra("shuffle", shuffle);
-		intent.putExtra("loop", loopMode);
+		intent.putExtra("loop", isLoopMode());
 		intent.putExtra("start", start);
 		intent.putExtra("keepFirst", keepFirst);
 		Log.i(TAG, "Start Player activity");
@@ -220,7 +223,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		switch (requestCode) {
 		case SETTINGS_REQUEST:
 			update();			
-			showToasts = prefs.getBoolean(Preferences.SHOW_TOAST, true);
+			mShowToasts = mPrefs.getBoolean(Preferences.SHOW_TOAST, true);
 			break;
 		case PLAY_MOD_REQUEST:
 			if (resultCode != RESULT_OK) {

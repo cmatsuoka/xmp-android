@@ -10,7 +10,6 @@ import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Log;
 
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -47,8 +46,6 @@ public class PlaylistActivity extends BasePlaylistActivity {
 
 		setTitle("Playlist");
 		
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
 		listView = (TouchListView)findViewById(R.id.plist_list);
 		super.setOnItemClickListener(listView);
 		
@@ -66,11 +63,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		curListDesc.setText(playlist.getComment());
 		registerForContextMenu(listView);
 		
-		shuffleMode = playlist.isShuffleMode();
-		loopMode = playlist.isLoopMode();
 		setupButtons();
-				
-		modifiedOptions = false;
 	}
 	
 	@Override
@@ -89,13 +82,33 @@ public class PlaylistActivity extends BasePlaylistActivity {
 	protected List<PlaylistItem> getModList() {
 		return playlist.getList();
 	}
+	
+	@Override
+	protected void setShuffleMode(final boolean shuffleMode) {
+		playlist.setShuffleMode(shuffleMode);
+	}
+	
+	@Override
+	protected void setLoopMode(final boolean loopMode) {
+		playlist.setLoopMode(loopMode);
+	}
+	
+	@Override
+	protected boolean isShuffleMode() {
+		return playlist.isShuffleMode();
+	}
+	
+	@Override
+	protected boolean isLoopMode() {
+		return playlist.isLoopMode();
+	}
 
 	
 	public void update() {
 		try {
 			playlist = new Playlist(this, name);
 			adapter = new PlaylistItemAdapter(PlaylistActivity.this, R.layout.playlist_item,
-					R.id.plist_info, playlist.getList(), prefs.getBoolean(Preferences.USE_FILENAME, false));
+					R.id.plist_info, playlist.getList(), mPrefs.getBoolean(Preferences.USE_FILENAME, false));
         
 			listView.setAdapter(adapter);
 		} catch (IOException e) {
@@ -108,7 +121,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 	@Override
 	public void onCreateContextMenu(final ContextMenu menu, final View view, final ContextMenuInfo menuInfo) {
 		
-		final int mode = Integer.parseInt(prefs.getString(Preferences.PLAYLIST_MODE, "1"));
+		final int mode = Integer.parseInt(mPrefs.getString(Preferences.PLAYLIST_MODE, "1"));
 
 		menu.setHeaderTitle("Edit playlist");
 		menu.add(Menu.NONE, 0, 0, "Remove from playlist");

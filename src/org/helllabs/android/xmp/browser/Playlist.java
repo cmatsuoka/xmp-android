@@ -394,7 +394,7 @@ public class Playlist {
 		mShuffleMode = shuffleMode;
 	}
 	
-	public void setListChanged(boolean listChanged) {
+	public void setListChanged(final boolean listChanged) {
 		mListChanged = listChanged;
 	}
 }

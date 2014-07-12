@@ -11,6 +11,7 @@ import java.util.List;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.InfoCache;
+import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.ModInfo;
 
 import android.animation.Animator;
@@ -34,7 +35,12 @@ import android.widget.TextView;
 
 
 public class FilelistActivity extends BasePlaylistActivity {
-	//private boolean isBadDir = false;
+	private static final String TAG = "BasePlaylistActivity";
+	private static final String OPTIONS_SHUFFLE_MODE = "options_shuffleMode";
+	private static final String OPTIONS_LOOP_MODE = "options_loopMode";
+	private static final boolean DEFAULT_SHUFFLE_MODE = true;
+	private static final boolean DEFAULT_LOOP_MODE = false;
+
 	private boolean isPathMenu;
 	private TextView curPath;
 	private ImageButton upButton;
@@ -45,9 +51,10 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private int fileSelection;
 	private int fileNum;
 	private Context context;
-	private int textColor;
 	private ListView listView;
-	protected List<PlaylistItem> modList = new ArrayList<PlaylistItem>();
+	private final List<PlaylistItem> mList = new ArrayList<PlaylistItem>();
+	private boolean mLoopMode;
+	private boolean mShuffleMode;
 	
 	// Cross-fade
 	private View contentView;
@@ -91,8 +98,30 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 	@Override
 	protected List<PlaylistItem> getModList() {
-		return modList;
+		return mList;
 	}
+	
+	@Override
+	protected void setShuffleMode(final boolean shuffleMode) {
+		mShuffleMode = shuffleMode;
+	}
+	
+	@Override
+	protected void setLoopMode(final boolean loopMode) {
+		mLoopMode = loopMode;
+	}
+	
+	
+	@Override
+	protected boolean isShuffleMode() {
+		return mShuffleMode;
+	}
+	
+	@Override
+	protected boolean isLoopMode() {
+		return mLoopMode;
+	}
+
 
 	/*
 	 * Add directory to playlist
@@ -101,7 +130,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					PlaylistUtils.filesToPlaylist(context, modList.get(fileSelection).filename,
+					PlaylistUtils.filesToPlaylist(context, mList.get(fileSelection).filename,
 							PlaylistUtils.listNoSuffix()[playlistSelection], false);
 				}
 			}
@@ -129,7 +158,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					PlaylistUtils.filesToPlaylist(context, modList.get(fileSelection).filename,
+					PlaylistUtils.filesToPlaylist(context, mList.get(fileSelection).filename,
 							PlaylistUtils.listNoSuffix()[playlistSelection], true);
 				}
 			}
@@ -145,7 +174,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				if (playlistSelection >= 0) {
 					boolean invalid = false;
 					for (int i = fileSelection; i < fileSelection + fileNum; i++) {
-						final PlaylistItem info = modList.get(i);
+						final PlaylistItem info = mList.get(i);
 						final ModInfo modInfo = new ModInfo();
 						if (InfoCache.testModule(info.filename, modInfo)) {
 							info.name = modInfo.name;
@@ -198,12 +227,13 @@ public class FilelistActivity extends BasePlaylistActivity {
 	
 	@Override
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
-		String name = modList.get(position).filename;
+		String name = mList.get(position).filename;
         final File file = new File(name);
 
         if (file.isDirectory()) {
         	if (file.getName().equals("..")) {
-        		if ((name = file.getParentFile().getParent()) == null) {
+        		name = file.getParentFile().getParent();
+        		if (name == null) {
         			name = "/";
                 }
             }
@@ -225,7 +255,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Create", new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int which) {
 				examples.install(media_path,
-						prefs.getBoolean(Preferences.EXAMPLES, true));
+						mPrefs.getBoolean(Preferences.EXAMPLES, true));
 				updateModlist(media_path);
 			}
 		});
@@ -235,6 +265,14 @@ public class FilelistActivity extends BasePlaylistActivity {
 			}
 		});
 		alertDialog.show();
+	}
+	
+	private boolean readShuffleModePref() {
+		return mPrefs.getBoolean(OPTIONS_SHUFFLE_MODE, DEFAULT_SHUFFLE_MODE);
+	}
+	
+	private boolean readLoopModePref() {
+		return mPrefs.getBoolean(OPTIONS_LOOP_MODE, DEFAULT_LOOP_MODE);
 	}
 	
 	@Override
@@ -251,7 +289,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		});
 
 		registerForContextMenu(listView);
-		final String media_path = prefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
+		final String media_path = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 
 		context = this;
 
@@ -266,7 +304,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		curPath = (TextView)findViewById(R.id.current_path);
 		registerForContextMenu(curPath);
 
-		textColor = curPath.getCurrentTextColor();
+		final int textColor = curPath.getCurrentTextColor();
 		curPath.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(final View view, final MotionEvent event) {
@@ -284,8 +322,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 			@Override
 			public void onClick(final View view) {
 				final File file = new File(currentDir + "/.");
-				String name;
-				if ((name = file.getParentFile().getParent()) == null) {
+				String name = file.getParentFile().getParent();
+				if (name == null) {
 					name = "/";
 				}
 				updateModlist(name);
@@ -313,19 +351,29 @@ public class FilelistActivity extends BasePlaylistActivity {
 			pathNotFound(media_path);
 		}
 
-		shuffleMode = prefs.getBoolean("options_shuffleMode", true);
-		loopMode = prefs.getBoolean("options_loopMode", false);
+		mShuffleMode = readShuffleModePref();
+		mLoopMode = readLoopModePref();
+		
 		setupButtons();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		
+		boolean saveModes = false;
+		if (mShuffleMode != readShuffleModePref()) {
+			saveModes = true;
+		}
+		if (mLoopMode != readLoopModePref()) {
+			saveModes = true;
+		}
 
-		if (modifiedOptions) {
-			final SharedPreferences.Editor editor = prefs.edit();
-			editor.putBoolean("options_shuffleMode", shuffleMode);
-			editor.putBoolean("options_loopMode", loopMode);
+		if (saveModes) {
+			Log.i(TAG, "Save new file list preferences");
+			final SharedPreferences.Editor editor = mPrefs.edit();
+			editor.putBoolean(OPTIONS_SHUFFLE_MODE, mShuffleMode);
+			editor.putBoolean(OPTIONS_LOOP_MODE, mLoopMode);
 			editor.commit();
 		}
 	}
@@ -338,12 +386,12 @@ public class FilelistActivity extends BasePlaylistActivity {
 	}
 
 	public void updateModlist(final String path) {
-		modList.clear();
+		mList.clear();
 
 		currentDir = path;
 		curPath.setText(path);
 
-		final boolean titlesInBrowser = prefs.getBoolean(Preferences.TITLES_IN_BROWSER, false);
+		final boolean titlesInBrowser = mPrefs.getBoolean(Preferences.TITLES_IN_BROWSER, false);
 
 		parentNum = directoryNum = 0;
 		final File modDir = new File(path);
@@ -358,7 +406,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 			}
 		}
 		Collections.sort(list);
-		modList.addAll(list);
+		mList.addAll(list);
 
 		final ModInfo info = new ModInfo();
 
@@ -382,11 +430,11 @@ public class FilelistActivity extends BasePlaylistActivity {
 				}
 			}
 			Collections.sort(list);
-			modList.addAll(list);
+			mList.addAll(list);
 		}
 
 		final PlaylistItemAdapter playlist = new PlaylistItemAdapter(FilelistActivity.this,
-				R.layout.song_item, R.id.info, modList, false);
+				R.layout.song_item, R.id.info, mList, false);
 
 		listView.setAdapter(playlist);
 
@@ -420,7 +468,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
 			menu.add(Menu.NONE, 1, 1, "Recursive add to playlist");
 		} else {											// For files			
-			final int mode = Integer.parseInt(prefs.getString(Preferences.PLAYLIST_MODE, "1"));
+			final int mode = Integer.parseInt(mPrefs.getString(Preferences.PLAYLIST_MODE, "1"));
 
 			menu.setHeaderTitle("This file");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
@@ -446,22 +494,22 @@ public class FilelistActivity extends BasePlaylistActivity {
 		if (isPathMenu) {
 			switch (id) {
 			case 0:						// Add all to playlist
-				addToPlaylist(directoryNum, modList.size() - directoryNum, addFileToPlaylistDialogClickListener);
+				addToPlaylist(directoryNum, mList.size() - directoryNum, addFileToPlaylistDialogClickListener);
 				break;
 			case 1:						// Recursive add to playlist
-				addToPlaylist(2, modList.size() - 2, addCurRecursiveToPlaylistDialogClickListener);
+				addToPlaylist(2, mList.size() - 2, addCurRecursiveToPlaylistDialogClickListener);
 				break;
 			case 2:						// Add all to queue
-				addToQueue(directoryNum, modList.size() - directoryNum);
+				addToQueue(directoryNum, mList.size() - directoryNum);
 				break;
 			case 3:						// Set as default path
-				final SharedPreferences.Editor editor = prefs.edit();
+				final SharedPreferences.Editor editor = mPrefs.edit();
 				editor.putString(Preferences.MEDIA_PATH, currentDir);
 				editor.commit();
 				Message.toast(context, "Set as default module path");
 				break;
 			case 4:						// Clear cache
-				clearCachedEntries(directoryNum, modList.size() - directoryNum);
+				clearCachedEntries(directoryNum, mList.size() - directoryNum);
 				break;
 			}
 
@@ -490,13 +538,13 @@ public class FilelistActivity extends BasePlaylistActivity {
 				addToQueue(info.position, 1);
 				break;
 			case 2:										// Play this module
-				playModule(modList.get(info.position).filename);
+				playModule(mList.get(info.position).filename);
 				break;
 			case 3:										// Play all starting here
-				playModule(modList, info.position);
+				playModule(mList, info.position);
 				break;
 			case 4:										// Delete file
-				deleteName = modList.get(info.position).filename;
+				deleteName = mList.get(info.position).filename;
 				Message.yesNoDialog(this, "Delete", "Are you sure to delete " + deleteName + "?", deleteDialogClickListener);
 				break;
 			}
@@ -531,7 +579,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 	protected void clearCachedEntries(final int start, final int num) {
 		for (int i = 0; i < num; i++) {
-			final String filename = modList.get(start + i).filename;
+			final String filename = mList.get(start + i).filename;
 			InfoCache.clearCache(filename);
 		}
 	}
