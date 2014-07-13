@@ -45,6 +45,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private TextView curPath;
 	private ImageButton upButton;
 	private String currentDir;
+	private String deleteName;
 	private int directoryNum;
 	private int parentNum;
 	private int playlistSelection;
