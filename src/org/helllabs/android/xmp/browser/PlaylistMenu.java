@@ -72,18 +72,13 @@ public class PlaylistMenu extends ActionBarActivity {
 			updateList();
 		} else {
 			if (Preferences.DATA_DIR.mkdirs()) {
-				final String name = getString(R.string.empty_playlist);
-				File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX);
 				try {
-					file.createNewFile();
-					file = new File(Preferences.DATA_DIR, name + PlaylistUtils.COMMENT_SUFFIX);
-					file.createNewFile();
-					FileUtils.writeToFile(file, getString(R.string.empty_comment));
-					updateList();
+					final Playlist playlist = new Playlist(this, getString(R.string.empty_playlist));
+					playlist.setComment(getString(R.string.empty_comment));
+					playlist.commit();
 				} catch (IOException e) {
 					Message.error(this, getString(R.string.error_create_playlist));
-					return;
-				}				
+				}			
 			} else {
 				Message.fatalError(this, getString(R.string.error_datadir), PlaylistMenu.this);
 			}
@@ -109,17 +104,17 @@ public class PlaylistMenu extends ActionBarActivity {
 	private void updateList() {
 		mediaPath = prefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 
-		final List<PlaylistInfo> list = new ArrayList<PlaylistInfo>();
+		final List<PlaylistItem> list = new ArrayList<PlaylistItem>();
 
 		list.clear();
-		list.add(new PlaylistInfo("File browser", "Files in " + mediaPath,
+		list.add(new PlaylistItem("File browser", "Files in " + mediaPath,
 				R.drawable.browser));
 
 		for (final String name : PlaylistUtils.listNoSuffix()) {
-			list.add(new PlaylistInfo(name, PlaylistUtils.readComment(this, name), R.drawable.list));
+			list.add(new PlaylistItem(name, Playlist.readComment(this, name), R.drawable.list));
 		}
 
-		final PlaylistInfoAdapter playlist = new PlaylistInfoAdapter(PlaylistMenu.this,
+		final PlaylistItemAdapter playlist = new PlaylistItemAdapter(PlaylistMenu.this,
 				R.layout.playlist_item, R.id.plist_info, list, false);
 
 		listView.setAdapter(playlist);
@@ -169,7 +164,7 @@ public class PlaylistMenu extends ActionBarActivity {
 						PlaylistUtils.listNoSuffix()[deletePosition] + "?", new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int which) {
 						if (which == DialogInterface.BUTTON_POSITIVE) {
-							PlaylistUtils.deleteList(context, deletePosition);
+							Playlist.delete(context, PlaylistUtils.listNoSuffix()[deletePosition]);
 							updateList();
 						}
 					}
@@ -193,31 +188,10 @@ public class PlaylistMenu extends ActionBarActivity {
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {
-				boolean error = false;
 				final String value = alert.input.getText().toString();
-				final File old1 = new File(Preferences.DATA_DIR, name + PlaylistUtils.PLAYLIST_SUFFIX);
-				final File old2 = new File(Preferences.DATA_DIR, name + PlaylistUtils.COMMENT_SUFFIX);
-				final File new1 = new File(Preferences.DATA_DIR, value + PlaylistUtils.PLAYLIST_SUFFIX);
-				final File new2 = new File(Preferences.DATA_DIR, value + PlaylistUtils.COMMENT_SUFFIX);
-
-				if (!old1.renameTo(new1)) { 
-					error = true;
-				} else if (!old2.renameTo(new2)) {
-					new1.renameTo(old1);
-					error = true;
-				}
-
-				if (error) {
+				
+				if (!Playlist.rename(context, name, value)) {
 					Message.error(context, getString(R.string.error_rename_playlist));
-				} else {
-					final SharedPreferences.Editor editor = prefs.edit();
-					editor.putBoolean(PlaylistUtils.OPTIONS_PREFIX + value + "_shuffleMode",
-									prefs.getBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_shuffleMode", true));
-					editor.putBoolean(PlaylistUtils.OPTIONS_PREFIX + value + "_loopMode",
-									prefs.getBoolean(PlaylistUtils.OPTIONS_PREFIX + name + "_loopMode", false));
-					editor.remove(PlaylistUtils.OPTIONS_PREFIX + name + "_shuffleMode");
-					editor.remove(PlaylistUtils.OPTIONS_PREFIX + name + "_loopMode");
-					editor.commit();
 				}
 
 				updateList();
@@ -265,12 +239,12 @@ public class PlaylistMenu extends ActionBarActivity {
 		final InputDialog alert = new InputDialog(context);		  
 		alert.setTitle("Edit comment");
 		alert.setMessage("Enter the new comment for " + name + ":");  
-		alert.input.setText(PlaylistUtils.readComment(context, name));
+		alert.input.setText(Playlist.readComment(context, name));
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {  
 				final String value = alert.input.getText().toString().replace("\n", " ");				
-				final File file = new File(Preferences.DATA_DIR, name + PlaylistUtils.COMMENT_SUFFIX);
+				final File file = new File(Preferences.DATA_DIR, name + Playlist.COMMENT_SUFFIX);
 				try {
 					file.delete();
 					file.createNewFile();
@@ -325,7 +299,7 @@ public class PlaylistMenu extends ActionBarActivity {
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.menu_new_playlist:
-			PlaylistUtils.newPlaylist(this, new Runnable() {
+			PlaylistUtils.newPlaylistDialog(this, new Runnable() {
 				public void run() {
 					updateList();
 				}

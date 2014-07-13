@@ -240,10 +240,6 @@
             <ruleset>Comments</ruleset>
         </rule>
         <rule>
-            <name>CommentRequired</name>
-            <ruleset>Comments</ruleset>
-        </rule>
-        <rule>
             <name>AssignmentInOperand</name>
             <ruleset>Controversial</ruleset>
         </rule>
@@ -257,10 +253,6 @@
         </rule>
         <rule>
             <name>AvoidFinalLocalVariable</name>
-            <ruleset>Controversial</ruleset>
-        </rule>
-        <rule>
-            <name>AvoidPrefixingMethodParameters</name>
             <ruleset>Controversial</ruleset>
         </rule>
         <rule>
@@ -509,10 +501,6 @@
         </rule>
         <rule>
             <name>UseNotifyAllInsteadOfNotify</name>
-            <ruleset>Design</ruleset>
-        </rule>
-        <rule>
-            <name>UseSingleton</name>
             <ruleset>Design</ruleset>
         </rule>
         <rule>
