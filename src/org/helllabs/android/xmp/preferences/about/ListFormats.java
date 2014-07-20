@@ -1,5 +1,7 @@
 package org.helllabs.android.xmp.preferences.about;
 
+import java.util.Arrays;
+
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Xmp;
 
@@ -15,7 +17,7 @@ public class ListFormats extends ListActivity {
     public void onCreate(final Bundle icicle) {
 		super.onCreate(icicle);
 		setContentView(R.layout.list_formats);
-		setListAdapter(new ArrayAdapter<String>(this, 
-				R.layout.format_list_item, formats));
+		Arrays.sort(formats);
+		setListAdapter(new ArrayAdapter<String>(this, R.layout.format_list_item, formats));
 	}
 }

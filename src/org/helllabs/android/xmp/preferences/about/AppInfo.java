@@ -6,9 +6,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 
 public final class AppInfo {
 	
-	// All methods are staticW
 	private AppInfo() {
-		// Do nothing
+		
 	}
 	
 	public static String getVersion(final Context context) {
