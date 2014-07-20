@@ -30,12 +30,9 @@ public final class FileUtils {
 	}
 
 	public static String readFromFile(final File file) throws IOException {
-		String line;
-
 		final BufferedReader in = new BufferedReader(new FileReader(file), 512);
-		line = in.readLine();
+		final String line = in.readLine();
 		in.close();
-
 		return line;
 	}
 

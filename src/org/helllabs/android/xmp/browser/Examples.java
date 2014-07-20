@@ -12,14 +12,13 @@ import java.io.OutputStream;
 import java.io.FileOutputStream;
 
 
-public class Examples {
-	private final Context context;
+public final class Examples {
 	
-	public Examples(final Context context) {
-		this.context = context;
+	private Examples() {
+		
 	}
 	
-	public int install(final String path, final boolean examples) {
+	public static int install(final Context context, final String path, final boolean examples) {
 		final File dir = new File(path);
 		
 		if (dir.isDirectory()) {
@@ -50,7 +49,7 @@ public class Examples {
 		return 0;
 	}
 
-	private int copyAsset(final InputStream in, final String dst) {
+	private static int copyAsset(final InputStream in, final String dst) {
 		final byte[] buf = new byte[1024];
 		int len;
 		

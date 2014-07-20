@@ -35,18 +35,17 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private static final String TAG = "PlaylistActivity";
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAY_MOD_REQUEST = 669; 
-	protected SharedPreferences mPrefs;
-	protected String deleteName;
+	
+	private Context mContext;
 	private boolean mShowToasts;
-	private ModInterface modPlayer;
-	private String[] addList;
-	private Context context;
+	private ModInterface mModPlayer;
+	private String[] mAddList;
+	protected SharedPreferences mPrefs;
 
 	@Override
 	public void onCreate(final Bundle icicle) {
 		super.onCreate(icicle);
-
-		context = this;
+		mContext = this;
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mShowToasts = mPrefs.getBoolean(Preferences.SHOW_TOAST, true);
 	}
@@ -118,7 +117,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 				break;
 			}
 		} else {
-			Message.toast(context, "Unrecognized file format");
+			Message.toast(mContext, "Unrecognized file format");
 		}
 	}
 	
@@ -237,9 +236,9 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 
 	private final ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(final ComponentName className, final IBinder service) {
-			modPlayer = ModInterface.Stub.asInterface(service);
+			mModPlayer = ModInterface.Stub.asInterface(service);
 			try {				
-				modPlayer.add(addList);
+				mModPlayer.add(mAddList);
 			} catch (RemoteException e) {
 				Message.toast(BasePlaylistActivity.this, "Error adding module");
 			}
@@ -247,7 +246,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		}
 
 		public void onServiceDisconnected(final ComponentName className) {
-			modPlayer = null;
+			mModPlayer = null;
 		}
 	};
 
@@ -266,7 +265,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		}
 
 		if (invalid) {
-			Message.toast(context, "Only valid files were sent to player");
+			Message.toast(mContext, "Only valid files were sent to player");
 		}
 
 		if (realSize > 0) {
@@ -276,7 +275,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			System.arraycopy(list,  0, realList, 0, realSize);
 
 			if (PlayerService.isAlive) {
-				addList = realList;		
+				mAddList = realList;		
 				bindService(service, connection, 0);
 			} else {
 				playModule(realList);

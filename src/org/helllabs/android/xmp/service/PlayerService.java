@@ -30,6 +30,7 @@ public final class PlayerService extends Service {
 	private static final int CMD_NEXT = 1;
 	private static final int CMD_PREV = 2;
 	private static final int CMD_STOP = 3;
+	
 	private AudioTrack audio;
 	private Thread playThread;
 	private SharedPreferences prefs;

@@ -45,6 +45,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private TextView curPath;
 	private ImageButton upButton;
 	private String currentDir;
+	private String deleteName;
 	private int directoryNum;
 	private int parentNum;
 	private int playlistSelection;
@@ -244,9 +245,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	}
 
 	private void pathNotFound(final String media_path) {
-		final Examples examples = new Examples(this);
 
-		//isBadDir = true;
 		final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 
 		alertDialog.setTitle("Path not found");
@@ -254,8 +253,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				"Create this directory or change the module path.");
 		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Create", new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int which) {
-				examples.install(media_path,
-						mPrefs.getBoolean(Preferences.EXAMPLES, true));
+				Examples.install(context, media_path, mPrefs.getBoolean(Preferences.EXAMPLES, true));
 				updateModlist(media_path);
 			}
 		});
