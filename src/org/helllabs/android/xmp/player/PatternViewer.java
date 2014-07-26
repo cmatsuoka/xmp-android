@@ -15,10 +15,11 @@ import android.os.RemoteException;
 // http://developer.android.com/guide/topics/graphics/2d-graphics.html
 
 public class PatternViewer extends Viewer {
+	private static final int MAX_NOTES = 120;
 	private final Paint headerPaint, headerTextPaint, notePaint, insPaint;
 	private final Paint barPaint, muteNotePaint, muteInsPaint;
 	private final int fontSize, fontHeight, fontWidth;
-	private final String[] allNotes = new String[120];
+	private final String[] allNotes = new String[MAX_NOTES];
 	private final String[] hexByte = new String[256];
 	private final byte[] rowNotes = new byte[64];
 	private final byte[] rowInstruments = new byte[64];
@@ -73,7 +74,7 @@ public class PatternViewer extends Viewer {
 		fontWidth = (int)notePaint.measureText("X");
 		fontHeight = fontSize * 12 / 10;
 
-		for (int i = 0; i < 120; i++) {
+		for (int i = 0; i < MAX_NOTES; i++) {
 			allNotes[i] = new String(NOTES[i % 12] + (i / 12));
 		}
 
@@ -208,10 +209,13 @@ public class PatternViewer extends Viewer {
 					paint2 = insPaint;
 				}
 
-				if (rowNotes[j] < 0) {
+				final byte note = rowNotes[j];
+				if (note < 0) {
 					canvas.drawText("===", x, y, paint);
-				} else if (rowNotes[j] > 0) {
-					canvas.drawText(allNotes[rowNotes[j] - 1], x, y, paint);
+				} else if (note > MAX_NOTES) {
+					canvas.drawText(">>>", x, y, paint);
+				} else if (note > 0) {
+					canvas.drawText(allNotes[note - 1], x, y, paint);
 				} else {
 					canvas.drawText("---", x, y, paint);
 				}
