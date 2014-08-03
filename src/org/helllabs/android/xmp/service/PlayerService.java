@@ -339,6 +339,10 @@ public final class PlayerService extends Service {
 					}
 					continue;
 				}
+				
+				final int defpan = prefs.getInt(Preferences.DEFAULT_PAN, 50);
+				Log.i(TAG, "Set default pan to " + defpan);
+				Xmp.setPlayer(Xmp.PLAYER_DEFPAN, defpan);
 
 				// Ditto if we can't load the module
 				Log.w(TAG, "Load " + fileName);
@@ -396,7 +400,7 @@ public final class PlayerService extends Service {
 				audio.play();
 				Xmp.startPlayer(0, sampleRate, sampleFormat);
 				Xmp.setPlayer(Xmp.PLAYER_AMP, Integer.parseInt(volBoost));
-				Xmp.setPlayer(Xmp.PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));
+				Xmp.setPlayer(Xmp.PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));				
 				Xmp.setPlayer(Xmp.PLAYER_INTERP, interpType);
 				Xmp.setPlayer(Xmp.PLAYER_DSP, dsp);
 

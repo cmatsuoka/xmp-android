@@ -127,6 +127,17 @@
       android:text="%"
       android:max="100" />
     
+    <org.helllabs.android.xmp.preferences.SeekBarPreference
+      android:key="default_pan"
+      android:persistent="true"
+      android:dependency="stereo"
+      android:title="@string/pref_default_pan_title"
+      android:summary="@string/pref_default_pan_summary"
+      android:dialogMessage="@string/preferences_default_pan_dialog"
+      android:defaultValue="50"
+      android:text="%"
+      android:max="100" />
+    
     <PreferenceCategory
       android:title="@string/pref_category_player_control">
     

@@ -28,6 +28,7 @@ public class Preferences extends PreferenceActivity {
 	public static final String CHANGELOG_VERSION = "changelog_version";
 	public static final String STEREO = "stereo";
 	public static final String PAN_SEPARATION = "pan_separation";
+	public static final String DEFAULT_PAN = "default_pan";
 	public static final String PLAYLIST_MODE = "playlist_mode";
 	// Don't use PREF_INTERPOLATION -- was boolean in 2.x and string in 3.2.0
 	public static final String INTERPOLATE = "interpolate";
