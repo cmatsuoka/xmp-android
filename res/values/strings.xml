@@ -25,14 +25,14 @@
     <string name="pref_category_sound">Sound settings</string>
     <string name="pref_category_files">Playlist settings</string>
     <string name="pref_category_player_control">Player control</string>
-    <string name="changelog_text">• Fix crash in pattern viewer\n• Fix OctaMED default pitch\n• Fix OctaMED instrument names\n
+    <string name="changelog_text">• Refactor and fix Amiga period limits\n• Fix XM and IT envelope loop quirks\n• Fix XM invalid offset handling\n• Fix MOD pattern break with jump\n• Fix IT portamento with offset\n• Fix IT NNA with invalid sample\n• Fix IT and S3M BPM limits\n• Fix IT envelope reset\n• Fix IT carry on note cut events\n• Fix IT compatible GXX mode\n• Fix XM release reset on new volume\n 
+\nVersion 3.9.5:\n• Fix crash in pattern viewer\n• Fix OctaMED default pitch\n• Fix OctaMED instrument names\n
 \nVersion 3.9.4:\n• Fix crash caused by integer overflow\n• Fix MED synth pitch slide reset\n• Fix MED synth finetune effect\n• Fix MED turn off note effect\n• Fix MED4 instrument numbering\n
 \nVersion 3.9.3:\n• Fix crash on module data retrieval\n• Fix OctaMED decimal volume decoding\n• Fix MED4 sampled instrument octave range\n• Fix mishandling of MED4 effect FFD\n• Fix MED synth waveform command CHD\n• Fix XM stray notes after invalid event\n• Fix crash on high transpose values\n 
 \nVersion 3.9.2:\n• Fix notification actions in KitKat\n• Fix asynchronous native call crashes\n• Fix add to nonexistent playlist\n• Fix application not found crash\n• Fix thread synchronization issues\n
 \nVersion 3.9.1:\n• Increase module list size limit\n• Fix crash on service disconnection\n• Fix crash in cache parsing\n• Fix crash in mod list update\n• Fix crash in empty module list\n
-\nVersion 3.9.0:\n• Add option to play hidden patterns\n• Add subsong selection drawer\n• Fix playlist shuffle mode\n• Fix native crash at end of replay\n• Misc minor fixes\n
     </string>
-    <string name="changelog_title">New in version 3.9.5</string>
+    <string name="changelog_title">New in version 3.10.0</string>
     <string name="changelog">Changelog</string>
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
     <string name="menu_refresh">Rescan</string>
