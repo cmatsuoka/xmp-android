@@ -740,6 +740,14 @@ public class PlayerActivity extends Activity {
 		synchronized (playerLock) {
 			if (modPlayer != null) {
 				try {
+					// Write our all sequences button status to shared prefs
+					final boolean allSeq = modPlayer.getAllSequences();
+					if (allSeq != prefs.getBoolean(Preferences.ALL_SEQUENCES, false)) {
+						SharedPreferences.Editor editor = prefs.edit();
+						editor.putBoolean(Preferences.ALL_SEQUENCES, allSeq);
+						editor.commit();
+					}
+					
 					modPlayer.unregisterCallback(playerCallback);
 				} catch (RemoteException e) {
 					Log.e(TAG, "Can't unregister player callback");
