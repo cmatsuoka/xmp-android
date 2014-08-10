@@ -43,6 +43,7 @@ public final class PlayerService extends Service {
 	private boolean canRelease;
 	private boolean paused;
 	private boolean looped;
+	private boolean allSequences;
 	private int startIndex;
 	private boolean updateData;
 	private String fileName;			// currently playing file
@@ -117,6 +118,7 @@ public final class PlayerService extends Service {
 		isAlive = false;
 		isLoaded = false;
 		paused = false;
+		allSequences = prefs.getBoolean(Preferences.ALL_SEQUENCES, false);
 
 		notifier = new Notifier(this);
 
@@ -411,7 +413,6 @@ public final class PlayerService extends Service {
 
 				sequenceNumber = 0;
 				boolean playNewSequence;
-				final boolean allSequences = prefs.getBoolean(Preferences.ALL_SEQUENCES, false);
 				Xmp.setSequence(sequenceNumber);
 
 				do {
@@ -636,6 +637,19 @@ public final class PlayerService extends Service {
 		public boolean toggleLoop() throws RemoteException {
 			looped ^= true;
 			return looped;
+		}
+		
+		public boolean toggleAllSequences() throws RemoteException {
+			allSequences ^= true;
+			return allSequences;
+		}
+		
+		public boolean getLoop() throws RemoteException {
+			return looped;
+		}
+		
+		public boolean getAllSequences() throws RemoteException {
+			return allSequences;
 		}
 
 		public boolean isPaused() {

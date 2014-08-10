@@ -74,13 +74,31 @@
         android:layout_width="match_parent"
         android:layout_height="10dp" />
 
-    <TextView
+    <LinearLayout
         style="@style/SidebarSectionTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/sidebar_subsongs" />
+        android:orientation="horizontal" >
 
-    <ScrollView>
+        <TextView
+            style="@style/SidebarSectionTheme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/sidebar_subsongs" />
+
+        <ImageButton
+            android:id="@+id/sidebar_allseqs_button"
+            style="@style/SidebarSectionTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/sidebar_button_allseqs"
+            android:src="@drawable/sub_off" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
 
         <RadioGroup
             android:id="@+id/sidebar_sequences"

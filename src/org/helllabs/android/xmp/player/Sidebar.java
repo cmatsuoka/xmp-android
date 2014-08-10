@@ -3,7 +3,9 @@ package org.helllabs.android.xmp.player;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.util.Log;
 
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -17,6 +19,7 @@ public class Sidebar {
 	private final TextView numInsText;
 	private final TextView numSmpText;
 	private final TextView numChnText;
+	private final ImageButton allSequencesButton;
 	private final RadioGroup seqGroup;
 	private final RadioGroup.OnCheckedChangeListener seqGroupListener;
 
@@ -34,7 +37,16 @@ public class Sidebar {
 		numInsText = (TextView)activity.findViewById(R.id.sidebar_num_ins);
 		numSmpText = (TextView)activity.findViewById(R.id.sidebar_num_smp);
 		numChnText = (TextView)activity.findViewById(R.id.sidebar_num_chn);
+		allSequencesButton = (ImageButton)activity.findViewById(R.id.sidebar_allseqs_button);
 
+		allSequencesButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(final View v) {
+				allSequencesButton.setImageResource(activity.toggleAllSequences() ? R.drawable.sub_on : R.drawable.sub_off);
+			}
+		});
+		allSequencesButton.setImageResource(activity.getAllSequences() ? R.drawable.sub_on : R.drawable.sub_off);
+		
 		seqGroup = (RadioGroup)activity.findViewById(R.id.sidebar_sequences);
 		seqGroupListener = new RadioGroup.OnCheckedChangeListener() {
 			@Override
@@ -46,11 +58,12 @@ public class Sidebar {
 		seqGroup.setOnCheckedChangeListener(seqGroupListener);
 	}
 
-	public void setDetails(final int numPat, final int numIns, final int numSmp, final int numChn) {
+	public void setDetails(final int numPat, final int numIns, final int numSmp, final int numChn, final boolean allSequences) {
 		numPatText.setText(Integer.toString(numPat));
 		numInsText.setText(Integer.toString(numIns));
 		numSmpText.setText(Integer.toString(numSmp));
 		numChnText.setText(Integer.toString(numChn));
+		allSequencesButton.setImageResource(allSequences ? R.drawable.sub_on : R.drawable.sub_off);
 	}
 
 	public void clearSequences() {
