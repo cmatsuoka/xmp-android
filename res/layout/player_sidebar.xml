@@ -73,18 +73,21 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp" />
-    
+
     <TextView
         style="@style/SidebarSectionTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Subsongs" />
+        android:text="@string/sidebar_subsongs" />
 
-    <RadioGroup
-        android:id="@+id/sidebar_sequences"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-    </RadioGroup>
+    <ScrollView>
+
+        <RadioGroup
+            android:id="@+id/sidebar_sequences"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </RadioGroup>
+    </ScrollView>
 
 </LinearLayout>
