@@ -81,7 +81,6 @@
         android:orientation="horizontal" >
 
         <TextView
-            style="@style/SidebarSectionTheme"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -89,7 +88,7 @@
 
         <ImageButton
             android:id="@+id/sidebar_allseqs_button"
-            style="@style/SidebarSectionTheme"
+            android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/sidebar_button_allseqs"
