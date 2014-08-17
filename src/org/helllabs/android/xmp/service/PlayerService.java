@@ -180,7 +180,7 @@ public final class PlayerService extends Service {
 		cmd = CMD_STOP;
 	}
 
-	private void actionPause() {
+	private void actionPlayPause() {
 		doPauseAndNotify();
 
 		// Notify clients that we paused
@@ -230,8 +230,21 @@ public final class PlayerService extends Service {
 				break;
 			case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
 				Log.i(TAG, "Handle KEYCODE_MEDIA_PLAY_PAUSE");
-				actionPause();
+				actionPlayPause();
 				headsetPause = false;
+				break;
+			case KeyEvent.KEYCODE_MEDIA_PLAY:
+				Log.i(TAG, "Handle KEYCODE_MEDIA_PLAY");
+				if (paused) {
+					actionPlayPause();
+				}
+				break;
+			case KeyEvent.KEYCODE_MEDIA_PAUSE:
+				Log.i(TAG, "Handle KEYCODE_MEDIA_PAUSE");
+				if (!paused) {
+					actionPlayPause();
+					headsetPause = false;
+				}
 				break;
 			}
 
@@ -250,7 +263,7 @@ public final class PlayerService extends Service {
 				break;
 			case NotificationActionReceiver.PAUSE:
 				Log.i(TAG, "Handle notification pause");
-				actionPause();
+				actionPlayPause();
 				headsetPause = false;
 				break;
 			case NotificationActionReceiver.NEXT:
@@ -274,7 +287,7 @@ public final class PlayerService extends Service {
 				// If not already paused
 				if (!paused && !autoPaused) {
 					headsetPause = true;
-					actionPause();
+					actionPlayPause();
 				} else {
 					Log.i(TAG, "Already paused");
 				}
@@ -286,7 +299,7 @@ public final class PlayerService extends Service {
 				if (headsetPause) {
 					// Don't unpause if we're paused due to phone call
 					if (!autoPaused) {
-						actionPause();
+						actionPlayPause();
 					} else {
 						Log.i(TAG, "Paused by phone state, don't unpause");
 					}

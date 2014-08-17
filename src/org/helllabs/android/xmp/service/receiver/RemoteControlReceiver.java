@@ -29,8 +29,8 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 			case KeyEvent.KEYCODE_MEDIA_NEXT:
 			case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
 			case KeyEvent.KEYCODE_MEDIA_STOP:
-			//case KeyEvent.KEYCODE_MEDIA_PAUSE:
-			//case KeyEvent.KEYCODE_MEDIA_PLAY:
+			case KeyEvent.KEYCODE_MEDIA_PAUSE:
+			case KeyEvent.KEYCODE_MEDIA_PLAY:
 			case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
 				Log.i(TAG, "Key code " + code);
 				keyCode = code;
