@@ -74,29 +74,37 @@
         android:layout_width="match_parent"
         android:layout_height="10dp" />
 
-    <Button
-        android:id="@+id/sidebar_comment"
-        style="@style/SidebarSectionTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Comments" />
-    
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
-    
-    <TextView
+    <LinearLayout
         style="@style/SidebarSectionTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Subsongs" />
+        android:orientation="horizontal" >
 
-    <RadioGroup
-        android:id="@+id/sidebar_sequences"
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/sidebar_subsongs" />
+
+        <ImageButton
+            android:id="@+id/sidebar_allseqs_button"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/sidebar_button_allseqs"
+            android:src="@drawable/sub_off" />
+    </LinearLayout>
+
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-    </RadioGroup>
+        android:layout_height="wrap_content" >
+
+        <RadioGroup
+            android:id="@+id/sidebar_sequences"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </RadioGroup>
+    </ScrollView>
 
 </LinearLayout>

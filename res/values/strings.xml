@@ -10,6 +10,8 @@
     <string name="pref_playlist_mode_summary">Choose default action when clicking on playlist item</string>	
 	<string name="pref_pan_separation_title">Stereo separation</string>
     <string name="pref_pan_separation_summary">Set the mixer stereo separation</string>
+    <string name="pref_default_pan_title">Default pan separation</string>
+    <string name="pref_default_pan_summary">Set the default pan separation</string>
     <string name="pref_stereo_summary">Mix channels to stereo</string>
     <string name="pref_stereo_title">Stereo output</string>
     <string name="pref_filter_summary">Enable IT lowpass filter effect</string>
@@ -25,17 +27,17 @@
     <string name="pref_category_sound">Sound settings</string>
     <string name="pref_category_files">Playlist settings</string>
     <string name="pref_category_player_control">Player control</string>
-    <string name="changelog_text">• Fix crash caused by integer overflow\n• Fix MED synth pitch slide reset\n• Fix MED synth finetune effect\n• Fix MED turn off note effect\n• Fix MED4 instrument numbering\n
-\nVersion 3.9.3:\n• Fix crash on module data retrieval\n• Fix OctaMED decimal volume decoding\n• Fix MED4 sampled instrument octave range\n• Fix mishandling of MED4 effect FFD\n• Fix MED synth waveform command CHD\n• Fix XM stray notes after invalid event\n• Fix crash on high transpose values\n 
-\nVersion 3.9.2:\n• Fix notification actions in KitKat\n• Fix asynchronous native call crashes\n• Fix add to nonexistent playlist\n• Fix application not found crash\n• Fix thread synchronization issues\n
-\nVersion 3.9.1:\n• Increase module list size limit\n• Fix crash on service disconnection\n• Fix crash in cache parsing\n• Fix crash in mod list update\n• Fix crash in empty module list\n
-\nVersion 3.9.0:\n• Add option to play hidden patterns\n• Add subsong selection drawer\n• Fix playlist shuffle mode\n• Fix native crash at end of replay\n• Misc minor fixes\n
-\nVersion 3.8.0:\n• Update player engine to libxmp 4.2.7\n• Automatically pause if headset unplugged\n• Honor shuffle mode in playlists\n• Add support to OctaMED multi-samples\n• Add support to OctaMED hold effect\n• Add support to XM ADPCM samples\n• Fix IT tempo slide effect\n• Fix XM set pan effect\n• Fix misc interface crashes\n
-\nVersion 3.7.3:\n• Update player engine to libxmp 4.2.6\n• Fix MED synth instrument volume\n• Fix OctaMED MMD2 instrument transposition\n• Fix segfault in NDK data retrieval\n• Fix race condition at end of replay\n• Fix notification order\n• Fix index in Android 2.x notification\n
+    <string name="changelog_text">• Add support to play and pause media buttons\n• Add support to AMOS Music Bank format\n• Fix XM fadeout reset on note end\n• Fix IT portamento in sample mode\n• Fix fine volume slide effect memory\n
+\nVersion 3.10.1:\n• Fix end of envelope detection\n• Fix IT foreground channel reset\n• Fix IT unmapped sample parsing\n• Fix S3M effect memory sharing\n• Fix S3M default pan positions\n• Fix XM fine pitch slide effect memory\n• Fix XM finetune effect handling\n• Fix subsong list scrolling\n 
+\nVersion 3.10.0:\n• Add default pan separation option\n• Refactor and fix Amiga period limits\n• Fix XM and IT envelope loop quirks\n• Fix XM invalid offset handling\n• Fix MOD pattern break with jump\n• Fix IT portamento with offset\n• Fix IT NNA with invalid sample\n• Fix IT and S3M BPM limits\n• Fix IT envelope reset\n• Fix IT carry on note cut events\n• Fix IT compatible GXX mode\n• Fix XM release reset on new volume\n 
+\nVersion 3.9.5:\n• Fix crash in pattern viewer\n• Fix OctaMED default pitch\n• Fix OctaMED instrument names\n
+\nVersion 3.9.4:\n• Fix crash caused by integer overflow\n• Fix MED synth pitch slide reset\n• Fix MED synth finetune effect\n• Fix MED turn off note effect\n• Fix MED4 instrument numbering\n
+\nVersion 3.9.3:\n• Fix crash on module data retrieval\n• Fix OctaMED decimal volume decoding\n• Fix MED4 sampled instrument octave range\n• Fix mishandling of MED4 effect FFD\n• Fix MED synth waveform command CHD\n• Fix XM stray notes after invalid event\n• Fix crash on high transpose values\n
     </string>
-    <string name="changelog_title">New in version 3.9.4</string>
+    <string name="changelog_title">New in version 3.10.2</string>
     <string name="changelog">Changelog</string>
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
+    <string name="preferences_default_pan_dialog">Set the default pan separation:</string>
     <string name="menu_refresh">Rescan</string>
     <string name="menu_prefs">Settings</string>
     <string name="pref_examples_title">Install modules</string>
@@ -108,4 +110,6 @@
     <string name="sidebar_samples">Samples:</string>
     <string name="sidebar_channels">Channels:</string>
     <string name="sidebar_subsongs">Subsongs</string>
+    <string name="sidebar_button_allseqs">Play all subsongs</string>
+    <string name="sidebar_button_loopseq">Loop subsong</string>
 </resources>

@@ -489,10 +489,37 @@ public class PlayerActivity extends Activity {
 			}
 		}
 	}
+	
+
+	// Sidebar services
+	
+	public boolean toggleAllSequences() {
+		synchronized (playerLock) {
+			if (modPlayer != null) {
+				try {
+					return modPlayer.toggleAllSequences();
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't toggle all sequences status");
+				}
+			}
+			return false;
+		}
+	}
+
+	public boolean getAllSequences() {
+		if (modPlayer != null) {
+			try {
+				return modPlayer.getAllSequences();
+			} catch (RemoteException e) {
+				Log.e(TAG, "Can't get all sequences status");
+			}
+		}
+		return false;
+	}
 
 
 	// Click listeners
-
+	
 	public void loopButtonListener(final View view) {
 		synchronized (playerLock) {
 			if (modPlayer != null) {
@@ -713,6 +740,14 @@ public class PlayerActivity extends Activity {
 		synchronized (playerLock) {
 			if (modPlayer != null) {
 				try {
+					// Write our all sequences button status to shared prefs
+					final boolean allSeq = modPlayer.getAllSequences();
+					if (allSeq != prefs.getBoolean(Preferences.ALL_SEQUENCES, false)) {
+						SharedPreferences.Editor editor = prefs.edit();
+						editor.putBoolean(Preferences.ALL_SEQUENCES, allSeq);
+						editor.commit();
+					}
+					
 					modPlayer.unregisterCallback(playerCallback);
 				} catch (RemoteException e) {
 					Log.e(TAG, "Can't unregister player callback");
@@ -815,9 +850,13 @@ public class PlayerActivity extends Activity {
 
 				String name;
 				String type;
+				boolean allSeq;
+				boolean loop;
 				try {
 					name = modPlayer.getModName();
 					type = modPlayer.getModType();
+					allSeq = modPlayer.getAllSequences();
+					loop = modPlayer.getLoop();
 
 					if (name.trim().length() == 0) {
 						name = "<untitled>";
@@ -825,6 +864,8 @@ public class PlayerActivity extends Activity {
 				} catch (RemoteException e) {
 					name = "";
 					type = "";
+					allSeq = false;
+					loop = false;
 					Log.e(TAG, "Can't get module name and type");
 				}
 				final int time = modVars[0];
@@ -835,18 +876,15 @@ public class PlayerActivity extends Activity {
 				final int smp = modVars[5];
 				final int numSeq = modVars[6];
 				
-				try {
-					sidebar.showCommentButton(modPlayer.hasComment());
-				} catch (RemoteException e) {
-					// do nothing
-				}
-				
-				sidebar.setDetails(pat, ins, smp, chn);
+
+				sidebar.setDetails(pat, ins, smp, chn, allSeq);
 				sidebar.clearSequences();
 				for (int i = 0; i < numSeq; i++) {
 					sidebar.addSequence(i, seqVars[i]);
 				}
 				sidebar.selectSequence(0);
+				
+				loopButton.setImageResource(loop ? R.drawable.loop_on : R.drawable.loop_off);
 
 				totalTime = time / 1000;
 				seekBar.setProgress(0);
