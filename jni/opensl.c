@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
+#include "audio.h"
 
 static SLObjectItf engine_obj;
 static SLEngineItf engine_engine;
@@ -10,37 +11,18 @@ static SLPlayItf player_play;
 static SLAndroidSimpleBufferQueueItf buffer_queue;
 static int currentOutputIndex;
 static int currentOutputBuffer;
-static short *outputBuffer[2];
+static short *buffer;
+static int buffer_num;
+static int buffer_size;
 static int outBufSamples;
-static void* outlock;
-static double time;
+
+#define BUFFER_TIME 40
 
 
 static void player_callback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
 
 }
-
-static int opensl_init()
-{
-	SLresult r;
-
-	r = slCreateEngine(&engine_obj, 0, NULL, 0, NULL, NULL);
-	if (r != SL_RESULT_SUCCESS) 
-		return -1;
-
-	r = (*engine_obj)->Realize(engine_obj, SL_BOOLEAN_FALSE);
-	if (r != SL_RESULT_SUCCESS) 
-		return -1;
-
-	r = (*engine_obj)->GetInterface(engine_obj, SL_IID_ENGINE,
-				&engine_engine);
-	if (r != SL_RESULT_SUCCESS) 
-		return -1;
-
-	return 0;
-}
-
 
 static int opensl_open(int sr)
 {
@@ -61,8 +43,22 @@ static int opensl_open(int sr)
 		rate = SL_SAMPLINGRATE_48;
 		break;
 	default:
-		return -1;
+		goto err;
 	}
+
+	/* create engine */
+	r = slCreateEngine(&engine_obj, 0, NULL, 0, NULL, NULL);
+	if (r != SL_RESULT_SUCCESS) 
+		goto err;
+
+	r = (*engine_obj)->Realize(engine_obj, SL_BOOLEAN_FALSE);
+	if (r != SL_RESULT_SUCCESS) 
+		goto err;
+
+	r = (*engine_obj)->GetInterface(engine_obj, SL_IID_ENGINE,
+				&engine_engine);
+	if (r != SL_RESULT_SUCCESS) 
+		goto err1;
 
 	/* create output mix */
 	const SLInterfaceID ids[] = {
@@ -75,12 +71,12 @@ static int opensl_open(int sr)
 	r = (*engine_engine)->CreateOutputMix(engine_engine,
 				&output_mix_obj, 1, ids, req);
 	if (r != SL_RESULT_SUCCESS) 
-		return -1;
+		goto err1;
 	
 	/* realize output mix */
 	r = (*output_mix_obj)->Realize(output_mix_obj, SL_BOOLEAN_FALSE);
 	if (r != SL_RESULT_SUCCESS) 
-		return -1;
+		goto err1;
 
 	SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {
 		SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2
@@ -114,35 +110,44 @@ static int opensl_open(int sr)
 	r = (*engine_engine)->CreateAudioPlayer(engine_engine, &player_obj,
 			&audioSrc, &audioSnk, 1, ids1, req1);
 	if (r != SL_RESULT_SUCCESS) 
-		return -1;
+		goto err2;
 
 	/* realize player */
 	r = (*player_obj)->Realize(player_obj, SL_BOOLEAN_FALSE);
 	if (r != SL_RESULT_SUCCESS) 
-		return -1;
+		goto err2;
 
 	/* get play interface */
 	r = (*player_obj)->GetInterface(player_obj, SL_IID_PLAY, &player_play);
 	if (r != SL_RESULT_SUCCESS) 
-		return -1;
+		goto err3;
 
 	/* get buffer queue interface */
 	r = (*player_obj)->GetInterface(player_obj,
 			SL_IID_ANDROIDSIMPLEBUFFERQUEUE, &buffer_queue);
 	if (r != SL_RESULT_SUCCESS) 
-		return -1;
+		goto err3;
 
 	/* register callback on buffer queue */
 	r = (*buffer_queue)->RegisterCallback(buffer_queue, player_callback, 0);
 	if (r != SL_RESULT_SUCCESS) 
-		return -1;
+		goto err3;
 
 	/* set player state to playing */
 	r = (*player_play)->SetPlayState(player_play, SL_PLAYSTATE_PLAYING);
 	if (r != SL_RESULT_SUCCESS) 
-		return -1;
+		goto err3;
 
 	return 0;
+
+    err3:
+	(*player_obj)->Destroy(player_obj);
+    err2:
+	(*output_mix_obj)->Destroy(output_mix_obj);
+    err1:
+	(*engine_obj)->Destroy(engine_obj);
+    err:
+	return -1;
 }
 
 static void opensl_close()
@@ -155,24 +160,18 @@ static void opensl_close()
 void close_audio()
 {
 	opensl_close();
-	free(outputBuffer[0]);
-	free(outputBuffer[1]);
+	free(buffer);
 }
 
-int open_audio(int rate, int frames)
+int open_audio(int rate, int latency)
 {
-	if (opensl_init() < 0) {
-		goto err;
-	}
+	buffer_num = latency / BUFFER_TIME;
+	buffer_size = rate * 2 * 2 * BUFFER_TIME / 1000;
 
-	if (opensl_open(rate) < 0) {
-		goto err;
-	}
+	buffer = malloc(buffer_size * buffer_num);
+	if (buffer == NULL)
+		return -1;
 
-	return 0;
-
-    err:
-	close_audio();
-	return -1;
+	return opensl_open(rate);
 }
 

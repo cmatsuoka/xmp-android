@@ -31,6 +31,7 @@ static int _mod_is_loaded;
 #define MAX_BUFFER_SIZE 256
 static char _buffer[MAX_BUFFER_SIZE];
 
+#include "audio.h"
 
 /* For ModList */
 JNIEXPORT void JNICALL
