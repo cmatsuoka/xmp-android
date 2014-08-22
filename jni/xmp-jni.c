@@ -46,6 +46,7 @@ Java_org_helllabs_android_xmp_Xmp_init(JNIEnv *env, jobject obj)
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_deinit(JNIEnv *env, jobject obj)
 {
+
 	/* xmp_free_context(ctx); */
 	return 0;
 }
@@ -138,9 +139,13 @@ Java_org_helllabs_android_xmp_Xmp_releaseModule(JNIEnv *env, jobject obj)
 }
 
 JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint start, jint rate, jint flags)
+Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint rate, jint ms)
 {
 	int i;
+
+	if (open_audio(rate, ms) < 0) {
+		return -100;
+	}
 
 	for (i = 0; i < XMP_MAX_CHANNELS; i++) {
 		_key[i] = -1;
@@ -148,7 +153,7 @@ Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint sta
 	}
 
 	_playing = 1;
-	return xmp_start_player(ctx, rate, flags);
+	return xmp_start_player(ctx, rate, 0);
 }
 
 JNIEXPORT jint JNICALL
@@ -156,15 +161,35 @@ Java_org_helllabs_android_xmp_Xmp_endPlayer(JNIEnv *env, jobject obj)
 {
 	_playing = 0;
 	xmp_end_player(ctx);
+	close_audio();
+
 	return 0;
 }
 
+int play_buffer(void *buffer, int size)
+{
+	return xmp_play_buffer(ctx, buffer, size, 0);
+}
+
 JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_playFrame(JNIEnv *env, jobject obj)
+Java_org_helllabs_android_xmp_Xmp_playAudio(JNIEnv *env, jobject obj)
+{
+	play_audio();
+}
+
+JNIEXPORT void JNICALL
+Java_org_helllabs_android_xmp_Xmp_stopAudio(JNIEnv *env, jobject obj)
+{
+	stop_audio();
+}
+
+#if 0
+JNIEXPORT jint JNICALL
+Java_org_helllabs_android_xmp_Xmp_playBuffer(JNIEnv *env, jobject obj)
 {
 	int i, ret;
 
-	ret = xmp_play_frame(ctx);
+	ret = xmp_play_buffer(ctx);
 	xmp_get_frame_info(ctx, &fi);
 
 	return ret;
@@ -176,6 +201,7 @@ Java_org_helllabs_android_xmp_Xmp_getBuffer(JNIEnv *env, jobject obj, jshortArra
 	(*env)->SetShortArrayRegion(env, buffer, 0, fi.buffer_size, fi.buffer);
 	return fi.buffer_size / 2;
 }
+#endif
 
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_nextPosition(JNIEnv *env, jobject obj)

@@ -31,12 +31,13 @@ public final class PlayerService extends Service {
 	private static final int CMD_PREV = 2;
 	private static final int CMD_STOP = 3;
 	
-	private AudioTrack audio;
+	//private AudioTrack audio;
+	private int bufferMs;
 	private Thread playThread;
 	private SharedPreferences prefs;
 	private Watchdog watchdog;
 	private int bufferSize;
-	private int sampleRate, sampleFormat;
+	private int sampleRate;
 	private Notifier notifier;
 	private int cmd;
 	private boolean restart;
@@ -82,8 +83,10 @@ public final class PlayerService extends Service {
 			registerReceiver(headsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
 		}
 
-		final int bufferMs = prefs.getInt(Preferences.BUFFER_MS, 500);
+		bufferMs = prefs.getInt(Preferences.BUFFER_MS, 500);
+		
 		sampleRate = Integer.parseInt(prefs.getString(Preferences.SAMPLING_RATE, "44100"));
+		/*
 		sampleFormat = 0;
 
 		final boolean stereo = prefs.getBoolean(Preferences.STEREO, true);
@@ -112,7 +115,7 @@ public final class PlayerService extends Service {
 				AudioFormat.ENCODING_PCM_16BIT,
 				bufferSize,
 				AudioTrack.MODE_STREAM);
-
+		 */
 		Xmp.init();
 
 		isAlive = false;
@@ -314,14 +317,14 @@ public final class PlayerService extends Service {
 		}
 	}
 
-	private int playFrame() {
-		// Synchronize frame play with data gathering so we don't change playing variables
-		// in the middle of e.g. sample data reading, which results in a segfault in C code
-
-		synchronized (playThread) {
-			return Xmp.playFrame();
-		}
-	}
+//	private int playFrame() {
+//		// Synchronize frame play with data gathering so we don't change playing variables
+//		// in the middle of e.g. sample data reading, which results in a segfault in C code
+//
+//		synchronized (playThread) {
+//			return Xmp.playBuffer();
+//		}
+//	}
 
 	private void notifyNewSequence() {
 		final int numClients = callbacks.beginBroadcast();
@@ -412,8 +415,9 @@ public final class PlayerService extends Service {
 					interpType = Xmp.INTERP_NEAREST;
 				}
 
-				audio.play();
-				Xmp.startPlayer(0, sampleRate, sampleFormat);
+				//audio.play();
+				int res = Xmp.startPlayer(sampleRate, bufferMs);
+				Log.e(TAG, "res = " + res);
 				Xmp.setPlayer(Xmp.PLAYER_AMP, Integer.parseInt(volBoost));
 				Xmp.setPlayer(Xmp.PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));				
 				Xmp.setPlayer(Xmp.PLAYER_INTERP, interpType);
@@ -427,21 +431,23 @@ public final class PlayerService extends Service {
 				sequenceNumber = 0;
 				boolean playNewSequence;
 				Xmp.setSequence(sequenceNumber);
+				
+				Xmp.playAudio();
 
 				do {
-					while (playFrame() == 0) {
+					while (true) {
 						count = Xmp.getLoopCount();
 						if (!looped && count != loopCount) {
 							break;
 						}
 						loopCount = count;
 
-						final int size = Xmp.getBuffer(buffer);
-						audio.write(buffer, 0, size);
+						//final int size = Xmp.getBuffer(buffer);
+						//audio.write(buffer, 0, size);
 
-						while (paused) {
-							audio.flush();
-							audio.pause();
+						//while (paused) {
+							//audio.flush();
+							//audio.pause();
 							watchdog.refresh();
 							try {
 								Thread.sleep(500);
@@ -452,13 +458,20 @@ public final class PlayerService extends Service {
 							checkMediaButtons();
 							checkHeadsetState();
 							checkNotificationButtons();
-						}
-						audio.play();
+						//}
+						//audio.play();
+//						Log.e(TAG, "audio play");
+//						try {
+//							Thread.sleep(40);
+//						} catch (InterruptedException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
 
-						watchdog.refresh();
-						checkMediaButtons();
-						checkHeadsetState();
-						checkNotificationButtons();
+						//watchdog.refresh();
+						//checkMediaButtons();
+						//checkHeadsetState();
+						//checkNotificationButtons();
 					}
 
 					// Subsong explorer
@@ -472,7 +485,7 @@ public final class PlayerService extends Service {
 						if (Xmp.setSequence(sequenceNumber)) {
 							playNewSequence = true;
 							notifyNewSequence();
-						}
+						}		Log.e(TAG, "init result = " + res);
 					}
 				} while (playNewSequence);
 
@@ -512,7 +525,7 @@ public final class PlayerService extends Service {
 				Log.w(TAG, "Release module");
 				Xmp.releaseModule();
 
-				audio.stop();
+				//audio.stop();
 
 				// Used when current files are replaced by a new set
 				if (restart) {
@@ -556,7 +569,7 @@ public final class PlayerService extends Service {
 		paused = false;
 
 		Xmp.deinit();
-		audio.release();
+		//audio.release();
 	}
 
 	private final ModInterface.Stub binder = new ModInterface.Stub() {

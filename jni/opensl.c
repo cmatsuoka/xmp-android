@@ -3,28 +3,34 @@
 #include <SLES/OpenSLES_Android.h>
 #include "audio.h"
 
+/* #include <android/log.h> */
+
 static SLObjectItf engine_obj;
 static SLEngineItf engine_engine;
 static SLObjectItf output_mix_obj;
 static SLObjectItf player_obj;
 static SLPlayItf player_play;
 static SLAndroidSimpleBufferQueueItf buffer_queue;
-static int currentOutputIndex;
-static int currentOutputBuffer;
-static short *buffer;
+static char *buffer;
 static int buffer_num;
 static int buffer_size;
-static int outBufSamples;
+static volatile int first_free, last_free;
+static int playing;
 
+#define TAG "Xmp"
 #define BUFFER_TIME 40
 
 
 static void player_callback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
-
+	if ((last_free + 1) >= buffer_num) {
+		last_free = 0;
+	} else {
+		last_free++;
+	}
 }
 
-static int opensl_open(int sr)
+static int opensl_open(int sr, int num)
 {
 	SLresult r;
 	SLuint32 rate;
@@ -79,7 +85,7 @@ static int opensl_open(int sr)
 		goto err1;
 
 	SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {
-		SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2
+		SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, num
 	};
 
 	SLDataFormat_PCM format_pcm = {
@@ -133,11 +139,6 @@ static int opensl_open(int sr)
 	if (r != SL_RESULT_SUCCESS) 
 		goto err3;
 
-	/* set player state to playing */
-	r = (*player_play)->SetPlayState(player_play, SL_PLAYSTATE_PLAYING);
-	if (r != SL_RESULT_SUCCESS) 
-		goto err3;
-
 	return 0;
 
     err3:
@@ -167,11 +168,57 @@ int open_audio(int rate, int latency)
 {
 	buffer_num = latency / BUFFER_TIME;
 	buffer_size = rate * 2 * 2 * BUFFER_TIME / 1000;
-
 	buffer = malloc(buffer_size * buffer_num);
 	if (buffer == NULL)
 		return -1;
 
-	return opensl_open(rate);
+	return opensl_open(rate, buffer_num);
 }
 
+int play_audio()
+{
+	SLresult r;
+	int i;
+
+	/* enqueue initial buffers */
+	for (i = 0; i < buffer_num; i++) {
+		char *b = &buffer[i * buffer_size];
+		play_buffer(b, buffer_size);
+		(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
+	}
+
+	last_free = first_free = 0;
+	playing = 1;
+
+	/* set player state to playing */
+	r = (*player_play)->SetPlayState(player_play, SL_PLAYSTATE_PLAYING);
+	if (r != SL_RESULT_SUCCESS) 
+		return -1;
+
+	while (playing) {
+		while (last_free == first_free) {
+			/* buffers are full, wait */
+			usleep(10000);
+		}
+
+		/* fill and enqueue buffer */
+		char *b = &buffer[first_free * buffer_size];
+		if ((first_free + 1) >= buffer_num) {
+			first_free = 0;
+		} else {
+			first_free++;
+		}
+
+		play_buffer(b, buffer_size);
+		(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
+	}
+
+	r = (*player_play)->SetPlayState(player_play, SL_PLAYSTATE_STOPPED);
+	if (r != SL_RESULT_SUCCESS) 
+		return -1;
+}
+
+void stop_audio()
+{
+	playing = 0;
+}
