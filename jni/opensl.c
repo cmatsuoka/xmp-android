@@ -23,11 +23,7 @@ static int playing;
 
 static void player_callback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
-	if ((last_free + 1) >= buffer_num) {
-		last_free = 0;
-	} else {
-		last_free++;
-	}
+	INC(last_free, buffer_num);
 }
 
 static int opensl_open(int sr, int num)
@@ -166,13 +162,19 @@ void close_audio()
 
 int open_audio(int rate, int latency)
 {
+	int ret;
+
 	buffer_num = latency / BUFFER_TIME;
 	buffer_size = rate * 2 * 2 * BUFFER_TIME / 1000;
 	buffer = malloc(buffer_size * buffer_num);
 	if (buffer == NULL)
 		return -1;
 
-	return opensl_open(rate, buffer_num);
+	ret = opensl_open(rate, buffer_num);
+	if (ret < 0)
+		return ret;
+
+	return buffer_num;
 }
 
 int play_audio()
@@ -204,11 +206,7 @@ void fill_buffer()
 {
 	/* fill and enqueue buffer */
 	char *b = &buffer[first_free * buffer_size];
-	if ((first_free + 1) >= buffer_num) {
-		first_free = 0;
-	} else {
-		first_free++;
-	}
+	INC(first_free, buffer_num);
 
 	play_buffer(b, buffer_size);
 	(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);

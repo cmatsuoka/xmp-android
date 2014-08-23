@@ -215,11 +215,8 @@ public class PlayerActivity extends Activity {
 		@Override
 		public void run() {
 			final boolean p = paused;
-			
-			//now = (before + FRAME_RATE * latency / 1000 + 1) % FRAME_RATE;
 
 			if (!p) {
-				
 				// update seekbar
 				if (!seeking && playTime >= 0) {
 					seekBar.setProgress(playTime);
