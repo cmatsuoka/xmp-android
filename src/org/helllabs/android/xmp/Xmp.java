@@ -40,6 +40,8 @@ public final class Xmp {
 	public static native int endPlayer();
 	public static native int playAudio();
 	public static native void stopAudio();
+	public static native boolean hasFreeBuffer();
+	public static native void fillBuffer();
 //	public static native int playBuffer();	
 //	public static native int getBuffer(short buffer[]);
 	public static native int nextPosition();

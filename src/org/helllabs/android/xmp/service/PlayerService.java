@@ -86,36 +86,7 @@ public final class PlayerService extends Service {
 		bufferMs = prefs.getInt(Preferences.BUFFER_MS, 500);
 		
 		sampleRate = Integer.parseInt(prefs.getString(Preferences.SAMPLING_RATE, "44100"));
-		/*
-		sampleFormat = 0;
-
-		final boolean stereo = prefs.getBoolean(Preferences.STEREO, true);
-		if (!stereo) {
-			sampleFormat |= Xmp.FORMAT_MONO;
-		}
-
-		bufferSize = (sampleRate * (stereo ? 2 : 1) * 2 * bufferMs / 1000) & ~0x3;
-
-		final int channelConfig = stereo ?
-				AudioFormat.CHANNEL_OUT_STEREO :
-					AudioFormat.CHANNEL_OUT_MONO;
-
-		final int minSize = AudioTrack.getMinBufferSize(
-				sampleRate,
-				channelConfig,
-				AudioFormat.ENCODING_PCM_16BIT);
-
-		if (bufferSize < minSize) {
-			bufferSize = minSize;
-		}
-
-		audio = new AudioTrack(
-				AudioManager.STREAM_MUSIC, sampleRate,
-				channelConfig,
-				AudioFormat.ENCODING_PCM_16BIT,
-				bufferSize,
-				AudioTrack.MODE_STREAM);
-		 */
+		
 		Xmp.init();
 
 		isAlive = false;
@@ -435,7 +406,7 @@ public final class PlayerService extends Service {
 				Xmp.playAudio();
 
 				do {
-					while (true) {
+					while (cmd == CMD_NONE) {
 						count = Xmp.getLoopCount();
 						if (!looped && count != loopCount) {
 							break;
@@ -448,12 +419,12 @@ public final class PlayerService extends Service {
 						//while (paused) {
 							//audio.flush();
 							//audio.pause();
-							watchdog.refresh();
-							try {
-								Thread.sleep(500);
-							} catch (InterruptedException e) {
-								break;
-							}
+							//watchdog.refresh();
+							//try {
+							//	Thread.sleep(500);
+							//} catch (InterruptedException e) {
+							//	break;
+							//}
 
 							checkMediaButtons();
 							checkHeadsetState();
@@ -468,10 +439,17 @@ public final class PlayerService extends Service {
 //							e.printStackTrace();
 //						}
 
-						//watchdog.refresh();
-						//checkMediaButtons();
-						//checkHeadsetState();
-						//checkNotificationButtons();
+						while (!Xmp.hasFreeBuffer()) {
+							try {
+								Thread.sleep(10);
+							} catch (InterruptedException e) {	}
+						}
+						Xmp.fillBuffer();
+						
+						watchdog.refresh();
+						checkMediaButtons();
+						checkHeadsetState();
+						checkNotificationButtons();
 					}
 
 					// Subsong explorer

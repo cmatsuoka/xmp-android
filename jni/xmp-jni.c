@@ -183,6 +183,19 @@ Java_org_helllabs_android_xmp_Xmp_stopAudio(JNIEnv *env, jobject obj)
 	stop_audio();
 }
 
+JNIEXPORT jboolean JNICALL
+Java_org_helllabs_android_xmp_Xmp_hasFreeBuffer(JNIEnv *env, jobject obj)
+{
+	return has_free_buffer() ? JNI_TRUE : JNI_FALSE;
+}
+
+JNIEXPORT void JNICALL
+Java_org_helllabs_android_xmp_Xmp_fillBuffer(JNIEnv *env, jobject obj)
+{
+	fill_buffer();
+}
+
+
 #if 0
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_playBuffer(JNIEnv *env, jobject obj)

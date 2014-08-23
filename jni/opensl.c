@@ -188,37 +188,33 @@ int play_audio()
 	}
 
 	last_free = first_free = 0;
-	playing = 1;
 
 	/* set player state to playing */
 	r = (*player_play)->SetPlayState(player_play, SL_PLAYSTATE_PLAYING);
 	if (r != SL_RESULT_SUCCESS) 
 		return -1;
+}
 
-	while (playing) {
-		while (last_free == first_free) {
-			/* buffers are full, wait */
-			usleep(10000);
-		}
+int has_free_buffer()
+{
+	return last_free != first_free;
+}
 
-		/* fill and enqueue buffer */
-		char *b = &buffer[first_free * buffer_size];
-		if ((first_free + 1) >= buffer_num) {
-			first_free = 0;
-		} else {
-			first_free++;
-		}
-
-		play_buffer(b, buffer_size);
-		(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
+void fill_buffer()
+{
+	/* fill and enqueue buffer */
+	char *b = &buffer[first_free * buffer_size];
+	if ((first_free + 1) >= buffer_num) {
+		first_free = 0;
+	} else {
+		first_free++;
 	}
 
-	r = (*player_play)->SetPlayState(player_play, SL_PLAYSTATE_STOPPED);
-	if (r != SL_RESULT_SUCCESS) 
-		return -1;
+	play_buffer(b, buffer_size);
+	(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
 }
 
 void stop_audio()
 {
-	playing = 0;
+	(*player_play)->SetPlayState(player_play, SL_PLAYSTATE_STOPPED);
 }
