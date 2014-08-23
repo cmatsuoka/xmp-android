@@ -33,7 +33,7 @@ public class Preferences extends PreferenceActivity {
 	// Don't use PREF_INTERPOLATION -- was boolean in 2.x and string in 3.2.0
 	public static final String INTERPOLATE = "interpolate";
 	public static final String INTERP_TYPE = "interp_type";
-	public static final String FILTER = "filter";
+	//public static final String FILTER = "filter";
 	public static final String EXAMPLES = "examples";
 	public static final String SAMPLING_RATE = "sampling_rate";
 	//public static final String BUFFER_MS = "buffer_ms";

@@ -93,14 +93,6 @@
       android:defaultValue="1"
       android:entries="@array/interp_type_array"
       android:entryValues="@array/interp_type_values" />
-
-    <CheckBoxPreference
-      android:key="filter"
-      android:persistent="true"
-      android:title="@string/pref_filter_title"
-      android:summary="@string/pref_filter_summary"
-      android:dependency="interpolate"
-      android:defaultValue="true" />
           
     <CheckBoxPreference
       android:key="stereo"

@@ -386,20 +386,16 @@ public final class PlayerService extends Service {
 					interpType = Xmp.INTERP_LINEAR;
 				}
 
-				int dsp = 0;
-				if (prefs.getBoolean(Preferences.FILTER, true)) {
-					dsp |= Xmp.DSP_LOWPASS;
-				}
-
 				if (!prefs.getBoolean(Preferences.INTERPOLATE, true)) {
 					interpType = Xmp.INTERP_NEAREST;
 				}
 
-				final int res = Xmp.startPlayer(sampleRate, bufferMs);
+				Xmp.startPlayer(sampleRate, bufferMs);
+				
 				Xmp.setPlayer(Xmp.PLAYER_AMP, Integer.parseInt(volBoost));
 				Xmp.setPlayer(Xmp.PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));				
 				Xmp.setPlayer(Xmp.PLAYER_INTERP, interpType);
-				Xmp.setPlayer(Xmp.PLAYER_DSP, dsp);
+				Xmp.setPlayer(Xmp.PLAYER_DSP, Xmp.DSP_LOWPASS);
 
 				updateData = true;
 				
