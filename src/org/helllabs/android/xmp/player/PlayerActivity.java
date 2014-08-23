@@ -383,7 +383,7 @@ public class PlayerActivity extends Activity {
 	public void onConfigurationChanged(final Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		if (viewer != null) {
-			viewer.setRotation(display.getOrientation());
+			viewer.setRotation(display.getRotation());
 		}
 	}
 
@@ -479,7 +479,7 @@ public class PlayerActivity extends Activity {
 
 					viewerLayout.addView(viewer);   		
 					viewer.setup(modPlayer, modVars);
-					viewer.setRotation(display.getOrientation());
+					viewer.setRotation(display.getRotation());
 				}
 			}
 		}
@@ -893,7 +893,7 @@ public class PlayerActivity extends Activity {
 				titleFlipper.showNext();
 
 				viewer.setup(modPlayer, modVars);
-				viewer.setRotation(display.getOrientation());
+				viewer.setRotation(display.getRotation());
 
 				/*infoMod.setText(String.format("Channels: %d\n" +
 		       			"Length: %d, Patterns: %d\n" +
