@@ -13,9 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.os.IBinder;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
@@ -386,8 +383,7 @@ public final class PlayerService extends Service {
 					interpType = Xmp.INTERP_NEAREST;
 				}
 
-				//audio.play();
-				int res = Xmp.startPlayer(sampleRate, bufferMs);
+				final int res = Xmp.startPlayer(sampleRate, bufferMs);
 				Log.e(TAG, "res = " + res);
 				Xmp.setPlayer(Xmp.PLAYER_AMP, Integer.parseInt(volBoost));
 				Xmp.setPlayer(Xmp.PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));				
@@ -647,7 +643,7 @@ public final class PlayerService extends Service {
 			return paused;
 		}
 
-		public boolean setSequence(int seq) {
+		public boolean setSequence(final int seq) {
 			final boolean ret = Xmp.setSequence(seq);
 			if (ret) {
 				sequenceNumber = seq;
