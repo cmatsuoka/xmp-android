@@ -143,6 +143,11 @@ public final class PlayerService extends Service {
 	private void doPauseAndNotify() {
 		paused ^= true;
 		updateNotification();
+		if (paused) {
+			Xmp.stopAudio();
+		} else {
+			Xmp.restartAudio();
+		}
 	}
 
 	private void actionStop() {
@@ -384,7 +389,6 @@ public final class PlayerService extends Service {
 				}
 
 				final int res = Xmp.startPlayer(sampleRate, bufferMs);
-				Log.e(TAG, "res = " + res);
 				Xmp.setPlayer(Xmp.PLAYER_AMP, Integer.parseInt(volBoost));
 				Xmp.setPlayer(Xmp.PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));				
 				Xmp.setPlayer(Xmp.PLAYER_INTERP, interpType);

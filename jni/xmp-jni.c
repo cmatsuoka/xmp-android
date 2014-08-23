@@ -197,6 +197,12 @@ Java_org_helllabs_android_xmp_Xmp_stopAudio(JNIEnv *env, jobject obj)
 	stop_audio();
 }
 
+JNIEXPORT void JNICALL
+Java_org_helllabs_android_xmp_Xmp_restartAudio(JNIEnv *env, jobject obj)
+{
+	restart_audio();
+}
+
 JNIEXPORT jboolean JNICALL
 Java_org_helllabs_android_xmp_Xmp_hasFreeBuffer(JNIEnv *env, jobject obj)
 {
@@ -209,26 +215,6 @@ Java_org_helllabs_android_xmp_Xmp_fillBuffer(JNIEnv *env, jobject obj)
 	fill_buffer();
 }
 
-
-#if 0
-JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_playBuffer(JNIEnv *env, jobject obj)
-{
-	int i, ret;
-
-	ret = xmp_play_buffer(ctx);
-	xmp_get_frame_info(ctx, &fi);
-
-	return ret;
-}
-
-JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_getBuffer(JNIEnv *env, jobject obj, jshortArray buffer)
-{
-	(*env)->SetShortArrayRegion(env, buffer, 0, fi.buffer_size, fi.buffer);
-	return fi.buffer_size / 2;
-}
-#endif
 
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_nextPosition(JNIEnv *env, jobject obj)

@@ -212,6 +212,11 @@ void fill_buffer()
 	(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
 }
 
+void restart_audio()
+{
+	(*player_play)->SetPlayState(player_play, SL_PLAYSTATE_PLAYING);
+}
+
 void stop_audio()
 {
 	(*player_play)->SetPlayState(player_play, SL_PLAYSTATE_STOPPED);
