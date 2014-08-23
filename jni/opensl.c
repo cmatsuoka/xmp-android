@@ -185,7 +185,7 @@ int play_audio()
 	/* enqueue initial buffers */
 	for (i = 0; i < buffer_num; i++) {
 		char *b = &buffer[i * buffer_size];
-		play_buffer(b, buffer_size);
+		play_buffer(b, buffer_size, 0);
 		(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
 	}
 
@@ -202,14 +202,18 @@ int has_free_buffer()
 	return last_free != first_free;
 }
 
-void fill_buffer()
+int fill_buffer(int num_loop)
 {
+	int ret;
+
 	/* fill and enqueue buffer */
 	char *b = &buffer[first_free * buffer_size];
 	INC(first_free, buffer_num);
 
-	play_buffer(b, buffer_size);
+	ret = play_buffer(b, buffer_size, num_loop);
 	(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
+
+	return ret;
 }
 
 void restart_audio()

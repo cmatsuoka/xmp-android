@@ -5,6 +5,9 @@ import org.helllabs.android.xmp.util.ModInfo;
 
 public final class Xmp {
 	
+	// Return codes
+	public static final int XMP_END = 1;			// End of module reached
+	
 	// Sample format flags
 	public static final int FORMAT_MONO = 1 << 2;
 	
@@ -42,7 +45,7 @@ public final class Xmp {
 	public static native void stopAudio();
 	public static native void restartAudio();
 	public static native boolean hasFreeBuffer();
-	public static native void fillBuffer();
+	public static native int fillBuffer(boolean loop);
 	public static native int nextPosition();
 	public static native int prevPosition();
 	public static native int setPosition(int num);

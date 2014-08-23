@@ -431,7 +431,9 @@ public final class PlayerService extends Service {
 								Thread.sleep(40);
 							} catch (InterruptedException e) {	}
 						}
-						Xmp.fillBuffer();
+						if (Xmp.fillBuffer(looped) < 0) {
+							break;
+						}
 						
 						watchdog.refresh();
 						checkMediaButtons();

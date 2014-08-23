@@ -150,7 +150,7 @@ Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint rat
 	}
 	_buffer_num++;
 
-	fi = malloc(_buffer_num * sizeof (struct xmp_frame_info));
+	fi = calloc(1, _buffer_num * sizeof (struct xmp_frame_info));
 	if (fi == NULL) {
 		return -101;
 	}
@@ -160,6 +160,7 @@ Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint rat
 		_last_key[i] = -1;
 	}
 
+	_now = _before = 0;
 	_playing = 1;
 	return xmp_start_player(ctx, rate, 0);
 }
@@ -175,9 +176,9 @@ Java_org_helllabs_android_xmp_Xmp_endPlayer(JNIEnv *env, jobject obj)
 	return 0;
 }
 
-int play_buffer(void *buffer, int size)
+int play_buffer(void *buffer, int size, int num_loop)
 {
-	int ret = xmp_play_buffer(ctx, buffer, size, 0);
+	int ret = xmp_play_buffer(ctx, buffer, size, num_loop);
 	xmp_get_frame_info(ctx, &fi[_now]);
 	INC(_before, _buffer_num);
 	_now = (_before + _buffer_num - 1) % _buffer_num;
@@ -209,10 +210,10 @@ Java_org_helllabs_android_xmp_Xmp_hasFreeBuffer(JNIEnv *env, jobject obj)
 	return has_free_buffer() ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT void JNICALL
-Java_org_helllabs_android_xmp_Xmp_fillBuffer(JNIEnv *env, jobject obj)
+JNIEXPORT jint JNICALL
+Java_org_helllabs_android_xmp_Xmp_fillBuffer(JNIEnv *env, jobject obj, jboolean loop)
 {
-	fill_buffer();
+	return fill_buffer(!loop);
 }
 
 

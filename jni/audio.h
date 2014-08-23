@@ -11,8 +11,8 @@ void close_audio(void);
 int play_audio(void);
 void stop_audio(void);
 void restart_audio(void);
-int play_buffer(void *, int);
+int play_buffer(void *, int, int);
 int has_free_buffer(void);
-void fill_buffer(void);
+void fill_buffer(int);
 
 #endif
