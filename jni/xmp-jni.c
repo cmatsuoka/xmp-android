@@ -252,7 +252,11 @@ JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_seek(JNIEnv *env, jobject obj, jint time)
 {
 	int ret = xmp_seek_time(ctx, time);
-	fi[_now].time = time;
+	int i;
+
+	for (i = 0; i < _buffer_num; i++) {
+		fi[i].time = time;
+	}
 	return ret;
 }
 
