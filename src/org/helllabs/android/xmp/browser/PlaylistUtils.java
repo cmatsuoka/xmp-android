@@ -64,7 +64,7 @@ public final class PlaylistUtils {
 			}  
 		});  
 		  
-		alert.setInverseBackgroundForced(true).show();
+		alert.show();
 	}
 	
 	/*
