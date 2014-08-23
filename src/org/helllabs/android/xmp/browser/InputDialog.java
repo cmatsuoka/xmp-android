@@ -19,7 +19,7 @@ public class InputDialog extends AlertDialog.Builder {
 		
 		input = new EditText(context);
 		input.setLayoutParams(new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.FILL_PARENT,
+				LinearLayout.LayoutParams.MATCH_PARENT,
 				LinearLayout.LayoutParams.WRAP_CONTENT));
 		input.setTransformationMethod(new SingleLineTransformationMethod());
 		layout.addView(input);		
