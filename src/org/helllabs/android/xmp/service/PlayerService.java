@@ -33,7 +33,6 @@ public final class PlayerService extends Service {
 	private Thread playThread;
 	private SharedPreferences prefs;
 	private Watchdog watchdog;
-	private int bufferSize;
 	private int sampleRate;
 	private Notifier notifier;
 	private int cmd;
@@ -313,7 +312,6 @@ public final class PlayerService extends Service {
 
 	private class PlayRunnable implements Runnable {
 		public void run() {
-			final short buffer[] = new short[bufferSize];
 			cmd = CMD_NONE;
 
 			do {    			
