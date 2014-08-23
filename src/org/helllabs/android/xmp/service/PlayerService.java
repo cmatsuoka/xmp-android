@@ -393,10 +393,7 @@ public final class PlayerService extends Service {
 				Xmp.setPlayer(Xmp.PLAYER_DSP, dsp);
 
 				updateData = true;
-
-				int count;
-				int loopCount = 0;
-
+				
 				sequenceNumber = 0;
 				boolean playNewSequence;
 				Xmp.setSequence(sequenceNumber);
@@ -405,12 +402,6 @@ public final class PlayerService extends Service {
 
 				do {
 					while (cmd == CMD_NONE) {
-						count = Xmp.getLoopCount();
-						if (!looped && count != loopCount) {
-							break;
-						}
-						loopCount = count;
-
 						while (paused) {
 							watchdog.refresh();
 							try {
@@ -444,13 +435,12 @@ public final class PlayerService extends Service {
 					playNewSequence = false;
 					if (allSequences && cmd == CMD_NONE) {
 						sequenceNumber++;
-						loopCount = Xmp.getLoopCount();
 
 						Log.w(TAG, "Play sequence " + sequenceNumber);
 						if (Xmp.setSequence(sequenceNumber)) {
 							playNewSequence = true;
 							notifyNewSequence();
-						}		Log.e(TAG, "init result = " + res);
+						}
 					}
 				} while (playNewSequence);
 
