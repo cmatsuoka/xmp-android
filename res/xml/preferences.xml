@@ -93,18 +93,10 @@
       android:defaultValue="1"
       android:entries="@array/interp_type_array"
       android:entryValues="@array/interp_type_values" />
-          
-    <CheckBoxPreference
-      android:key="stereo"
-      android:persistent="true"
-      android:title="@string/pref_stereo_title"
-      android:summary="@string/pref_stereo_summary"
-      android:defaultValue="true" />
       
     <org.helllabs.android.xmp.preferences.SeekBarPreference
       android:key="pan_separation"
       android:persistent="true"
-      android:dependency="stereo"
       android:title="@string/pref_pan_separation_title"
       android:summary="@string/pref_pan_separation_summary"
       android:dialogMessage="@string/preferences_pan_separation_dialog"
@@ -115,7 +107,6 @@
     <org.helllabs.android.xmp.preferences.SeekBarPreference
       android:key="default_pan"
       android:persistent="true"
-      android:dependency="stereo"
       android:title="@string/pref_default_pan_title"
       android:summary="@string/pref_default_pan_summary"
       android:dialogMessage="@string/preferences_default_pan_dialog"

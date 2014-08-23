@@ -26,7 +26,7 @@ public class Preferences extends PreferenceActivity {
 	public static final String MEDIA_PATH = "media_path";
 	public static final String VOL_BOOST = "vol_boost";
 	public static final String CHANGELOG_VERSION = "changelog_version";
-	public static final String STEREO = "stereo";
+	//public static final String STEREO = "stereo";
 	public static final String PAN_SEPARATION = "pan_separation";
 	public static final String DEFAULT_PAN = "default_pan";
 	public static final String PLAYLIST_MODE = "playlist_mode";
