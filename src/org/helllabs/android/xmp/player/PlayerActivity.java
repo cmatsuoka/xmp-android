@@ -67,7 +67,6 @@ public class PlayerActivity extends Activity {
 	private SharedPreferences prefs;
 	private FrameLayout viewerLayout;
 	private final Handler handler = new Handler();
-	private int latency;
 	private int totalTime;
 	private boolean screenOn;
 	private Activity activity;
@@ -627,11 +626,6 @@ public class PlayerActivity extends Activity {
 
 		final boolean showInfoLine = prefs.getBoolean(Preferences.SHOW_INFO_LINE, true);
 		showElapsed = true;
-
-		latency = prefs.getInt(Preferences.BUFFER_MS, 500);
-		if (latency > 1000) {
-			latency = 1000;
-		}
 
 		onNewIntent(getIntent());
 

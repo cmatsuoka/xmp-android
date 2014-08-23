@@ -59,12 +59,12 @@
       android:entryValues="@array/sampling_rate_values" />
       
     <org.helllabs.android.xmp.preferences.SeekBarPreference
-      android:key="buffer_ms"
+      android:key="buffer_ms_opensl"
       android:persistent="true"
       android:title="@string/pref_buffer_ms_title"
       android:summary="@string/pref_buffer_ms_summary"
       android:dialogMessage="@string/pref_buffer_ms_dialog"
-      android:defaultValue="500"
+      android:defaultValue="400"
       android:text="ms"
       android:max="1000" />
                   

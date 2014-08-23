@@ -36,7 +36,8 @@ public class Preferences extends PreferenceActivity {
 	public static final String FILTER = "filter";
 	public static final String EXAMPLES = "examples";
 	public static final String SAMPLING_RATE = "sampling_rate";
-	public static final String BUFFER_MS = "buffer_ms";
+	//public static final String BUFFER_MS = "buffer_ms";
+	public static final String BUFFER_MS = "buffer_ms_opensl";
 	public static final String SHOW_TOAST = "show_toast";
 	public static final String SHOW_INFO_LINE = "show_info_line";
 	public static final String USE_FILENAME = "use_filename";

@@ -28,6 +28,10 @@ public final class PlayerService extends Service {
 	private static final int CMD_PREV = 2;
 	private static final int CMD_STOP = 3;
 	
+	private static final int MIN_BUFFER_MS = 80;
+	private static final int MAX_BUFFER_MS = 1000;
+	private static final int DEFAULT_BUFFER_MS = 400;
+	
 	//private AudioTrack audio;
 	private int bufferMs;
 	private Thread playThread;
@@ -79,7 +83,12 @@ public final class PlayerService extends Service {
 			registerReceiver(headsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
 		}
 
-		bufferMs = prefs.getInt(Preferences.BUFFER_MS, 500);
+		bufferMs = prefs.getInt(Preferences.BUFFER_MS, DEFAULT_BUFFER_MS);
+		if (bufferMs < MIN_BUFFER_MS) {
+			bufferMs = MIN_BUFFER_MS;
+		} else if (bufferMs > MAX_BUFFER_MS) {
+			bufferMs = MAX_BUFFER_MS;
+		}
 		
 		sampleRate = Integer.parseInt(prefs.getString(Preferences.SAMPLING_RATE, "44100"));
 		
