@@ -166,6 +166,10 @@ int open_audio(int rate, int latency)
 
 	buffer_num = latency / BUFFER_TIME;
 	buffer_size = rate * 2 * 2 * BUFFER_TIME / 1000;
+
+	if (buffer_num < 2)
+		buffer_num = 2;
+
 	buffer = malloc(buffer_size * buffer_num);
 	if (buffer == NULL)
 		return -1;
