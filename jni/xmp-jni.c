@@ -148,6 +148,7 @@ Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint rat
 	if ((_buffer_num = open_audio(rate, ms)) < 0) {
 		return -100;
 	}
+	_buffer_num++;
 
 	fi = malloc(_buffer_num * sizeof (struct xmp_frame_info));
 	if (fi == NULL) {
@@ -178,8 +179,8 @@ int play_buffer(void *buffer, int size)
 {
 	int ret = xmp_play_buffer(ctx, buffer, size, 0);
 	xmp_get_frame_info(ctx, &fi[_now]);
-	_now = (_before + _buffer_num - 1) % _buffer_num;
 	INC(_before, _buffer_num);
+	_now = (_before + _buffer_num - 1) % _buffer_num;
 
 	return ret;
 }
@@ -301,30 +302,6 @@ JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_setPlayer(JNIEnv *env, jobject obj, jint parm, jint val)
 {
 	return xmp_set_player(ctx, parm, val);
-}
-
-JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_getPlaySpeed(JNIEnv *env, jobject obj)
-{
-	return fi[_before].speed;
-}
-
-JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_getPlayBpm(JNIEnv *env, jobject obj)
-{
-	return fi[_before].bpm;
-}
-
-JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_getPlayPos(JNIEnv *env, jobject obj)
-{
-	return fi[_before].pos;
-}
-
-JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_getPlayPat(JNIEnv *env, jobject obj)
-{
-	return fi[_before].pattern;
 }
 
 JNIEXPORT jint JNICALL
