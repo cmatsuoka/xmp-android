@@ -71,10 +71,9 @@ public class PlayerActivity extends Activity {
 	private int totalTime;
 	private boolean screenOn;
 	private Activity activity;
-	//private AlertDialog deleteDialog;
 	private BroadcastReceiver screenReceiver;
 	private Viewer viewer;
-	private Viewer.Info[] info;
+	private Viewer.Info info;
 	private final int[] modVars = new int[10];
 	private final int[] seqVars = new int[16];		// this is MAX_SEQUENCES defined in common.h
 	private static final int FRAME_RATE = 25;
@@ -209,7 +208,6 @@ public class PlayerActivity extends Activity {
 		private int oldPos = -1;
 		private int oldPat = -1;
 		private int oldTime = -1;
-		private int before, now;
 		private boolean oldShowElapsed;
 		private final char[] c = new char[2];
 		private StringBuilder s = new StringBuilder();
@@ -218,7 +216,7 @@ public class PlayerActivity extends Activity {
 		public void run() {
 			final boolean p = paused;
 			
-			now = (before + FRAME_RATE * latency / 1000 + 1) % FRAME_RATE;
+			//now = (before + FRAME_RATE * latency / 1000 + 1) % FRAME_RATE;
 
 			if (!p) {
 				
@@ -231,11 +229,11 @@ public class PlayerActivity extends Activity {
 				synchronized (playerLock) {
 					if (modPlayer != null) {
 						try {
-							modPlayer.getInfo(info[now].values);							
-							info[now].time = modPlayer.time() / 1000;
+							modPlayer.getInfo(info.values);							
+							info.time = modPlayer.time() / 1000;
 
-							modPlayer.getChannelData(info[now].volumes, info[now].finalvols, info[now].pans,
-									info[now].instruments, info[now].keys, info[now].periods);
+							modPlayer.getChannelData(info.volumes, info.finalvols, info.pans,
+													 info.instruments, info.keys, info.periods);
 						} catch (RemoteException e) {
 							// fail silently
 						}
@@ -243,40 +241,40 @@ public class PlayerActivity extends Activity {
 				}
 
 				// display frame info
-				if (info[before].values[5] != oldSpd || info[before].values[6] != oldBpm
-						|| info[before].values[0] != oldPos || info[before].values[1] != oldPat)
+				if (info.values[5] != oldSpd || info.values[6] != oldBpm
+						|| info.values[0] != oldPos || info.values[1] != oldPat)
 				{
 					// Ugly code to avoid expensive String.format()
 
 					s.delete(0, s.length());
 
 					s.append("Speed:");
-					Util.to02X(c, info[before].values[5]);
+					Util.to02X(c, info.values[5]);
 					s.append(c);
 
 					s.append(" BPM:");
-					Util.to02X(c, info[before].values[6]);
+					Util.to02X(c, info.values[6]);
 					s.append(c);
 
 					s.append(" Pos:");
-					Util.to02X(c, info[before].values[0]);
+					Util.to02X(c, info.values[0]);
 					s.append(c);
 
 					s.append(" Pat:");
-					Util.to02X(c, info[before].values[1]);
+					Util.to02X(c, info.values[1]);
 					s.append(c);
 
 					infoStatus.setText(s);
 
-					oldSpd = info[before].values[5];
-					oldBpm = info[before].values[6];
-					oldPos = info[before].values[0];
-					oldPat = info[before].values[1];
+					oldSpd = info.values[5];
+					oldBpm = info.values[6];
+					oldPos = info.values[0];
+					oldPat = info.values[1];
 				}
 
 				// display playback time
-				if (info[before].time != oldTime || showElapsed != oldShowElapsed) {
-					int t = info[before].time;
+				if (info.time != oldTime || showElapsed != oldShowElapsed) {
+					int t = info.time;
 					if (t < 0) {
 						t = 0;
 					}
@@ -304,23 +302,23 @@ public class PlayerActivity extends Activity {
 						elapsedTime.setText(s);
 					}
 
-					oldTime = info[before].time;
+					oldTime = info.time;
 					oldShowElapsed = showElapsed;
 				}
 			} // !p
 
 			// always call viewer update (for scrolls during pause)
 			synchronized (viewerLayout) {
-				viewer.update(info[before], p);
+				viewer.update(info, p);
 			}
 
-			// update latency compensation
-			if (!p) {
-				before++;
-				if (before >= FRAME_RATE) {
-					before = 0;
-				}
-			}
+//			// update latency compensation
+//			if (!p) {
+//				before++;
+//				if (before >= FRAME_RATE) {
+//					before = 0;
+//				}
+//			}
 		}
 	};
 
@@ -907,10 +905,7 @@ public class PlayerActivity extends Activity {
 		       			chn, len, pat, ins, smp,
 		       			((time + 500) / 60000), ((time + 500) / 1000) % 60));*/
 
-				info = new Viewer.Info[FRAME_RATE];
-				for (int i = 0; i < FRAME_RATE; i++) {
-					info[i] = new Viewer.Info();
-				}
+				info = new Viewer.Info();
 
 				stopUpdate = false;
 				if (progressThread == null || !progressThread.isAlive()) {
