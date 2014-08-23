@@ -201,7 +201,7 @@ public class PlayerActivity extends Activity {
 			}
 		}
 	};
-
+	
 	private final Runnable updateInfoRunnable = new Runnable() {
 		private int oldSpd = -1;
 		private int oldBpm = -1;
@@ -308,14 +308,6 @@ public class PlayerActivity extends Activity {
 			synchronized (viewerLayout) {
 				viewer.update(info, p);
 			}
-
-//			// update latency compensation
-//			if (!p) {
-//				before++;
-//				if (before >= FRAME_RATE) {
-//					before = 0;
-//				}
-//			}
 		}
 	};
 
@@ -360,7 +352,9 @@ public class PlayerActivity extends Activity {
 				} catch (InterruptedException e) { }
 			} while (playTime >= 0);
 
-			seekBar.setProgress(0);
+			//seekBar.setProgress(0);
+			handler.removeCallbacks(updateInfoRunnable);
+			
 			try {
 				modPlayer.allowRelease();		// finished playing, we can release the module
 			} catch (Exception e) {
