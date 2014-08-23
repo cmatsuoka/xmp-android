@@ -413,35 +413,22 @@ public final class PlayerService extends Service {
 						}
 						loopCount = count;
 
-						//final int size = Xmp.getBuffer(buffer);
-						//audio.write(buffer, 0, size);
-
-						//while (paused) {
-							//audio.flush();
-							//audio.pause();
-							//watchdog.refresh();
-							//try {
-							//	Thread.sleep(500);
-							//} catch (InterruptedException e) {
-							//	break;
-							//}
+						while (paused) {
+							watchdog.refresh();
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								break;
+							}
 
 							checkMediaButtons();
 							checkHeadsetState();
 							checkNotificationButtons();
-						//}
-						//audio.play();
-//						Log.e(TAG, "audio play");
-//						try {
-//							Thread.sleep(40);
-//						} catch (InterruptedException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
+						}
 
 						while (!Xmp.hasFreeBuffer()) {
 							try {
-								Thread.sleep(10);
+								Thread.sleep(40);
 							} catch (InterruptedException e) {	}
 						}
 						Xmp.fillBuffer();
