@@ -389,8 +389,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 		currentDir = path;
 		curPath.setText(path);
 
-		final boolean titlesInBrowser = mPrefs.getBoolean(Preferences.TITLES_IN_BROWSER, false);
-
 		parentNum = directoryNum = 0;
 		final File modDir = new File(path);
 
@@ -416,16 +414,10 @@ public class FilelistActivity extends BasePlaylistActivity {
 				final String filename = path + "/" + file.getName();
 				final String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
 						DateFormat.MEDIUM).format(file.lastModified());
-
-				if (titlesInBrowser && !file.isDirectory()) {
-					if (InfoCache.testModule(filename, info)) {
-						list.add(new PlaylistItem(info.name, info.type, filename));
-					}
-				} else {
-					final String name = file.getName();
-					final String comment = date + String.format(" (%d kB)", file.length() / 1024);
-					list.add(new PlaylistItem(name, comment, filename));
-				}
+				
+				final String name = file.getName();
+				final String comment = date + String.format(" (%d kB)", file.length() / 1024);
+				list.add(new PlaylistItem(name, comment, filename));
 			}
 			Collections.sort(list);
 			mList.addAll(list);

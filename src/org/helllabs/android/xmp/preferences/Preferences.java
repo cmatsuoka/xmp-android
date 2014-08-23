@@ -40,7 +40,7 @@ public class Preferences extends PreferenceActivity {
 	public static final String SHOW_TOAST = "show_toast";
 	public static final String SHOW_INFO_LINE = "show_info_line";
 	public static final String USE_FILENAME = "use_filename";
-	public static final String TITLES_IN_BROWSER = "titles_in_browser";
+	//public static final String TITLES_IN_BROWSER = "titles_in_browser";
 	public static final String ENABLE_DELETE = "enable_delete";
 	public static final String KEEP_SCREEN_ON = "keep_screen_on";
 	public static final String HEADSET_PAUSE = "headset_pause";
