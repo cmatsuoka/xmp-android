@@ -123,6 +123,8 @@ public class PlayerActivity extends Activity {
 		}
 
 		public void onServiceDisconnected(final ComponentName className) {
+			saveAllSeqPreference();
+			
 			synchronized (playerLock) {
 				stopUpdate = true;
 				modPlayer = null;
@@ -355,7 +357,7 @@ public class PlayerActivity extends Activity {
 			handler.removeCallbacksAndMessages(null);
 			
 			try {
-				Thread.sleep(100);
+				Thread.sleep(100);				// in case we have a callback running
 				modPlayer.allowRelease();		// finished playing, we can release the module
 			} catch (Exception e) {
 				Log.e(TAG, "Can't allow module release");
@@ -715,23 +717,36 @@ public class PlayerActivity extends Activity {
 	}
 
 
-	@Override
-	public void onDestroy() {		
-		//if (deleteDialog != null) {
-		//	deleteDialog.cancel();
-		//}
-
+	private void saveAllSeqPreference() {
 		synchronized (playerLock) {
 			if (modPlayer != null) {
 				try {
 					// Write our all sequences button status to shared prefs
 					final boolean allSeq = modPlayer.getAllSequences();
 					if (allSeq != prefs.getBoolean(Preferences.ALL_SEQUENCES, false)) {
+						Log.w(TAG, "Write all sequences preference");
 						SharedPreferences.Editor editor = prefs.edit();
 						editor.putBoolean(Preferences.ALL_SEQUENCES, allSeq);
 						editor.commit();
 					}
-					
+				} catch (RemoteException e) {
+					Log.e(TAG, "Can't save all sequences preference");
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void onDestroy() {		
+		//if (deleteDialog != null) {
+		//	deleteDialog.cancel();
+		//}
+
+		saveAllSeqPreference();
+		
+		synchronized (playerLock) {
+			if (modPlayer != null) {
+				try {
 					modPlayer.unregisterCallback(playerCallback);
 				} catch (RemoteException e) {
 					Log.e(TAG, "Can't unregister player callback");
