@@ -37,6 +37,13 @@
       android:title="@string/pref_use_filename_title"
       android:summary="@string/pref_use_filename_summary"
       android:defaultValue="false" />
+    
+    <CheckBoxPreference 
+      android:key="back_button_parentdir"
+      android:persistent="true"
+      android:title="@string/pref_back_button_parentdir_title"
+      android:summary="@string/pref_back_button_parentdir_summary"
+      android:defaultValue="false"/>
      
     <Preference
       android:key="clear_cache"

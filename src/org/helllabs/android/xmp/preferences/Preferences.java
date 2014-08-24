@@ -46,6 +46,7 @@ public class Preferences extends PreferenceActivity {
 	public static final String KEEP_SCREEN_ON = "keep_screen_on";
 	public static final String HEADSET_PAUSE = "headset_pause";
 	public static final String ALL_SEQUENCES = "all_sequences";
+	public static final String BACK_BUTTON_PARENTDIR = "back_button_parentdir";
 
 	private SharedPreferences prefs;
 	private String oldPath;

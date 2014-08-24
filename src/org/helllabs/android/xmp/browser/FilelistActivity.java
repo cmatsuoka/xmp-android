@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -56,6 +57,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private final List<PlaylistItem> mList = new ArrayList<PlaylistItem>();
 	private boolean mLoopMode;
 	private boolean mShuffleMode;
+	private boolean mBackButtonParentdir;
 	
 	// Cross-fade
 	private View contentView;
@@ -301,6 +303,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 		curPath = (TextView)findViewById(R.id.current_path);
 		registerForContextMenu(curPath);
+		
+		mBackButtonParentdir = mPrefs.getBoolean(Preferences.BACK_BUTTON_PARENTDIR, false);
 
 		final int textColor = curPath.getCurrentTextColor();
 		curPath.setOnTouchListener(new View.OnTouchListener() {
@@ -319,12 +323,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		upButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View view) {
-				final File file = new File(currentDir + "/.");
-				String name = file.getParentFile().getParent();
-				if (name == null) {
-					name = "/";
-				}
-				updateModlist(name);
+				parentDir();
 			}
 		});
 
@@ -353,6 +352,26 @@ public class FilelistActivity extends BasePlaylistActivity {
 		mLoopMode = readLoopModePref();
 		
 		setupButtons();
+	}
+	
+	private void parentDir() {
+		final File file = new File(currentDir + "/.");
+		String name = file.getParentFile().getParent();
+		if (name == null) {
+			name = "/";
+		}
+		updateModlist(name);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			if (mBackButtonParentdir) {
+				parentDir();
+				return true;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
@@ -403,8 +422,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 		}
 		Collections.sort(list);
 		mList.addAll(list);
-
-		final ModInfo info = new ModInfo();
 
 		list.clear();
 		final File[] modFiles = modDir.listFiles(new ModFilter());

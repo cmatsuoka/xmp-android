@@ -48,6 +48,9 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		mContext = this;
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mShowToasts = mPrefs.getBoolean(Preferences.SHOW_TOAST, true);
+		
+		// Action bar icon navigation
+	    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
 	protected abstract List<PlaylistItem> getModList();
