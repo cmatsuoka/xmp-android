@@ -108,7 +108,7 @@ public class PlayerActivity extends Activity {
 				} else {
 					// Reconnect to existing service
 					try {
-						showNewMod(modPlayer.getFileName());
+						showNewMod();
 
 						if (modPlayer.isPaused()) {
 							pause();
@@ -136,10 +136,10 @@ public class PlayerActivity extends Activity {
 	private final PlayerCallback playerCallback = new PlayerCallback.Stub() {
 
 		@Override
-		public void newModCallback(final String name, final String[] instruments) throws RemoteException {
+		public void newModCallback() throws RemoteException {
 			synchronized (playerLock) {
 				Log.i(TAG, "Show module data");
-				showNewMod(name);
+				showNewMod();
 				canChangeViewer = true;
 			}
 		}
@@ -725,7 +725,7 @@ public class PlayerActivity extends Activity {
 					final boolean allSeq = modPlayer.getAllSequences();
 					if (allSeq != prefs.getBoolean(Preferences.ALL_SEQUENCES, false)) {
 						Log.w(TAG, "Write all sequences preference");
-						SharedPreferences.Editor editor = prefs.edit();
+						final SharedPreferences.Editor editor = prefs.edit();
 						editor.putBoolean(Preferences.ALL_SEQUENCES, allSeq);
 						editor.commit();
 					}
@@ -786,7 +786,7 @@ public class PlayerActivity extends Activity {
 		screenOn = true;
 	}
 	
-	public void playNewSequence(int num) {
+	public void playNewSequence(final int num) {
 		synchronized (playerLock) {
 			if (modPlayer != null) {
 				try {
@@ -827,7 +827,7 @@ public class PlayerActivity extends Activity {
 		}
 	};
 
-	private void showNewMod(final String fileName) {
+	private void showNewMod() {
 		//if (deleteDialog != null) {
 		//	deleteDialog.cancel();
 		//}
@@ -857,7 +857,7 @@ public class PlayerActivity extends Activity {
 					allSeq = modPlayer.getAllSequences();
 					loop = modPlayer.getLoop();
 
-					if (name.trim().length() == 0) {
+					if (name.trim().isEmpty()) {
 						name = "<untitled>";
 					}
 				} catch (RemoteException e) {

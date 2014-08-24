@@ -368,7 +368,7 @@ public final class PlayerService extends Service {
 				int numClients = callbacks.beginBroadcast();
 				for (int j = 0; j < numClients; j++) {
 					try {
-						callbacks.getBroadcastItem(j).newModCallback(fileName, Xmp.getInstruments());
+						callbacks.getBroadcastItem(j).newModCallback();
 					} catch (RemoteException e) {
 						Log.e(TAG, "Error notifying new module to client");
 					}
