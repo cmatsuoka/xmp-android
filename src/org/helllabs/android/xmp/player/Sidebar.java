@@ -1,10 +1,8 @@
 package org.helllabs.android.xmp.player;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.util.Log;
 
-import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -97,13 +95,13 @@ public class Sidebar {
 	
 	}
 	
-	private void commentClick() {
-		final String comment = Xmp.getComment();
-		if (comment != null) {
-			final Intent intent = new Intent(activity, CommentActivity.class);
-			intent.putExtra("comment", comment);
-			activity.startActivity(intent);		
-		}
-		
-	}
+//	private void commentClick() {
+//		final String comment = Xmp.getComment();
+//		if (comment != null) {
+//			final Intent intent = new Intent(activity, CommentActivity.class);
+//			intent.putExtra("comment", comment);
+//			activity.startActivity(intent);		
+//		}
+//		
+//	}
 }
