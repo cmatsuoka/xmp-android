@@ -365,16 +365,6 @@ public final class PlayerService extends Service {
 					Xmp.mute(i, 0);
 				}
 
-				int numClients = callbacks.beginBroadcast();
-				for (int j = 0; j < numClients; j++) {
-					try {
-						callbacks.getBroadcastItem(j).newModCallback();
-					} catch (RemoteException e) {
-						Log.e(TAG, "Error notifying new module to client");
-					}
-				}
-				callbacks.finishBroadcast();
-
 				final String volBoost = prefs.getString(Preferences.VOL_BOOST, "1");
 
 				final int[] interpTypes = { Xmp.INTERP_NEAREST, Xmp.INTERP_LINEAR, Xmp.INTERP_SPLINE };
@@ -391,6 +381,16 @@ public final class PlayerService extends Service {
 				}
 
 				Xmp.startPlayer(sampleRate, bufferMs);
+				
+				int numClients = callbacks.beginBroadcast();
+				for (int j = 0; j < numClients; j++) {
+					try {
+						callbacks.getBroadcastItem(j).newModCallback();
+					} catch (RemoteException e) {
+						Log.e(TAG, "Error notifying new module to client");
+					}
+				}
+				callbacks.finishBroadcast();
 				
 				Xmp.setPlayer(Xmp.PLAYER_AMP, Integer.parseInt(volBoost));
 				Xmp.setPlayer(Xmp.PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));				

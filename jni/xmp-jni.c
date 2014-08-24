@@ -285,13 +285,13 @@ Java_org_helllabs_android_xmp_Xmp_getInfo(JNIEnv *env, jobject obj, jintArray va
 {
 	int v[7];
 
-	v[0] = fi[_before].pos;
-	v[1] = fi[_before].pattern;
-	v[2] = fi[_before].row;
-	v[3] = fi[_before].num_rows;
-	v[4] = fi[_before].frame;
-	v[5] = fi[_before].speed;
-	v[6] = fi[_before].bpm;
+	v[0] = fi[_before].pos & 0xff;
+	v[1] = fi[_before].pattern & 0xff;
+	v[2] = fi[_before].row & 0xff;
+	v[3] = fi[_before].num_rows & 0xff;
+	v[4] = fi[_before].frame & 0xff;
+	v[5] = fi[_before].speed & 0xff;
+	v[6] = fi[_before].bpm & 0xff;
 
 	(*env)->SetIntArrayRegion(env, values, 0, 7, v);
 }

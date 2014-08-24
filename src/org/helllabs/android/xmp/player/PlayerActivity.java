@@ -340,8 +340,7 @@ public class PlayerActivity extends Activity {
 					}
 				}
 
-				if (/* !paused && */ screenOn) {
-					// also show information when paused so scrolls work
+				if (screenOn) {
 					handler.post(updateInfoRunnable);
 				}
 
@@ -353,7 +352,6 @@ public class PlayerActivity extends Activity {
 				} catch (InterruptedException e) { }
 			} while (playTime >= 0);
 
-			//seekBar.setProgress(0);
 			handler.removeCallbacksAndMessages(null);
 			handler.post(new Runnable() {
 				@Override
