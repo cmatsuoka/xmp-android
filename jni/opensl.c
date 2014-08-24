@@ -206,7 +206,7 @@ int has_free_buffer()
 	return last_free != first_free;
 }
 
-int fill_buffer(int num_loop)
+int fill_buffer(int looped)
 {
 	int ret;
 
@@ -214,7 +214,7 @@ int fill_buffer(int num_loop)
 	char *b = &buffer[first_free * buffer_size];
 	INC(first_free, buffer_num);
 
-	ret = play_buffer(b, buffer_size, num_loop);
+	ret = play_buffer(b, buffer_size, looped);
 	(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
 
 	return ret;

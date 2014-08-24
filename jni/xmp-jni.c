@@ -29,6 +29,7 @@ static int _sequence;
 static int _mod_is_loaded;
 static int _now, _before;
 static int _buffer_num;
+static int _loop_count;
 
 #define MAX_BUFFER_SIZE 256
 static char _buffer[MAX_BUFFER_SIZE];
@@ -161,6 +162,7 @@ Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint rat
 	}
 
 	_now = _before = 0;
+	_loop_count = 0;
 	_playing = 1;
 	return xmp_start_player(ctx, rate, 0);
 }
@@ -176,12 +178,17 @@ Java_org_helllabs_android_xmp_Xmp_endPlayer(JNIEnv *env, jobject obj)
 	return 0;
 }
 
-int play_buffer(void *buffer, int size, int num_loop)
+int play_buffer(void *buffer, int size, int looped)
 {
-	int ret = xmp_play_buffer(ctx, buffer, size, num_loop);
+	int ret;
+	int num_loop;
+
+	num_loop = looped ? 0 : _loop_count + 1;
+	ret = xmp_play_buffer(ctx, buffer, size, num_loop);
 	xmp_get_frame_info(ctx, &fi[_now]);
 	INC(_before, _buffer_num);
 	_now = (_before + _buffer_num - 1) % _buffer_num;
+	_loop_count = fi[_now].loop_count;
 
 	return ret;
 }
@@ -211,9 +218,9 @@ Java_org_helllabs_android_xmp_Xmp_hasFreeBuffer(JNIEnv *env, jobject obj)
 }
 
 JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_fillBuffer(JNIEnv *env, jobject obj, jboolean loop)
+Java_org_helllabs_android_xmp_Xmp_fillBuffer(JNIEnv *env, jobject obj, jboolean looped)
 {
-	return fill_buffer(!loop);
+	return fill_buffer(looped);
 }
 
 
@@ -644,6 +651,7 @@ Java_org_helllabs_android_xmp_Xmp_setSequence(JNIEnv *env, jobject obj, jint seq
 		return JNI_FALSE;
 
 	_sequence = seq;
+	_loop_count = 0;
 
 	xmp_set_position(ctx, mi.seq_data[_sequence].entry_point);
 	xmp_play_buffer(ctx, NULL, 0, 0);
