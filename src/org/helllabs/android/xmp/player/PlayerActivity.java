@@ -352,9 +352,10 @@ public class PlayerActivity extends Activity {
 			} while (playTime >= 0);
 
 			//seekBar.setProgress(0);
-			handler.removeCallbacks(updateInfoRunnable);
+			handler.removeCallbacksAndMessages(null);
 			
 			try {
+				Thread.sleep(100);
 				modPlayer.allowRelease();		// finished playing, we can release the module
 			} catch (Exception e) {
 				Log.e(TAG, "Can't allow module release");
