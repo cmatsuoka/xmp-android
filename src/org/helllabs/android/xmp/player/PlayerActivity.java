@@ -355,13 +355,17 @@ public class PlayerActivity extends Activity {
 
 			//seekBar.setProgress(0);
 			handler.removeCallbacksAndMessages(null);
-			
-			try {
-				Thread.sleep(100);				// in case we have a callback running
-				modPlayer.allowRelease();		// finished playing, we can release the module
-			} catch (Exception e) {
-				Log.e(TAG, "Can't allow module release");
-			}
+			handler.post(new Runnable() {
+				@Override
+				public void run() {
+					Log.i(TAG, "Flush interface update");
+					try {
+						modPlayer.allowRelease();		// finished playing, we can release the module
+					} catch (RemoteException e) {
+						Log.e(TAG, "Can't allow module release");
+					}
+				}
+			});
 		}
 	};
 
