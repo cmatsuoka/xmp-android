@@ -91,7 +91,7 @@ static int opensl_open(int sr, int num)
 		SL_BYTEORDER_LITTLEENDIAN
 	};
 
-	SLDataSource audioSrc = { &loc_bufq, &format_pcm };
+	SLDataSource audio_source = { &loc_bufq, &format_pcm };
 
 	/* configure audio sink */
 	SLDataLocator_OutputMix loc_outmix = {
@@ -99,7 +99,7 @@ static int opensl_open(int sr, int num)
 		output_mix_obj
 	};
 
-	SLDataSink audioSnk = { &loc_outmix, NULL };
+	SLDataSink audio_sink = { &loc_outmix, NULL };
 
 	/* create audio player */
 	const SLInterfaceID ids1[] = {
@@ -110,7 +110,7 @@ static int opensl_open(int sr, int num)
 	};
 
 	r = (*engine_engine)->CreateAudioPlayer(engine_engine, &player_obj,
-			&audioSrc, &audioSnk, 1, ids1, req1);
+			&audio_source, &audio_sink, 1, ids1, req1);
 	if (r != SL_RESULT_SUCCESS) 
 		goto err2;
 
