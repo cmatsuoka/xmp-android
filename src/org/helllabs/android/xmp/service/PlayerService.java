@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
@@ -97,7 +98,9 @@ public final class PlayerService extends Service {
 			filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
 			filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
 			filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-			filter.addAction(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
+			if (Build.VERSION.SDK_INT >= 11) {
+				filter.addAction(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
+			}
 			registerReceiver(bluetoothConnectionReceiver, filter);
 		}
 
