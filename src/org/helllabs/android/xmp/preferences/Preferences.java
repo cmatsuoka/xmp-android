@@ -47,6 +47,7 @@ public class Preferences extends PreferenceActivity {
 	public static final String HEADSET_PAUSE = "headset_pause";
 	public static final String ALL_SEQUENCES = "all_sequences";
 	public static final String BACK_BUTTON_PARENTDIR = "back_button_parentdir";
+	public static final String BLUETOOTH_PAUSE = "bluetooth_pause";
 
 	private SharedPreferences prefs;
 	private String oldPath;

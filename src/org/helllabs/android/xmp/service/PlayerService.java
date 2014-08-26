@@ -2,6 +2,7 @@ package org.helllabs.android.xmp.service;
 
 import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.preferences.Preferences;
+import org.helllabs.android.xmp.service.receiver.BluetoothConnectionReceiver;
 import org.helllabs.android.xmp.service.receiver.HeadsetPlugReceiver;
 import org.helllabs.android.xmp.service.receiver.NotificationActionReceiver;
 import org.helllabs.android.xmp.service.receiver.RemoteControlReceiver;
@@ -9,6 +10,8 @@ import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
 
 import android.app.Service;
+import android.bluetooth.BluetoothA2dp;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -60,6 +63,9 @@ public final class PlayerService extends Service {
 	// Headset autopause
 	private HeadsetPlugReceiver headsetPlugReceiver;
 	private boolean headsetPause;
+	
+	// Bluetooth autopause
+	private BluetoothConnectionReceiver bluetoothConnectionReceiver;
 
 	// remote control
 	private MediaButtons mediaButtons;
@@ -77,10 +83,22 @@ public final class PlayerService extends Service {
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if (prefs.getBoolean(Preferences.HEADSET_PAUSE, true)) {
+			Log.i(TAG, "Register headset receiver");
 			// For listening to headset changes, the broadcast receiver cannot be
 			// declared in the manifest, it must be dynamically registered. 
 			headsetPlugReceiver = new HeadsetPlugReceiver();
 			registerReceiver(headsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+		}
+		
+		if (prefs.getBoolean(Preferences.BLUETOOTH_PAUSE, true)) {
+			Log.i(TAG, "Register bluetooth receiver");
+			bluetoothConnectionReceiver = new BluetoothConnectionReceiver();
+			final IntentFilter filter = new IntentFilter();
+			filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+			filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+			filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+			filter.addAction(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
+			registerReceiver(bluetoothConnectionReceiver, filter);
 		}
 
 		bufferMs = prefs.getInt(Preferences.BUFFER_MS, DEFAULT_BUFFER_MS);
@@ -127,6 +145,7 @@ public final class PlayerService extends Service {
 	public void onDestroy() {
 		if (headsetPlugReceiver != null) {
 			unregisterReceiver(headsetPlugReceiver);
+			unregisterReceiver(bluetoothConnectionReceiver);
 		}
 		mediaButtons.unregister();
 		watchdog.stop();
@@ -297,6 +316,44 @@ public final class PlayerService extends Service {
 			HeadsetPlugReceiver.setState(HeadsetPlugReceiver.NO_STATE);
 		}
 	}
+	
+	private void checkBluetoothState() {
+		final int state = BluetoothConnectionReceiver.getState();
+
+		if (state != BluetoothConnectionReceiver.NO_STATE) {
+			switch (state) {
+			case BluetoothConnectionReceiver.DISCONNECTED:
+				Log.i(TAG, "Handle bluetooth disconnection");
+
+				// If not already paused
+				if (!paused && !autoPaused) {
+					headsetPause = true;
+					actionPlayPause();
+				} else {
+					Log.i(TAG, "Already paused");
+				}
+				break;
+			case BluetoothConnectionReceiver.CONNECTED:
+				Log.i(TAG, "Handle bluetooth connection");
+
+				// If paused by headset unplug
+				if (headsetPause) {
+					// Don't unpause if we're paused due to phone call
+					if (!autoPaused) {
+						actionPlayPause();
+					} else {
+						Log.i(TAG, "Paused by phone state, don't unpause");
+					}
+					headsetPause = false;
+				} else {
+					Log.i(TAG, "Manual pause, don't unpause");
+				}
+				break;
+			}
+
+			BluetoothConnectionReceiver.setState(BluetoothConnectionReceiver.NO_STATE);
+		}
+	}
 
 //	private int playFrame() {
 //		// Synchronize frame play with data gathering so we don't change playing variables
@@ -407,24 +464,26 @@ public final class PlayerService extends Service {
 
 				do {
 					while (cmd == CMD_NONE) {
-						while (paused) {
-							watchdog.refresh();
+						while (paused) {					
 							try {
 								Thread.sleep(100);
 							} catch (InterruptedException e) {
 								break;
 							}
 
+							watchdog.refresh();
 							checkMediaButtons();
 							checkHeadsetState();
+							checkBluetoothState();
 							checkNotificationButtons();
 						}
 
-						while (!Xmp.hasFreeBuffer()) {
+						while (!Xmp.hasFreeBuffer() && !paused) {
 							try {
 								Thread.sleep(40);
 							} catch (InterruptedException e) {	}
 						}
+						
 						if (Xmp.fillBuffer(looped) < 0) {
 							break;
 						}
@@ -432,6 +491,7 @@ public final class PlayerService extends Service {
 						watchdog.refresh();
 						checkMediaButtons();
 						checkHeadsetState();
+						checkBluetoothState();
 						checkNotificationButtons();
 					}
 

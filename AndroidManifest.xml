@@ -13,6 +13,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -167,12 +168,13 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
+
         <receiver android:name=".service.receiver.NotificationActionReceiver" />
 
         <!--
              For listening to headset changes, the broadcast receiver
-		     cannot be declared in the manifest, it must be dynamically
-		     registered.
+             cannot be declared in the manifest, it must be dynamically
+             registered.
         -->
     </application>
 

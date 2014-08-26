@@ -18,6 +18,8 @@
     <string name="pref_interp_type_title">Interpolation type</string>
     <string name="pref_headset_pause_summary">Automatically pause replay when headset is disconnected</string>
     <string name="pref_headset_pause_title">Pause on headset unplug</string>
+    <string name="pref_bluetooth_pause_summary">Automatically pause replay when bluetooth is disconnected</string>
+    <string name="pref_bluetooth_pause_title">Pause on bluetooth disconnection</string>
     <string name="pref_all_sequences_summary">Play all existing patterns/subsongs</string>
     <string name="pref_all_sequences_title">Hidden patterns</string>
     <string name="pref_back_button_parentdir_summary">Use back button to navigate to parent directory</string>
@@ -25,6 +27,8 @@
     <string name="pref_category_sound">Sound settings</string>
     <string name="pref_category_files">Playlist settings</string>
     <string name="pref_category_player_control">Player control</string>
+    <string name="pref_category_information">Information</string>
+    <string name="pref_category_interface">Interface settings</string>
     <string name="changelog_text">• Use native OpenSL audio output\n• Add option to use back for parent dir\n• Fix subsong explorer preference persistence\n• Fix IT fadeout on virtual channel\n• Fix S3M tone portamento after note end\n 
 \nVersion 3.10.2:\n• Add support to play and pause media buttons\n• Add support to AMOS Music Bank format\n• Fix XM fadeout reset on note end\n• Fix IT portamento in sample mode\n• Fix fine volume slide effect memory\n
 \nVersion 3.10.1:\n• Fix end of envelope detection\n• Fix IT foreground channel reset\n• Fix IT unmapped sample parsing\n• Fix S3M effect memory sharing\n• Fix S3M default pan positions\n• Fix XM fine pitch slide effect memory\n• Fix XM finetune effect handling\n• Fix subsong list scrolling\n 
@@ -40,12 +44,10 @@
     <string name="menu_prefs">Settings</string>
     <string name="pref_examples_title">Install modules</string>
     <string name="pref_examples_summary">Install example music files when creating modules directory</string>
-    <string name="pref_category_interface">Interface settings</string>
     <string name="pref_sampling_rate_summary">Set the mixer sampling rate</string>
     <string name="pref_sampling_rate_title">Sampling rate</string>
     <string name="pref_list_formats_title">Known formats</string>
     <string name="pref_list_formats_summary">List all supported module formats</string>
-    <string name="pref_category_information">Information</string>
     <string name="pref_about_title">About</string>
     <string name="pref_about_summary">View version and application info</string>
     <string name="dialog_new_comment">Comment</string>
