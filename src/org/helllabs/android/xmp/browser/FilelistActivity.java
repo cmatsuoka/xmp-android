@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.preferences.Preferences;
@@ -41,6 +42,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private static final String OPTIONS_LOOP_MODE = "options_loopMode";
 	private static final boolean DEFAULT_SHUFFLE_MODE = true;
 	private static final boolean DEFAULT_LOOP_MODE = false;
+	
+	private Stack<String> mPathStack;
 
 	private boolean isPathMenu;
 	private TextView curPath;
@@ -240,6 +243,7 @@ public class FilelistActivity extends BasePlaylistActivity {
         			name = "/";
                 }
             }
+        	mPathStack.push(name);
             updateModlist(name);
         } else {
             super.onListItemClick(list, view, position, id);
@@ -304,7 +308,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		curPath = (TextView)findViewById(R.id.current_path);
 		registerForContextMenu(curPath);
 		
-		mBackButtonParentdir = mPrefs.getBoolean(Preferences.BACK_BUTTON_PARENTDIR, false);
+		mBackButtonParentdir = mPrefs.getBoolean(Preferences.BACK_BUTTON_NAVIGATION, true);
 
 		final int textColor = curPath.getCurrentTextColor();
 		curPath.setOnTouchListener(new View.OnTouchListener() {
@@ -351,6 +355,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 		mShuffleMode = readShuffleModePref();
 		mLoopMode = readLoopModePref();
 		
+		mPathStack = new Stack<String>();
+		
 		setupButtons();
 	}
 	
@@ -360,15 +366,23 @@ public class FilelistActivity extends BasePlaylistActivity {
 		if (name == null) {
 			name = "/";
 		}
+		
+		if (!mPathStack.isEmpty()) {
+			mPathStack.pop();
+		}
+		
 		updateModlist(name);
 	}
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (mBackButtonParentdir) {
-				parentDir();
-				return true;
+				// Return to parent dir up to the starting level, then act as regular back
+				if (!mPathStack.isEmpty()) {
+					parentDir();
+					return true;
+				}
 			}
 		}
 		return super.onKeyDown(keyCode, event);
