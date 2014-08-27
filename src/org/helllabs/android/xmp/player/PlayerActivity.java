@@ -356,11 +356,15 @@ public class PlayerActivity extends Activity {
 			handler.post(new Runnable() {
 				@Override
 				public void run() {
-					Log.i(TAG, "Flush interface update");
-					try {
-						modPlayer.allowRelease();		// finished playing, we can release the module
-					} catch (RemoteException e) {
-						Log.e(TAG, "Can't allow module release");
+					synchronized (playerLock) {
+						if (modPlayer != null) {
+							Log.i(TAG, "Flush interface update");
+							try {
+								modPlayer.allowRelease();		// finished playing, we can release the module
+							} catch (RemoteException e) {
+								Log.e(TAG, "Can't allow module release");
+							}
+						}
 					}
 				}
 			});
