@@ -215,6 +215,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		intent.putExtra("loop", isLoopMode());
 		intent.putExtra("start", start);
 		intent.putExtra("keepFirst", keepFirst);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);	// prevent screen flicker when starting player activity 
 		Log.i(TAG, "Start Player activity");
 		startActivityForResult(intent, PLAY_MOD_REQUEST);
 	}
