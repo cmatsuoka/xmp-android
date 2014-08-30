@@ -173,6 +173,13 @@
       android:summary="@string/pref_keep_screen_on_summary"
       android:defaultValue="false"/>
     
+    <CheckBoxPreference 
+      android:key="start_on_player"
+      android:persistent="true"
+      android:title="@string/pref_start_on_player_title"
+      android:summary="@string/pref_start_on_player_summary"
+      android:defaultValue="true"/>
+    
     <PreferenceCategory
       android:title="@string/pref_category_experimental">
           

@@ -8,6 +8,10 @@ public final class Log {
 		
 	}
 	
+	public static void d(final String tag, final String message) {
+		android.util.Log.d(TAG, "[" + tag + "] " + message);
+	}
+	
 	public static void i(final String tag, final String message) {
 		android.util.Log.i(TAG, "[" + tag + "] " + message);
 	}

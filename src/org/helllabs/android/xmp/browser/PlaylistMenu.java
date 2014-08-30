@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.player.PlayerActivity;
 import org.helllabs.android.xmp.preferences.Preferences;
+import org.helllabs.android.xmp.service.PlayerService;
 import org.helllabs.android.xmp.util.ChangeLog;
 import org.helllabs.android.xmp.util.Log;
 
@@ -87,9 +89,31 @@ public class PlaylistMenu extends ActionBarActivity {
 		final ChangeLog changeLog = new ChangeLog(this);
 
 		changeLog.show();
-
+		
+		if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_NEW_TASK) != 0) {
+			startPlayerActivity();
+		}
+	}
+	
+	@Override
+	public void onNewIntent(Intent intent) {
+		
+		// If we launch from launcher and we're playing a module, go straight to the player activity
+		
+		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_NEW_TASK) != 0) {
+			startPlayerActivity();
+		}
 	}
 
+	private void startPlayerActivity() {
+		if (prefs.getBoolean(Preferences.START_ON_PLAYER, true)) {
+			if (PlayerService.isAlive) {
+				final Intent playerIntent = new Intent(this, PlayerActivity.class);
+				startActivity(playerIntent);
+			}
+		}
+	}
+	
 	private boolean checkStorage() {
 		final String state = Environment.getExternalStorageState();
 
