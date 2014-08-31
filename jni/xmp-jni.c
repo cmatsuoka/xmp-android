@@ -196,7 +196,7 @@ int play_buffer(void *buffer, int size, int looped)
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_playAudio(JNIEnv *env, jobject obj)
 {
-	play_audio();
+	return play_audio();
 }
 
 JNIEXPORT void JNICALL

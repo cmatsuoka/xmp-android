@@ -161,10 +161,14 @@ static int opensl_open(int sr, int num)
 static void opensl_close()
 {
 	lock();
+
 	(*player_obj)->Destroy(player_obj);
 	(*output_mix_obj)->Destroy(output_mix_obj);
 	(*engine_obj)->Destroy(engine_obj);
+
 	player_play = NULL;
+	buffer_queue = NULL;
+
 	unlock();
 }
 
@@ -204,7 +208,11 @@ int play_audio()
 	for (i = 0; i < buffer_num; i++) {
 		char *b = &buffer[i * buffer_size];
 		play_buffer(b, buffer_size, 0);
-		(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
+		lock();
+		if (buffer_queue != NULL) {
+			(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
+		}
+		unlock();
 	}
 
 	last_free = first_free = 0;
@@ -213,6 +221,8 @@ int play_audio()
 	r = (*player_play)->SetPlayState(player_play, SL_PLAYSTATE_PLAYING);
 	if (r != SL_RESULT_SUCCESS) 
 		return -1;
+
+	return 0;
 }
 
 int has_free_buffer()
@@ -229,7 +239,11 @@ int fill_buffer(int looped)
 	INC(first_free, buffer_num);
 
 	ret = play_buffer(b, buffer_size, looped);
-	(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
+	lock();
+	if (buffer_queue != NULL) {
+		(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
+	}
+	unlock();
 
 	return ret;
 }
