@@ -583,6 +583,9 @@ public class PlayerActivity extends Activity {
 				try {
 					if (modPlayer.time() > 3000) {
 						modPlayer.seek(0);
+						if (paused) {
+							modPlayer.pause();
+						}
 					} else {
 						modPlayer.prevSong();
 					}
