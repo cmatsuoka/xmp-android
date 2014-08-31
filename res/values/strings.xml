@@ -31,7 +31,7 @@
     <string name="pref_category_player_control">Player control</string>
     <string name="pref_category_information">Information</string>
     <string name="pref_category_interface">Interface settings</string>
-    <string name="changelog_text">• Autopause on bluetooth disconnection\n• Smart back button in file browser\n• Launch in player screen if already playing\n• Fix crash at end of replay\n• Fix deadlock on module stop\n
+    <string name="changelog_text">• Many stability fixes\n• Autopause on bluetooth disconnection\n• Smart back button in file browser\n• Launch in player screen if already playing\n
 \nVersion 4.0.0:\n• Use native OpenSL audio output\n• Add option to use back for parent dir\n• Fix subsong explorer preference persistence\n• Fix IT fadeout on virtual channel\n• Fix S3M tone portamento after note end\n 
 \nVersion 3.10.2:\n• Add support to play and pause media buttons\n• Add support to AMOS Music Bank format\n• Fix XM fadeout reset on note end\n• Fix IT portamento in sample mode\n• Fix fine volume slide effect memory\n
 \nVersion 3.10.1:\n• Fix end of envelope detection\n• Fix IT foreground channel reset\n• Fix IT unmapped sample parsing\n• Fix S3M effect memory sharing\n• Fix S3M default pan positions\n• Fix XM fine pitch slide effect memory\n• Fix XM finetune effect handling\n• Fix subsong list scrolling\n 
