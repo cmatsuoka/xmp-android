@@ -31,14 +31,14 @@
     <string name="pref_category_player_control">Player control</string>
     <string name="pref_category_information">Information</string>
     <string name="pref_category_interface">Interface settings</string>
-    <string name="changelog_text">• Use native OpenSL audio output\n• Add option to use back for parent dir\n• Fix subsong explorer preference persistence\n• Fix IT fadeout on virtual channel\n• Fix S3M tone portamento after note end\n 
+    <string name="changelog_text">• Autopause on bluetooth disconnection\n• Smart back button in file browser\n• Fix crash at end of replay\n• Launch in player screen if already playing\n
+\nVersion 4.0.0:\n• Use native OpenSL audio output\n• Add option to use back for parent dir\n• Fix subsong explorer preference persistence\n• Fix IT fadeout on virtual channel\n• Fix S3M tone portamento after note end\n 
 \nVersion 3.10.2:\n• Add support to play and pause media buttons\n• Add support to AMOS Music Bank format\n• Fix XM fadeout reset on note end\n• Fix IT portamento in sample mode\n• Fix fine volume slide effect memory\n
 \nVersion 3.10.1:\n• Fix end of envelope detection\n• Fix IT foreground channel reset\n• Fix IT unmapped sample parsing\n• Fix S3M effect memory sharing\n• Fix S3M default pan positions\n• Fix XM fine pitch slide effect memory\n• Fix XM finetune effect handling\n• Fix subsong list scrolling\n 
 \nVersion 3.10.0:\n• Add default pan separation option\n• Refactor and fix Amiga period limits\n• Fix XM and IT envelope loop quirks\n• Fix XM invalid offset handling\n• Fix MOD pattern break with jump\n• Fix IT portamento with offset\n• Fix IT NNA with invalid sample\n• Fix IT and S3M BPM limits\n• Fix IT envelope reset\n• Fix IT carry on note cut events\n• Fix IT compatible GXX mode\n• Fix XM release reset on new volume\n 
 \nVersion 3.9.5:\n• Fix crash in pattern viewer\n• Fix OctaMED default pitch\n• Fix OctaMED instrument names\n
-\nVersion 3.9.4:\n• Fix crash caused by integer overflow\n• Fix MED synth pitch slide reset\n• Fix MED synth finetune effect\n• Fix MED turn off note effect\n• Fix MED4 instrument numbering\n
     </string>
-    <string name="changelog_title">New in version 4.0.0</string>
+    <string name="changelog_title">New in version 4.0.1</string>
     <string name="changelog">Changelog</string>
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
     <string name="preferences_default_pan_dialog">Set the default pan separation:</string>
