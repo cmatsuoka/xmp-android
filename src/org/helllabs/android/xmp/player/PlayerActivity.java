@@ -325,12 +325,12 @@ public class PlayerActivity extends Activity {
 			playTime = 0;
 
 			do {
+				if (stopUpdate) {
+					Log.i(TAG, "Stop update");
+					break;
+				}
+				
 				synchronized (playerLock) {
-					if (stopUpdate) {
-						Log.i(TAG, "Stop update");
-						break;
-					}
-
 					if (modPlayer != null) {
 						try {
 							playTime = modPlayer.time() / 100;
