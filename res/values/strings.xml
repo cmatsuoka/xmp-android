@@ -25,7 +25,7 @@
     <string name="pref_back_button_navigation_summary">Back button returns to parent directory</string>
     <string name="pref_back_button_navigation_title">Back button navigation</string>
     <string name="pref_start_on_player_summary">If a module is playing, launch in the player screen</string>
-    <string name="pref_start_on_player_title">Start on player</string>
+    <string name="pref_start_on_player_title">Launch in player screen</string>
     <string name="pref_category_sound">Sound settings</string>
     <string name="pref_category_files">Playlist settings</string>
     <string name="pref_category_player_control">Player control</string>
