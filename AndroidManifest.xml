@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.helllabs.android.xmp"
     android:installLocation="auto"
-    android:versionCode="62"
-    android:versionName="4.0.1" >
+    android:versionCode="64"
+    android:versionName="4.0.1.2" >
 
     <uses-sdk
         android:minSdkVersion="9"

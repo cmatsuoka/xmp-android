@@ -49,12 +49,14 @@ Java_org_helllabs_android_xmp_Xmp_init(JNIEnv *env, jobject obj)
 		return;
 
 	ctx = xmp_create_context();
+	pthread_mutex_init(&_lock, NULL);
 }
 
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_deinit(JNIEnv *env, jobject obj)
 {
 
+	/*pthread_mutex_destroy(&_lock);*/
 	/* xmp_free_context(ctx); */
 	return 0;
 }
