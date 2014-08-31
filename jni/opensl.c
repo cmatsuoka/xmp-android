@@ -222,10 +222,14 @@ int fill_buffer(int looped)
 
 void restart_audio()
 {
-	(*player_play)->SetPlayState(player_play, SL_PLAYSTATE_PLAYING);
+	if (player_play != NULL) {
+		(*player_play)->SetPlayState(player_play, SL_PLAYSTATE_PLAYING);
+	}
 }
 
 void stop_audio()
 {
-	(*player_play)->SetPlayState(player_play, SL_PLAYSTATE_STOPPED);
+	if (player_play != NULL) {
+		(*player_play)->SetPlayState(player_play, SL_PLAYSTATE_STOPPED);
+	}
 }
