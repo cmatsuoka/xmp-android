@@ -201,7 +201,7 @@ int open_audio(int rate, int latency)
 
 int play_audio()
 {
-	SLresult r;
+	SLresult r = SL_RESULT_SUCCESS;
 	int i;
 
 	/* enqueue initial buffers */
@@ -218,7 +218,12 @@ int play_audio()
 	last_free = first_free = 0;
 
 	/* set player state to playing */
-	r = (*player_play)->SetPlayState(player_play, SL_PLAYSTATE_PLAYING);
+	lock();
+	if (player_play != NULL) {
+		r = (*player_play)->SetPlayState(player_play,
+					SL_PLAYSTATE_PLAYING);
+	}
+	unlock();
 	if (r != SL_RESULT_SUCCESS) 
 		return -1;
 

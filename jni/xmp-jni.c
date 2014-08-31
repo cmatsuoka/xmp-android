@@ -141,8 +141,13 @@ Java_org_helllabs_android_xmp_Xmp_testModule(JNIEnv *env, jobject obj, jstring n
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_releaseModule(JNIEnv *env, jobject obj)
 {
-	_mod_is_loaded = 0;
-	xmp_release_module(ctx);
+	lock();
+	if (_mod_is_loaded) {
+		_mod_is_loaded = 0;
+		xmp_release_module(ctx);
+	}
+	unlock();
+
 	return 0;
 }
 
@@ -197,15 +202,21 @@ Java_org_helllabs_android_xmp_Xmp_endPlayer(JNIEnv *env, jobject obj)
 
 int play_buffer(void *buffer, int size, int looped)
 {
-	int ret;
+	int ret = -XMP_END;
 	int num_loop;
 
-	num_loop = looped ? 0 : _loop_count + 1;
-	ret = xmp_play_buffer(ctx, buffer, size, num_loop);
-	xmp_get_frame_info(ctx, &fi[_now]);
-	INC(_before, _buffer_num);
-	_now = (_before + _buffer_num - 1) % _buffer_num;
-	_loop_count = fi[_now].loop_count;
+	lock();
+
+	if (_playing) {
+		num_loop = looped ? 0 : _loop_count + 1;
+		ret = xmp_play_buffer(ctx, buffer, size, num_loop);
+		xmp_get_frame_info(ctx, &fi[_now]);
+		INC(_before, _buffer_num);
+		_now = (_before + _buffer_num - 1) % _buffer_num;
+		_loop_count = fi[_now].loop_count;
+	}
+
+	unlock();
 
 	return ret;
 }
@@ -342,8 +353,12 @@ Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray
 {
 	int v[8];
 
-	if (!_mod_is_loaded)
+	lock();
+
+	if (!_mod_is_loaded) {
+		unlock();
 		return;
+	}
 
 	v[0] = mi.seq_data[_sequence].duration;
 	v[1] = mi.mod->len;
@@ -355,6 +370,8 @@ Java_org_helllabs_android_xmp_Xmp_getModVars(JNIEnv *env, jobject obj, jintArray
 	v[7] = _sequence;
 
 	(*env)->SetIntArrayRegion(env, vars, 0, 8, v);
+
+	unlock();
 }
 
 JNIEXPORT jstring JNICALL
@@ -472,12 +489,9 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 	int chn = mi.mod->chn;
 	int i;
 
-	if (!_mod_is_loaded)
-		return;
-
 	lock();
 
-	if (!_playing) {
+	if (!_mod_is_loaded || !_playing) {
 		unlock();
 		return;
 	}
@@ -565,8 +579,10 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 	int limit;
 	int step, len, lps, lpe;
  
+	lock();
+
 	if (!_mod_is_loaded)
-		return;
+		goto err;
 
 	if (width > MAX_BUFFER_SIZE) {
 		width = MAX_BUFFER_SIZE;
@@ -669,11 +685,16 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 	_pos[chn] = pos;
 
 	(*env)->SetByteArrayRegion(env, buffer, 0, width, _buffer);
+
+	unlock();
+
 	return;
 
     err:
 	memset(_buffer, 0, width);
 	(*env)->SetByteArrayRegion(env, buffer, 0, width, _buffer);
+
+	unlock();
 }
 
 JNIEXPORT jboolean JNICALL
