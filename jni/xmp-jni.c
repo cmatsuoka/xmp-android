@@ -5,8 +5,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 #include <jni.h>
 #include "xmp.h"
+#include "audio.h"
 
 /* #include <android/log.h> */
 
@@ -30,11 +32,14 @@ static int _mod_is_loaded;
 static int _now, _before;
 static int _buffer_num;
 static int _loop_count;
+static pthread_mutex_t _lock;
 
 #define MAX_BUFFER_SIZE 256
 static char _buffer[MAX_BUFFER_SIZE];
 
-#include "audio.h"
+#define lock()   pthread_mutex_lock(&_lock)
+#define unlock() pthread_mutex_unlock(&_lock)
+
 
 /* For ModList */
 JNIEXPORT void JNICALL
@@ -144,15 +149,18 @@ Java_org_helllabs_android_xmp_Xmp_releaseModule(JNIEnv *env, jobject obj)
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint rate, jint ms)
 {
-	int i;
+	int i, ret;
 
 	if ((_buffer_num = open_audio(rate, ms)) < 0) {
 		return -100;
 	}
 	_buffer_num++;
 
+	lock();
+
 	fi = calloc(1, _buffer_num * sizeof (struct xmp_frame_info));
 	if (fi == NULL) {
+		unlock();
 		return -101;
 	}
 
@@ -164,16 +172,25 @@ Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint rat
 	_now = _before = 0;
 	_loop_count = 0;
 	_playing = 1;
-	return xmp_start_player(ctx, rate, 0);
+	ret = xmp_start_player(ctx, rate, 0);
+
+	unlock();
+
+	return ret;
 }
 
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_endPlayer(JNIEnv *env, jobject obj)
 {
-	_playing = 0;
-	xmp_end_player(ctx);
-	free(fi);
-	close_audio();
+	lock();
+	if (_playing) {
+		_playing = 0;
+		xmp_end_player(ctx);
+		free(fi);
+		fi = NULL;
+		close_audio();
+	}
+	unlock();
 
 	return 0;
 }
@@ -259,12 +276,20 @@ Java_org_helllabs_android_xmp_Xmp_restartModule(JNIEnv *env, jobject obj)
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_seek(JNIEnv *env, jobject obj, jint time)
 {
-	int ret = xmp_seek_time(ctx, time);
+	int ret = 0;
 	int i;
 
-	for (i = 0; i < _buffer_num; i++) {
-		fi[i].time = time;
+	lock();
+
+	ret = xmp_seek_time(ctx, time);
+	if (_playing) {
+		for (i = 0; i < _buffer_num; i++) {
+			fi[i].time = time;
+		}
 	}
+
+	unlock ();
+
 	return ret;
 }
 
@@ -285,15 +310,19 @@ Java_org_helllabs_android_xmp_Xmp_getInfo(JNIEnv *env, jobject obj, jintArray va
 {
 	int v[7];
 
-	v[0] = fi[_before].pos & 0xff;
-	v[1] = fi[_before].pattern & 0xff;
-	v[2] = fi[_before].row & 0xff;
-	v[3] = fi[_before].num_rows & 0xff;
-	v[4] = fi[_before].frame & 0xff;
-	v[5] = fi[_before].speed & 0xff;
-	v[6] = fi[_before].bpm & 0xff;
+	lock();
+	if (_playing) {
+		v[0] = fi[_before].pos & 0xff;
+		v[1] = fi[_before].pattern & 0xff;
+		v[2] = fi[_before].row & 0xff;
+		v[3] = fi[_before].num_rows & 0xff;
+		v[4] = fi[_before].frame & 0xff;
+		v[5] = fi[_before].speed & 0xff;
+		v[6] = fi[_before].bpm & 0xff;
 
-	(*env)->SetIntArrayRegion(env, values, 0, 7, v);
+		(*env)->SetIntArrayRegion(env, values, 0, 7, v);
+	}
+	unlock();
 }
 
 JNIEXPORT jint JNICALL
@@ -446,6 +475,13 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 	if (!_mod_is_loaded)
 		return;
 
+	lock();
+
+	if (!_playing) {
+		unlock();
+		return;
+	}
+
 	for (i = 0; i < chn; i++) {
                 struct xmp_channel_info *ci = &fi[_before].channel_info[i];
 
@@ -486,6 +522,8 @@ Java_org_helllabs_android_xmp_Xmp_getChannelData(JNIEnv *env, jobject obj, jintA
 	(*env)->SetIntArrayRegion(env, ins, 0, chn, _ins);
 	(*env)->SetIntArrayRegion(env, key, 0, chn, _key);
 	(*env)->SetIntArrayRegion(env, period, 0, chn, _period);
+
+	unlock();
 }
 
 JNIEXPORT void JNICALL
