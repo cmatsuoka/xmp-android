@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
+#include <pthread.h>
 #include "audio.h"
 
 /* #include <android/log.h> */
@@ -16,9 +17,13 @@ static int buffer_num;
 static int buffer_size;
 static volatile int first_free, last_free;
 static int playing;
+static pthread_mutex_t _lock;
 
 #define TAG "Xmp"
 #define BUFFER_TIME 40
+
+#define lock()   pthread_mutex_lock(&_lock)
+#define unlock() pthread_mutex_unlock(&_lock)
 
 
 static void player_callback(SLAndroidSimpleBufferQueueItf bq, void *context)
@@ -46,6 +51,11 @@ static int opensl_open(int sr, int num)
 		break;
 	default:
 		goto err;
+	}
+
+	/* initialize lock */
+	if (pthread_mutex_init(&_lock, NULL) != 0) {
+		return -1;
 	}
 
 	/* create engine */
@@ -144,14 +154,18 @@ static int opensl_open(int sr, int num)
     err1:
 	(*engine_obj)->Destroy(engine_obj);
     err:
+	pthread_mutex_destroy(&_lock);
 	return -1;
 }
 
 static void opensl_close()
 {
+	lock();
 	(*player_obj)->Destroy(player_obj);
 	(*output_mix_obj)->Destroy(output_mix_obj);
 	(*engine_obj)->Destroy(engine_obj);
+	player_play = NULL;
+	unlock();
 }
 
 void close_audio()
@@ -222,14 +236,18 @@ int fill_buffer(int looped)
 
 void restart_audio()
 {
+	lock();
 	if (player_play != NULL) {
 		(*player_play)->SetPlayState(player_play, SL_PLAYSTATE_PLAYING);
 	}
+	unlock();
 }
 
 void stop_audio()
 {
+	lock();
 	if (player_play != NULL) {
 		(*player_play)->SetPlayState(player_play, SL_PLAYSTATE_STOPPED);
 	}
+	unlock();
 }
