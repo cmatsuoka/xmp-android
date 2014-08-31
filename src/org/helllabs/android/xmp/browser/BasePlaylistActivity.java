@@ -59,44 +59,53 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	protected abstract boolean isShuffleMode();
 	protected abstract boolean isLoopMode();
 	
+	private final OnClickListener playAllButtonListener = new OnClickListener() {
+		@Override
+		public void onClick(final View view) {
+			playModule(getModList());
+		}
+	};
+	
+	private final OnClickListener toggleLoopButtonListener = new OnClickListener() {
+		@Override
+		public void onClick(final View view) {
+			boolean loopMode = isLoopMode();
+			loopMode ^= true;
+			((ImageButton)view).setImageResource(loopMode ?
+					R.drawable.list_loop_on : R.drawable.list_loop_off);
+			if (mShowToasts) {
+				Message.toast(view.getContext(), loopMode ? "Loop on" : "Loop off");
+			}
+			setLoopMode(loopMode);
+		}
+	};
+	
+	private final OnClickListener toggleShuffleButtonListener = new OnClickListener() {
+		@Override
+		public void onClick(final View view) {
+			boolean shuffleMode = isShuffleMode();
+			shuffleMode ^= true;
+			((ImageButton)view).setImageResource(shuffleMode ?	R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
+			if (mShowToasts) {
+				Message.toast(view.getContext(), shuffleMode ? "Shuffle on" : "Shuffle off");
+			}
+			setShuffleMode(shuffleMode);
+		}
+	};
+	
 	protected void setupButtons() {
 		final ImageButton playAllButton = (ImageButton)findViewById(R.id.play_all);
 		final ImageButton toggleLoopButton = (ImageButton)findViewById(R.id.toggle_loop);
 		final ImageButton toggleShuffleButton = (ImageButton)findViewById(R.id.toggle_shuffle);
 
 		playAllButton.setImageResource(R.drawable.list_play);
-		playAllButton.setOnClickListener(new OnClickListener() {
-			public void onClick(final View view) {
-				playModule(getModList());
-			}
-		});
+		playAllButton.setOnClickListener(playAllButtonListener);
 
 		toggleLoopButton.setImageResource(isLoopMode() ? R.drawable.list_loop_on : R.drawable.list_loop_off);
-		toggleLoopButton.setOnClickListener(new OnClickListener() {
-			public void onClick(final View view) {
-				boolean loopMode = isLoopMode();
-				loopMode ^= true;
-				((ImageButton)view).setImageResource(loopMode ?
-						R.drawable.list_loop_on : R.drawable.list_loop_off);
-				if (mShowToasts) {
-					Message.toast(view.getContext(), loopMode ? "Loop on" : "Loop off");
-				}
-				setLoopMode(loopMode);
-			}
-		});
+		toggleLoopButton.setOnClickListener(toggleLoopButtonListener);
 
 		toggleShuffleButton.setImageResource(isShuffleMode() ? R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
-		toggleShuffleButton.setOnClickListener(new OnClickListener() {
-			public void onClick(final View view) {
-				boolean shuffleMode = isShuffleMode();
-				shuffleMode ^= true;
-				((ImageButton)view).setImageResource(shuffleMode ?	R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
-				if (mShowToasts) {
-					Message.toast(view.getContext(), shuffleMode ? "Shuffle on" : "Shuffle off");
-				}
-				setShuffleMode(shuffleMode);
-			}
-		});
+		toggleShuffleButton.setOnClickListener(toggleShuffleButtonListener);
 	}
 
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
