@@ -567,11 +567,11 @@ public class PlayerActivity extends Activity {
 
 		paused = false;
 
-		if (progressThread != null && progressThread.isAlive()) {
-			try {
-				progressThread.join();
-			} catch (InterruptedException e) { }
-		}
+//		if (progressThread != null && progressThread.isAlive()) {
+//			try {
+//				progressThread.join();
+//			} catch (InterruptedException e) { }
+//		}
 	}
 
 	public void backButtonListener(final View view) {
@@ -845,79 +845,81 @@ public class PlayerActivity extends Activity {
 			Log.i(TAG, "Show new module");
 
 			synchronized (playerLock) {
-				try {
-					modPlayer.getModVars(modVars);
-					modPlayer.getSeqVars(seqVars);
-				} catch (RemoteException e) {
-					Log.e(TAG, "Can't get module data");
-					return;
-				}
-
-				String name;
-				String type;
-				boolean allSeq;
-				boolean loop;
-				try {
-					name = modPlayer.getModName();
-					type = modPlayer.getModType();
-					allSeq = modPlayer.getAllSequences();
-					loop = modPlayer.getLoop();
-
-					if (name.trim().isEmpty()) {
-						name = "<untitled>";
+				if (modPlayer != null) {
+					try {
+						modPlayer.getModVars(modVars);
+						modPlayer.getSeqVars(seqVars);
+					} catch (RemoteException e) {
+						Log.e(TAG, "Can't get module data");
+						return;
 					}
-				} catch (RemoteException e) {
-					name = "";
-					type = "";
-					allSeq = false;
-					loop = false;
-					Log.e(TAG, "Can't get module name and type");
-				}
-				final int time = modVars[0];
-				/*int len = vars[1]; */
-				final int pat = modVars[2];
-				final int chn = modVars[3];
-				final int ins = modVars[4];
-				final int smp = modVars[5];
-				final int numSeq = modVars[6];
-				
 
-				sidebar.setDetails(pat, ins, smp, chn, allSeq);
-				sidebar.clearSequences();
-				for (int i = 0; i < numSeq; i++) {
-					sidebar.addSequence(i, seqVars[i]);
-				}
-				sidebar.selectSequence(0);
-				
-				loopButton.setImageResource(loop ? R.drawable.loop_on : R.drawable.loop_off);
+					String name;
+					String type;
+					boolean allSeq;
+					boolean loop;
+					try {
+						name = modPlayer.getModName();
+						type = modPlayer.getModType();
+						allSeq = modPlayer.getAllSequences();
+						loop = modPlayer.getLoop();
 
-				totalTime = time / 1000;
-				seekBar.setProgress(0);
-				seekBar.setMax(time / 100);
+						if (name.trim().isEmpty()) {
+							name = "<untitled>";
+						}
+					} catch (RemoteException e) {
+						name = "";
+						type = "";
+						allSeq = false;
+						loop = false;
+						Log.e(TAG, "Can't get module name and type");
+					}
+					final int time = modVars[0];
+					/*int len = vars[1]; */
+					final int pat = modVars[2];
+					final int chn = modVars[3];
+					final int ins = modVars[4];
+					final int smp = modVars[5];
+					final int numSeq = modVars[6];
 
-				flipperPage = (flipperPage + 1) % 2;
 
-				infoName[flipperPage].setText(name);
-				infoType[flipperPage].setText(type);
+					sidebar.setDetails(pat, ins, smp, chn, allSeq);
+					sidebar.clearSequences();
+					for (int i = 0; i < numSeq; i++) {
+						sidebar.addSequence(i, seqVars[i]);
+					}
+					sidebar.selectSequence(0);
 
-				titleFlipper.showNext();
+					loopButton.setImageResource(loop ? R.drawable.loop_on : R.drawable.loop_off);
 
-				viewer.setup(modPlayer, modVars);
-				viewer.setRotation(display.getRotation());
+					totalTime = time / 1000;
+					seekBar.setProgress(0);
+					seekBar.setMax(time / 100);
 
-				/*infoMod.setText(String.format("Channels: %d\n" +
+					flipperPage = (flipperPage + 1) % 2;
+
+					infoName[flipperPage].setText(name);
+					infoType[flipperPage].setText(type);
+
+					titleFlipper.showNext();
+
+					viewer.setup(modPlayer, modVars);
+					viewer.setRotation(display.getRotation());
+
+					/*infoMod.setText(String.format("Channels: %d\n" +
 		       			"Length: %d, Patterns: %d\n" +
 		       			"Instruments: %d, Samples: %d\n" +
 		       			"Estimated play time: %dmin%02ds",
 		       			chn, len, pat, ins, smp,
 		       			((time + 500) / 60000), ((time + 500) / 1000) % 60));*/
 
-				info = new Viewer.Info();
+					info = new Viewer.Info();
 
-				stopUpdate = false;
-				if (progressThread == null || !progressThread.isAlive()) {
-					progressThread = new ProgressThread();
-					progressThread.start();
+					stopUpdate = false;
+					if (progressThread == null || !progressThread.isAlive()) {
+						progressThread = new ProgressThread();
+						progressThread.start();
+					}
 				}
 			}
 		}
