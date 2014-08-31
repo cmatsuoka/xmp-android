@@ -127,7 +127,9 @@ public class InstrumentViewer extends Viewer {
 				}
 			}
 			
-			canvas.drawText(insName[i], 0, y, insPaint[maxVol]);
+			if (insName != null) {
+				canvas.drawText(insName[i], 0, y, insPaint[maxVol]);
+			}
 		}
 	}
 }
