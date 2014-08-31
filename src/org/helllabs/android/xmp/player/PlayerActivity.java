@@ -138,7 +138,7 @@ public class PlayerActivity extends Activity {
 		@Override
 		public void newModCallback() throws RemoteException {
 			synchronized (playerLock) {
-				Log.i(TAG, "Show module data");
+				Log.d(TAG, "newModCallback: show module data");
 				showNewMod();
 				canChangeViewer = true;
 			}
@@ -147,7 +147,7 @@ public class PlayerActivity extends Activity {
 		@Override
 		public void endModCallback() throws RemoteException {
 			synchronized (playerLock) {
-				Log.i(TAG, "End of module");
+				Log.d(TAG, "endModCallback: end of module");
 				stopUpdate = true;
 				canChangeViewer = false;
 			}
@@ -156,7 +156,7 @@ public class PlayerActivity extends Activity {
 		@Override
 		public void endPlayCallback() throws RemoteException {
 			synchronized (playerLock) {
-				Log.i(TAG, "End progress thread");
+				Log.d(TAG, "endPlayCallback: End progress thread");
 				stopUpdate = true;
 
 				if (progressThread != null && progressThread.isAlive()) {
@@ -170,20 +170,20 @@ public class PlayerActivity extends Activity {
 
 		@Override
 		public void pauseCallback() throws RemoteException {
+			Log.d(TAG, "pauseCallback");
 			handler.post(setPauseStateRunnable);
 		}
 		
 		@Override
 		public void newSequenceCallback() throws RemoteException {
 			synchronized (playerLock) {
-				Log.i(TAG, "Show new sequence");
+				Log.d(TAG, "newSequenceCallback: show new sequence");
 				showNewSequence();
 			}
 		}
 	};
 
 	private final Runnable setPauseStateRunnable = new Runnable() {
-
 		@Override
 		public void run() {
 			synchronized (playerLock) {
@@ -536,6 +536,7 @@ public class PlayerActivity extends Activity {
 	public void playButtonListener(final View view) {
 		//Debug.startMethodTracing("xmp");				
 		synchronized (this) {
+			Log.d(TAG, "Play/pause button pressed (paused=" + paused + ")");
 			if (modPlayer != null) {
 				try {
 					modPlayer.pause();
@@ -556,6 +557,7 @@ public class PlayerActivity extends Activity {
 		//Debug.stopMethodTracing();
 
 		synchronized (playerLock) {
+			Log.d(TAG, "Stop button pressed");
 			if (modPlayer != null) {	
 				try {
 					modPlayer.stop();
@@ -576,6 +578,7 @@ public class PlayerActivity extends Activity {
 
 	public void backButtonListener(final View view) {
 		synchronized (playerLock) {
+			Log.d(TAG, "Back button pressed");
 			if (modPlayer != null) {
 				try {
 					if (modPlayer.time() > 3000) {
@@ -593,6 +596,7 @@ public class PlayerActivity extends Activity {
 
 	public void forwardButtonListener(final View view) {
 		synchronized (playerLock) {
+			Log.d(TAG, "Next button pressed");
 			if (modPlayer != null) {
 				try {
 					modPlayer.nextSong();

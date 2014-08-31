@@ -481,7 +481,7 @@ public final class PlayerService extends Service {
 							checkNotificationButtons();
 						}
 
-						while (!Xmp.hasFreeBuffer() && !paused) {
+						while (!Xmp.hasFreeBuffer() && !paused && cmd == CMD_NONE) {
 							try {
 								Thread.sleep(40);
 							} catch (InterruptedException e) {	}
