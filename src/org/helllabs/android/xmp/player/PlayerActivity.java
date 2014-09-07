@@ -856,6 +856,7 @@ public class PlayerActivity extends Activity {
 					try {
 						modPlayer.getModVars(modVars);
 						modPlayer.getSeqVars(seqVars);
+						playTime = modPlayer.time() / 100;
 					} catch (RemoteException e) {
 						Log.e(TAG, "Can't get module data");
 						return;
@@ -900,8 +901,8 @@ public class PlayerActivity extends Activity {
 					loopButton.setImageResource(loop ? R.drawable.loop_on : R.drawable.loop_off);
 
 					totalTime = time / 1000;
-					seekBar.setProgress(0);
 					seekBar.setMax(time / 100);
+					seekBar.setProgress(playTime);
 
 					flipperPage = (flipperPage + 1) % 2;
 
