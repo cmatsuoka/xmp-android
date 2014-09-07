@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.player.PlayerActivity;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.service.PlayerService;
@@ -87,7 +88,6 @@ public class PlaylistMenu extends ActionBarActivity {
 		}
 
 		final ChangeLog changeLog = new ChangeLog(this);
-
 		changeLog.show();
 		
 		if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_NEW_TASK) != 0) {
@@ -334,6 +334,9 @@ public class PlaylistMenu extends ActionBarActivity {
 			break;
 		case R.id.menu_refresh:
 			updateList();
+			break;
+		case R.id.menu_download:
+			startActivity(new Intent(this, Search.class));
 			break;
 		default:
 			break;

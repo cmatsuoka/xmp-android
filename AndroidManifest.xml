@@ -145,6 +145,9 @@
             android:name=".browser.PlaylistActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
+            android:name=".modarchive.Search"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
             android:name=".preferences.about.ListFormats"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>

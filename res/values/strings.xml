@@ -44,6 +44,7 @@
     <string name="preferences_default_pan_dialog">Set the default pan separation:</string>
     <string name="menu_refresh">Rescan</string>
     <string name="menu_prefs">Settings</string>
+    <string name="menu_download">Download</string>
     <string name="pref_examples_title">Install modules</string>
     <string name="pref_examples_summary">Install example music files when creating modules directory</string>
     <string name="pref_sampling_rate_summary">Set the mixer sampling rate</string>

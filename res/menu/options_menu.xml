@@ -14,6 +14,11 @@
         xmp:showAsAction="ifRoom|withText"
         android:title="@string/menu_refresh"/>
     <item
+        android:id="@+id/menu_download"
+        android:icon="@drawable/ic_action_download"
+        xmp:showAsAction="ifRoom|withText"
+        android:title="@string/menu_download"/>
+    <item
         android:id="@+id/menu_prefs"
         android:icon="@drawable/ic_action_settings"
         android:title="@string/menu_prefs"/>
