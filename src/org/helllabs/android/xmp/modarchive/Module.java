@@ -1,21 +1,15 @@
 package org.helllabs.android.xmp.modarchive;
 
+import android.text.Html;
+
 public class Module {
 	private String filename;
 	private String format;
 	private String url;
 	private int bytes;
-	private String songtitle;
+	private String songTitle;
 	private String license;
-	private String artist;
-	
-	public String getArtist() {
-		return artist;
-	}
-	
-	public void setArtist(final String artist) {
-		this.artist = artist;
-	}
+	private String instruments;
 	
 	public int getBytes() {
 		return bytes;
@@ -41,20 +35,28 @@ public class Module {
 		this.format = format;
 	}
 	
+	public String getInstruments() {
+		return instruments;
+	}
+	
+	public void setInstruments(final String instruments) {
+		this.instruments = Html.fromHtml(instruments).toString();
+	}
+	
 	public String getLicense() {
 		return license;
 	}
 	
 	public void setLicense(final String license) {
-		this.license = license;
+		this.license = Html.fromHtml(license).toString();
 	}
 	
-	public String getSongtitle() {
-		return songtitle;
+	public String getSongTitle() {
+		return songTitle;
 	}
 	
-	public void setSongtitle(final String songtitle) {
-		this.songtitle = songtitle;
+	public void setSongTitle(final String songtitle) {
+		this.songTitle = Html.fromHtml(songtitle).toString();
 	}
 	
 	public String getUrl() {

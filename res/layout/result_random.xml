@@ -7,12 +7,66 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
-    
-    <RelativeLayout
+
+    <ScrollView
         android:id="@+id/result_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-        
-    </RelativeLayout>
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/module_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="14dp"
+                android:text="Title"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/module_filename"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/module_title"
+                android:text="filename" />
+
+            <TextView
+                android:id="@+id/module_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/module_filename"
+                android:layout_marginTop="10dp"
+                android:text="info" />
+            
+            
+            <TextView
+                android:id="@+id/module_license"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/module_info"
+                android:text="license" />
+
+            <TextView
+                android:id="@+id/module_instruments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/module_license"
+                android:layout_marginTop="10dp"
+                android:text="instruments"
+                android:textSize="11sp"
+                android:typeface="monospace" />
+
+
+        </RelativeLayout>
+    </ScrollView>
 
 </merge>
