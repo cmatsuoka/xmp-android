@@ -5,6 +5,7 @@ import org.helllabs.android.xmp.R;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
@@ -15,8 +16,12 @@ public abstract class Result extends ActionBarActivity  {
 	private View contentView;
 	private View progressView;
 	private int animationDuration;
-
 	
+	@Override
+	public void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setTitle(R.string.search_title);
+	}
 
 	protected void setupCrossfade() {
 		// Set up crossfade

@@ -104,6 +104,10 @@
             <ruleset>Basic</ruleset>
         </rule>
         <rule>
+            <name>AssignmentInOperand</name>
+            <ruleset>Basic Ecmascript</ruleset>
+        </rule>
+        <rule>
             <name>AvoidTrailingComma</name>
             <ruleset>Basic Ecmascript</ruleset>
         </rule>
@@ -240,10 +244,6 @@
             <ruleset>Comments</ruleset>
         </rule>
         <rule>
-            <name>AssignmentInOperand</name>
-            <ruleset>Controversial</ruleset>
-        </rule>
-        <rule>
             <name>AtLeastOneConstructor</name>
             <ruleset>Controversial</ruleset>
         </rule>
@@ -293,10 +293,6 @@
         </rule>
         <rule>
             <name>UnnecessaryConstructor</name>
-            <ruleset>Controversial</ruleset>
-        </rule>
-        <rule>
-            <name>UnnecessaryParentheses</name>
             <ruleset>Controversial</ruleset>
         </rule>
         <rule>
@@ -437,10 +433,6 @@
         </rule>
         <rule>
             <name>OptimizableToArrayCall</name>
-            <ruleset>Design</ruleset>
-        </rule>
-        <rule>
-            <name>PositionLiteralsFirstInComparisons</name>
             <ruleset>Design</ruleset>
         </rule>
         <rule>
@@ -889,6 +881,10 @@
         </rule>
         <rule>
             <name>UnnecessaryFinalModifier</name>
+            <ruleset>Unnecessary</ruleset>
+        </rule>
+        <rule>
+            <name>UnnecessaryParentheses</name>
             <ruleset>Unnecessary</ruleset>
         </rule>
         <rule>

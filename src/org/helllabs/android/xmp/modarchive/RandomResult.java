@@ -2,7 +2,6 @@ package org.helllabs.android.xmp.modarchive;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.util.Log;
-import org.json.JSONObject;
 
 import android.os.Bundle;
 
@@ -23,8 +22,9 @@ public class RandomResult extends Result implements ModArchiveRequest.OnResponse
 	}
 
 	@Override
-	public void onResponse(JSONObject json) {
-		Log.e(TAG, "JSON=" + json);
+	public void onResponse(final Module module) {
+		Log.i(TAG, "random pick=" + module.getFilename());
+		crossfade();
 		
 	}
 }

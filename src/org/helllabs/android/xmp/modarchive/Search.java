@@ -43,7 +43,7 @@ public class Search extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
 		
-		setTitle("Module search");
+		setTitle(R.string.search_title);
 		context = this;
 		
 		final Button searchButton = (Button)findViewById(R.id.search_button);

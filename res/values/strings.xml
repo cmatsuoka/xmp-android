@@ -115,4 +115,5 @@
     <string name="sidebar_subsongs">Subsongs</string>
     <string name="sidebar_button_allseqs">Play all subsongs</string>
     <string name="sidebar_button_loopseq">Loop subsong</string>
+    <string name="search_title">Module search</string>
 </resources>
