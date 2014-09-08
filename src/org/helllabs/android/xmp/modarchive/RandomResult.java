@@ -39,7 +39,7 @@ public class RandomResult extends Result implements ModArchiveRequest.OnResponse
 		title.setText(module.getSongTitle());
 		filename.setText(module.getFilename());
 		final float size = (float)module.getBytes() / 1024;
-		info.setText(String.format("%.1f KB", size));
+		info.setText(String.format("%s by %s (%.1f KB)", module.getFormat(), module.getArtist(), size));
 		license.setText("License: " + module.getLicense());
 		instruments.setText(module.getInstruments());
 		crossfade();

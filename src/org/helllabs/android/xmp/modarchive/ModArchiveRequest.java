@@ -93,6 +93,8 @@ public class ModArchiveRequest implements Response.Listener<String>, Response.Er
 						module.setBytes(Integer.parseInt(text));
 					} else if (name.equals("songtitle")) {
 						module.setSongTitle(text);
+					} else if (name.equals("alias")) {
+						module.setArtist(text);
 					} else if (name.equals("title")) {
 						module.setLicense(text);
 					} else if (name.equals("instruments")) {
