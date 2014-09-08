@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -146,6 +147,9 @@
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name=".modarchive.Search"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".modarchive.RandomResult"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name=".preferences.about.ListFormats"

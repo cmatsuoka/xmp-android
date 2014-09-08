@@ -2,6 +2,8 @@ package org.helllabs.android.xmp.modarchive;
 
 import org.helllabs.android.xmp.R;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.RadioGroup;
 public class Search extends ActionBarActivity {
 	
 	private RadioGroup searchType;
+	private Context context;
 	
 	private final View.OnClickListener searchClick = new View.OnClickListener() {
 		@Override
@@ -31,7 +34,7 @@ public class Search extends ActionBarActivity {
 	private final View.OnClickListener randomClick = new View.OnClickListener() {
 		@Override
 		public void onClick(final View view) {
-			
+			startActivity(new Intent(context, RandomResult.class));
 		}
 	};
 	
@@ -41,6 +44,7 @@ public class Search extends ActionBarActivity {
 		setContentView(R.layout.search);
 		
 		setTitle("Module search");
+		context = this;
 		
 		final Button searchButton = (Button)findViewById(R.id.search_button);
 		final Button randomButton = (Button)findViewById(R.id.random_button);
