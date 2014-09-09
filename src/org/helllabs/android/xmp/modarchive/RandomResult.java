@@ -4,6 +4,7 @@ import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.util.Log;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -43,6 +44,10 @@ public class RandomResult extends Result implements ModArchiveRequest.OnResponse
 		license.setText("License: " + module.getLicense());
 		instruments.setText(module.getInstruments());
 		crossfade();
+		
+	}
+	
+	public void onDownloadClick(final View view) {
 		
 	}
 }

@@ -65,6 +65,15 @@
                 android:textSize="11sp"
                 android:typeface="monospace" />
 
+            <Button
+                android:id="@+id/module_download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/module_title"
+                android:layout_marginRight="10dp"
+                android:onClick="onDownloadClick"
+                android:text="Download" />
 
         </RelativeLayout>
     </ScrollView>
