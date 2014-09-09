@@ -1,4 +1,4 @@
-package org.helllabs.android.xmp.modarchive;
+package org.helllabs.android.xmp.modarchive.model;
 
 import android.text.Html;
 

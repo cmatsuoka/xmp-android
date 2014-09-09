@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp.modarchive;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.util.Log;
 
 import android.os.Bundle;

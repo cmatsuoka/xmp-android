@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.helllabs.android.xmp.XmpApplication;
+import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.util.Log;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
