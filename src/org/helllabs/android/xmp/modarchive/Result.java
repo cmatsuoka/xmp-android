@@ -48,7 +48,4 @@ public abstract class Result extends ActionBarActivity  {
 			contentView.setVisibility(View.VISIBLE);
 		}
 	}
-
-
-
 }

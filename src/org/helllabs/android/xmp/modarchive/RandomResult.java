@@ -2,6 +2,7 @@ package org.helllabs.android.xmp.modarchive;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.modarchive.model.Module;
+import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
 import org.helllabs.android.xmp.util.Log;
 
 import android.os.Bundle;
@@ -9,7 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 
-public class RandomResult extends Result implements ModArchiveRequest.OnResponseListener {
+public class RandomResult extends Result implements ModuleRequest.OnResponseListener<Module> {
 	
 	private static final String TAG = "RandomResult";
 	private TextView title;
@@ -31,7 +32,7 @@ public class RandomResult extends Result implements ModArchiveRequest.OnResponse
 		license = (TextView)findViewById(R.id.module_license);
 		
 		final String key = getString(R.string.modarchive_apikey);
-		final ModArchiveRequest request = new ModArchiveRequest(key, "random");
+		final ModuleRequest request = new ModuleRequest(key, "random");
 		request.setOnResponseListener(this).send();
 	}
 
