@@ -8,22 +8,29 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 
 public class Search extends ActionBarActivity {
 	
+	public static final String SEARCH = "search";
 	private RadioGroup searchType;
+	private EditText search;
 	private Context context;
 	
 	private final View.OnClickListener searchClick = new View.OnClickListener() {
 		@Override
 		public void onClick(final View view) {
 			final int selectedId = searchType.getCheckedRadioButtonId();
+			final String searchText = search.getText().toString();
 			
 			switch (selectedId) {
 			case R.id.title_radio:
 				break;
 			case R.id.artist_radio:
+				final Intent intent = new Intent(context, ArtistResult.class);
+				intent.putExtra(SEARCH, searchText);
+				startActivity(intent);
 				break;
 			default:
 				break;
@@ -54,6 +61,8 @@ public class Search extends ActionBarActivity {
 		
 		searchButton.setOnClickListener(searchClick);
 		randomButton.setOnClickListener(randomClick);
+		
+		search = (EditText)findViewById(R.id.search_text);
 	}
 
 }

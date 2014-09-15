@@ -24,8 +24,10 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 		context = this;
 		list = (ListView)findViewById(R.id.artist_list);
 		
+		final String search = getIntent().getStringExtra(Search.SEARCH);
+		
 		final String key = getString(R.string.modarchive_apikey);
-		final ArtistRequest request = new ArtistRequest(key, "liz");
+		final ArtistRequest request = new ArtistRequest(key, "search_artist&query=" + search);
 		request.setOnResponseListener(this).send();
 	}
 	

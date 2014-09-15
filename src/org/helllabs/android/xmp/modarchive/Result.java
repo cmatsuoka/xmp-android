@@ -20,7 +20,7 @@ public abstract class Result extends ActionBarActivity  {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTitle(R.string.search_title);
+		setTitle(R.string.search_result_title);
 	}
 
 	protected void setupCrossfade() {
