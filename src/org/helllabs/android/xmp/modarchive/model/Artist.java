@@ -19,4 +19,9 @@ public class Artist {
 	public void setId(final long id) {
 		this.id = id;
 	}
+	
+	@Override
+	public String toString() {
+		return alias;
+	}
 }

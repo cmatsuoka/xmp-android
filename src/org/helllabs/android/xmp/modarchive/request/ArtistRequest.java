@@ -3,61 +3,59 @@ package org.helllabs.android.xmp.modarchive.request;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.helllabs.android.xmp.modarchive.model.Module;
+import org.helllabs.android.xmp.modarchive.model.Artist;
 import org.helllabs.android.xmp.util.Log;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-public class ModuleRequest extends ModArchiveRequest<Module> {
+public class ArtistRequest extends ModArchiveRequest<List<Artist>> {
 
-	private static final String TAG = "ModuleRequest";
+	private static final String TAG = "ArtistRequest";
 
-	public ModuleRequest(final String key, final String request) {
+	public ArtistRequest(final String key, final String request) {
 		super(key, request);
 	}
-	
+
 	@Override
-	protected Module xmlParse(final String result) {
-		final Module module = new Module();
+	protected List<Artist> xmlParse(String result) {
+		final List<Artist> artistList = new ArrayList<Artist>();
+		Artist artist = null;
 
 		try {
 			final XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
 			final XmlPullParser myparser = xmlFactoryObject.newPullParser();
 			final InputStream stream = new ByteArrayInputStream(result.getBytes());
 			myparser.setInput(stream, null);
-			
+
 			int event = myparser.getEventType();
 			String text = "";
 			while (event != XmlPullParser.END_DOCUMENT)	{
 				switch (event){
-				case XmlPullParser.START_TAG:
+				case XmlPullParser.START_TAG: {
+					final String name = myparser.getName();
+					if (name.equals("item")) {
+						artist = new Artist();
+					}
 					break;
+				}
 				case XmlPullParser.TEXT:
 					text = myparser.getText();
 					break;
-				case XmlPullParser.END_TAG:
+				case XmlPullParser.END_TAG: {
 					final String name = myparser.getName();
-					//Log.d(TAG, "name=" + name + " text=" + text);
-					if (name.equals("filename")) {
-						module.setFilename(text);
-					} else if (name.equals("format")) {
-						module.setFormat(text);
-					} else if (name.equals("url")) {
-						module.setUrl(text);
-					} else if (name.equals("bytes")) {
-						module.setBytes(Integer.parseInt(text));
-					} else if (name.equals("songtitle")) {
-						module.setSongTitle(text);
+					if (name.equals("id")) {
+						artist.setId(Long.parseLong(text));
 					} else if (name.equals("alias")) {
-						module.setArtist(text);
-					} else if (name.equals("title")) {
-						module.setLicense(text);
-					} else if (name.equals("instruments")) {
-						module.setInstruments(text);
+						artist.setAlias(text);
+					} else if (name.equals("item")) {
+						artistList.add(artist);
 					}
 					break;
+				}
 				default:
 					break;
 				}		 
@@ -71,6 +69,7 @@ public class ModuleRequest extends ModArchiveRequest<Module> {
 			return null;
 		}
 
-		return module;
+		return artistList;
 	}
+
 }
