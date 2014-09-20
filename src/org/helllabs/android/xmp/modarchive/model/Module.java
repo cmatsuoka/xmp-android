@@ -11,6 +11,7 @@ public class Module {
 	private String songTitle;
 	private String license;
 	private String instruments;
+	private long id;
 	
 	public String getArtist() {
 		return artist;
@@ -84,5 +85,18 @@ public class Module {
 	
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+	
+	public long getId() {
+		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	@Override
+	public String toString() {
+		return songTitle;
 	}
 }

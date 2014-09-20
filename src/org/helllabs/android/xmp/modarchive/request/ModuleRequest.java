@@ -3,6 +3,8 @@ package org.helllabs.android.xmp.modarchive.request;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.util.Log;
@@ -10,7 +12,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-public class ModuleRequest extends ModArchiveRequest<Module> {
+public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 
 	private static final String TAG = "ModuleRequest";
 
@@ -19,8 +21,9 @@ public class ModuleRequest extends ModArchiveRequest<Module> {
 	}
 	
 	@Override
-	protected Module xmlParse(final String result) {
-		final Module module = new Module();
+	protected List<Module> xmlParse(final String result) {
+		final List<Module> moduleList = new ArrayList<Module>();
+		Module module = null;
 
 		try {
 			final XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
@@ -33,6 +36,9 @@ public class ModuleRequest extends ModArchiveRequest<Module> {
 			while (event != XmlPullParser.END_DOCUMENT)	{
 				switch (event){
 				case XmlPullParser.START_TAG:
+					if (myparser.getName().equals("module")) {
+						module = new Module(); // NOPMD
+					}
 					break;
 				case XmlPullParser.TEXT:
 					text = myparser.getText();
@@ -56,6 +62,10 @@ public class ModuleRequest extends ModArchiveRequest<Module> {
 						module.setLicense(text);
 					} else if (name.equals("instruments")) {
 						module.setInstruments(text);
+					} else if (name.equals("id")) {
+						module.setId(Long.parseLong(text));
+					} else if (name.equals("module")) {
+						moduleList.add(module);
 					}
 					break;
 				default:
@@ -71,6 +81,6 @@ public class ModuleRequest extends ModArchiveRequest<Module> {
 			return null;
 		}
 
-		return module;
+		return moduleList;
 	}
 }

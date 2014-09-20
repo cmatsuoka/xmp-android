@@ -14,14 +14,14 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 public class ArtistRequest extends ModArchiveRequest<List<Artist>> {
 
-	private static final String TAG = "ArtistRequest";
+	private static final String TAG = "ArtistListRequest";
 
 	public ArtistRequest(final String key, final String request) {
 		super(key, request);
 	}
 
 	@Override
-	protected List<Artist> xmlParse(String result) {
+	protected List<Artist> xmlParse(final String result) {
 		final List<Artist> artistList = new ArrayList<Artist>();
 		Artist artist = null;
 
@@ -36,9 +36,8 @@ public class ArtistRequest extends ModArchiveRequest<List<Artist>> {
 			while (event != XmlPullParser.END_DOCUMENT)	{
 				switch (event){
 				case XmlPullParser.START_TAG: {
-					final String name = myparser.getName();
-					if (name.equals("item")) {
-						artist = new Artist();
+					if (myparser.getName().equals("item")) {
+						artist = new Artist(); // NOPMD
 					}
 					break;
 				}
