@@ -7,7 +7,7 @@ import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
 public class RandomResult extends ModuleResult {
 	
 	@Override
-	protected void makeRequest(final long id) {
+	protected void makeRequest(final String query) {
 		final String key = getString(R.string.modarchive_apikey);
 		final ModuleRequest request = new ModuleRequest(key, "random");
 		request.setOnResponseListener(this).send();

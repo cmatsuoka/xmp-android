@@ -49,7 +49,7 @@ public abstract class ModArchiveRequest<T> implements Response.Listener<String>,
 
 	@Override
 	public void onResponse(final String result) {
-		Log.i(TAG, "Volley: get response " + result);
+		Log.i(TAG, "Volley: get response");
 		mOnResponseListener.onResponse(xmlParse(result));
 	}
 

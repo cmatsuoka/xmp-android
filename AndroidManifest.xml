@@ -149,6 +149,9 @@
             android:name=".modarchive.Search"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
+            android:name=".modarchive.TitleResult"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
             android:name=".modarchive.ArtistResult"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity

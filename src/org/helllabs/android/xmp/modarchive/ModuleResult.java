@@ -31,14 +31,14 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 		instruments = (TextView)findViewById(R.id.module_instruments);
 		license = (TextView)findViewById(R.id.module_license);
 		
-		final long id = getIntent().getLongExtra(ArtistModulesResult.MODULE_ID, -1);
+		final long id = getIntent().getLongExtra(Search.MODULE_ID, -1);
 		
-		makeRequest(id);
+		makeRequest(String.valueOf(id));
 	}
 	
-	protected void makeRequest(final long id) {
+	protected void makeRequest(final String query) {
 		final String key = getString(R.string.modarchive_apikey);
-		final ModuleRequest request = new ModuleRequest(key, "view_by_moduleid&query=" + id);
+		final ModuleRequest request = new ModuleRequest(key, "view_by_moduleid&query=" + query);
 		request.setOnResponseListener(this).send();
 	}
 
@@ -53,7 +53,6 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 		license.setText("License: " + module.getLicense());
 		instruments.setText(module.getInstruments());
 		crossfade();
-		
 	}
 	
 	public void onDownloadClick(final View view) {

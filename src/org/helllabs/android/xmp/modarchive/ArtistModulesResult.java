@@ -17,7 +17,6 @@ import android.widget.ListView;
 
 public class ArtistModulesResult extends Result implements ModuleRequest.OnResponseListener<List<Module>>, ListView.OnItemClickListener {
 	
-	public static final String MODULE_ID = "module_id";
 	private Context context;
 	private ListView list;
 	private List<Module> moduleList;
@@ -26,13 +25,14 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.result_list);
+		setupCrossfade();
 		
 		setTitle("Modules by artist");
 		
 		context = this;
 		list = (ListView)findViewById(R.id.result_list);
 		
-		final long artistId = getIntent().getLongExtra(ArtistResult.ARTIST_ID, -1);
+		final long artistId = getIntent().getLongExtra(Search.ARTIST_ID, -1);
 
 		final String key = getString(R.string.modarchive_apikey);
 		final ModuleRequest request = new ModuleRequest(key, "view_modules_by_artistid&query=" + artistId);
@@ -46,12 +46,13 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 		moduleList = response;
 		final ArrayAdapter<Module> adapter = new ArrayAdapter<Module>(context, android.R.layout.simple_list_item_1, response);
 		list.setAdapter(adapter);
+		crossfade();
 	}
 
 	@Override
 	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
 		final Intent intent = new Intent(this, ModuleResult.class);
-		intent.putExtra(MODULE_ID, moduleList.get(position).getId());
+		intent.putExtra(Search.MODULE_ID, moduleList.get(position).getId());
 		startActivity(intent);
 	}
 }

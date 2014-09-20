@@ -12,24 +12,31 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 
 public class Search extends ActionBarActivity {
-	
-	public static final String SEARCH = "search";
+
+	public static final String SEARCH_TEXT = "search_text";
+	public static final String MODULE_ID = "module_id";
+	public static final String ARTIST_ID = "artist_id";
 	private RadioGroup searchType;
-	private EditText search;
+	private EditText searchEdit;
 	private Context context;
-	
+
 	private final View.OnClickListener searchClick = new View.OnClickListener() {
 		@Override
 		public void onClick(final View view) {
 			final int selectedId = searchType.getCheckedRadioButtonId();
-			final String searchText = search.getText().toString();
-			
+			final String searchText = searchEdit.getText().toString();
+
+			Intent intent;
+
 			switch (selectedId) {
 			case R.id.title_radio:
+				intent = new Intent(context, TitleResult.class);
+				intent.putExtra(SEARCH_TEXT, searchText);
+				startActivity(intent);
 				break;
 			case R.id.artist_radio:
-				final Intent intent = new Intent(context, ArtistResult.class);
-				intent.putExtra(SEARCH, searchText);
+				intent = new Intent(context, ArtistResult.class);
+				intent.putExtra(SEARCH_TEXT, searchText);
 				startActivity(intent);
 				break;
 			default:
@@ -37,32 +44,32 @@ public class Search extends ActionBarActivity {
 			}
 		}
 	};
-	
+
 	private final View.OnClickListener randomClick = new View.OnClickListener() {
 		@Override
 		public void onClick(final View view) {
 			startActivity(new Intent(context, RandomResult.class));
 		}
 	};
-	
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
-		
+
 		setTitle(R.string.search_title);
 		context = this;
-		
+
 		final Button searchButton = (Button)findViewById(R.id.search_button);
 		final Button randomButton = (Button)findViewById(R.id.random_button);
-		
+
 		searchType = (RadioGroup)findViewById(R.id.search_type);
 		searchType.check(R.id.title_radio);
-		
+
 		searchButton.setOnClickListener(searchClick);
 		randomButton.setOnClickListener(randomClick);
-		
-		search = (EditText)findViewById(R.id.search_text);
+
+		searchEdit = (EditText)findViewById(R.id.search_text);
 	}
 
 }
