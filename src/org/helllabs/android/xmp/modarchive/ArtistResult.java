@@ -6,7 +6,6 @@ import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.modarchive.model.Artist;
 import org.helllabs.android.xmp.modarchive.request.ArtistRequest;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.ListView;
 
 public class ArtistResult extends Result implements ArtistRequest.OnResponseListener<List<Artist>>, ListView.OnItemClickListener {
 	
-	private Context context;
 	private ListView list;
 	private List<Artist> artistList;
 
@@ -26,7 +24,6 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 		setContentView(R.layout.result_list);
 		setupCrossfade();
 		
-		context = this;
 		list = (ListView)findViewById(R.id.result_list);
 		
 		final String searchText = getIntent().getStringExtra(Search.SEARCH_TEXT);
@@ -41,7 +38,7 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 	@Override
 	public void onResponse(final List<Artist> response) {
 		artistList = response;
-		final ArrayAdapter<Artist> adapter = new ArrayAdapter<Artist>(context, android.R.layout.simple_list_item_1, response);
+		final ArrayAdapter<Artist> adapter = new ArrayAdapter<Artist>(this, android.R.layout.simple_list_item_1, response);
 		list.setAdapter(adapter);
 		crossfade();
 	}

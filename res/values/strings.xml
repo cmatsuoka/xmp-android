@@ -117,4 +117,6 @@
     <string name="sidebar_button_loopseq">Loop subsong</string>
     <string name="search_title">Module search</string>
     <string name="search_result_title">Search result</string>
+    <string name="download_cancelled">Download cancelled</string>
+    <string name="file_downloaded">Module downloaded</string>
 </resources>

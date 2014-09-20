@@ -9,33 +9,42 @@ import org.helllabs.android.xmp.util.Log;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class ModuleResult extends Result implements ModuleRequest.OnResponseListener<List<Module>> {
+public class ModuleResult extends Result implements ModuleRequest.OnResponseListener<List<Module>>, View.OnClickListener {
 	private static final String TAG = "ModuleResult";
 	private TextView title;
 	private TextView filename;
 	private TextView info;
 	private TextView instruments;
 	private TextView license;
+	private String url;
+	private Downloader downloader;
+	private Button downloadButton;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.result_module);	
 		setupCrossfade();
-		
+
 		title = (TextView)findViewById(R.id.module_title);
 		filename = (TextView)findViewById(R.id.module_filename);
 		info = (TextView)findViewById(R.id.module_info);
 		instruments = (TextView)findViewById(R.id.module_instruments);
 		license = (TextView)findViewById(R.id.module_license);
+		downloadButton = (Button)findViewById(R.id.module_download);
 		
+		downloadButton.setOnClickListener(this);
+
+		downloader = new Downloader(this);
+
 		final long id = getIntent().getLongExtra(Search.MODULE_ID, -1);
-		
+		Log.d(TAG, "request module ID " + id);
 		makeRequest(String.valueOf(id));
 	}
-	
+
 	protected void makeRequest(final String query) {
 		final String key = getString(R.string.modarchive_apikey);
 		final ModuleRequest request = new ModuleRequest(key, "view_by_moduleid&query=" + query);
@@ -52,10 +61,15 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 		info.setText(String.format("%s by %s (%.1f KB)", module.getFormat(), module.getArtist(), size));
 		license.setText("License: " + module.getLicense());
 		instruments.setText(module.getInstruments());
+
+		url = module.getUrl();
+
 		crossfade();
 	}
 	
-	public void onDownloadClick(final View view) {
-		
+	@Override
+	public void onClick(final View view) {
+		Log.i(TAG, "Download " + url);
+		downloader.download(url);	
 	}
 }

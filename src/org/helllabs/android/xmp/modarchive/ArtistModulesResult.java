@@ -7,7 +7,6 @@ import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.ListView;
 
 public class ArtistModulesResult extends Result implements ModuleRequest.OnResponseListener<List<Module>>, ListView.OnItemClickListener {
 	
-	private Context context;
 	private ListView list;
 	private List<Module> moduleList;
 	
@@ -29,7 +27,6 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 		
 		setTitle("Modules by artist");
 		
-		context = this;
 		list = (ListView)findViewById(R.id.result_list);
 		
 		final long artistId = getIntent().getLongExtra(Search.ARTIST_ID, -1);
@@ -44,7 +41,7 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 	@Override
 	public void onResponse(final List<Module> response) {
 		moduleList = response;
-		final ArrayAdapter<Module> adapter = new ArrayAdapter<Module>(context, android.R.layout.simple_list_item_1, response);
+		final ArrayAdapter<Module> adapter = new ArrayAdapter<Module>(this, android.R.layout.simple_list_item_1, response);
 		list.setAdapter(adapter);
 		crossfade();
 	}

@@ -72,7 +72,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/module_title"
                 android:layout_marginRight="10dp"
-                android:onClick="onDownloadClick"
                 android:text="Download" />
 
         </RelativeLayout>
