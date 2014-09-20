@@ -19,52 +19,60 @@ public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 	public ModuleRequest(final String key, final String request) {
 		super(key, request);
 	}
-	
+
 	@Override
 	protected List<Module> xmlParse(final String result) {
 		final List<Module> moduleList = new ArrayList<Module>();
 		Module module = null;
+		boolean inArtistInfo = false;
 
 		try {
 			final XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
 			final XmlPullParser myparser = xmlFactoryObject.newPullParser();
 			final InputStream stream = new ByteArrayInputStream(result.getBytes());
 			myparser.setInput(stream, null);
-			
+
 			int event = myparser.getEventType();
 			String text = "";
 			while (event != XmlPullParser.END_DOCUMENT)	{
 				switch (event){
 				case XmlPullParser.START_TAG:
-					if (myparser.getName().equals("module")) {
+					final String start = myparser.getName();
+					if (start.equals("module")) {
 						module = new Module(); // NOPMD
+					} else if (start.equals("artist_info")) {
+						inArtistInfo = true;
 					}
 					break;
 				case XmlPullParser.TEXT:
 					text = myparser.getText();
 					break;
 				case XmlPullParser.END_TAG:
-					final String name = myparser.getName();
+					final String end = myparser.getName();
 					//Log.d(TAG, "name=" + name + " text=" + text);
-					if (name.equals("filename")) {
+					if (end.equals("filename")) {
 						module.setFilename(text);
-					} else if (name.equals("format")) {
+					} else if (end.equals("format")) {
 						module.setFormat(text);
-					} else if (name.equals("url")) {
+					} else if (end.equals("url")) {
 						module.setUrl(text);
-					} else if (name.equals("bytes")) {
+					} else if (end.equals("bytes")) {
 						module.setBytes(Integer.parseInt(text));
-					} else if (name.equals("songtitle")) {
+					} else if (end.equals("songtitle")) {
 						module.setSongTitle(text);
-					} else if (name.equals("alias")) {
+					} else if (end.equals("alias")) {
 						module.setArtist(text);
-					} else if (name.equals("title")) {
+					} else if (end.equals("title")) {
 						module.setLicense(text);
-					} else if (name.equals("instruments")) {
+					} else if (end.equals("instruments")) {
 						module.setInstruments(text);
-					} else if (name.equals("id")) {
-						module.setId(Long.parseLong(text));
-					} else if (name.equals("module")) {
+					} else if (end.equals("id")) {
+						if (!inArtistInfo) {
+							module.setId(Long.parseLong(text));
+						}
+					} else if (end.equals("artist_info")) {
+						inArtistInfo = false;
+					} else if (end.equals("module")) {
 						moduleList.add(module);
 					}
 					break;

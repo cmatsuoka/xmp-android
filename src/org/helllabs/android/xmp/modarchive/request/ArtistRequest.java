@@ -36,7 +36,8 @@ public class ArtistRequest extends ModArchiveRequest<List<Artist>> {
 			while (event != XmlPullParser.END_DOCUMENT)	{
 				switch (event){
 				case XmlPullParser.START_TAG: {
-					if (myparser.getName().equals("item")) {
+					final String start = myparser.getName();
+					if (start.equals("item")) {
 						artist = new Artist(); // NOPMD
 					}
 					break;
@@ -45,12 +46,12 @@ public class ArtistRequest extends ModArchiveRequest<List<Artist>> {
 					text = myparser.getText();
 					break;
 				case XmlPullParser.END_TAG: {
-					final String name = myparser.getName();
-					if (name.equals("id")) {
+					final String end = myparser.getName();
+					if (end.equals("id")) {
 						artist.setId(Long.parseLong(text));
-					} else if (name.equals("alias")) {
+					} else if (end.equals("alias")) {
 						artist.setAlias(text);
-					} else if (name.equals("item")) {
+					} else if (end.equals("item")) {
 						artistList.add(artist);
 					}
 					break;
