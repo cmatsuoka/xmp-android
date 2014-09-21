@@ -3,6 +3,7 @@ package org.helllabs.android.xmp.modarchive;
 import java.io.File;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.util.Log;
 
 import com.telly.groundy.Groundy;
 import com.telly.groundy.GroundyManager;
@@ -22,18 +23,20 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.widget.Toast;
 
+/*
+ * Based on the Groundy download example
+ */
 public class Downloader {
 
+	protected static final String TAG = "Downloader";
 	private final Context context;
 	private ProgressDialog mProgressDialog;
 	private TaskHandler mTaskHandler;
 
-
-	//a callback can be any kind of object :)
 	private final Object mCallback = new Object() {
 		@SuppressLint("NewApi")
 		@OnProgress(DownloadTask.class)
-		public void onNiceProgress(@Param(Groundy.PROGRESS) final int progress) {
+		public void onProgress(@Param(Groundy.PROGRESS) final int progress) {
 			if (progress == Groundy.NO_SIZE_AVAILABLE) {
 				mProgressDialog.setIndeterminate(true);
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -46,19 +49,21 @@ public class Downloader {
 		}
 
 		@OnSuccess(DownloadTask.class)
-		public void onBeautifulSuccess() {
+		public void onSuccess() {
+			Log.d(TAG, "download success");
 			Toast.makeText(context, R.string.file_downloaded, Toast.LENGTH_LONG).show();
 			mProgressDialog.dismiss();
 		}
 
 		@OnFailure(DownloadTask.class)
-		public void onTragedy(@Param(Groundy.CRASH_MESSAGE) final String error) {
+		public void onFailure(@Param(Groundy.CRASH_MESSAGE) final String error) {
+			Log.d(TAG, "download fail");
 			Toast.makeText(context, error, Toast.LENGTH_LONG).show();
 			mProgressDialog.dismiss();
 		}
 	};
 
-	public class DownloadTask extends GroundyTask {
+	public static class DownloadTask extends GroundyTask {
 		public static final String PARAM_URL = "org.helllabs.android.xmp.modarchive.URL";
 
 		@Override
@@ -108,7 +113,7 @@ public class Downloader {
 		});
 		mProgressDialog.show();
 
-		mTaskHandler = Groundy.create(DownloadTask.class)
+		mTaskHandler = Groundy.create(Downloader.DownloadTask.class)
 				.callback(mCallback)
 				.arg(DownloadTask.PARAM_URL, url)
 				.queueUsing(context);

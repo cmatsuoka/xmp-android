@@ -183,6 +183,9 @@
         </activity>
 
         <service android:name=".service.PlayerService" />
+        <service
+            android:name="com.telly.groundy.GroundyService"
+            android:exported="false" />
 
         <receiver
             android:name=".service.receiver.RemoteControlReceiver"

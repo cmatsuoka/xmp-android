@@ -54,7 +54,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	@Override
 	public void onResponse(final List<Module> moduleList) {
 		final Module module = moduleList.get(0);
-		Log.i(TAG, "Response: " + module.getSongTitle());
+		Log.i(TAG, "Response: title=" + module.getSongTitle());
 		title.setText(module.getSongTitle());
 		filename.setText(module.getFilename());
 		final float size = (float)module.getBytes() / 1024;
