@@ -4,6 +4,7 @@ package org.helllabs.android.xmp.modarchive;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.modarchive.adapter.ModuleArrayAdapter;
 import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
 
@@ -11,7 +12,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class ArtistModulesResult extends Result implements ModuleRequest.OnResponseListener<List<Module>>, ListView.OnItemClickListener {
@@ -41,7 +41,7 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 	@Override
 	public void onResponse(final List<Module> response) {
 		moduleList = response;
-		final ArrayAdapter<Module> adapter = new ArrayAdapter<Module>(this, android.R.layout.simple_list_item_1, response);
+		final ModuleArrayAdapter adapter = new ModuleArrayAdapter(this, R.layout.search_list_item, R.id.search_list_line1, response);
 		list.setAdapter(adapter);
 		crossfade();
 	}
