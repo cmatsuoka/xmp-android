@@ -10,10 +10,7 @@ import com.telly.groundy.GroundyManager;
 import com.telly.groundy.GroundyTask;
 import com.telly.groundy.TaskHandler;
 import com.telly.groundy.TaskResult;
-import com.telly.groundy.annotations.OnFailure;
-import com.telly.groundy.annotations.OnProgress;
-import com.telly.groundy.annotations.OnSuccess;
-import com.telly.groundy.annotations.Param;
+import com.telly.groundy.annotations.*;
 import com.telly.groundy.util.DownloadUtils;
 
 import android.annotation.SuppressLint;
