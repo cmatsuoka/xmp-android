@@ -73,7 +73,9 @@ public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 					} else if (end.equals("artist_info")) {
 						inArtistInfo = false;
 					} else if (end.equals("module")) {
-						moduleList.add(module);
+						if (!module.getFormat().equals("AHX")) {
+							moduleList.add(module);
+						}
 					}
 					break;
 				default:
