@@ -3,6 +3,7 @@ package org.helllabs.android.xmp.modarchive.model;
 import android.text.Html;
 
 public class Module {
+	public static final String UNTITLED = "(untitled)";
 	private String artist;
 	private String filename;
 	private String format;
@@ -13,16 +14,16 @@ public class Module {
 	private String instruments;
 	private long id;
 	
+	public Module() {
+		artist = Artist.UNKNOWN;
+	}
+	
 	public String getArtist() {
 		return artist;
 	}
 	
 	public void setArtist(final String artist) {
-		if (artist == null || artist.trim().isEmpty()) {
-			this.artist = "(unknown)";
-		} else {
-			this.artist = artist;
-		}
+		this.artist = artist;
 	}
 	
 	public int getBytes() {
@@ -76,7 +77,11 @@ public class Module {
 	}
 	
 	public void setSongTitle(final String songtitle) {
-		this.songTitle = Html.fromHtml(songtitle).toString();
+		if (songtitle.isEmpty()) {
+			this.songTitle = Module.UNTITLED;
+		} else {
+			this.songTitle = Html.fromHtml(songtitle).toString();
+		}
 	}
 	
 	public String getUrl() {
@@ -91,7 +96,7 @@ public class Module {
 		return id;
 	}
 	
-	public void setId(long id) {
+	public void setId(final long id) {
 		this.id = id;
 	}
 	

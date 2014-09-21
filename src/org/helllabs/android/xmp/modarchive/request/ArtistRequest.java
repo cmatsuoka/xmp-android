@@ -43,7 +43,7 @@ public class ArtistRequest extends ModArchiveRequest<List<Artist>> {
 					break;
 				}
 				case XmlPullParser.TEXT:
-					text = myparser.getText();
+					text = myparser.getText().trim();
 					break;
 				case XmlPullParser.END_TAG: {
 					final String end = myparser.getName();

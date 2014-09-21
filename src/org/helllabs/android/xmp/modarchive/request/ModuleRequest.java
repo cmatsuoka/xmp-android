@@ -45,7 +45,7 @@ public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 					}
 					break;
 				case XmlPullParser.TEXT:
-					text = myparser.getText();
+					text = myparser.getText().trim();
 					break;
 				case XmlPullParser.END_TAG:
 					final String end = myparser.getName();

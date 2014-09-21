@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp.modarchive.model;
 
 public class Artist {
+	public static final String UNKNOWN = "unknown";
 	private String alias;
 	private long id;
 	
@@ -9,7 +10,11 @@ public class Artist {
 	}
 	
 	public void setAlias(final String alias) {
-		this.alias = alias;
+		if (alias == null || alias.isEmpty()) {
+			this.alias = Artist.UNKNOWN;
+		} else {
+			this.alias = alias;
+		}
 	}
 	
 	public long getId() {
