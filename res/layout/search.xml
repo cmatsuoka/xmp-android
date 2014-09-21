@@ -49,6 +49,7 @@
         android:layout_below="@+id/search_type"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="15dp"
+        style="@android:style/Widget.Button"
         android:text="Search" />
 
     <Button
@@ -60,6 +61,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignRight="@+id/search_text"
         android:layout_marginRight="30dp"
+        style="@android:style/Widget.Button"
         android:text="Random pick" />
 
 </RelativeLayout>

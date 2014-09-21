@@ -72,6 +72,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/module_title"
                 android:layout_marginRight="10dp"
+                style="@android:style/Widget.Button"
                 android:text="Download" />
 
         </RelativeLayout>
