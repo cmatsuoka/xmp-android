@@ -38,9 +38,9 @@ public class ModuleArrayAdapter extends ArrayAdapter<Module> {
     		final TextView size = (TextView)view.findViewById(R.id.search_list_size);
     		
     		fmt.setText(module.getFormat());
-    		size.setText((module.getBytes() / 1024) + " Kb");
     		line1.setText(module.getSongTitle());
     		line2.setText("by " + module.getArtist());
+    		size.setText((module.getBytes() / 1024) + " Kb");
     	}
     	
     	return view;
