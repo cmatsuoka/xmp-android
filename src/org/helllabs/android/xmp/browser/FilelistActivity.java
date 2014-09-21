@@ -293,7 +293,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		});
 
 		registerForContextMenu(listView);
-		final String media_path = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
+		final String mediaPath = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 
 		context = this;
 
@@ -344,12 +344,12 @@ public class FilelistActivity extends BasePlaylistActivity {
 		});
 
 		// Check if directory exists
-		final File modDir = new File(media_path);
+		final File modDir = new File(mediaPath);
 
 		if (modDir.isDirectory()) {
-			updateModlist(media_path);	
+			updateModlist(mediaPath);	
 		} else {
-			pathNotFound(media_path);
+			pathNotFound(mediaPath);
 		}
 
 		mShuffleMode = readShuffleModePref();

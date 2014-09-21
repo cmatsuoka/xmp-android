@@ -5,9 +5,12 @@ import java.util.List;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
+import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Log;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,21 +24,24 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	private TextView license;
 	private String url;
 	private Downloader downloader;
-	private Button downloadButton;
+	
+	private SharedPreferences mPrefs;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.result_module);	
 		setupCrossfade();
+		
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		title = (TextView)findViewById(R.id.module_title);
 		filename = (TextView)findViewById(R.id.module_filename);
 		info = (TextView)findViewById(R.id.module_info);
 		instruments = (TextView)findViewById(R.id.module_instruments);
 		license = (TextView)findViewById(R.id.module_license);
-		downloadButton = (Button)findViewById(R.id.module_download);
 		
+		final Button downloadButton = (Button)findViewById(R.id.module_download);
 		downloadButton.setOnClickListener(this);
 
 		downloader = new Downloader(this);
@@ -69,7 +75,8 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	
 	@Override
 	public void onClick(final View view) {
-		Log.i(TAG, "Download " + url);
-		downloader.download(url);	
+		final String path = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
+		Log.i(TAG, "Download " + url + " to " + path);
+		downloader.download(url, path);	
 	}
 }

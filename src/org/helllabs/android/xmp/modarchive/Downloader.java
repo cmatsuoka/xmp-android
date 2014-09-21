@@ -29,7 +29,7 @@ import android.widget.Toast;
 public class Downloader {
 
 	protected static final String TAG = "Downloader";
-	private final Context context;
+	private final Context mContext;
 	private ProgressDialog mProgressDialog;
 	private TaskHandler mTaskHandler;
 
@@ -51,26 +51,30 @@ public class Downloader {
 		@OnSuccess(DownloadTask.class)
 		public void onSuccess() {
 			Log.d(TAG, "download success");
-			Toast.makeText(context, R.string.file_downloaded, Toast.LENGTH_LONG).show();
+			Toast.makeText(mContext, R.string.file_downloaded, Toast.LENGTH_LONG).show();
 			mProgressDialog.dismiss();
 		}
 
 		@OnFailure(DownloadTask.class)
 		public void onFailure(@Param(Groundy.CRASH_MESSAGE) final String error) {
-			Log.d(TAG, "download fail");
-			Toast.makeText(context, error, Toast.LENGTH_LONG).show();
+			Log.d(TAG, "download fail: " + error);
+			Toast.makeText(mContext, error, Toast.LENGTH_LONG).show();
 			mProgressDialog.dismiss();
 		}
 	};
 
 	public static class DownloadTask extends GroundyTask {
 		public static final String PARAM_URL = "org.helllabs.android.xmp.modarchive.URL";
+		public static final String PARAM_PATH = "org.helllabs.android.xmp.modarchive.PATH";
 
 		@Override
 		protected TaskResult doInBackground() {
 			try {
 				final String url = getStringArg(PARAM_URL);
-				final File dest = new File(getContext().getFilesDir(), new File(url).getName());
+				final String path = getStringArg(PARAM_PATH);
+				final String name = new File(url).getName();
+				final int start = name.indexOf('#') + 1;
+				final File dest = new File(path, name.substring(start));
 				DownloadUtils.downloadFile(getContext(), url, dest,
 						DownloadUtils.getDownloadListenerForTask(this), new DownloadUtils.DownloadCancelListener(){
 					@Override
@@ -91,21 +95,21 @@ public class Downloader {
 
 
 	public Downloader(final Context context) {
-		this.context = context;
+		this.mContext = context;
 	}
 
-	public void download(final String url) {
-		mProgressDialog = new ProgressDialog(context);
+	public void download(final String url, final String path) {
+		mProgressDialog = new ProgressDialog(mContext);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		mProgressDialog.setCancelable(true);
 		mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			@Override
 			public void onCancel(final DialogInterface dialogInterface){
 				if (mTaskHandler != null) {
-					mTaskHandler.cancel(context, 0, new GroundyManager.SingleCancelListener() {
+					mTaskHandler.cancel(mContext, 0, new GroundyManager.SingleCancelListener() {
 						@Override
 						public void onCancelResult(final long id, final int result){
-							Toast.makeText(context, R.string.download_cancelled, Toast.LENGTH_LONG).show();
+							Toast.makeText(mContext, R.string.download_cancelled, Toast.LENGTH_LONG).show();
 						}
 					});
 				}
@@ -116,7 +120,8 @@ public class Downloader {
 		mTaskHandler = Groundy.create(Downloader.DownloadTask.class)
 				.callback(mCallback)
 				.arg(DownloadTask.PARAM_URL, url)
-				.queueUsing(context);
+				.arg(DownloadTask.PARAM_PATH, path)
+				.queueUsing(mContext);
 	}
 
 
