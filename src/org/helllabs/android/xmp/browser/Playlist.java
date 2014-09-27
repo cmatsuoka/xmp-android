@@ -258,7 +258,7 @@ public class Playlist {
 		} catch (IOException e) {
 			Message.error(context, context.getString(R.string.error_read_comment));
 		}	    
-	    if (comment == null || comment.trim().length() == 0) {
+	    if (comment == null || comment.trim().isEmpty()) {
 	    	comment = context.getString(R.string.no_comment);
 	    }
 		return comment;		
@@ -281,8 +281,11 @@ public class Playlist {
 	    	lineNum = 0;
 	    	while ((line = reader.readLine()) != null) {
 	    		final String[] fields = line.split(":", 3);
-	    		if (InfoCache.fileExists(fields[0])) {
-	    			mList.add(new PlaylistItem(fields[2], fields[1], fields[0], R.drawable.grabber));
+	    		final String filename = fields[0];
+	    		final String comment = fields.length > 1 ? fields[1] : "";
+	    		final String title = fields.length > 2 ? fields[2] : "";
+	    		if (InfoCache.fileExists(filename)) {
+	    			mList.add(new PlaylistItem(title, comment, filename, R.drawable.grabber));
 	    		} else {
 	    			invalidList.add(lineNum);
 	    		}
