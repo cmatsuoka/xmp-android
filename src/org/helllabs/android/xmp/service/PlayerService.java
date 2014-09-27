@@ -148,6 +148,8 @@ public final class PlayerService extends Service {
 	public void onDestroy() {
 		if (headsetPlugReceiver != null) {
 			unregisterReceiver(headsetPlugReceiver);
+		}
+		if (bluetoothConnectionReceiver != null) {		// Z933 (glaucus) needs this test
 			unregisterReceiver(bluetoothConnectionReceiver);
 		}
 		mediaButtons.unregister();
