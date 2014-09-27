@@ -162,14 +162,22 @@ static void opensl_close()
 {
 	lock();
 
-	(*player_obj)->Destroy(player_obj);
-	(*output_mix_obj)->Destroy(output_mix_obj);
-	(*engine_obj)->Destroy(engine_obj);
+	if (player_obj != NULL)
+		(*player_obj)->Destroy(player_obj);
+	if (output_mix_obj != NULL)
+		(*output_mix_obj)->Destroy(output_mix_obj);
+	if (engine_obj != NULL)
+		(*engine_obj)->Destroy(engine_obj);
+
+	player_obj = NULL;
+	output_mix_obj = NULL;
+	engine_obj = NULL;
 
 	player_play = NULL;
 	buffer_queue = NULL;
 
 	unlock();
+	pthread_mutex_destroy(&_lock);
 }
 
 void close_audio()
