@@ -55,11 +55,12 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private int fileNum;
 	private Context context;
 	private ListView listView;
-	private final List<PlaylistItem> mList = new ArrayList<PlaylistItem>();
+	protected List<PlaylistItem> mList;
 	private boolean mLoopMode;
 	private boolean mShuffleMode;
 	private boolean mBackButtonParentdir;
 	private Crossfader crossfade;
+	private PlaylistItemAdapter playlistAdapter;
 
 	@Override
 	protected List<PlaylistItem> getModList() {
@@ -249,6 +250,10 @@ public class FilelistActivity extends BasePlaylistActivity {
 				onListItemClick(list, view, position, id);
 			}		
 		});
+		
+		mList = new ArrayList<PlaylistItem>();
+		playlistAdapter = new PlaylistItemAdapter(this, R.layout.song_item, R.id.info, mList, false);
+		listView.setAdapter(playlistAdapter);
 
 		registerForContextMenu(listView);
 		final String mediaPath = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
@@ -409,10 +414,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 			mList.addAll(list);
 		}
 
-		final PlaylistItemAdapter playlist = new PlaylistItemAdapter(FilelistActivity.this,
-				R.layout.song_item, R.id.info, mList, false);
-
-		listView.setAdapter(playlist);
+		playlistAdapter.notifyDataSetChanged();
 
 		crossfade.crossfade();
 	}
