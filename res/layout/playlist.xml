@@ -32,7 +32,6 @@
 
 	</LinearLayout>
 
-
 	<LinearLayout android:gravity="top"
 		android:layout_weight="1.0"
 		android:orientation="vertical"

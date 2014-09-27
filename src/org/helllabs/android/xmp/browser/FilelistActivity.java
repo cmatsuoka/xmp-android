@@ -11,13 +11,11 @@ import java.util.Stack;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.preferences.Preferences;
+import org.helllabs.android.xmp.util.Crossfader;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.ModInfo;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -61,46 +59,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private boolean mLoopMode;
 	private boolean mShuffleMode;
 	private boolean mBackButtonParentdir;
-	
-	// Cross-fade
-	private View contentView;
-	private View progressView;
-	private int animationDuration;
-
-	@TargetApi(12)
-	protected void crossfade() {
-
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB_MR1) {
-
-			// Set the content view to 0% opacity but visible, so that it is visible
-			// (but fully transparent) during the animation.
-			contentView.setAlpha(0f);
-			contentView.setVisibility(View.VISIBLE);
-
-			// Animate the content view to 100% opacity, and clear any animation
-			// listener set on the view.
-			contentView.animate()
-				.alpha(1f)
-				.setDuration(animationDuration)
-				.setListener(null);
-
-			// Animate the loading view to 0% opacity. After the animation ends,
-			// set its visibility to GONE as an optimization step (it won't
-			// participate in layout passes, etc.)
-			progressView.animate()
-				.alpha(0f)
-				.setDuration(animationDuration)
-				.setListener(new AnimatorListenerAdapter() {
-					@Override
-					public void onAnimationEnd(final Animator animation) {
-						progressView.setVisibility(View.GONE);
-					}
-				});
-		} else {
-			progressView.setVisibility(View.GONE);
-			contentView.setVisibility(View.VISIBLE);
-		}
-	}
+	private Crossfader crossfade;
 
 	@Override
 	protected List<PlaylistItem> getModList() {
@@ -127,7 +86,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 	protected boolean isLoopMode() {
 		return mLoopMode;
 	}
-
 
 	/*
 	 * Add directory to playlist
@@ -280,8 +238,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 	}
 	
 	@Override
-	public void onCreate(final Bundle icicle) {
-		super.onCreate(icicle);	
+	public void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.modlist);
 
 		listView = (ListView)findViewById(R.id.modlist_listview);
@@ -299,11 +257,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 		setTitle("File Browser");
 
-		// Set up crossfade
-		contentView = findViewById(R.id.modlist_content);
-		progressView = findViewById(R.id.modlist_spinner);
-		contentView.setVisibility(View.GONE);
-		animationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+		crossfade = new Crossfader(this);
+		crossfade.setup(R.id.modlist_content, R.id.modlist_spinner);
 
 		curPath = (TextView)findViewById(R.id.current_path);
 		registerForContextMenu(curPath);
@@ -459,7 +414,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 		listView.setAdapter(playlist);
 
-		crossfade();
+		crossfade.crossfade();
 	}
 
 	// Playlist context menu

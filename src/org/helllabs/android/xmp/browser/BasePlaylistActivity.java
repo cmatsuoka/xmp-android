@@ -43,8 +43,8 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	protected SharedPreferences mPrefs;
 
 	@Override
-	public void onCreate(final Bundle icicle) {
-		super.onCreate(icicle);
+	public void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		mContext = this;
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mShowToasts = mPrefs.getBoolean(Preferences.SHOW_TOAST, true);
