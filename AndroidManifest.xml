@@ -178,7 +178,7 @@
                 android:value=".modarchive.Search" />
         </activity>
         <activity
-            android:name=".modarchive.ArtistModulesResult"
+            android:name=".modarchive.result.ArtistModulesResult"
             android:configChanges="keyboardHidden|orientation|screenSize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
