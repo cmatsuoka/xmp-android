@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.util.Log;
+import org.helllabs.android.xmp.util.Message;
 
 import com.telly.groundy.Groundy;
 import com.telly.groundy.GroundyManager;
@@ -96,6 +97,32 @@ public class Downloader {
 	}
 
 	public void download(final String url, final String path) {
+		
+		// Check if file already exists
+		final String filename = url.substring(url.lastIndexOf('#')+1, url.length());
+		final File newfile = new File(path, filename);
+		
+		Log.d(TAG, "check if " + newfile.getPath() + " already exists");
+		
+		if (newfile.exists()) {
+			Message.yesNoDialog(mContext, "File exists!", "This module already exists. Do you want to overwrite?", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(final DialogInterface dialog, final int which) {
+					if (which == DialogInterface.BUTTON_POSITIVE) {
+						downloadUrl(url, path);
+					}
+				}	
+			});
+		} else {
+			downloadUrl(url, path);
+		}
+	}
+	
+	private void downloadUrl(final String url, final String path) {
+		
+		final File pathFile = new File(path);
+		pathFile.mkdir();
+		
 		mProgressDialog = new ProgressDialog(mContext);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		mProgressDialog.setCancelable(true);
@@ -120,6 +147,4 @@ public class Downloader {
 				.arg(DownloadTask.PARAM_PATH, path)
 				.queueUsing(mContext);
 	}
-
-
 }
