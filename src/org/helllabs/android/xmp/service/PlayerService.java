@@ -165,11 +165,13 @@ public final class PlayerService extends Service {
 	}
 
 	private void updateNotification() {
-		if (paused) {
-			notifier.pauseNotification(Xmp.getModName(), queue.getIndex());
-		} else {
-			notifier.unpauseNotification(Xmp.getModName(), queue.getIndex());
-		}		
+		if (queue != null) {	// It seems that queue can be null if we're called from PhoneStateListener
+			if (paused) {
+				notifier.pauseNotification(Xmp.getModName(), queue.getIndex());
+			} else {
+				notifier.unpauseNotification(Xmp.getModName(), queue.getIndex());
+			}
+		}
 	}
 	
 	private void doPauseAndNotify() {
