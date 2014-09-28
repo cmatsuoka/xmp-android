@@ -47,6 +47,11 @@ public class TitleResult extends Result implements ModuleRequest.OnResponseListe
 		list.setAdapter(adapter);
 		crossfade();
 	}
+	
+	@Override
+	public void onError(final Throwable error) {
+		handleError(error);
+	}
 
 	@Override
 	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {

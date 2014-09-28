@@ -19,6 +19,7 @@ public class Search extends ActionBarActivity {
 	public static final String SEARCH_TEXT = "search_text";
 	public static final String MODULE_ID = "module_id";
 	public static final String ARTIST_ID = "artist_id";
+	public static final String ERROR = "error";
 	private RadioGroup searchType;
 	private EditText searchEdit;
 	private Context context;

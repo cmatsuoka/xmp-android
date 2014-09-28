@@ -76,9 +76,15 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	}
 	
 	@Override
+	public void onError(final Throwable error) {
+		handleError(error);
+	}
+	
+	@Override
 	public void onClick(final View view) {
 		final String path = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 		Log.i(TAG, "Download " + url + " to " + path);
 		downloader.download(url, path);	
 	}
+
 }

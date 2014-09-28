@@ -1,16 +1,19 @@
 package org.helllabs.android.xmp.modarchive.result;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.modarchive.Search;
+import org.helllabs.android.xmp.modarchive.SearchError;
 import org.helllabs.android.xmp.util.Crossfader;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
 public abstract class Result extends ActionBarActivity  {
-	
+
 	private Crossfader crossfader;
 
-	
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -24,5 +27,11 @@ public abstract class Result extends ActionBarActivity  {
 
 	protected void crossfade() {
 		crossfader.crossfade();
+	}
+
+	protected void handleError(final Throwable error) {
+		final Intent intent = new Intent(this, SearchError.class);
+		intent.putExtra(Search.ERROR, error);
+		startActivity(intent);
 	}
 }

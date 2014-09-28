@@ -43,6 +43,11 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 		list.setAdapter(adapter);
 		crossfade();
 	}
+	
+	@Override
+	public void onError(final Throwable error) {
+		handleError(error);
+	}
 
 	@Override
 	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
@@ -50,7 +55,5 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 		intent.putExtra(Search.ARTIST_ID, artistList.get(position).getId());
 		startActivity(intent);
 	}
-
-
 
 }

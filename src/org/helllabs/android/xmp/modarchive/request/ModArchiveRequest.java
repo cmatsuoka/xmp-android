@@ -19,6 +19,7 @@ public abstract class ModArchiveRequest<T> implements Response.Listener<String>,
 
 	public interface OnResponseListener<T> {
 		void onResponse(T response);
+		void onError(Throwable error);
 	}
 
 	public ModArchiveRequest(final String key, final String request) {
@@ -43,7 +44,7 @@ public abstract class ModArchiveRequest<T> implements Response.Listener<String>,
 	@Override
 	public void onErrorResponse(final VolleyError error) {
 		Log.e(TAG, "Volley error: " + error.getMessage());
-		mOnResponseListener.onResponse(null);
+		mOnResponseListener.onError(error);
 	}
 
 	@Override
