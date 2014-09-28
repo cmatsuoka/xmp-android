@@ -50,8 +50,6 @@
     <string name="pref_show_info_line_summary">Show replay information and time</string>
     <string name="pref_keep_screen_on_summary">Prevent screen from sleeping during replay</string>
     <string name="pref_keep_screen_on_title">Keep screen on</string>
-    <string name="pref_titles_in_browser_title">Titles in browser</string>
-    <string name="pref_titles_in_browser_summary">Display titles instead of file names in browser (warning: may be slow)</string>
     <string name="pref_use_filename_title">File names in playlist</string>
     <string name="pref_use_filename_summary">Display file names instead of titles in playlists</string>
     <string name="pref_enable_delete_title">Enable file delete</string>
