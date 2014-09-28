@@ -1,81 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1.0"
+    android:gravity="top"
+    android:orientation="vertical" >
 
-    <ProgressBar
-        android:id="@+id/result_spinner"
-        style="?android:progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-
-    <ScrollView
-        android:id="@+id/result_content"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1.0" >
 
-        <RelativeLayout
-            
+        <ProgressBar
+            android:id="@+id/result_spinner"
+            style="?android:progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <ScrollView
+            android:id="@+id/result_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="match_parent" >
 
-            <TextView
-                android:id="@+id/module_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="14dp"
-                android:text="Title"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/module_filename"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/module_title"
-                android:text="filename" />
+                <TextView
+                    android:id="@+id/module_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="Title"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:id="@+id/module_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/module_filename"
-                android:layout_marginTop="10dp"
-                android:text="info" />
-            
-            
-            <TextView
-                android:id="@+id/module_license"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/module_info"
-                android:text="license" />
+                <TextView
+                    android:id="@+id/module_filename"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="filename" />
 
-            <TextView
-                android:id="@+id/module_instruments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/module_license"
-                android:layout_marginTop="10dp"
-                android:text="instruments"
-                android:textSize="11sp"
-                android:typeface="monospace" />
+                <TextView
+                    android:id="@+id/module_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="info" />
 
-            <Button
-                android:id="@+id/module_download"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/module_title"
-                android:layout_marginRight="10dp"
-                style="@android:style/Widget.Button"
-                android:text="Download" />
+                <TextView
+                    android:id="@+id/module_license"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="license" />
 
-        </RelativeLayout>
-    </ScrollView>
+                <TextView
+                    android:id="@+id/module_instruments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="instruments"
+                    android:textSize="11sp"
+                    android:typeface="monospace" />
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
 
-</merge>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/module_download"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Download" />
+    </LinearLayout>
+
+</LinearLayout>
