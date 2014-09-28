@@ -7,7 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.widget.TextView;
 
 public class SearchError extends ActionBarActivity {
-
+	
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
