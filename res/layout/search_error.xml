@@ -7,12 +7,12 @@
         android:id="@+id/error_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:drawableTop="@drawable/monster"
         android:drawablePadding="10dp"
         android:gravity="center"
-        android:textColor="#ffa0a0a0"
+        android:textColor="#ffff0000"
         android:textSize="10sp"
-        android:typeface="monospace" />
+        android:padding="12dp"
+        android:typeface="monospace"
+        android:background="@drawable/guru_frame" />
 
 </RelativeLayout>
