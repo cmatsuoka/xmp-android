@@ -31,7 +31,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 
-public class PlaylistMenu extends ActionBarActivity {
+public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnItemClickListener {
 	private static final String TAG = "PlaylistMenu";
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAYLIST_REQUEST = 46;
@@ -39,7 +39,8 @@ public class PlaylistMenu extends ActionBarActivity {
 	private String mediaPath;
 	private int deletePosition;
 	private Context context;
-	private ListView listView;
+	private PlaylistItemAdapter playlistAdapter;
+	private List<PlaylistItem> mList;
 
 	@Override
 	public void onCreate(final Bundle icicle) {		
@@ -47,22 +48,12 @@ public class PlaylistMenu extends ActionBarActivity {
 		context = this;
 		setContentView(R.layout.playlist_menu);
 
-		listView = (ListView)findViewById(R.id.plist_menu_list);
-
-		listView.setOnItemClickListener(
-				new AdapterView.OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> l, View view, int position, long id) {
-						if (position == 0) {
-							final Intent intent = new Intent(PlaylistMenu.this, FilelistActivity.class);
-							startActivityForResult(intent, PLAYLIST_REQUEST);
-						} else {
-							final Intent intent = new Intent(PlaylistMenu.this, PlaylistActivity.class);
-							intent.putExtra("name", PlaylistUtils.listNoSuffix()[position -1]);
-							startActivityForResult(intent, PLAYLIST_REQUEST);
-						}
-					}
-				});
+		final ListView listView = (ListView)findViewById(R.id.plist_menu_list);
+		listView.setOnItemClickListener(this);
+		
+		mList = new ArrayList<PlaylistItem>();
+		playlistAdapter = new PlaylistItemAdapter(PlaylistMenu.this, R.layout.playlist_item, R.id.plist_info, mList, false);
+		listView.setAdapter(playlistAdapter);
 
 		registerForContextMenu(listView);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -96,7 +87,7 @@ public class PlaylistMenu extends ActionBarActivity {
 	}
 	
 	@Override
-	public void onNewIntent(Intent intent) {
+	public void onNewIntent(final Intent intent) {
 		
 		// If we launch from launcher and we're playing a module, go straight to the player activity
 		
@@ -105,6 +96,18 @@ public class PlaylistMenu extends ActionBarActivity {
 		}
 	}
 
+	@Override
+	public void onItemClick(final AdapterView<?> l, final View view, final int position, final long id) {
+		if (position == 0) {
+			final Intent intent = new Intent(PlaylistMenu.this, FilelistActivity.class);
+			startActivityForResult(intent, PLAYLIST_REQUEST);
+		} else {
+			final Intent intent = new Intent(PlaylistMenu.this, PlaylistActivity.class);
+			intent.putExtra("name", PlaylistUtils.listNoSuffix()[position -1]);
+			startActivityForResult(intent, PLAYLIST_REQUEST);
+		}
+	}
+	
 	private void startPlayerActivity() {
 		if (prefs.getBoolean(Preferences.START_ON_PLAYER, true)) {
 			if (PlayerService.isAlive) {
@@ -128,20 +131,15 @@ public class PlaylistMenu extends ActionBarActivity {
 	private void updateList() {
 		mediaPath = prefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 
-		final List<PlaylistItem> list = new ArrayList<PlaylistItem>();
-
-		list.clear();
-		list.add(new PlaylistItem("File browser", "Files in " + mediaPath,
+		mList.clear();
+		mList.add(new PlaylistItem("File browser", "Files in " + mediaPath,
 				R.drawable.browser));
 
 		for (final String name : PlaylistUtils.listNoSuffix()) {
-			list.add(new PlaylistItem(name, Playlist.readComment(this, name), R.drawable.list));
+			mList.add(new PlaylistItem(name, Playlist.readComment(this, name), R.drawable.list));	// NOPMD
 		}
 
-		final PlaylistItemAdapter playlist = new PlaylistItemAdapter(PlaylistMenu.this,
-				R.layout.playlist_item, R.id.plist_info, list, false);
-
-		listView.setAdapter(playlist);
+		playlistAdapter.notifyDataSetChanged();
 	}
 
 
