@@ -55,7 +55,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private int fileSelection;
 	private int fileNum;
 	private Context context;
-	private ListView listView;
 	protected List<PlaylistItem> mList;
 	private boolean mLoopMode;
 	private boolean mShuffleMode;
@@ -244,7 +243,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.modlist);
 
-		listView = (ListView)findViewById(R.id.modlist_listview);
+		final ListView listView = (ListView)findViewById(R.id.modlist_listview);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
