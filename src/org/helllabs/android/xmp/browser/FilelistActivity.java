@@ -14,6 +14,7 @@ import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Crossfader;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
+import org.helllabs.android.xmp.util.Message;
 import org.helllabs.android.xmp.util.ModInfo;
 
 import android.app.AlertDialog;

@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.browser.Message;
+import org.helllabs.android.xmp.util.Message;
 import org.helllabs.android.xmp.service.PlayerService;
 
 import android.content.SharedPreferences;

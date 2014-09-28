@@ -15,6 +15,7 @@ import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
+import org.helllabs.android.xmp.util.Message;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,4 +1,4 @@
-package org.helllabs.android.xmp.browser;
+package org.helllabs.android.xmp.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;

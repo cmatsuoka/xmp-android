@@ -19,12 +19,13 @@ import android.widget.TextView;
 
 public class ModuleResult extends Result implements ModuleRequest.OnResponseListener<List<Module>>, View.OnClickListener {
 	private static final String TAG = "ModuleResult";
+	private static final String MODARCHIVE_DIRNAME = "ModArchive";
 	private TextView title;
 	private TextView filename;
 	private TextView info;
 	private TextView instruments;
 	private TextView license;
-	private String url;
+	private Module module;
 	private Downloader downloader;
 	
 	private SharedPreferences mPrefs;
@@ -70,7 +71,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 		license.setText("License: " + module.getLicense());
 		instruments.setText(module.getInstruments());
 
-		url = module.getUrl();
+		this.module = module;
 
 		crossfade();
 	}
@@ -82,9 +83,25 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	
 	@Override
 	public void onClick(final View view) {
-		final String path = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
-		Log.i(TAG, "Download " + url + " to " + path);
-		downloader.download(url, path);	
+		final StringBuffer sb = new StringBuffer();
+		
+		sb.append(mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH));
+		
+		if (mPrefs.getBoolean(Preferences.MODARCHIVE_FOLDER, false)) {
+			sb.append('/');
+			sb.append(MODARCHIVE_DIRNAME);
+		}
+		
+		if (mPrefs.getBoolean(Preferences.ARTIST_FOLDER, true)) {
+			sb.append('/');
+			sb.append(module.getArtist());
+		}
+		
+		final String modDir = sb.toString();
+		final String url = module.getUrl();
+		
+		Log.i(TAG, "Download " + url + " to " + modDir);
+		downloader.download(url, modDir);	
 	}
 
 }

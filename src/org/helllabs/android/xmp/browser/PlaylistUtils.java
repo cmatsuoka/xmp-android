@@ -8,6 +8,7 @@ import java.util.List;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.preferences.Preferences;
+import org.helllabs.android.xmp.util.Message;
 import org.helllabs.android.xmp.util.ModInfo;
 
 import android.app.AlertDialog;

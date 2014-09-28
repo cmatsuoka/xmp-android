@@ -2,13 +2,13 @@ package org.helllabs.android.xmp.player;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.XmpApplication;
-import org.helllabs.android.xmp.browser.Message;
 import org.helllabs.android.xmp.browser.PlaylistMenu;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.service.ModInterface;
 import org.helllabs.android.xmp.service.PlayerCallback;
 import org.helllabs.android.xmp.service.PlayerService;
 import org.helllabs.android.xmp.util.Log;
+import org.helllabs.android.xmp.util.Message;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

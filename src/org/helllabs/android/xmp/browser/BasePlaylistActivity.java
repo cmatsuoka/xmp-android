@@ -11,6 +11,7 @@ import org.helllabs.android.xmp.service.ModInterface;
 import org.helllabs.android.xmp.service.PlayerService;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
+import org.helllabs.android.xmp.util.Message;
 
 import android.content.ComponentName;
 import android.content.Context;

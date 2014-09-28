@@ -13,7 +13,6 @@ public abstract class Result extends ActionBarActivity  {
 
 	private Crossfader crossfader;
 
-
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
