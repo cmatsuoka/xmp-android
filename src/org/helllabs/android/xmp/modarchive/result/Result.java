@@ -1,4 +1,4 @@
-package org.helllabs.android.xmp.modarchive;
+package org.helllabs.android.xmp.modarchive.result;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.util.Crossfader;

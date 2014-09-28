@@ -1,8 +1,9 @@
-package org.helllabs.android.xmp.modarchive;
+package org.helllabs.android.xmp.modarchive.result;
 
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.modarchive.model.Artist;
 import org.helllabs.android.xmp.modarchive.request.ArtistRequest;
 

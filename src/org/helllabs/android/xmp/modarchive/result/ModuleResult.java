@@ -1,8 +1,10 @@
-package org.helllabs.android.xmp.modarchive;
+package org.helllabs.android.xmp.modarchive.result;
 
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.modarchive.Downloader;
+import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
 import org.helllabs.android.xmp.preferences.Preferences;

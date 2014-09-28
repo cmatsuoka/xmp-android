@@ -157,14 +157,14 @@
                 android:value=".browser.PlaylistMenu" />
         </activity>
         <activity
-            android:name=".modarchive.TitleResult"
+            android:name=".modarchive.result.TitleResult"
             android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".modarchive.Search" />
         </activity>
         <activity
-            android:name=".modarchive.ArtistResult"
+            android:name=".modarchive.result.ArtistResult"
             android:configChanges="keyboardHidden|orientation|screenSize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -178,14 +178,14 @@
                 android:value=".modarchive.Search" />
         </activity>
         <activity
-            android:name=".modarchive.ModuleResult"
+            android:name=".modarchive.result.ModuleResult"
             android:configChanges="keyboardHidden|orientation|screenSize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".modarchive.Search" />
         </activity>
         <activity
-            android:name=".modarchive.RandomResult"
+            android:name=".modarchive.result.RandomResult"
             android:configChanges="keyboardHidden|orientation|screenSize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

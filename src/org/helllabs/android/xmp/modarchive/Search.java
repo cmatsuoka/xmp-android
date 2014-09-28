@@ -1,6 +1,9 @@
 package org.helllabs.android.xmp.modarchive;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.modarchive.result.ArtistResult;
+import org.helllabs.android.xmp.modarchive.result.RandomResult;
+import org.helllabs.android.xmp.modarchive.result.TitleResult;
 
 import android.content.Context;
 import android.content.Intent;
