@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.XmpApplication;
+import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.player.PlayerActivity;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.service.ModInterface;
@@ -325,6 +326,9 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			break;
 		case R.id.menu_refresh:
 			update();
+			break;
+		case R.id.menu_download:
+			startActivity(new Intent(this, Search.class));
 			break;
 		}
 		return super.onOptionsItemSelected(item);
