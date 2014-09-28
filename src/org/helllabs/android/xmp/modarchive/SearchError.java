@@ -44,6 +44,8 @@ public class SearchError extends ActionBarActivity implements Runnable {
 		
 		if (message.trim().isEmpty()) {
 			message = "Software Failure.   Press back button to continue.\n\nGuru Meditation #35068035.48454C50";
+		} else {
+			message += ".  Press back button to continue.";
 		}
 		
 		msg.setText(message);
