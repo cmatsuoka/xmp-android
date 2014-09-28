@@ -75,6 +75,11 @@ public class Search extends ActionBarActivity {
 		randomButton.setOnClickListener(randomClick);
 
 		searchEdit = (EditText)findViewById(R.id.search_text);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
 		
 		// Show soft keyboard
 		searchEdit.requestFocus();
