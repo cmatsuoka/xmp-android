@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.helllabs.android.xmp.modarchive.model.Artist;
 import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.util.Log;
 import org.xmlpull.v1.XmlPullParser;
@@ -35,7 +36,7 @@ public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 			int event = myparser.getEventType();
 			String text = "";
 			while (event != XmlPullParser.END_DOCUMENT)	{
-				switch (event){
+				switch (event){		// NOPMD
 				case XmlPullParser.START_TAG:
 					final String start = myparser.getName();
 					if (start.equals("module")) {
@@ -61,7 +62,10 @@ public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 					} else if (end.equals("songtitle")) {
 						module.setSongTitle(text);
 					} else if (end.equals("alias")) {
-						module.setArtist(text);
+						// Use non-guessed artist if available
+						if (module.getArtist().equals(Artist.UNKNOWN)) {
+							module.setArtist(text);
+						}
 					} else if (end.equals("title")) {
 						module.setLicense(text);
 					} else if (end.equals("instruments")) {
