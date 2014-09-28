@@ -3,6 +3,7 @@ package org.helllabs.android.xmp.modarchive;
 import org.helllabs.android.xmp.R;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
@@ -18,13 +19,37 @@ public class SearchError extends ActionBarActivity implements Runnable {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+//		// Hide the status bar
+//        if (Build.VERSION.SDK_INT < 16) {
+//            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        } else {
+//        	final View decorView = getWindow().getDecorView();
+//        	decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+//        }
+        
 		setContentView(R.layout.search_error);
 		
 		setTitle("Search error");
 		
 		final Throwable error = (Throwable)getIntent().getSerializableExtra(Search.ERROR);
 		msg = (TextView)findViewById(R.id.error_message);
-		msg.setText(error.getMessage());
+		
+		String message = error.getMessage();
+		
+		final int idx = message.indexOf("Exception: ");
+		if (idx >= 0) {
+			message = message.substring(idx + 11);
+		}
+		
+		if (message.trim().isEmpty()) {
+			message = "Software Failure.   Press back button to continue.\n\nGuru Meditation #35068035.48454C50";
+		}
+		
+		msg.setText(message);
+		
+		final Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/TopazPlus_a500_v1.0.ttf");
+		msg.setTypeface(typeface);
 		
 		msg.postDelayed(this, PERIOD);
 	}
