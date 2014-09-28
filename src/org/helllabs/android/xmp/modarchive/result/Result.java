@@ -32,6 +32,7 @@ public abstract class Result extends ActionBarActivity  {
 	protected void handleError(final Throwable error) {
 		final Intent intent = new Intent(this, SearchError.class);
 		intent.putExtra(Search.ERROR, error);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		startActivity(intent);
 	}
 }

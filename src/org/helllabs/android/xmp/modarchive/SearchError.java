@@ -44,6 +44,7 @@ public class SearchError extends ActionBarActivity implements Runnable {
 	        final Intent intent = new Intent(this, Search.class);
 	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        startActivity(intent);
+	        overridePendingTransition(0, 0);
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
