@@ -74,6 +74,8 @@ public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 						if (!inArtistInfo) {
 							module.setId(Long.parseLong(text));
 						}
+					} else if (end.equals("hash")) {
+						module.setHash(text);
 					} else if (end.equals("artist_info")) {
 						inArtistInfo = false;
 					} else if (end.equals("module")) {
