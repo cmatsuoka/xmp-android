@@ -50,6 +50,8 @@ public class Preferences extends PreferenceActivity {
 	public static final String BACK_BUTTON_NAVIGATION = "back_button_navigation";
 	public static final String BLUETOOTH_PAUSE = "bluetooth_pause";
 	public static final String START_ON_PLAYER = "start_on_player";
+	public static final String MODARCHIVE_FOLDER = "modarchive_folder";
+	public static final String ARTIST_FOLDER = "artist_folder";
 
 	private SharedPreferences prefs;
 	private String oldPath;

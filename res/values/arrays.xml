@@ -46,5 +46,6 @@
         <item>22050</item>
         <item>44100</item>
         <item>48000</item>
-    </string-array>  
+    </string-array>
+    
 </resources>
