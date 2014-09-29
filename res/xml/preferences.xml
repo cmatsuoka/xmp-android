@@ -170,7 +170,7 @@
         <PreferenceScreen android:title="@string/pref_category_modarchive" >
             <PreferenceCategory android:title="@string/pref_category_download" >
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:key="modarchive_folder"
                     android:persistent="true"
                     android:summary="@string/pref_modarchive_folder_summary"

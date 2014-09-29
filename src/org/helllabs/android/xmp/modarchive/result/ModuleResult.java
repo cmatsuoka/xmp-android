@@ -87,7 +87,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 		
 		sb.append(mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH));
 		
-		if (mPrefs.getBoolean(Preferences.MODARCHIVE_FOLDER, false)) {
+		if (mPrefs.getBoolean(Preferences.MODARCHIVE_FOLDER, true)) {
 			sb.append('/');
 			sb.append(MODARCHIVE_DIRNAME);
 		}
