@@ -1,4 +1,4 @@
-package org.helllabs.android.xmp.browser;
+package org.helllabs.android.xmp.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

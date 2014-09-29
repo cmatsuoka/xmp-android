@@ -1,4 +1,4 @@
-package org.helllabs.android.xmp.browser;
+package org.helllabs.android.xmp.browser.playlist;
 
 import java.io.File;
 import java.io.IOException;
@@ -121,7 +121,7 @@ public final class PlaylistUtils {
 	}
 	
 	public static String[] list() {		
-		return Preferences.DATA_DIR.list(new PlayListFilter());
+		return Preferences.DATA_DIR.list(new PlaylistFilter());
 	}
 	
 	public static String[] listNoSuffix() {

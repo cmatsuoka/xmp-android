@@ -1,12 +1,11 @@
 package org.helllabs.android.xmp.browser;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.browser.adapter.PlaylistItemAdapter;
 import org.helllabs.android.xmp.browser.model.PlaylistItem;
+import org.helllabs.android.xmp.browser.playlist.Playlist;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
@@ -21,13 +20,6 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.tlv.TouchListView;
-
-
-class PlayListFilter implements FilenameFilter {
-	public boolean accept(final File dir, final String name) {
-		return name.endsWith(Playlist.PLAYLIST_SUFFIX);
-	}
-}
 
 public class PlaylistActivity extends BasePlaylistActivity {
 	private static final String TAG = "PlaylistActivity";

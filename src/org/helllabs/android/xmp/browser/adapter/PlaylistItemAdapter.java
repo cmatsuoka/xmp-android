@@ -3,8 +3,8 @@ package org.helllabs.android.xmp.browser.adapter;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.browser.FileUtils;
 import org.helllabs.android.xmp.browser.model.PlaylistItem;
+import org.helllabs.android.xmp.util.FileUtils;
 
 import android.content.Context;
 import android.graphics.Typeface;

@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import org.helllabs.android.xmp.Xmp;
-import org.helllabs.android.xmp.browser.FileUtils;
 import org.helllabs.android.xmp.preferences.Preferences;
 
 

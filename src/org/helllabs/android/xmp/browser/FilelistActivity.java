@@ -12,6 +12,8 @@ import java.util.Stack;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.browser.adapter.PlaylistItemAdapter;
 import org.helllabs.android.xmp.browser.model.PlaylistItem;
+import org.helllabs.android.xmp.browser.playlist.Playlist;
+import org.helllabs.android.xmp.browser.playlist.PlaylistUtils;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Crossfader;
 import org.helllabs.android.xmp.util.InfoCache;
@@ -35,7 +37,6 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-
 
 public class FilelistActivity extends BasePlaylistActivity {
 	private static final String TAG = "BasePlaylistActivity";
