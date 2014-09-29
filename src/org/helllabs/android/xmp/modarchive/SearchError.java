@@ -1,5 +1,7 @@
 package org.helllabs.android.xmp.modarchive;
 
+import java.util.Locale;
+
 import org.helllabs.android.xmp.R;
 
 import android.content.Intent;
@@ -45,7 +47,7 @@ public class SearchError extends ActionBarActivity implements Runnable {
 		if (message.trim().isEmpty()) {
 			message = "Software Failure.   Press back button to continue.\n\nGuru Meditation #35068035.48454C50";
 		} else {
-			message += ".  Press back button to continue.";  // NOPMD
+			message = message.substring(0, 1).toUpperCase(Locale.US) + message.substring(1) + ".  Press back button to continue.";
 		}
 		
 		msg.setText(message);
