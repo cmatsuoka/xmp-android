@@ -35,9 +35,9 @@
     <string name="pref_back_button_navigation_title">Back button navigation</string>
     <string name="pref_start_on_player_summary">If a module is playing, launch in the player screen</string>
     <string name="pref_start_on_player_title">Launch in player screen</string>
-    <string name="pref_modarchive_folder_summary">Download files to &lt;moddir&gt;/ModArchive</string>
-    <string name="pref_modarchive_folder_title">ModArchive folder</string>
-    <string name="pref_artist_folder_summary">Create per-artist folders</string>
+    <string name="pref_modarchive_folder_summary">Download to TheModArchive subfolder</string>
+    <string name="pref_modarchive_folder_title">TheModArchive folder</string>
+    <string name="pref_artist_folder_summary">Organize downloads by artist</string>
     <string name="pref_artist_folder_title">Artist folders</string>
     <string name="pref_buffer_ms_summary">Sound buffer duration</string>
     <string name="pref_buffer_ms_title">Buffer size</string>
@@ -60,7 +60,7 @@
     <string name="pref_category_player_control">Player control</string>
     <string name="pref_category_information">Information</string>
     <string name="pref_category_interface">Interface settings</string>
-    <string name="pref_category_modarchive">Mod Archive client settings</string>
+    <string name="pref_category_modarchive">Download settings</string>
     <string name="pref_category_download">Download location</string>
     <string name="pref_category_experimental">Experimental (be careful)</string>
     <string name="pref_category_preferences">Preferences</string>

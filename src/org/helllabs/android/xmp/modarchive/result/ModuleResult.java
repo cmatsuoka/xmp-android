@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 public class ModuleResult extends Result implements ModuleRequest.OnResponseListener<List<Module>>, View.OnClickListener {
 	private static final String TAG = "ModuleResult";
-	private static final String MODARCHIVE_DIRNAME = "ModArchive";
+	private static final String MODARCHIVE_DIRNAME = "TheModArchive";
 	private TextView title;
 	private TextView filename;
 	private TextView info;
