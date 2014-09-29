@@ -54,8 +54,11 @@ public class Downloader {
 		}
 
 		@OnFailure(DownloadTask.class)
-		public void onFailure(@Param(Groundy.CRASH_MESSAGE) final String error) {
+		public void onFailure(@Param(Groundy.CRASH_MESSAGE) String error) {
 			Log.d(TAG, "download fail: " + error);
+			if (error == null) {
+				error = "Download failed";
+			}
 			Toast.makeText(mContext, error, Toast.LENGTH_LONG).show();
 			mProgressDialog.dismiss();
 		}
@@ -121,7 +124,7 @@ public class Downloader {
 	private void downloadUrl(final String url, final String path) {
 		
 		final File pathFile = new File(path);
-		pathFile.mkdir();
+		pathFile.mkdirs();
 		
 		mProgressDialog = new ProgressDialog(mContext);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
