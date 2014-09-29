@@ -76,9 +76,18 @@
         <Button
             android:id="@+id/module_download"
             style="@android:style/Widget.Button"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.5"
             android:text="Download" />
+        
+        <Button
+            android:id="@+id/module_play"
+            style="@android:style/Widget.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Play" />
     </LinearLayout>
 
 </LinearLayout>
