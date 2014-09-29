@@ -1,5 +1,8 @@
 package org.helllabs.android.xmp.modarchive.request;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.helllabs.android.xmp.XmpApplication;
 import org.helllabs.android.xmp.util.Log;
 
@@ -9,10 +12,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
 public abstract class ModArchiveRequest<T> implements Response.Listener<String>, Response.ErrorListener {
-	
+
 	private static final String TAG = "ModArchiveRequest";
 	private static final String SERVER = "http://api.modarchive.org";
-	
+
 	public static final String ARTIST = "search_artist&query=";
 	public static final String ARTIST_MODULES = "view_modules_by_artistid&query=";
 	public static final String MODULE = "view_by_moduleid&query=";
@@ -33,6 +36,10 @@ public abstract class ModArchiveRequest<T> implements Response.Listener<String>,
 		mKey = key;
 		mRequest = request;
 	}
+	
+	public ModArchiveRequest(final String key, final String request, final String parameter) throws UnsupportedEncodingException {
+		this(key, request + URLEncoder.encode(parameter, "UTF-8"));
+	}
 
 	public ModArchiveRequest<T> setOnResponseListener(final OnResponseListener<T> listener) {
 		mOnResponseListener = listener;
@@ -42,9 +49,11 @@ public abstract class ModArchiveRequest<T> implements Response.Listener<String>,
 	public void send() {
 		final String url = SERVER + "/xml-tools.php?key=" + mKey + "&request=" + mRequest;
 		final RequestQueue queue = XmpApplication.getInstance().getRequestQueue();
-
 		final StringRequest jsObjRequest = new StringRequest(url, this, this);
 		queue.add(jsObjRequest);
+		//		} catch (UnsupportedEncodingException e) {
+		//			mOnResponseListener.onError(new Throwable("Bad search string. "));
+		//		}
 	}
 
 	@Override

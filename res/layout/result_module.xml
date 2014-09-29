@@ -79,7 +79,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:onClick="downloadClick"
             android:text="Download" />
+        
+        <Button
+            android:id="@+id/module_delete"
+            style="@android:style/Widget.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="deleteClick"
+            android:text="Delete" />
         
         <Button
             android:id="@+id/module_play"
@@ -87,6 +97,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:onClick="playClick"
             android:text="Play" />
     </LinearLayout>
 

@@ -1,5 +1,6 @@
 package org.helllabs.android.xmp.modarchive.result;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
@@ -15,26 +16,29 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class ArtistModulesResult extends Result implements ModuleRequest.OnResponseListener<List<Module>>, ListView.OnItemClickListener {
-	
+
 	private ListView list;
-	
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.result_list);
 		setupCrossfade();
-		
-		setTitle(R.string.search_artist_modules_title);
-		
-		list = (ListView)findViewById(R.id.result_list);
-		
-		final long artistId = getIntent().getLongExtra(Search.ARTIST_ID, -1);
 
-		final String key = getString(R.string.modarchive_apikey);
-		final ModuleRequest request = new ModuleRequest(key, ModuleRequest.ARTIST_MODULES, artistId);
-		request.setOnResponseListener(this).send();
-		
+		setTitle(R.string.search_artist_modules_title);
+
+		list = (ListView)findViewById(R.id.result_list);
 		list.setOnItemClickListener(this);
+
+		final long artistId = getIntent().getLongExtra(Search.ARTIST_ID, -1);
+		final String key = getString(R.string.modarchive_apikey);
+
+		try {
+			final ModuleRequest request = new ModuleRequest(key, ModuleRequest.ARTIST_MODULES, artistId);
+			request.setOnResponseListener(this).send();
+		} catch (UnsupportedEncodingException e) {
+			handleQueryError();
+		}
 	}
 
 	@Override
@@ -43,7 +47,7 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 		list.setAdapter(adapter);
 		crossfade();
 	}
-	
+
 	@Override
 	public void onError(final Throwable error) {
 		handleError(error);

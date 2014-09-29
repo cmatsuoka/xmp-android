@@ -34,4 +34,8 @@ public abstract class Result extends ActionBarActivity  {
 		intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		startActivity(intent);
 	}
+	
+	protected void handleQueryError() {
+		handleError(new Throwable("Bad search string. "));
+	}
 }

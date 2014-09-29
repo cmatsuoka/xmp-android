@@ -31,6 +31,12 @@ public class Downloader {
 	private ProgressDialog mProgressDialog;
 	private TaskHandler mTaskHandler;
 	private int mSize;
+	private DownloaderListener listener;
+	
+	public interface DownloaderListener {
+		void onSuccess();
+		void onFailure();
+	}
 
 	private final Object mCallback = new Object() {
 		@SuppressLint("NewApi")
@@ -52,6 +58,9 @@ public class Downloader {
 			Log.d(TAG, "download success");
 			Toast.makeText(mContext, R.string.file_downloaded, Toast.LENGTH_LONG).show();
 			mProgressDialog.dismiss();
+			if (listener != null) {
+				listener.onSuccess();
+			}
 		}
 
 		@OnFailure(DownloadTask.class)
@@ -62,6 +71,9 @@ public class Downloader {
 			}
 			Toast.makeText(mContext, error, Toast.LENGTH_LONG).show();
 			mProgressDialog.dismiss();
+			if (listener != null) {
+				listener.onFailure();
+			}
 		}
 	};
 
@@ -99,18 +111,16 @@ public class Downloader {
 	public Downloader(final Context context) {
 		this.mContext = context;
 	}
+	
+	public void setDownloaderListener(final DownloaderListener listener) {
+		this.listener = listener;
+	}
 
 	public void download(final String url, final String path, final int size) {
 
-		// Check if file already exists
-		final String filename = url.substring(url.lastIndexOf('#')+1, url.length());
-		final File newfile = new File(path, filename);
-
 		mSize = size / 1024;
 
-		Log.d(TAG, "check if " + newfile.getPath() + " already exists");
-
-		if (newfile.exists()) {
+		if (moduleExists(url, path)) {
 			Message.yesNoDialog(mContext, "File exists!", "This module already exists. Do you want to overwrite?", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(final DialogInterface dialog, final int which) {
@@ -157,5 +167,12 @@ public class Downloader {
 				.arg(DownloadTask.PARAM_URL, url)
 				.arg(DownloadTask.PARAM_PATH, path)
 				.queueUsing(mContext);
+	}
+	
+	public static boolean moduleExists(final String url, final String path) {
+		final String filename = url.substring(url.lastIndexOf('#')+1, url.length());
+		final File file = new File(path, filename);
+		Log.d(TAG, "check if " + file.getPath() + " already exists");
+		return file.exists();
 	}
 }

@@ -1,5 +1,6 @@
 package org.helllabs.android.xmp.modarchive.result;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
@@ -29,14 +30,17 @@ public class TitleResult extends Result implements ModuleRequest.OnResponseListe
 
 		context = this;
 		list = (ListView)findViewById(R.id.result_list);
+		list.setOnItemClickListener(this);
 
 		final String searchText = getIntent().getStringExtra(Search.SEARCH_TEXT);
-
 		final String key = getString(R.string.modarchive_apikey);
-		final ModuleRequest request = new ModuleRequest(key, ModuleRequest.FILENAME_OR_TITLE, searchText);
-		request.setOnResponseListener(this).send();
-
-		list.setOnItemClickListener(this);
+		
+		try {
+			final ModuleRequest request = new ModuleRequest(key, ModuleRequest.FILENAME_OR_TITLE, searchText);
+			request.setOnResponseListener(this).send();
+		} catch (UnsupportedEncodingException e) {
+			handleQueryError();
+		}
 	}
 
 	@Override

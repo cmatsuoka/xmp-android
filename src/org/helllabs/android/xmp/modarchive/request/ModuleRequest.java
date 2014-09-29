@@ -3,6 +3,7 @@ package org.helllabs.android.xmp.modarchive.request;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +22,12 @@ public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 		super(key, request);
 	}
 	
-	public ModuleRequest(final String key, final String request, final String parameter) {
-		this(key, request + parameter);
+	public ModuleRequest(final String key, final String request, final String parameter) throws UnsupportedEncodingException {
+		super(key, request, parameter);
 	}
 	
-	public ModuleRequest(final String key, final String request, final long parameter) {
-		this(key, request + parameter);
+	public ModuleRequest(final String key, final String request, final long parameter) throws UnsupportedEncodingException {
+		this(key, request, String.valueOf(parameter));
 	}
 
 	@Override
