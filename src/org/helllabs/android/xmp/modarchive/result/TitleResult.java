@@ -25,7 +25,7 @@ public class TitleResult extends Result implements ModuleRequest.OnResponseListe
 		setContentView(R.layout.result_list);
 		setupCrossfade();
 
-		setTitle("Title search");
+		setTitle(R.string.search_title_title);
 
 		context = this;
 		list = (ListView)findViewById(R.id.result_list);

@@ -6,9 +6,15 @@ import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
 
+import android.os.Bundle;
 
 public class RandomResult extends ModuleResult implements ModuleRequest.OnResponseListener<List<Module>> {
-
+	@Override
+	public void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setTitle(R.string.search_random_title);
+	}
+	
 	@Override
 	protected void makeRequest(final String query) {
 		final String key = getString(R.string.modarchive_apikey);

@@ -24,7 +24,7 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 		setContentView(R.layout.result_list);
 		setupCrossfade();
 		
-		setTitle("Artist search");
+		setTitle(R.string.search_artist_title);
 		
 		list = (ListView)findViewById(R.id.result_list);
 		

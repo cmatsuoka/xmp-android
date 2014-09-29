@@ -135,6 +135,9 @@
     <string name="search_title">Module search</string>
     <string name="search_result_title">Search result</string>
     <string name="search_artist_modules_title">Modules by artist</string>
+    <string name="search_artist_title">Artist search</string>
+    <string name="search_random_title">Random module</string>
+    <string name="search_title_title">Title search</string>
     
     <string name="download_cancelled">Download cancelled</string>
     <string name="file_downloaded">Module downloaded</string>

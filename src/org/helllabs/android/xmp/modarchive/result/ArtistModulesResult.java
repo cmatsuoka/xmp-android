@@ -24,7 +24,7 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 		setContentView(R.layout.result_list);
 		setupCrossfade();
 		
-		setTitle("Modules by artist");
+		setTitle(R.string.search_artist_modules_title);
 		
 		list = (ListView)findViewById(R.id.result_list);
 		
