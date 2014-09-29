@@ -18,7 +18,6 @@ import android.widget.ListView;
 public class TitleResult extends Result implements ModuleRequest.OnResponseListener<List<Module>>, ListView.OnItemClickListener {
 	private Context context;
 	private ListView list;
-	private List<Module> moduleList;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -42,8 +41,7 @@ public class TitleResult extends Result implements ModuleRequest.OnResponseListe
 
 	@Override
 	public void onResponse(final List<Module> response) {
-		moduleList = response;
-		final ModuleArrayAdapter adapter = new ModuleArrayAdapter(context, R.layout.search_list_item, R.id.search_list_line1, response);
+		final ModuleArrayAdapter adapter = new ModuleArrayAdapter(context, R.layout.search_list_item, response);
 		list.setAdapter(adapter);
 		crossfade();
 	}
@@ -55,10 +53,9 @@ public class TitleResult extends Result implements ModuleRequest.OnResponseListe
 
 	@Override
 	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+		final ModuleArrayAdapter adapter = (ModuleArrayAdapter)parent.getAdapter();
 		final Intent intent = new Intent(this, ModuleResult.class);
-		intent.putExtra(Search.MODULE_ID, moduleList.get(position).getId());
+		intent.putExtra(Search.MODULE_ID, adapter.getItem(position).getId());
 		startActivity(intent);
 	}
-
-
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.modarchive.Search;
+import org.helllabs.android.xmp.modarchive.adapter.ArtistArrayAdapter;
 import org.helllabs.android.xmp.modarchive.model.Artist;
 import org.helllabs.android.xmp.modarchive.request.ArtistRequest;
 
@@ -11,13 +12,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class ArtistResult extends Result implements ArtistRequest.OnResponseListener<List<Artist>>, ListView.OnItemClickListener {
 	
 	private ListView list;
-	private List<Artist> artistList;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -38,8 +37,7 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 	
 	@Override
 	public void onResponse(final List<Artist> response) {
-		artistList = response;
-		final ArrayAdapter<Artist> adapter = new ArrayAdapter<Artist>(this, android.R.layout.simple_list_item_1, response);
+		final ArtistArrayAdapter adapter = new ArtistArrayAdapter(this, android.R.layout.simple_list_item_1, response);
 		list.setAdapter(adapter);
 		crossfade();
 	}
@@ -51,8 +49,9 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 
 	@Override
 	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+		final ArtistArrayAdapter adapter = (ArtistArrayAdapter)parent.getAdapter();
 		final Intent intent = new Intent(this, ArtistModulesResult.class);
-		intent.putExtra(Search.ARTIST_ID, artistList.get(position).getId());
+		intent.putExtra(Search.ARTIST_ID, adapter.getItem(position).getId());
 		startActivity(intent);
 	}
 

@@ -14,12 +14,10 @@ import android.widget.TextView;
 
 public class ModuleArrayAdapter extends ArrayAdapter<Module> {
 	private final Context context;
-	private final List<Module> items;
 
-	public ModuleArrayAdapter(final Context context, final int resource, final int textViewResourceId, final List<Module> items) {
-		super(context, resource, textViewResourceId, items);
+	public ModuleArrayAdapter(final Context context, final int resource, final List<Module> items) {
+		super(context, resource, items);
 		this.context = context;
-		this.items = items;
 	}
 
 	@Override
@@ -30,7 +28,7 @@ public class ModuleArrayAdapter extends ArrayAdapter<Module> {
     		view = inflater.inflate(R.layout.search_list_item, null);
     	}
 
-    	final Module module = items.get(position);
+    	final Module module = getItem(position);
     	if (module != null) {
     		final TextView fmt = (TextView)view.findViewById(R.id.search_list_fmt);
     		final TextView line1 = (TextView)view.findViewById(R.id.search_list_line1);
