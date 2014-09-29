@@ -7,6 +7,7 @@ import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.modarchive.adapter.ArtistArrayAdapter;
 import org.helllabs.android.xmp.modarchive.model.Artist;
 import org.helllabs.android.xmp.modarchive.request.ArtistRequest;
+import org.helllabs.android.xmp.modarchive.request.ModArchiveRequest;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,7 +32,7 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 		final String searchText = getIntent().getStringExtra(Search.SEARCH_TEXT);
 		
 		final String key = getString(R.string.modarchive_apikey);
-		final ArtistRequest request = new ArtistRequest(key, "search_artist&query=" + searchText);
+		final ArtistRequest request = new ArtistRequest(key, ModArchiveRequest.ARTIST, searchText);
 		request.setOnResponseListener(this).send();
 		
 		list.setOnItemClickListener(this);

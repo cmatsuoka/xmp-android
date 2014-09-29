@@ -9,9 +9,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
 public abstract class ModArchiveRequest<T> implements Response.Listener<String>, Response.ErrorListener {
-	private static final String SERVER = "http://api.modarchive.org";
-
+	
 	private static final String TAG = "ModArchiveRequest";
+	private static final String SERVER = "http://api.modarchive.org";
+	
+	public static final String ARTIST = "search_artist&query=";
+	public static final String ARTIST_MODULES = "view_modules_by_artistid&query=";
+	public static final String MODULE = "view_by_moduleid&query=";
+	public static final String RANDOM = "random";
+	public static final String FILENAME_OR_TITLE = "search&type=filename_and_songtitle&query=";
 
 	private final String mKey;
 	private final String mRequest;

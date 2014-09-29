@@ -57,7 +57,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 
 	protected void makeRequest(final String query) {
 		final String key = getString(R.string.modarchive_apikey);
-		final ModuleRequest request = new ModuleRequest(key, "view_by_moduleid&query=" + query);
+		final ModuleRequest request = new ModuleRequest(key, ModuleRequest.MODULE, query);
 		request.setOnResponseListener(this).send();
 	}
 

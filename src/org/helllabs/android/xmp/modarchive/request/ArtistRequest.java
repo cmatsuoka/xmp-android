@@ -19,6 +19,14 @@ public class ArtistRequest extends ModArchiveRequest<List<Artist>> {
 	public ArtistRequest(final String key, final String request) {
 		super(key, request);
 	}
+	
+	public ArtistRequest(final String key, final String request, final String parameter) {
+		this(key, request + parameter);
+	}
+	
+	public ArtistRequest(final String key, final String request, final long parameter) {
+		this(key, request + parameter);
+	}
 
 	@Override
 	protected List<Artist> xmlParse(final String result) {

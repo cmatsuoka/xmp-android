@@ -31,7 +31,7 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 		final long artistId = getIntent().getLongExtra(Search.ARTIST_ID, -1);
 
 		final String key = getString(R.string.modarchive_apikey);
-		final ModuleRequest request = new ModuleRequest(key, "view_modules_by_artistid&query=" + artistId);
+		final ModuleRequest request = new ModuleRequest(key, ModuleRequest.ARTIST_MODULES, artistId);
 		request.setOnResponseListener(this).send();
 		
 		list.setOnItemClickListener(this);

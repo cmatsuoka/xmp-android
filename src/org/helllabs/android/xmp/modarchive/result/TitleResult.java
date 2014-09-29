@@ -33,7 +33,7 @@ public class TitleResult extends Result implements ModuleRequest.OnResponseListe
 		final String searchText = getIntent().getStringExtra(Search.SEARCH_TEXT);
 
 		final String key = getString(R.string.modarchive_apikey);
-		final ModuleRequest request = new ModuleRequest(key, "search&type=filename_and_songtitle&query=" + searchText);
+		final ModuleRequest request = new ModuleRequest(key, ModuleRequest.FILENAME_OR_TITLE, searchText);
 		request.setOnResponseListener(this).send();
 
 		list.setOnItemClickListener(this);

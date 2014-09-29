@@ -20,6 +20,14 @@ public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 	public ModuleRequest(final String key, final String request) {
 		super(key, request);
 	}
+	
+	public ModuleRequest(final String key, final String request, final String parameter) {
+		this(key, request + parameter);
+	}
+	
+	public ModuleRequest(final String key, final String request, final long parameter) {
+		this(key, request + parameter);
+	}
 
 	@Override
 	protected List<Module> xmlParse(final String result) {
