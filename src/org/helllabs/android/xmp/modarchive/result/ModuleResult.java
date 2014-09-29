@@ -1,5 +1,6 @@
 package org.helllabs.android.xmp.modarchive.result;
 
+import java.io.File;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
@@ -89,12 +90,12 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 		sb.append(mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH));
 
 		if (mPrefs.getBoolean(Preferences.MODARCHIVE_FOLDER, true)) {
-			sb.append('/');
+			sb.append(File.separatorChar);
 			sb.append(MODARCHIVE_DIRNAME);
 		}
 
 		if (mPrefs.getBoolean(Preferences.ARTIST_FOLDER, true)) {
-			sb.append('/');
+			sb.append(File.separatorChar);
 			sb.append(module.getArtist());
 		}
 
