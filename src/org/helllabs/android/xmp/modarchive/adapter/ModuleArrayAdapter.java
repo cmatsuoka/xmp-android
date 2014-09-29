@@ -38,7 +38,7 @@ public class ModuleArrayAdapter extends ArrayAdapter<Module> {
     		fmt.setText(module.getFormat());
     		line1.setText(module.getSongTitle());
     		line2.setText("by " + module.getArtist());
-    		size.setText((module.getBytes() / 1024) + " Kb");
+    		size.setText((module.getBytes() / 1024) + " KB");
     	}
     	
     	return view;

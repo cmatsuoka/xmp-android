@@ -30,6 +30,7 @@ public class Downloader {
 	private final Context mContext;
 	private ProgressDialog mProgressDialog;
 	private TaskHandler mTaskHandler;
+	private int mSize;
 
 	private final Object mCallback = new Object() {
 		@SuppressLint("NewApi")
@@ -41,9 +42,9 @@ public class Downloader {
 					mProgressDialog.setProgressNumberFormat(null);
 					mProgressDialog.setProgressPercentFormat(null);
 				}
-				return;
+			} else {
+				mProgressDialog.setProgress(mSize * progress / 100);
 			}
-			mProgressDialog.setProgress(progress);
 		}
 
 		@OnSuccess(DownloadTask.class)
@@ -77,7 +78,7 @@ public class Downloader {
 				final int start = name.indexOf('#') + 1;
 				final File dest = new File(path, name.substring(start));
 				DownloadUtils.downloadFile(getContext(), url, dest,
-						DownloadUtils.getDownloadListenerForTask(this), new DownloadUtils.DownloadCancelListener(){
+						DownloadUtils.getDownloadListenerForTask(this), new DownloadUtils.DownloadCancelListener() {
 					@Override
 					public boolean shouldCancelDownload() {
 						return isQuitting();
@@ -99,14 +100,16 @@ public class Downloader {
 		this.mContext = context;
 	}
 
-	public void download(final String url, final String path) {
-		
+	public void download(final String url, final String path, final int size) {
+
 		// Check if file already exists
 		final String filename = url.substring(url.lastIndexOf('#')+1, url.length());
 		final File newfile = new File(path, filename);
-		
+
+		mSize = size / 1024;
+
 		Log.d(TAG, "check if " + newfile.getPath() + " already exists");
-		
+
 		if (newfile.exists()) {
 			Message.yesNoDialog(mContext, "File exists!", "This module already exists. Do you want to overwrite?", new DialogInterface.OnClickListener() {
 				@Override
@@ -120,15 +123,20 @@ public class Downloader {
 			downloadUrl(url, path);
 		}
 	}
-	
+
+	@SuppressLint("NewApi")
 	private void downloadUrl(final String url, final String path) {
-		
+
 		final File pathFile = new File(path);
 		pathFile.mkdirs();
-		
+
 		mProgressDialog = new ProgressDialog(mContext);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		mProgressDialog.setCancelable(true);
+		mProgressDialog.setMax(mSize);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			mProgressDialog.setProgressNumberFormat("%d KB");
+		}
 		mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			@Override
 			public void onCancel(final DialogInterface dialogInterface){
