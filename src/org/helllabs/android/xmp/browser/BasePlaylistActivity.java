@@ -43,6 +43,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private ModInterface mModPlayer;
 	private String[] mAddList;
 	protected SharedPreferences mPrefs;
+	protected PlaylistItemAdapter playlistAdapter;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -55,7 +56,6 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
-	protected abstract List<PlaylistItem> getModList();
 	protected abstract void setShuffleMode(boolean shuffleMode);
 	protected abstract void setLoopMode(boolean loopMode);
 	protected abstract boolean isShuffleMode();
@@ -64,7 +64,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private final OnClickListener playAllButtonListener = new OnClickListener() {
 		@Override
 		public void onClick(final View view) {
-			playModule(getModList());
+			playModule(playlistAdapter.getItems());
 		}
 	};
 	
@@ -111,7 +111,9 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	}
 
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
-		final String filename = getModList().get(position).filename;
+		final PlaylistItemAdapter adapter = (PlaylistItemAdapter)list.getAdapter();
+		final String filename = adapter.getItem(position).filename;
+		
 		final int mode = Integer.parseInt(mPrefs.getString(Preferences.PLAYLIST_MODE, "1"));
 
 		/* Test module again if invalid, in case a new file format is added to the
@@ -121,7 +123,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			switch (mode) {
 			case 1:								// play all starting at this one
 			default:
-				playModule(getModList(), position, isShuffleMode(), isShuffleMode());
+				playModule(adapter.getItems(), position, isShuffleMode(), isShuffleMode());
 				break;
 			case 2:								// play this one
 				playModule(filename);
@@ -271,7 +273,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		boolean invalid = false;
 
 		for (int i = 0; i < size; i++) {
-			final String filename = getModList().get(start + i).filename;
+			final String filename = playlistAdapter.getItem(start + i).filename;
 			if (InfoCache.testModule(filename)) {
 				list[realSize++] = filename;
 			} else {

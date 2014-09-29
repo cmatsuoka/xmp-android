@@ -60,12 +60,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private boolean mShuffleMode;
 	private boolean mBackButtonParentdir;
 	private Crossfader crossfade;
-	private PlaylistItemAdapter playlistAdapter;
-
-	@Override
-	protected List<PlaylistItem> getModList() {
-		return mList;
-	}
 	
 	@Override
 	protected void setShuffleMode(final boolean shuffleMode) {

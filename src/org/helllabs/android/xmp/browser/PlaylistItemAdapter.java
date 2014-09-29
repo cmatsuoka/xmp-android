@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.helllabs.android.xmp.R;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -61,4 +62,8 @@ public class PlaylistItemAdapter extends ArrayAdapter<PlaylistItem> {
             
     	return view;
     }
+    
+    public List<PlaylistItem> getItems() {
+		return items;
+	}
 }

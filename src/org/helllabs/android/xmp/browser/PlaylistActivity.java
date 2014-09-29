@@ -3,7 +3,6 @@ package org.helllabs.android.xmp.browser;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.List;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.preferences.Preferences;
@@ -31,7 +30,6 @@ class PlayListFilter implements FilenameFilter {
 public class PlaylistActivity extends BasePlaylistActivity {
 	private static final String TAG = "PlaylistActivity";
 	private Playlist playlist;
-	private PlaylistItemAdapter playlistAdapter;
 
 	@Override
 	public void onCreate(final Bundle icicle) {
@@ -81,11 +79,6 @@ public class PlaylistActivity extends BasePlaylistActivity {
 			Message.toast(this, getString(R.string.error_write_to_playlist));
 		}
 
-	}
-
-	@Override
-	protected List<PlaylistItem> getModList() {
-		return playlist.getList();
 	}
 
 	@Override
@@ -150,13 +143,13 @@ public class PlaylistActivity extends BasePlaylistActivity {
 			addToQueue(info.position, 1);
 			break;
 		case 2:										// Add all to play queue
-			addToQueue(0, getModList().size());
+			addToQueue(0, playlistAdapter.getItems().size());
 			break;
 		case 3:										// Play only this module
-			playModule(getModList().get(info.position).filename);
+			playModule(playlistAdapter.getItem(info.position).filename);
 			break;
 		case 4:										// Play all starting here
-			playModule(getModList(), info.position);
+			playModule(playlistAdapter.getItems(), info.position);
 			break;
 		}
 
