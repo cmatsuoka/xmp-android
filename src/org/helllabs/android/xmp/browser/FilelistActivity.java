@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Stack;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.browser.adapter.PlaylistItemAdapter;
+import org.helllabs.android.xmp.browser.model.PlaylistItem;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Crossfader;
 import org.helllabs.android.xmp.util.InfoCache;

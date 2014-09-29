@@ -1,10 +1,11 @@
-package org.helllabs.android.xmp.browser;
+package org.helllabs.android.xmp.browser.adapter;
 
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.browser.FileUtils;
+import org.helllabs.android.xmp.browser.model.PlaylistItem;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -33,7 +34,7 @@ public class PlaylistItemAdapter extends ArrayAdapter<PlaylistItem> {
     		final LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     		view = inflater.inflate(R.layout.playlist_item, null);
     	}
-    	final PlaylistItem info = items.get(position);
+    	final PlaylistItem info = getItem(position);
     	           
     	if (info != null) {                		
     		final TextView titleText = (TextView)view.findViewById(R.id.plist_title);

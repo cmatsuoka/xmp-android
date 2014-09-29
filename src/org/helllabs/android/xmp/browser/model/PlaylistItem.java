@@ -1,4 +1,4 @@
-package org.helllabs.android.xmp.browser;
+package org.helllabs.android.xmp.browser.model;
 
 public class PlaylistItem implements Comparable<PlaylistItem> {
 	public String name;

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.browser.adapter.PlaylistItemAdapter;
+import org.helllabs.android.xmp.browser.model.PlaylistItem;
 import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.player.PlayerActivity;
 import org.helllabs.android.xmp.preferences.Preferences;
@@ -98,13 +100,15 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 	}
 
 	@Override
-	public void onItemClick(final AdapterView<?> l, final View view, final int position, final long id) {
+	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+		final PlaylistItemAdapter adapter = (PlaylistItemAdapter)parent.getAdapter();
+		
 		if (position == 0) {
 			final Intent intent = new Intent(PlaylistMenu.this, FilelistActivity.class);
 			startActivityForResult(intent, PLAYLIST_REQUEST);
 		} else {
 			final Intent intent = new Intent(PlaylistMenu.this, PlaylistActivity.class);
-			intent.putExtra("name", PlaylistUtils.listNoSuffix()[position -1]);
+			intent.putExtra("name", adapter.getItem(position).name);
 			startActivityForResult(intent, PLAYLIST_REQUEST);
 		}
 	}

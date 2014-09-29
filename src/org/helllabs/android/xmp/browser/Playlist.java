@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.browser.model.PlaylistItem;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;

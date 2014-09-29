@@ -5,6 +5,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.browser.adapter.PlaylistItemAdapter;
+import org.helllabs.android.xmp.browser.model.PlaylistItem;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
