@@ -96,7 +96,9 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	public void onResponse(final ModArchiveResponse response) {
 
 		final ModuleResponse moduleList = (ModuleResponse)response;
-		if (!moduleList.isEmpty()) {
+		if (moduleList.isEmpty()) {
+			dataView.setVisibility(View.GONE);
+		} else {
 			final Module module = moduleList.get(0);
 			Log.i(TAG, "Response: title=" + module.getSongTitle());
 			title.setText(module.getSongTitle());
@@ -108,8 +110,6 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 			this.module = module;
 
 			updateButtons(module);
-		} else {
-			dataView.setVisibility(View.GONE);
 		}
 
 		crossfade();

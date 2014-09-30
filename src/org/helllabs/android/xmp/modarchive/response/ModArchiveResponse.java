@@ -1,5 +1,9 @@
 package org.helllabs.android.xmp.modarchive.response;
 
-public abstract class ModArchiveResponse {
+public class ModArchiveResponse {
+	
+	protected ModArchiveResponse() {
+		
+	}
 	
 }

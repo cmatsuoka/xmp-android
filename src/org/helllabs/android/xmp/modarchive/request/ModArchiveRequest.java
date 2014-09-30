@@ -69,7 +69,7 @@ public abstract class ModArchiveRequest implements Response.Listener<String>, Re
 	@Override
 	public void onResponse(final String result) {
 		Log.i(TAG, "Volley: get response");
-		ModArchiveResponse response = xmlParse(result);
+		final ModArchiveResponse response = xmlParse(result);
 		if (response instanceof SoftErrorResponse) {
 			mOnResponseListener.onSoftError((SoftErrorResponse)response);
 		} else {
