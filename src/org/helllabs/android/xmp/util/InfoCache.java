@@ -55,7 +55,11 @@ public final class InfoCache {
 		final File file = new File(filename);
 		if (file.isDirectory()) {
 			for (final File f : file.listFiles()) {
-				deleteRecursive(f.getPath());
+				if (f.isDirectory()) {
+					deleteRecursive(f.getPath());
+				} else {
+					f.delete();
+				}
 			}
 			file.delete();
 			removeCacheDir(filename);

@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp.browser;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
@@ -268,6 +269,55 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			mModPlayer = null;
 		}
 	};
+	
+	protected static List<String> recursiveList(final String filename) {
+		final List<String> list = new ArrayList<String>();
+		final File file = new File(filename);
+		
+		if (file.isDirectory()) {
+			for (final File f : file.listFiles()) {
+				if (f.isDirectory()) {
+					list.addAll(recursiveList(f.getPath()));
+				} else {
+					list.add(f.getPath());
+				}
+			}
+		} else {
+			list.add(filename);
+		}
+		
+		return list;
+	}
+	
+	protected void addToQueue(final List<String> list) {
+		final List<String> realList = new ArrayList<String>();
+		int realSize = 0;
+		boolean invalid = false;
+
+		for (final String filename : list) {
+			if (InfoCache.testModule(filename)) {
+				realList.add(filename);
+				realSize++;
+			} else {
+				invalid = true;
+			}
+		}
+
+		if (invalid) {
+			Message.toast(this, "Only valid files were sent to player");
+		}
+
+		if (realSize > 0) {
+			final Intent service = new Intent(this, PlayerService.class);
+
+			if (PlayerService.isAlive) {
+				mAddList = (String[])realList.toArray();		
+				bindService(service, connection, 0);
+			} else {
+				playModule((String[])realList.toArray());
+			}
+		}
+	}
 
 	protected void addToQueue(final int start, final int size) {
 		final String[] list = new String[size];
@@ -301,6 +351,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			}
 		}
 	}
+	
 
 	// Menu
 
