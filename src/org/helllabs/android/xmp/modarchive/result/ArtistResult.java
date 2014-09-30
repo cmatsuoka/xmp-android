@@ -46,6 +46,11 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 	public void onResponse(final List<Artist> response) {
 		final ArtistArrayAdapter adapter = new ArtistArrayAdapter(this, android.R.layout.simple_list_item_1, response);
 		list.setAdapter(adapter);
+		
+		if (response.isEmpty()) {
+			list.setVisibility(View.GONE);
+		}
+		
 		crossfade();
 	}
 

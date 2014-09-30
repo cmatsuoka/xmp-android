@@ -138,6 +138,7 @@
     <string name="search_artist_title">Artist search</string>
     <string name="search_random_title">Random module</string>
     <string name="search_title_title">Title search</string>
+    <string name="search_no_results">Search returned no results.</string>
     
     <string name="download_cancelled">Download cancelled</string>
     <string name="file_downloaded">Module downloaded</string>

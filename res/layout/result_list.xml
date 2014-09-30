@@ -8,16 +8,44 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/result_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:gravity="top"
+        android:orientation="vertical" >
 
         <ListView
             android:id="@+id/result_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
         </ListView>
-    </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@id/android:empty"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="8dp"
+                android:gravity="center|bottom"
+                android:text=":("
+                android:textColor="#ffa0a0a0"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@id/android:empty"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center|top"
+                android:text="@string/search_no_results" />
+        </LinearLayout>
+    </LinearLayout>
 
 </merge>

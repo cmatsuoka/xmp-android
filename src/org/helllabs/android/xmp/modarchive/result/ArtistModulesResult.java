@@ -45,6 +45,11 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 	public void onResponse(final List<Module> response) {
 		final ModuleArrayAdapter adapter = new ModuleArrayAdapter(this, R.layout.search_list_item, response);
 		list.setAdapter(adapter);
+		
+		if (response.isEmpty()) {
+			list.setVisibility(View.GONE);
+		}
+		
 		crossfade();
 	}
 

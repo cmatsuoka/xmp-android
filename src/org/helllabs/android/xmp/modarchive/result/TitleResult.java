@@ -47,6 +47,10 @@ public class TitleResult extends Result implements ModuleRequest.OnResponseListe
 	public void onResponse(final List<Module> response) {
 		final ModuleArrayAdapter adapter = new ModuleArrayAdapter(context, R.layout.search_list_item, response);
 		list.setAdapter(adapter);
+		
+		if (response.isEmpty()) {
+			list.setVisibility(View.GONE);
+		}
 		crossfade();
 	}
 	
