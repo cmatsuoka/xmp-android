@@ -16,6 +16,7 @@ import org.helllabs.android.xmp.browser.playlist.Playlist;
 import org.helllabs.android.xmp.browser.playlist.PlaylistUtils;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Crossfader;
+import org.helllabs.android.xmp.util.FileUtils;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
@@ -44,7 +45,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private static final String OPTIONS_LOOP_MODE = "options_loopMode";
 	private static final boolean DEFAULT_SHUFFLE_MODE = true;
 	private static final boolean DEFAULT_LOOP_MODE = false;
-	
+
 	private Stack<String> mPathStack;
 
 	private boolean isPathMenu;
@@ -63,23 +64,23 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private boolean mShuffleMode;
 	private boolean mBackButtonParentdir;
 	private Crossfader crossfade;
-	
+
 	@Override
 	protected void setShuffleMode(final boolean shuffleMode) {
 		mShuffleMode = shuffleMode;
 	}
-	
+
 	@Override
 	protected void setLoopMode(final boolean loopMode) {
 		mLoopMode = loopMode;
 	}
-	
-	
+
+
 	@Override
 	protected boolean isShuffleMode() {
 		return mShuffleMode;
 	}
-	
+
 	@Override
 	protected boolean isLoopMode() {
 		return mLoopMode;
@@ -174,6 +175,22 @@ public class FilelistActivity extends BasePlaylistActivity {
 		}
 	};
 
+	/*
+	 * Delete file
+	 */
+	private final DialogInterface.OnClickListener deleteDirectoryDialogClickListener = new DialogInterface.OnClickListener() {
+		public void onClick(final DialogInterface dialog, final int which) {
+			if (which == DialogInterface.BUTTON_POSITIVE) {
+				if (InfoCache.deleteRecursive(deleteName)) {
+					updateModlist(currentDir);
+					Message.toast(context, getString(R.string.msg_dir_deleted));
+				} else {
+					Message.toast(context, getString(R.string.msg_cant_delete_dir));
+				}
+			}
+		}
+	};
+
 	class DirFilter implements FileFilter {
 		public boolean accept(final File dir) {
 			return dir.isDirectory();
@@ -186,24 +203,24 @@ public class FilelistActivity extends BasePlaylistActivity {
 			return !file.isDirectory();
 		}
 	}
-	
+
 	@Override
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
 		String name = mList.get(position).filename;
-        final File file = new File(name);
+		final File file = new File(name);
 
-        if (file.isDirectory()) {
-        	if (file.getName().equals("..")) {
-        		name = file.getParentFile().getParent();
-        		if (name == null) {
-        			name = "/";
-                }
-            }
-        	mPathStack.push(name);
-            updateModlist(name);
-        } else {
-            super.onListItemClick(list, view, position, id);
-        }
+		if (file.isDirectory()) {
+			if (file.getName().equals("..")) {
+				name = file.getParentFile().getParent();
+				if (name == null) {
+					name = "/";
+				}
+			}
+			mPathStack.push(name);
+			updateModlist(name);
+		} else {
+			super.onListItemClick(list, view, position, id);
+		}
 	}
 
 	private void pathNotFound(final String media_path) {
@@ -226,15 +243,15 @@ public class FilelistActivity extends BasePlaylistActivity {
 		});
 		alertDialog.show();
 	}
-	
+
 	private boolean readShuffleModePref() {
 		return mPrefs.getBoolean(OPTIONS_SHUFFLE_MODE, DEFAULT_SHUFFLE_MODE);
 	}
-	
+
 	private boolean readLoopModePref() {
 		return mPrefs.getBoolean(OPTIONS_LOOP_MODE, DEFAULT_LOOP_MODE);
 	}
-	
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
@@ -247,7 +264,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				onListItemClick(list, view, position, id);
 			}		
 		});
-		
+
 		mList = new ArrayList<PlaylistItem>();
 		playlistAdapter = new PlaylistItemAdapter(this, R.layout.song_item, R.id.info, mList, false);
 		listView.setAdapter(playlistAdapter);
@@ -264,7 +281,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 		curPath = (TextView)findViewById(R.id.current_path);
 		registerForContextMenu(curPath);
-		
+
 		mBackButtonParentdir = mPrefs.getBoolean(Preferences.BACK_BUTTON_NAVIGATION, true);
 
 		final int textColor = curPath.getCurrentTextColor();
@@ -311,26 +328,26 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 		mShuffleMode = readShuffleModePref();
 		mLoopMode = readLoopModePref();
-		
+
 		mPathStack = new Stack<String>();
-		
+
 		setupButtons();
 	}
-	
+
 	private void parentDir() {
 		final File file = new File(currentDir + "/.");
 		String name = file.getParentFile().getParent();
 		if (name == null) {
 			name = "/";
 		}
-		
+
 		if (!mPathStack.isEmpty()) {
 			mPathStack.pop();
 		}
-		
+
 		updateModlist(name);
 	}
-	
+
 	@Override
 	public boolean onKeyDown(final int keyCode, final KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -348,7 +365,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		
+
 		boolean saveModes = false;
 		if (mShuffleMode != readShuffleModePref()) {
 			saveModes = true;
@@ -396,13 +413,13 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 		list.clear();
 		final File[] modFiles = modDir.listFiles(new ModFilter());
-		
+
 		if (modFiles != null) {
 			for (final File file : modFiles) {
 				final String filename = path + "/" + file.getName();
 				final String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
 						DateFormat.MEDIUM).format(file.lastModified());
-				
+
 				final String name = file.getName();
 				final String comment = date + String.format(" (%d kB)", file.length() / 1024);
 				list.add(new PlaylistItem(name, comment, filename));
@@ -442,6 +459,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 			menu.setHeaderTitle("This directory");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
 			menu.add(Menu.NONE, 1, 1, "Recursive add to playlist");
+			menu.add(Menu.NONE, 2, 2, "Delete directory");
 		} else {											// For files			
 			final int mode = Integer.parseInt(mPrefs.getString(Preferences.PLAYLIST_MODE, "1"));
 
@@ -503,6 +521,16 @@ public class FilelistActivity extends BasePlaylistActivity {
 			case 1:										//    Recursive add to playlist
 				addToPlaylist(info.position, 1, addRecursiveToPlaylistDialogClickListener);
 				break;
+			case 2:
+				deleteName = mList.get(info.position).filename;
+				final String mediaPath = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
+				if (deleteName.startsWith(mediaPath)) {
+					Message.yesNoDialog(this, "Delete directory", "Are you sure you want to delete directory \"" +
+							FileUtils.basename(deleteName) + "\" and all its contents?", deleteDirectoryDialogClickListener);
+				} else {
+					Message.toast(this, "Directory not under mod dir");
+				}
+				break;
 			}
 		} else {										// Files
 			switch (id) {
@@ -520,7 +548,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 				break;
 			case 4:										// Delete file
 				deleteName = mList.get(info.position).filename;
-				Message.yesNoDialog(this, "Delete", "Are you sure to delete " + deleteName + "?", deleteDialogClickListener);
+				Message.yesNoDialog(this, "Delete", "Are you sure you want to delete " +
+						FileUtils.basename(deleteName) + "?", deleteDialogClickListener);
 				break;
 			}
 		}
@@ -529,22 +558,22 @@ public class FilelistActivity extends BasePlaylistActivity {
 	}
 
 	protected void addToPlaylist(final int start, final int num, final DialogInterface.OnClickListener listener) {
-		
+
 		// Return if no playlists exist
 		if (PlaylistUtils.list().length <= 0) {
 			Message.toast(this, getString(R.string.msg_no_playlists));
 			return;
 		}
-		
+
 		fileSelection = start;
 		fileNum = num;
 		playlistSelection = 0;
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.msg_select_playlist)
-				.setPositiveButton(android.R.string.ok, listener)
-				.setNegativeButton(android.R.string.cancel, listener)
-				.setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
+		.setPositiveButton(android.R.string.ok, listener)
+		.setNegativeButton(android.R.string.cancel, listener)
+		.setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int which) {
 				playlistSelection = which;
 			}

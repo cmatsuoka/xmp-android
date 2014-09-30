@@ -32,13 +32,38 @@ public final class InfoCache {
 
 		return ret;
 	}
+	
+	public static boolean removeCacheDir(final String filename) {
+		final File cacheFile = new File(Preferences.CACHE_DIR, filename + ".cache");
+		boolean ret = false;
+
+		if (cacheFile.isDirectory()) {
+			cacheFile.delete();
+			ret = true;
+		}
+
+		return ret;
+	}
 
 	public static boolean delete(final String filename) {
 		final File file = new File(filename);
-
 		clearCache(filename);
-
 		return file.delete();
+	}
+	
+	public static boolean deleteRecursive(final String filename) {
+		final File file = new File(filename);
+		if (file.isDirectory()) {
+			for (final File f : file.listFiles()) {
+				deleteRecursive(f.getPath());
+			}
+			file.delete();
+			removeCacheDir(filename);
+			return true;
+		} else {
+			clearCache(filename);
+			return file.delete();
+		}
 	}
 
 	public static boolean fileExists(final String filename) {
