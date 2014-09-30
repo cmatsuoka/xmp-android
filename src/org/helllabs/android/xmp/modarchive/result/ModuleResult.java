@@ -37,8 +37,11 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	private TextView license;
 	private Module module;
 	private Downloader downloader;
+	private Button downloadButton;
 	private Button deleteButton;
 	private Button playButton;
+	private TextView errorMessage;
+	private View dataView;
 
 	private SharedPreferences mPrefs;
 
@@ -56,12 +59,18 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 		instruments = (TextView)findViewById(R.id.module_instruments);
 		license = (TextView)findViewById(R.id.module_license);
 
+		downloadButton = (Button)findViewById(R.id.module_download);
+		downloadButton.setEnabled(false);
+		
 		deleteButton = (Button)findViewById(R.id.module_delete);
 		deleteButton.setEnabled(false);
 
 		playButton = (Button)findViewById(R.id.module_play);
 		playButton.setEnabled(false);
-
+		
+		errorMessage = (TextView)findViewById(R.id.error_message);
+		dataView = findViewById(R.id.result_data);
+				
 		downloader = new Downloader(this);
 		downloader.setDownloaderListener(this);
 
@@ -99,6 +108,8 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 			this.module = module;
 
 			updateButtons(module);
+		} else {
+			dataView.setVisibility(View.GONE);
 		}
 
 		crossfade();
@@ -106,6 +117,8 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 
 	@Override
 	public void onSoftError(final SoftErrorResponse response) {
+		errorMessage.setText(response.getMessage());
+		dataView.setVisibility(View.GONE);
 		crossfade();
 	}
 
@@ -185,6 +198,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 
 	private void updateButtons(final Module module) {
 		final boolean exists = localFile(module).exists();
+		downloadButton.setEnabled(true);
 		deleteButton.setEnabled(exists);
 		playButton.setEnabled(exists);
 	}

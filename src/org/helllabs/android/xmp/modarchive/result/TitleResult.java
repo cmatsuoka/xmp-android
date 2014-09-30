@@ -22,6 +22,7 @@ import android.widget.TextView;
 public class TitleResult extends Result implements ModuleRequest.OnResponseListener, ListView.OnItemClickListener {
 	private Context context;
 	private ListView list;
+	private TextView errorMessage;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -35,6 +36,8 @@ public class TitleResult extends Result implements ModuleRequest.OnResponseListe
 		list = (ListView)findViewById(R.id.result_list);
 		list.setOnItemClickListener(this);
 
+		errorMessage = (TextView)findViewById(R.id.error_message);
+		
 		final String searchText = getIntent().getStringExtra(Search.SEARCH_TEXT);
 		final String key = getString(R.string.modarchive_apikey);
 
@@ -53,6 +56,7 @@ public class TitleResult extends Result implements ModuleRequest.OnResponseListe
 		list.setAdapter(adapter);
 
 		if (moduleList.isEmpty()) {
+			errorMessage.setText(R.string.search_no_result);
 			list.setVisibility(View.GONE);
 		}
 		crossfade();

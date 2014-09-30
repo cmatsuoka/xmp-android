@@ -18,53 +18,63 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
-        <ScrollView
+        <LinearLayout
             android:id="@+id/result_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:orientation="vertical" >
 
-            <LinearLayout
+            <ScrollView
+                android:id="@+id/result_data"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:layout_height="match_parent" >
 
-                <TextView
-                    android:id="@+id/module_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:text="Title"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
 
-                <TextView
-                    android:id="@+id/module_filename"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="filename" />
+                    <TextView
+                        android:id="@+id/module_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="Title"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <TextView
-                    android:id="@+id/module_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="info" />
+                    <TextView
+                        android:id="@+id/module_filename"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="filename" />
 
-                <TextView
-                    android:id="@+id/module_license"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="license" />
+                    <TextView
+                        android:id="@+id/module_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="info" />
 
-                <TextView
-                    android:id="@+id/module_instruments"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="instruments"
-                    android:textSize="11sp"
-                    android:typeface="monospace" />
-            </LinearLayout>
-        </ScrollView>
+                    <TextView
+                        android:id="@+id/module_license"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="license" />
+
+                    <TextView
+                        android:id="@+id/module_instruments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="instruments"
+                        android:textSize="11sp"
+                        android:typeface="monospace" />
+                </LinearLayout>
+            </ScrollView>
+
+            <include layout="@layout/error_message" />
+        </LinearLayout>
     </FrameLayout>
 
     <LinearLayout
@@ -81,7 +91,7 @@
             android:layout_weight="0.5"
             android:onClick="downloadClick"
             android:text="Download" />
-        
+
         <Button
             android:id="@+id/module_delete"
             style="@android:style/Widget.Button"
@@ -90,7 +100,7 @@
             android:layout_weight="0.5"
             android:onClick="deleteClick"
             android:text="Delete" />
-        
+
         <Button
             android:id="@+id/module_play"
             style="@android:style/Widget.Button"

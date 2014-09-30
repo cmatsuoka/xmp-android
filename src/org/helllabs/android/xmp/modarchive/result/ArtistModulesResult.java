@@ -21,6 +21,7 @@ import android.widget.TextView;
 public class ArtistModulesResult extends Result implements ModuleRequest.OnResponseListener, ListView.OnItemClickListener {
 
 	private ListView list;
+	private TextView errorMessage;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -32,6 +33,8 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 
 		list = (ListView)findViewById(R.id.result_list);
 		list.setOnItemClickListener(this);
+		
+		errorMessage = (TextView)findViewById(R.id.error_message);
 
 		final long artistId = getIntent().getLongExtra(Search.ARTIST_ID, -1);
 		final String key = getString(R.string.modarchive_apikey);
@@ -51,6 +54,7 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 		list.setAdapter(adapter);
 		
 		if (moduleList.isEmpty()) {
+			errorMessage.setText(R.string.search_artist_no_mods);
 			list.setVisibility(View.GONE);
 		}
 		

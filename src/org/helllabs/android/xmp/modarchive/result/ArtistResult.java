@@ -22,6 +22,7 @@ import android.widget.TextView;
 public class ArtistResult extends Result implements ArtistRequest.OnResponseListener, ListView.OnItemClickListener {
 
 	private ListView list;
+	private TextView errorMessage;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -33,6 +34,8 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 
 		list = (ListView)findViewById(R.id.result_list);
 		list.setOnItemClickListener(this);
+		
+		errorMessage = (TextView)findViewById(R.id.error_message);
 
 		final String searchText = getIntent().getStringExtra(Search.SEARCH_TEXT);
 		final String key = getString(R.string.modarchive_apikey);
@@ -52,6 +55,7 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 		list.setAdapter(adapter);
 
 		if (artistList.isEmpty()) {
+			errorMessage.setText(R.string.search_no_result);
 			list.setVisibility(View.GONE);
 		}
 
