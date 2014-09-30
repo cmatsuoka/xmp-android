@@ -225,13 +225,12 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		}
 
 		final Intent intent = new Intent(this, PlayerActivity.class);
-		//intent.putExtra("files", mods);
 		((XmpApplication)getApplication()).setFileArray(mods);
 		intent.putExtra("shuffle", shuffle);
 		intent.putExtra("loop", isLoopMode());
 		intent.putExtra("start", start);
 		intent.putExtra("keepFirst", keepFirst);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);	// prevent screen flicker when starting player activity 
+		//intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);	// prevent screen flicker when starting player activity 
 		Log.i(TAG, "Start Player activity");
 		startActivityForResult(intent, PLAY_MOD_REQUEST);
 	}

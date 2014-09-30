@@ -24,7 +24,7 @@ public class RandomResult extends ModuleResult implements ModuleRequest.OnRespon
 	
 	@Override
 	public void onResponse(final List<Module> moduleList) {
-		if (moduleList.size() > 0) {
+		if (!moduleList.isEmpty()) {
 			super.onResponse(moduleList);
 		} else {
 			// Handle error!

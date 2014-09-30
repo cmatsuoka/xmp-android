@@ -36,6 +36,6 @@ public abstract class Result extends ActionBarActivity  {
 	}
 	
 	protected void handleQueryError() {
-		handleError(new Throwable("Bad search string. "));
+		handleError(new Throwable("Bad search string. "));	// NOPMD
 	}
 }

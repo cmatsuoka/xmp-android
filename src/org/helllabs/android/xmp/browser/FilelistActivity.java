@@ -332,7 +332,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	}
 	
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	public boolean onKeyDown(final int keyCode, final KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (mBackButtonParentdir) {
 				// Return to parent dir up to the starting level, then act as regular back

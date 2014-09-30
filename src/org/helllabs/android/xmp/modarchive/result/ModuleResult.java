@@ -5,13 +5,18 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.XmpApplication;
 import org.helllabs.android.xmp.modarchive.Downloader;
 import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
+import org.helllabs.android.xmp.player.PlayerActivity;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Log;
+import org.helllabs.android.xmp.util.Message;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -74,7 +79,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 
 	@Override
 	public void onResponse(final List<Module> moduleList) {
-		if (moduleList.size() > 0) {
+		if (!moduleList.isEmpty()) {
 			final Module module = moduleList.get(0);
 			Log.i(TAG, "Response: title=" + module.getSongTitle());
 			title.setText(module.getSongTitle());
@@ -86,19 +91,18 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 			this.module = module;
 
 			updateButtons(module);
-
 		}
 
 		crossfade();
 	}
 
 	// ModuleRequest callbacks
-	
+
 	@Override
 	public void onError(final Throwable error) {
 		handleError(error);
 	}
-	
+
 	// DownloaderListener callbacks
 
 	@Override
@@ -112,9 +116,8 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	}
 
 	// Button click handlers
-	
-	public void downloadClick(final View view) {
 
+	public void downloadClick(final View view) {
 		final String modDir = getDownloadPath(module);
 		final String url = module.getUrl();
 
@@ -123,11 +126,32 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	}
 
 	public void deleteClick(final View view) {
+		final File file = localFile(module);
 
+		Message.yesNoDialog(this, "Delete file", "Are you sure you want to delete " + module.getFilename() + "?", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(final DialogInterface dialog, final int which) {
+				if (which == DialogInterface.BUTTON_POSITIVE) {
+					Log.i(TAG, "Delete " + file.getPath());
+					if (file.delete()) {
+						updateButtons(module);
+					} else {
+						Message.toast(ModuleResult.this, "Error");
+					}
+				}
+			}	
+		});
 	}
 
 	public void playClick(final View view) {
+		final File file = localFile(module);
+		final String[] mods = { file.getPath() };		
 
+		final Intent intent = new Intent(this, PlayerActivity.class);
+		((XmpApplication)getApplication()).setFileArray(mods);
+		intent.putExtra("start", 0);
+		Log.i(TAG, "Play " + mods[0]);
+		startActivity(intent);
 	}
 
 	private String getDownloadPath(final Module module) {
@@ -147,14 +171,17 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 
 		return sb.toString();
 	}
-	
-	private void updateButtons(final Module module) {
-		final String modDir = getDownloadPath(module);
-		final String url = module.getUrl();
 
-		if (Downloader.moduleExists(url, modDir)) {
-			deleteButton.setEnabled(true);
-			playButton.setEnabled(true);
-		}
+	private void updateButtons(final Module module) {
+		final boolean exists = localFile(module).exists();
+		deleteButton.setEnabled(exists);
+		playButton.setEnabled(exists);
+	}
+
+	private File localFile(final Module module) {
+		final String path = getDownloadPath(module);
+		final String url = module.getUrl();
+		final String filename = url.substring(url.lastIndexOf('#')+1, url.length());
+		return new File(path, filename);
 	}
 }

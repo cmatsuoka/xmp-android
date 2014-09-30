@@ -33,11 +33,6 @@ public class Downloader {
 	private int mSize;
 	private DownloaderListener listener;
 	
-	public interface DownloaderListener {
-		void onSuccess();
-		void onFailure();
-	}
-
 	private final Object mCallback = new Object() {
 		@SuppressLint("NewApi")
 		@OnProgress(DownloadTask.class)
@@ -76,6 +71,12 @@ public class Downloader {
 			}
 		}
 	};
+	
+	public interface DownloaderListener {
+		void onSuccess();
+		void onFailure();
+	}
+
 
 	public static class DownloadTask extends GroundyTask {
 		public static final String PARAM_URL = "org.helllabs.android.xmp.modarchive.URL";
@@ -120,7 +121,7 @@ public class Downloader {
 
 		mSize = size / 1024;
 
-		if (moduleExists(url, path)) {
+		if (localFile(url, path).exists()) {
 			Message.yesNoDialog(mContext, "File exists!", "This module already exists. Do you want to overwrite?", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(final DialogInterface dialog, final int which) {
@@ -169,10 +170,8 @@ public class Downloader {
 				.queueUsing(mContext);
 	}
 	
-	public static boolean moduleExists(final String url, final String path) {
+	private static File localFile(final String url, final String path) {
 		final String filename = url.substring(url.lastIndexOf('#')+1, url.length());
-		final File file = new File(path, filename);
-		Log.d(TAG, "check if " + file.getPath() + " already exists");
-		return file.exists();
+		return new File(path, filename);
 	}
 }
