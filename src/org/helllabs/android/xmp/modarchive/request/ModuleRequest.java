@@ -4,17 +4,19 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.helllabs.android.xmp.modarchive.model.Artist;
 import org.helllabs.android.xmp.modarchive.model.Module;
+import org.helllabs.android.xmp.modarchive.response.HardErrorResponse;
+import org.helllabs.android.xmp.modarchive.response.ModArchiveResponse;
+import org.helllabs.android.xmp.modarchive.response.ModuleResponse;
+import org.helllabs.android.xmp.modarchive.response.SoftErrorResponse;
 import org.helllabs.android.xmp.util.Log;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-public class ModuleRequest extends ModArchiveRequest<List<Module>> {
+public class ModuleRequest extends ModArchiveRequest {
 
 	private static final String TAG = "ModuleRequest";
 
@@ -31,8 +33,8 @@ public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 	}
 
 	@Override
-	protected List<Module> xmlParse(final String result) {
-		final List<Module> moduleList = new ArrayList<Module>();
+	protected ModArchiveResponse xmlParse(final String result) {
+		final ModuleResponse moduleList = new ModuleResponse();
 		Module module = null;
 		boolean inArtistInfo = false;
 
@@ -60,7 +62,9 @@ public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 				case XmlPullParser.END_TAG:
 					final String end = myparser.getName();
 					//Log.d(TAG, "name=" + name + " text=" + text);
-					if (end.equals("filename")) {
+					if (end.equals("error")) {
+						return new SoftErrorResponse(text);
+					} else if (end.equals("filename")) {
 						module.setFilename(text);
 					} else if (end.equals("format")) {
 						module.setFormat(text);
@@ -83,8 +87,6 @@ public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 						if (!inArtistInfo) {
 							module.setId(Long.parseLong(text));
 						}
-					} else if (end.equals("hash")) {
-						module.setHash(text);
 					} else if (end.equals("artist_info")) {
 						inArtistInfo = false;
 					} else if (end.equals("module")) {
@@ -100,10 +102,10 @@ public class ModuleRequest extends ModArchiveRequest<List<Module>> {
 			}
 		} catch (XmlPullParserException e) {
 			Log.e(TAG, "XmlPullParserException: " + e.getMessage());
-			return null;
+			return new HardErrorResponse(e);
 		} catch (IOException e) {
 			Log.e(TAG, "IOException: " + e.getMessage());
-			return null;
+			return new HardErrorResponse(e);
 		}
 
 		return moduleList;

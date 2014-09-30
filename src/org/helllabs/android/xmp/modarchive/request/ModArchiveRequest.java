@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.helllabs.android.xmp.XmpApplication;
+import org.helllabs.android.xmp.modarchive.response.HardErrorResponse;
+import org.helllabs.android.xmp.modarchive.response.ModArchiveResponse;
+import org.helllabs.android.xmp.modarchive.response.SoftErrorResponse;
 import org.helllabs.android.xmp.util.Log;
 
 import com.android.volley.RequestQueue;
@@ -11,7 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-public abstract class ModArchiveRequest<T> implements Response.Listener<String>, Response.ErrorListener {
+public abstract class ModArchiveRequest implements Response.Listener<String>, Response.ErrorListener {
 
 	private static final String TAG = "ModArchiveRequest";
 	private static final String SERVER = "http://api.modarchive.org";
@@ -24,11 +27,12 @@ public abstract class ModArchiveRequest<T> implements Response.Listener<String>,
 
 	private final String mKey;
 	private final String mRequest;
-	private OnResponseListener<T> mOnResponseListener;
+	private OnResponseListener mOnResponseListener;
 
-	public interface OnResponseListener<T> {
-		void onResponse(T response);
-		void onError(Throwable error);
+	public interface OnResponseListener {
+		void onResponse(ModArchiveResponse response);
+		void onSoftError(SoftErrorResponse response);
+		void onHardError(HardErrorResponse response);
 	}
 
 	public ModArchiveRequest(final String key, final String request) {
@@ -41,7 +45,7 @@ public abstract class ModArchiveRequest<T> implements Response.Listener<String>,
 		this(key, request + URLEncoder.encode(parameter, "UTF-8"));
 	}
 
-	public ModArchiveRequest<T> setOnResponseListener(final OnResponseListener<T> listener) {
+	public ModArchiveRequest setOnResponseListener(final OnResponseListener listener) {
 		mOnResponseListener = listener;
 		return this;
 	}
@@ -59,15 +63,20 @@ public abstract class ModArchiveRequest<T> implements Response.Listener<String>,
 	@Override
 	public void onErrorResponse(final VolleyError error) {
 		Log.e(TAG, "Volley error: " + error.getMessage());
-		mOnResponseListener.onError(error);
+		mOnResponseListener.onHardError(new HardErrorResponse(error));
 	}
 
 	@Override
 	public void onResponse(final String result) {
 		Log.i(TAG, "Volley: get response");
-		mOnResponseListener.onResponse(xmlParse(result));
+		ModArchiveResponse response = xmlParse(result);
+		if (response instanceof SoftErrorResponse) {
+			mOnResponseListener.onSoftError((SoftErrorResponse)response);
+		} else {
+			mOnResponseListener.onResponse(response);
+		}
 	}
 
-	protected abstract T xmlParse(String result);
+	protected abstract ModArchiveResponse xmlParse(String result);
 
 }

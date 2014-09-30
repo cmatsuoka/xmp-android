@@ -28,7 +28,6 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@id/android:empty"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -39,7 +38,7 @@
                 android:textSize="32sp" />
 
             <TextView
-                android:id="@id/android:empty"
+                android:id="@+id/error_message"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"

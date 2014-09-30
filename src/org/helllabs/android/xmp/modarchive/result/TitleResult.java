@@ -1,13 +1,15 @@
 package org.helllabs.android.xmp.modarchive.result;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.modarchive.adapter.ModuleArrayAdapter;
-import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
+import org.helllabs.android.xmp.modarchive.response.HardErrorResponse;
+import org.helllabs.android.xmp.modarchive.response.ModArchiveResponse;
+import org.helllabs.android.xmp.modarchive.response.ModuleResponse;
+import org.helllabs.android.xmp.modarchive.response.SoftErrorResponse;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +17,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
-public class TitleResult extends Result implements ModuleRequest.OnResponseListener<List<Module>>, ListView.OnItemClickListener {
+public class TitleResult extends Result implements ModuleRequest.OnResponseListener, ListView.OnItemClickListener {
 	private Context context;
 	private ListView list;
 
@@ -34,7 +37,7 @@ public class TitleResult extends Result implements ModuleRequest.OnResponseListe
 
 		final String searchText = getIntent().getStringExtra(Search.SEARCH_TEXT);
 		final String key = getString(R.string.modarchive_apikey);
-		
+
 		try {
 			final ModuleRequest request = new ModuleRequest(key, ModuleRequest.FILENAME_OR_TITLE, searchText);
 			request.setOnResponseListener(this).send();
@@ -44,19 +47,28 @@ public class TitleResult extends Result implements ModuleRequest.OnResponseListe
 	}
 
 	@Override
-	public void onResponse(final List<Module> response) {
-		final ModuleArrayAdapter adapter = new ModuleArrayAdapter(context, R.layout.search_list_item, response);
+	public void onResponse(final ModArchiveResponse response) {
+		final ModuleResponse moduleList = (ModuleResponse)response; 
+		final ModuleArrayAdapter adapter = new ModuleArrayAdapter(context, R.layout.search_list_item, moduleList.getList());
 		list.setAdapter(adapter);
-		
-		if (response.isEmpty()) {
+
+		if (moduleList.isEmpty()) {
 			list.setVisibility(View.GONE);
 		}
 		crossfade();
 	}
 	
 	@Override
-	public void onError(final Throwable error) {
-		handleError(error);
+	public void onSoftError(final SoftErrorResponse response) {
+		final TextView errorMessage = (TextView)findViewById(R.id.error_message);
+		errorMessage.setText(response.getMessage());
+		list.setVisibility(View.GONE);
+		crossfade();
+	}
+
+	@Override
+	public void onHardError(final HardErrorResponse response) {
+		handleError(response.getError());
 	}
 
 	@Override

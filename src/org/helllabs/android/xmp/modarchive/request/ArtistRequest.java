@@ -4,16 +4,18 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.helllabs.android.xmp.modarchive.model.Artist;
+import org.helllabs.android.xmp.modarchive.response.ArtistResponse;
+import org.helllabs.android.xmp.modarchive.response.HardErrorResponse;
+import org.helllabs.android.xmp.modarchive.response.ModArchiveResponse;
+import org.helllabs.android.xmp.modarchive.response.SoftErrorResponse;
 import org.helllabs.android.xmp.util.Log;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-public class ArtistRequest extends ModArchiveRequest<List<Artist>> {
+public class ArtistRequest extends ModArchiveRequest {
 
 	private static final String TAG = "ArtistListRequest";
 
@@ -30,8 +32,8 @@ public class ArtistRequest extends ModArchiveRequest<List<Artist>> {
 	}
 
 	@Override
-	protected List<Artist> xmlParse(final String result) {
-		final List<Artist> artistList = new ArrayList<Artist>();
+	protected ModArchiveResponse xmlParse(final String result) {
+		final ArtistResponse artistList = new ArtistResponse();
 		Artist artist = null;
 
 		try {
@@ -56,7 +58,9 @@ public class ArtistRequest extends ModArchiveRequest<List<Artist>> {
 					break;
 				case XmlPullParser.END_TAG: {
 					final String end = myparser.getName();
-					if (end.equals("id")) {
+					if (end.equals("error")) {
+						return new SoftErrorResponse(text);
+					} else if (end.equals("id")) {
 						artist.setId(Long.parseLong(text));
 					} else if (end.equals("alias")) {
 						artist.setAlias(text);
@@ -72,10 +76,10 @@ public class ArtistRequest extends ModArchiveRequest<List<Artist>> {
 			}
 		} catch (XmlPullParserException e) {
 			Log.e(TAG, "XmlPullParserException: " + e.getMessage());
-			return null;
+			return new HardErrorResponse(e);
 		} catch (IOException e) {
 			Log.e(TAG, "IOException: " + e.getMessage());
-			return null;
+			return new HardErrorResponse(e);
 		}
 
 		return artistList;

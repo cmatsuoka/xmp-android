@@ -14,7 +14,7 @@ import android.widget.TextView;
 public class SearchError extends ActionBarActivity implements Runnable {
 
 	private static final int PERIOD = 1337;
-	private static final String UNKNOWN_ERROR = "Software Failure.   Press back button to continue.\n\nGuru Meditation #35068035.48454C50";
+	private static final String UNKNOWN_ERROR = "Software Failure.   Press back to continue.\n\nGuru Meditation #35068035.48454C50";
 
 	private TextView msg;
 	private boolean frameBlink;

@@ -13,7 +13,6 @@ public class Module {
 	private String license;
 	private String instruments;
 	private long id;
-	private String hash;
 	
 	public Module() {
 		artist = Artist.UNKNOWN;
@@ -99,14 +98,6 @@ public class Module {
 	
 	public void setId(final long id) {
 		this.id = id;
-	}
-	
-	public String getHash() {
-		return hash;
-	}
-	
-	public void setHash(final String hash) {
-		this.hash = hash;
 	}
 	
 	@Override

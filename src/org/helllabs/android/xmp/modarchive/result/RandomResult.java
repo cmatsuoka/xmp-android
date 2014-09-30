@@ -1,14 +1,13 @@
 package org.helllabs.android.xmp.modarchive.result;
 
-import java.util.List;
-
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
+import org.helllabs.android.xmp.modarchive.response.ModArchiveResponse;
+import org.helllabs.android.xmp.modarchive.response.ModuleResponse;
 
 import android.os.Bundle;
 
-public class RandomResult extends ModuleResult implements ModuleRequest.OnResponseListener<List<Module>> {
+public class RandomResult extends ModuleResult implements ModuleRequest.OnResponseListener {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,7 +22,8 @@ public class RandomResult extends ModuleResult implements ModuleRequest.OnRespon
 	}
 	
 	@Override
-	public void onResponse(final List<Module> moduleList) {
+	public void onResponse(final ModArchiveResponse response) {
+		final ModuleResponse moduleList = (ModuleResponse)response;
 		if (!moduleList.isEmpty()) {
 			super.onResponse(moduleList);
 		} else {

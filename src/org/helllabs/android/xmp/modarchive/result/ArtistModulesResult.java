@@ -1,21 +1,24 @@
 package org.helllabs.android.xmp.modarchive.result;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.modarchive.adapter.ModuleArrayAdapter;
-import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
+import org.helllabs.android.xmp.modarchive.response.HardErrorResponse;
+import org.helllabs.android.xmp.modarchive.response.ModArchiveResponse;
+import org.helllabs.android.xmp.modarchive.response.ModuleResponse;
+import org.helllabs.android.xmp.modarchive.response.SoftErrorResponse;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
-public class ArtistModulesResult extends Result implements ModuleRequest.OnResponseListener<List<Module>>, ListView.OnItemClickListener {
+public class ArtistModulesResult extends Result implements ModuleRequest.OnResponseListener, ListView.OnItemClickListener {
 
 	private ListView list;
 
@@ -42,11 +45,12 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 	}
 
 	@Override
-	public void onResponse(final List<Module> response) {
-		final ModuleArrayAdapter adapter = new ModuleArrayAdapter(this, R.layout.search_list_item, response);
+	public void onResponse(final ModArchiveResponse response) {
+		final ModuleResponse moduleList = (ModuleResponse)response;
+		final ModuleArrayAdapter adapter = new ModuleArrayAdapter(this, R.layout.search_list_item, moduleList.getList());
 		list.setAdapter(adapter);
 		
-		if (response.isEmpty()) {
+		if (moduleList.isEmpty()) {
 			list.setVisibility(View.GONE);
 		}
 		
@@ -54,8 +58,16 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 	}
 
 	@Override
-	public void onError(final Throwable error) {
-		handleError(error);
+	public void onSoftError(final SoftErrorResponse response) {
+		final TextView errorMessage = (TextView)findViewById(R.id.error_message);
+		errorMessage.setText(response.getMessage());
+		list.setVisibility(View.GONE);
+		crossfade();
+	}
+
+	@Override
+	public void onHardError(final HardErrorResponse response) {
+		handleError(response.getError());
 	}
 
 	@Override

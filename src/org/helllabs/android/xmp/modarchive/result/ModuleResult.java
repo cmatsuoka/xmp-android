@@ -2,7 +2,6 @@ package org.helllabs.android.xmp.modarchive.result;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.XmpApplication;
@@ -10,6 +9,10 @@ import org.helllabs.android.xmp.modarchive.Downloader;
 import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.modarchive.model.Module;
 import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
+import org.helllabs.android.xmp.modarchive.response.HardErrorResponse;
+import org.helllabs.android.xmp.modarchive.response.ModArchiveResponse;
+import org.helllabs.android.xmp.modarchive.response.ModuleResponse;
+import org.helllabs.android.xmp.modarchive.response.SoftErrorResponse;
 import org.helllabs.android.xmp.player.PlayerActivity;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Log;
@@ -24,7 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ModuleResult extends Result implements ModuleRequest.OnResponseListener<List<Module>>, Downloader.DownloaderListener {
+public class ModuleResult extends Result implements ModuleRequest.OnResponseListener, Downloader.DownloaderListener {
 	private static final String TAG = "ModuleResult";
 	private static final String MODARCHIVE_DIRNAME = "TheModArchive";
 	private TextView title;
@@ -76,9 +79,14 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 			handleQueryError();
 		}
 	}
+	
+
+	// ModuleRequest callbacks
 
 	@Override
-	public void onResponse(final List<Module> moduleList) {
+	public void onResponse(final ModArchiveResponse response) {
+
+		final ModuleResponse moduleList = (ModuleResponse)response;
 		if (!moduleList.isEmpty()) {
 			final Module module = moduleList.get(0);
 			Log.i(TAG, "Response: title=" + module.getSongTitle());
@@ -96,11 +104,14 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 		crossfade();
 	}
 
-	// ModuleRequest callbacks
+	@Override
+	public void onSoftError(final SoftErrorResponse response) {
+		crossfade();
+	}
 
 	@Override
-	public void onError(final Throwable error) {
-		handleError(error);
+	public void onHardError(final HardErrorResponse response) {
+		handleError(response.getError());
 	}
 
 	// DownloaderListener callbacks
