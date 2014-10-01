@@ -293,6 +293,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				} else {
 					curPath.setTextColor(getResources().getColor(R.color.pressed_color));
 				}
+				view.performClick();
 				return false;
 			}
 		});
@@ -302,18 +303,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 			@Override
 			public void onClick(final View view) {
 				parentDir();
-			}
-		});
-
-		upButton.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(final View view, final MotionEvent event) {
-				if(event.getAction() == MotionEvent.ACTION_UP){
-					upButton.setImageResource(R.drawable.parent);
-				} else {
-					upButton.setImageResource(R.drawable.parent_touch);
-				}
-				return false;
 			}
 		});
 
@@ -508,10 +497,10 @@ public class FilelistActivity extends BasePlaylistActivity {
 		if (isPathMenu) {
 			switch (id) {
 			case 0:						// Add all to playlist
-				addToPlaylist(directoryNum, mList.size() - directoryNum, addFileToPlaylistDialogClickListener);
+				choosePlaylist(directoryNum, mList.size() - directoryNum, addFileToPlaylistDialogClickListener);
 				break;
 			case 1:						// Recursive add to playlist
-				addToPlaylist(2, mList.size() - 2, addCurRecursiveToPlaylistDialogClickListener);
+				choosePlaylist(2, mList.size() - 2, addCurRecursiveToPlaylistDialogClickListener);
 				break;
 			case 2:						// Add all to queue
 				addToQueue(PlaylistItemAdapter.getFilenameList(mList, directoryNum));
@@ -537,7 +526,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		} else if (info.position < directoryNum) {		// Directories
 			switch (id) {
 			case 0:										//    Add to playlist (recursive)
-				addToPlaylist(info.position, 1, addRecursiveToPlaylistDialogClickListener);
+				choosePlaylist(info.position, 1, addRecursiveToPlaylistDialogClickListener);
 				//addToPlaylist(info.position, 1, addDirToPlaylistDialogClickListener);
 				break;
 			case 1:										//    Add to play queue (recursive)
@@ -554,7 +543,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		} else {										// Files
 			switch (id) {
 			case 0:										//   Add to playlist
-				addToPlaylist(info.position, 1, addFileToPlaylistDialogClickListener);
+				choosePlaylist(info.position, 1, addFileToPlaylistDialogClickListener);
 				break;
 			case 1:										//   Add to queue
 				addToQueue(mList.get(info.position).filename);
@@ -576,7 +565,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		return true;
 	}
 
-	protected void addToPlaylist(final int start, final int num, final DialogInterface.OnClickListener listener) {
+	protected void choosePlaylist(final int start, final int num, final DialogInterface.OnClickListener listener) {
 
 		// Return if no playlists exist
 		if (PlaylistUtils.list().length <= 0) {

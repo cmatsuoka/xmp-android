@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/current_path"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:layout_marginLeft="2dp"
@@ -35,7 +35,7 @@
             android:layout_marginTop="5dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/button_parent_dir"
-            android:src="@drawable/parent" />
+            android:src="@drawable/parent_selector" />
     </LinearLayout>
 
     <FrameLayout
