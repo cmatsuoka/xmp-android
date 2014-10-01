@@ -23,7 +23,7 @@ public abstract class ModArchiveRequest implements Response.Listener<String>, Re
 	public static final String ARTIST_MODULES = "view_modules_by_artistid&query=";
 	public static final String MODULE = "view_by_moduleid&query=";
 	public static final String RANDOM = "random";
-	public static final String FILENAME_OR_TITLE = "search&type=filename_and_songtitle&query=";
+	public static final String FILENAME_OR_TITLE = "search&type=filename_or_songtitle&query=";
 
 	private final String mKey;
 	private final String mRequest;
