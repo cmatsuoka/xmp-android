@@ -80,5 +80,6 @@ public class ArtistModulesResult extends Result implements ModuleRequest.OnRespo
 		final Intent intent = new Intent(this, ModuleResult.class);
 		intent.putExtra(Search.MODULE_ID, adapter.getItem(position).getId());
 		startActivity(intent);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 }

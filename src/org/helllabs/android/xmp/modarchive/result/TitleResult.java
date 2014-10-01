@@ -81,5 +81,6 @@ public class TitleResult extends Result implements ModuleRequest.OnResponseListe
 		final Intent intent = new Intent(this, ModuleResult.class);
 		intent.putExtra(Search.MODULE_ID, adapter.getItem(position).getId());
 		startActivity(intent);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 }

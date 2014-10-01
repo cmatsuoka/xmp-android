@@ -674,8 +674,8 @@ public class PlayerActivity extends Activity {
 			titleFlipper.setKeepScreenOn(true);
 		}
 
-		titleFlipper.setInAnimation(this, R.anim.slide_in_right);
-		titleFlipper.setOutAnimation(this, R.anim.slide_out_left);
+		titleFlipper.setInAnimation(this, R.anim.slide_in_right_slow);
+		titleFlipper.setOutAnimation(this, R.anim.slide_out_left_slow);
 
 		final Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/Michroma.ttf");
 

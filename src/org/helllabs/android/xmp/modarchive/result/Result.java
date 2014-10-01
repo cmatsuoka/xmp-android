@@ -19,6 +19,12 @@ public abstract class Result extends ActionBarActivity  {
 		setTitle(R.string.search_result_title);
 		crossfader = new Crossfader(this);
 	}
+	
+	@Override
+	public void onBackPressed() {
+	    super.onBackPressed();
+	    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+	}
 
 	protected void setupCrossfade() {
 		crossfader.setup(R.id.result_content, R.id.result_spinner);

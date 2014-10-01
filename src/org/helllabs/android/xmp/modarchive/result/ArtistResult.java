@@ -81,5 +81,6 @@ public class ArtistResult extends Result implements ArtistRequest.OnResponseList
 		final Intent intent = new Intent(this, ArtistModulesResult.class);
 		intent.putExtra(Search.ARTIST_ID, adapter.getItem(position).getId());
 		startActivity(intent);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 }

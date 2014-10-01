@@ -39,6 +39,7 @@ public class Search extends ActionBarActivity implements TextView.OnEditorAction
 		@Override
 		public void onClick(final View view) {
 			startActivity(new Intent(context, RandomResult.class));
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 		}
 	};
 
@@ -92,11 +93,13 @@ public class Search extends ActionBarActivity implements TextView.OnEditorAction
 			intent = new Intent(context, TitleResult.class);
 			intent.putExtra(SEARCH_TEXT, searchText);
 			startActivity(intent);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			break;
 		case R.id.artist_radio:
 			intent = new Intent(context, ArtistResult.class);
 			intent.putExtra(SEARCH_TEXT, searchText);
 			startActivity(intent);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			break;
 		default:
 			break;
