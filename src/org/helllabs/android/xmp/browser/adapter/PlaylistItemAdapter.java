@@ -99,7 +99,7 @@ public class PlaylistItemAdapter extends ArrayAdapter<PlaylistItem> {
     }
     
     public static List<String> getFilenameList(final List<PlaylistItem> items, final int location) {
-    	final List<PlaylistItem> subItems = items.subList(location, items.size() - 1);
+    	final List<PlaylistItem> subItems = items.subList(location, items.size());
     	final List<String> list = new ArrayList<String>();
     	for (final PlaylistItem item : subItems) {
     		list.add(item.filename);
