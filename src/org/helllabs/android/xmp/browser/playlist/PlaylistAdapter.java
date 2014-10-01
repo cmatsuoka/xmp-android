@@ -6,6 +6,7 @@ import java.util.List;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.util.FileUtils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -27,7 +28,8 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
     	this.useFilename = useFilename;
     }
     
-    @Override
+    @SuppressLint("InflateParams")
+	@Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
     	View view = convertView;
     	if (view == null) {
