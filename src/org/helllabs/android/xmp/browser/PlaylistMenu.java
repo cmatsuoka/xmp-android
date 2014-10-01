@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.browser.adapter.PlaylistItemAdapter;
+import org.helllabs.android.xmp.browser.adapter.PlaylistAdapter;
 import org.helllabs.android.xmp.browser.model.PlaylistItem;
 import org.helllabs.android.xmp.browser.playlist.Playlist;
 import org.helllabs.android.xmp.browser.playlist.PlaylistUtils;
@@ -45,7 +45,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 	private String mediaPath;
 	private int deletePosition;
 	private Context context;
-	private PlaylistItemAdapter playlistAdapter;
+	private PlaylistAdapter playlistAdapter;
 	private List<PlaylistItem> mList;
 
 	@Override
@@ -58,7 +58,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		listView.setOnItemClickListener(this);
 		
 		mList = new ArrayList<PlaylistItem>();
-		playlistAdapter = new PlaylistItemAdapter(PlaylistMenu.this, R.layout.playlist_item, R.id.plist_info, mList, false);
+		playlistAdapter = new PlaylistAdapter(PlaylistMenu.this, R.layout.playlist_item, R.id.plist_info, mList, false);
 		listView.setAdapter(playlistAdapter);
 
 		registerForContextMenu(listView);
@@ -104,7 +104,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 
 	@Override
 	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-		final PlaylistItemAdapter adapter = (PlaylistItemAdapter)parent.getAdapter();
+		final PlaylistAdapter adapter = (PlaylistAdapter)parent.getAdapter();
 		
 		if (position == 0) {
 			final Intent intent = new Intent(PlaylistMenu.this, FilelistActivity.class);

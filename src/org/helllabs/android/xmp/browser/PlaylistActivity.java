@@ -3,7 +3,7 @@ package org.helllabs.android.xmp.browser;
 import java.io.IOException;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.browser.adapter.PlaylistItemAdapter;
+import org.helllabs.android.xmp.browser.adapter.PlaylistAdapter;
 import org.helllabs.android.xmp.browser.model.PlaylistItem;
 import org.helllabs.android.xmp.browser.playlist.Playlist;
 import org.helllabs.android.xmp.preferences.Preferences;
@@ -66,7 +66,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 
 		try {
 			playlist = new Playlist(this, name);
-			playlistAdapter = new PlaylistItemAdapter(this, R.layout.song_item, R.id.info, playlist.getList(), false);
+			playlistAdapter = new PlaylistAdapter(this, R.layout.song_item, R.id.info, playlist.getList(), false);
 			listView.setAdapter(playlistAdapter);
 		} catch (IOException e) {
 			Log.e(TAG, "Can't read playlist " + name);

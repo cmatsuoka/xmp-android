@@ -1,12 +1,11 @@
 package org.helllabs.android.xmp.browser;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.XmpApplication;
-import org.helllabs.android.xmp.browser.adapter.PlaylistItemAdapter;
+import org.helllabs.android.xmp.browser.adapter.PlaylistAdapter;
 import org.helllabs.android.xmp.browser.playlist.PlaylistUtils;
 import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.player.PlayerActivity;
@@ -47,7 +46,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private ModInterface mModPlayer;
 	private List<String> mAddList;
 	protected SharedPreferences mPrefs;
-	protected PlaylistItemAdapter playlistAdapter;
+	protected PlaylistAdapter playlistAdapter;
 	private boolean refresh;
 
 	
@@ -145,7 +144,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	}
 
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
-		final PlaylistItemAdapter adapter = (PlaylistItemAdapter)list.getAdapter();
+		final PlaylistAdapter adapter = (PlaylistAdapter)list.getAdapter();
 		final String filename = adapter.getItem(position).filename;
 		
 		final int mode = Integer.parseInt(mPrefs.getString(Preferences.PLAYLIST_MODE, "1"));

@@ -16,12 +16,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class PlaylistItemAdapter extends ArrayAdapter<PlaylistItem> {
+public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
     private final List<PlaylistItem> items;
     private final Context context;
     private final boolean useFilename;
 
-    public PlaylistItemAdapter(final Context context, final int resource, final int textViewResId, final List<PlaylistItem> items, final boolean useFilename) {
+    public PlaylistAdapter(final Context context, final int resource, final int textViewResId, final List<PlaylistItem> items, final boolean useFilename) {
     	super(context, resource, textViewResId, items);
     	this.items = items;
     	this.context = context;

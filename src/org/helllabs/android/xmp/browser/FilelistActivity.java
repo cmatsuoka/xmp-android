@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Stack;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.browser.adapter.PlaylistItemAdapter;
+import org.helllabs.android.xmp.browser.adapter.PlaylistAdapter;
 import org.helllabs.android.xmp.browser.model.PlaylistItem;
 import org.helllabs.android.xmp.browser.playlist.PlaylistUtils;
 import org.helllabs.android.xmp.preferences.Preferences;
@@ -256,7 +256,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 			}		
 		});
 
-		playlistAdapter = new PlaylistItemAdapter(this, R.layout.song_item, R.id.info, new ArrayList<PlaylistItem>(), false);
+		playlistAdapter = new PlaylistAdapter(this, R.layout.song_item, R.id.info, new ArrayList<PlaylistItem>(), false);
 		listView.setAdapter(playlistAdapter);
 
 		registerForContextMenu(listView);
