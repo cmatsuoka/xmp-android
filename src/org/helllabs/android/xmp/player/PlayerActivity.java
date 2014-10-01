@@ -1,5 +1,8 @@
 package org.helllabs.android.xmp.player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.XmpApplication;
 import org.helllabs.android.xmp.browser.PlaylistMenu;
@@ -62,7 +65,7 @@ public class PlayerActivity extends Activity {
 	private TextView elapsedTime;
 	private ViewFlipper titleFlipper;
 	private int flipperPage;
-	private String[] fileArray;
+	private List<String> fileList;
 	private int start;
 	private SharedPreferences prefs;
 	private FrameLayout viewerLayout;
@@ -102,9 +105,9 @@ public class PlayerActivity extends Activity {
 					Log.e(TAG, "Can't register player callback");
 				}
 
-				if (fileArray != null && fileArray.length > 0) {
+				if (fileList != null && fileList.size() > 0) {
 					// Start new queue
-					playNewMod(fileArray, start);
+					playNewMod(fileList, start);
 				} else {
 					// Reconnect to existing service
 					try {
@@ -406,12 +409,12 @@ public class PlayerActivity extends Activity {
 			path = intent.getData().getPath();
 		}
 
-		fileArray = null;
+		//fileArray = null;
 
 		if (path != null) {		// from intent filter
 			Log.i(TAG, "Player started from intent filter");
-			fileArray = new String[1];
-			fileArray[0] = path;
+			fileList = new ArrayList<String>();
+			fileList.add(path);
 			shuffleMode = false;
 			loopListMode = false;
 			keepFirst = false;
@@ -430,12 +433,12 @@ public class PlayerActivity extends Activity {
 			if (extras != null) {
 				//fileArray = extras.getStringArray("files");
 				final XmpApplication app = (XmpApplication)getApplication();
-				fileArray = app.getFileArray();
+				fileList = app.getFileList();
 				shuffleMode = extras.getBoolean("shuffle");
 				loopListMode = extras.getBoolean("loop");
 				keepFirst = extras.getBoolean("keepFirst");
 				start = extras.getInt("start");
-				app.clearFileArray();
+				app.clearFileList();
 			} else {
 				reconnect = true;
 			}
@@ -933,11 +936,11 @@ public class PlayerActivity extends Activity {
 		}
 	};
 
-	private void playNewMod(final String[] files, final int start) {
+	private void playNewMod(final List<String> fileList, final int start) {
 		synchronized (playerLock) {
 			if (modPlayer != null) {
 				try {
-					modPlayer.play(files, start, shuffleMode, loopListMode, keepFirst);
+					modPlayer.play(fileList, start, shuffleMode, loopListMode, keepFirst);
 				} catch (RemoteException e) {
 					Log.e(TAG, "Can't play module");
 				}

@@ -7,7 +7,6 @@ import java.util.List;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.XmpApplication;
 import org.helllabs.android.xmp.browser.adapter.PlaylistItemAdapter;
-import org.helllabs.android.xmp.browser.model.PlaylistItem;
 import org.helllabs.android.xmp.browser.playlist.PlaylistUtils;
 import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.player.PlayerActivity;
@@ -45,7 +44,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private Context mContext;
 	private boolean mShowToasts;
 	private ModInterface mModPlayer;
-	private String[] mAddList;
+	private List<String> mAddList;
 	protected SharedPreferences mPrefs;
 	protected PlaylistItemAdapter playlistAdapter;
 
@@ -68,7 +67,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private final OnClickListener playAllButtonListener = new OnClickListener() {
 		@Override
 		public void onClick(final View view) {
-			playModule(playlistAdapter.getItems());
+			playModule(playlistAdapter.getFilenameList());
 		}
 	};
 	
@@ -127,13 +126,13 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			switch (mode) {
 			case 1:								// play all starting at this one
 			default:
-				playModule(adapter.getItems(), position, isShuffleMode(), isShuffleMode());
+				playModule(adapter.getFilenameList(), position, isShuffleMode(), isShuffleMode());
 				break;
 			case 2:								// play this one
 				playModule(filename);
 				break;
 			case 3:								// add to queue
-				addToQueue(position, 1);
+				addToQueue(adapter.getFilename(position));
 				break;
 			}
 		} else {
@@ -154,79 +153,25 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 
 	abstract public void update();
 
-	// Play all modules in list and honor default shuffle mode
-	protected void playModule(final List<PlaylistItem> list) {
-		playModule(list, 0, isShuffleMode());
-	}
-
-	// Play all modules in list with start position, no shuffle
-	protected void playModule(final List<PlaylistItem> list, final int position) {
-		playModule(list, position, false);
-	}
-	
-	protected void playModule(final List<PlaylistItem> list, final int start, final boolean shuffle) {
-		playModule(list, start, shuffle, false);
-	}
-
-	// Play modules in list starting at the specified one
-	protected void playModule(final List<PlaylistItem> list, int start, final boolean shuffle, final boolean keepFirst) {
-		int num = 0;
-		int dir = 0;
-
-		for (final PlaylistItem info : list) {
-			if (new File(info.filename).isDirectory()) {
-				dir++;
-			} else {
-				num++;
-			}
-		}
-		if (num == 0) {
-			return;
-		}
-
-		if (start < dir) {
-			start = dir;
-		}
-
-		if (start >= (dir + num)) {
-			return;
-		}
-
-		final String[] mods = new String[num];
-
-		int i = 0;
-		for (final PlaylistItem info : list) {
-			if (new File(info.filename).isFile()) {
-				mods[i++] = info.filename;
-			}
-		}
-		if (i > 0) {
-			playModule(mods, start - dir, shuffle, keepFirst);
-		}
-	}
-
 	// Play this module
 	protected void playModule(final String mod) {
-		final String[] mods = { mod };
-		playModule(mods, 0, isShuffleMode(), false);
+		final List<String> modList = new ArrayList<String>();
+		modList.add(mod);
+		playModule(modList, 0, isShuffleMode(), false);
 	}
 
 	// Play all modules in list and honor default shuffle mode
-	protected void playModule(final String[] mods) {
-		playModule(mods, 0, isShuffleMode(), false);
+	protected void playModule(final List<String> modList) {
+		playModule(modList, 0, isShuffleMode(), false);
 	}
-
-	protected void playModule(final String[] mods, final int start, final boolean shuffle, final boolean keepFirst) {
-		if (mShowToasts) {
-			if (mods.length > 1) {
-				Message.toast(this, "Play all modules in list");
-			} else {
-				Message.toast(this, "Play only this module");
-			}
-		}
-
+	
+	protected void playModule(final List<String> modList, final int start) {
+		playModule(modList, start, isShuffleMode(), false);
+	}
+	
+	protected void playModule(final List<String> modList, final int start, final boolean shuffle, final boolean keepFirst) {
 		final Intent intent = new Intent(this, PlayerActivity.class);
-		((XmpApplication)getApplication()).setFileArray(mods);
+		((XmpApplication)getApplication()).setFileList(modList);
 		intent.putExtra("shuffle", shuffle);
 		intent.putExtra("loop", isLoopMode());
 		intent.putExtra("start", start);
@@ -289,6 +234,19 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		return list;
 	}
 	
+	protected void addToQueue(final String filename) {
+		if (InfoCache.testModule(filename)) {
+			if (PlayerService.isAlive) {
+				final Intent service = new Intent(this, PlayerService.class);
+				mAddList = new ArrayList<String>();
+				mAddList.add(filename);		
+				bindService(service, connection, 0);
+			} else {
+				playModule(filename);
+			}
+		}
+	}
+	
 	protected void addToQueue(final List<String> list) {
 		final List<String> realList = new ArrayList<String>();
 		int realSize = 0;
@@ -308,42 +266,8 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		}
 
 		if (realSize > 0) {
-			final Intent service = new Intent(this, PlayerService.class);
-
 			if (PlayerService.isAlive) {
-				mAddList = (String[])realList.toArray();		
-				bindService(service, connection, 0);
-			} else {
-				playModule((String[])realList.toArray());
-			}
-		}
-	}
-
-	protected void addToQueue(final int start, final int size) {
-		final String[] list = new String[size];
-		int realSize = 0;
-		boolean invalid = false;
-
-		for (int i = 0; i < size; i++) {
-			final String filename = playlistAdapter.getItem(start + i).filename;
-			if (InfoCache.testModule(filename)) {
-				list[realSize++] = filename;
-			} else {
-				invalid = true;
-			}
-		}
-
-		if (invalid) {
-			Message.toast(mContext, "Only valid files were sent to player");
-		}
-
-		if (realSize > 0) {
-			final Intent service = new Intent(this, PlayerService.class);
-
-			final String[] realList = new String[realSize];
-			System.arraycopy(list,  0, realList, 0, realSize);
-
-			if (PlayerService.isAlive) {
+				final Intent service = new Intent(this, PlayerService.class);
 				mAddList = realList;		
 				bindService(service, connection, 0);
 			} else {
@@ -351,7 +275,6 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			}
 		}
 	}
-	
 
 	// Menu
 

@@ -1,54 +1,49 @@
 package org.helllabs.android.xmp.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
 public class QueueManager {
-	private final List<String> array;
+	private final List<String> list;
 	private final RandomIndex ridx;
 	private int index;
 	private final boolean shuffleMode;
 	private final boolean loopListMode;
 	private int randomStart;
     
-    public QueueManager(final String[] files, int start, final boolean shuffle, final boolean loop, final boolean keepFirst) {
-    	if (start >= files.length) {
-    		start = files.length - 1;
+    public QueueManager(final List<String> fileList, int start, final boolean shuffle, final boolean loop, final boolean keepFirst) {
+    	if (start >= fileList.size()) {
+    		start = fileList.size() - 1;
     	}
     	
     	if (keepFirst) {
-    		final String temp = files[0];
-    		files[0] = files[start];
-    		files[start] = temp;
+    		Collections.swap(fileList, 0, start);
     		start = 0;
     		randomStart = 1;
     	}
     	
     	index = start;
-    	array = new ArrayList<String>(Arrays.asList(files));
-    	ridx = new RandomIndex(randomStart, files.length);
+    	list = fileList;
+    	ridx = new RandomIndex(randomStart, fileList.size());
     	shuffleMode = shuffle;
     	loopListMode = loop;
     }
     
-    public void add(final String[] files) {
-    	if (files.length > 0) {
-    		ridx.extend(files.length, index + 1);
-    		for (final String name : files) {
-    			array.add(name);
-    		}
+    public void add(final List<String> fileList) {
+    	if (!fileList.isEmpty()) {
+    		ridx.extend(fileList.size(), index + 1);
+    		list.addAll(fileList);
     	}
     }
     
     public int size() {
-    	return array.size();
+    	return list.size();
     }
     
     public boolean next() {
     	index++;
-    	if (index >= array.size()) {
+    	if (index >= list.size()) {
     		if (loopListMode) {
     			ridx.randomize();
     			index = 0;
@@ -63,7 +58,7 @@ public class QueueManager {
     	index -= 2;
     	if (index < -1) {
     		if (loopListMode) {
-    			index += array.size();
+    			index += list.size();
     		} else {
     			index = -1;
     		}
@@ -84,6 +79,6 @@ public class QueueManager {
     
     public String getFilename() {
     	final int idx = shuffleMode ? ridx.getIndex(index) : index;
-    	return array.get(idx);
+    	return list.get(idx);
     }
 }

@@ -1,5 +1,7 @@
 package org.helllabs.android.xmp;
 
+import java.util.List;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
@@ -7,7 +9,7 @@ import android.app.Application;
 
 public class XmpApplication extends Application {
 	
-	private String[] fileArray;
+	private List<String> fileList;
 	private RequestQueue mRequestQueue;
 	private static XmpApplication mInstance;
 	
@@ -25,16 +27,16 @@ public class XmpApplication extends Application {
         return mInstance;
     }
 	
-	public String[] getFileArray() {
-		return fileArray;
+	public List<String> getFileList() {
+		return fileList;
 	}
 	
-	public void setFileArray(final String[] fileArray) {
-		this.fileArray = fileArray;
+	public void setFileList(final List<String> fileList) {
+		this.fileList = fileList;
 	}
 	
-	public void clearFileArray() {
-		fileArray = null;
+	public void clearFileList() {
+		fileList = null;
 	}
 	
 	public RequestQueue getRequestQueue() {

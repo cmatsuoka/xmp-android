@@ -134,16 +134,16 @@ public class PlaylistActivity extends BasePlaylistActivity {
 			update();
 			break;
 		case 1:										// Add to play queue
-			addToQueue(info.position, 1);
+			addToQueue(playlistAdapter.getFilename(info.position));
 			break;
 		case 2:										// Add all to play queue
-			addToQueue(0, playlistAdapter.getItems().size());
+			addToQueue(playlistAdapter.getFilenameList());
 			break;
 		case 3:										// Play only this module
-			playModule(playlistAdapter.getItem(info.position).filename);
+			playModule(playlistAdapter.getFilename(info.position));
 			break;
 		case 4:										// Play all starting here
-			playModule(playlistAdapter.getItems(), info.position);
+			playModule(playlistAdapter.getFilenameList(), info.position);
 			break;
 		}
 

@@ -2,6 +2,8 @@ package org.helllabs.android.xmp.modarchive.result;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.XmpApplication;
@@ -168,13 +170,15 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	}
 
 	public void playClick(final View view) {
-		final File file = localFile(module);
-		final String[] mods = { file.getPath() };		
+		final String path = localFile(module).getPath();
+		final List<String> modList = new ArrayList<String>();
+		
+		modList.add(path);	
 
 		final Intent intent = new Intent(this, PlayerActivity.class);
-		((XmpApplication)getApplication()).setFileArray(mods);
+		((XmpApplication)getApplication()).setFileList(modList);
 		intent.putExtra("start", 0);
-		Log.i(TAG, "Play " + mods[0]);
+		Log.i(TAG, "Play " + path);
 		startActivity(intent);
 	}
 

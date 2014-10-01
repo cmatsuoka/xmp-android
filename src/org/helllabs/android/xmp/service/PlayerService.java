@@ -1,5 +1,7 @@
 package org.helllabs.android.xmp.service;
 
+import java.util.List;
+
 import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.service.receiver.BluetoothConnectionReceiver;
@@ -600,8 +602,8 @@ public final class PlayerService extends Service {
 	}
 
 	private final ModInterface.Stub binder = new ModInterface.Stub() {
-		public void play(final String[] files, final int start, final boolean shuffle, final boolean loopList, final boolean keepFirst) {			
-			queue = new QueueManager(files, start, shuffle, loopList, keepFirst);
+		public void play(final List<String> fileList, final int start, final boolean shuffle, final boolean loopList, final boolean keepFirst) {			
+			queue = new QueueManager(fileList, start, shuffle, loopList, keepFirst);
 			notifier.setQueue(queue);
 			//notifier.clean();
 			cmd = CMD_NONE;
@@ -620,8 +622,8 @@ public final class PlayerService extends Service {
 			isAlive = true;
 		}
 
-		public void add(final String[] files) {	
-			queue.add(files);
+		public void add(final List<String> fileList) {	
+			queue.add(fileList);
 			updateNotification();
 			//notifier.notification("Added to play queue");			
 		}

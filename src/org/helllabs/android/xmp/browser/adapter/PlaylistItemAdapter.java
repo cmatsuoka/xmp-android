@@ -1,5 +1,6 @@
 package org.helllabs.android.xmp.browser.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
@@ -67,4 +68,42 @@ public class PlaylistItemAdapter extends ArrayAdapter<PlaylistItem> {
     public List<PlaylistItem> getItems() {
 		return items;
 	}
+    
+    public String getFilename(final int location) {
+    	return items.get(location).filename;
+    }
+    
+    public List<String> getFilenameList() {
+    	final List<String> list = new ArrayList<String>();
+    	for (final PlaylistItem item : items) {
+    		list.add(item.filename);
+    	}
+    	return list;
+    }
+    
+//    public List<String> getFilenameList(final int location) {
+//    	final List<PlaylistItem> subItems = items.subList(location, items.size() - 1);
+//    	final List<String> list = new ArrayList<String>();
+//    	for (final PlaylistItem item : subItems) {
+//    		list.add(item.filename);
+//    	}
+//    	return list;
+//    }
+    
+    public static List<String> getFilenameList(final List<PlaylistItem> items) {
+    	final List<String> list = new ArrayList<String>();
+    	for (final PlaylistItem item : items) {
+    		list.add(item.filename);
+    	}
+    	return list;
+    }
+    
+    public static List<String> getFilenameList(final List<PlaylistItem> items, final int location) {
+    	final List<PlaylistItem> subItems = items.subList(location, items.size() - 1);
+    	final List<String> list = new ArrayList<String>();
+    	for (final PlaylistItem item : subItems) {
+    		list.add(item.filename);
+    	}
+    	return list;
+    }
 }

@@ -446,7 +446,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	
 	
 	private void addToQueueRecursive(final String filename) {
-
+		addToQueue(recursiveList(filename));
 	}
 	
 	private void playModuleRecursive(final String filename) {
@@ -514,7 +514,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				addToPlaylist(2, mList.size() - 2, addCurRecursiveToPlaylistDialogClickListener);
 				break;
 			case 2:						// Add all to queue
-				addToQueue(directoryNum, mList.size() - directoryNum);
+				addToQueue(PlaylistItemAdapter.getFilenameList(mList, directoryNum));
 				break;
 			case 3:						// Set as default path
 				final SharedPreferences.Editor editor = mPrefs.edit();
@@ -553,19 +553,19 @@ public class FilelistActivity extends BasePlaylistActivity {
 			}
 		} else {										// Files
 			switch (id) {
-			case 0:										// Add to playlist
+			case 0:										//   Add to playlist
 				addToPlaylist(info.position, 1, addFileToPlaylistDialogClickListener);
 				break;
-			case 1:										// Add to queue
-				addToQueue(info.position, 1);
+			case 1:										//   Add to queue
+				addToQueue(mList.get(info.position).filename);
 				break;
-			case 2:										// Play this module
+			case 2:										//   Play this module
 				playModule(mList.get(info.position).filename);
 				break;
-			case 3:										// Play all starting here
-				playModule(mList, info.position);
+			case 3:										//   Play all starting here
+				playModule(PlaylistItemAdapter.getFilenameList(mList), info.position);
 				break;
-			case 4:										// Delete file
+			case 4:										//   Delete file
 				deleteName = mList.get(info.position).filename;
 				Message.yesNoDialog(this, "Delete", "Are you sure you want to delete " +
 						FileUtils.basename(deleteName) + "?", deleteDialogClickListener);

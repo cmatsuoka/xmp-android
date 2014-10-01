@@ -4,8 +4,8 @@ import org.helllabs.android.xmp.service.PlayerCallback;
 
 
 interface ModInterface {
-	void play(in String[] files, int start, boolean shuffle, boolean loopList, boolean keepFirst);
-	void add(in String[] files);
+	void play(in List<String> fileList, int start, boolean shuffle, boolean loopList, boolean keepFirst);
+	void add(in List<String> fileList);
 	void stop();
 	void pause();
 	void getInfo(out int[] values);
