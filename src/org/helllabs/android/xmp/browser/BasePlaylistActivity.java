@@ -39,7 +39,8 @@ import android.widget.ListView;
 public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private static final String TAG = "PlaylistActivity";
 	private static final int SETTINGS_REQUEST = 45;
-	private static final int PLAY_MOD_REQUEST = 669; 
+	private static final int PLAY_MOD_REQUEST = 669;
+	private static final int SEARCH_REQUEST = 47;
 	
 	private Context mContext;
 	private boolean mShowToasts;
@@ -47,6 +48,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private List<String> mAddList;
 	protected SharedPreferences mPrefs;
 	protected PlaylistItemAdapter playlistAdapter;
+	private boolean refresh;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -57,6 +59,14 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		
 		// Action bar icon navigation
 	    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (refresh) {
+			update();
+		}
 	}
 	
 	protected abstract void setShuffleMode(boolean shuffleMode);
@@ -194,6 +204,9 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 				update();
 			}
 			break;
+		case SEARCH_REQUEST:
+			refresh = true;
+			break;
 		}
 	}
 
@@ -306,7 +319,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			update();
 			break;
 		case R.id.menu_download:
-			startActivity(new Intent(this, Search.class));
+			startActivityForResult(new Intent(this, Search.class), SEARCH_REQUEST);
 			break;
 		}
 		return super.onOptionsItemSelected(item);
