@@ -3,12 +3,11 @@ package org.helllabs.android.xmp.browser;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.browser.adapter.PlaylistAdapter;
-import org.helllabs.android.xmp.browser.model.PlaylistItem;
 import org.helllabs.android.xmp.browser.playlist.Playlist;
+import org.helllabs.android.xmp.browser.playlist.PlaylistAdapter;
+import org.helllabs.android.xmp.browser.playlist.PlaylistItem;
 import org.helllabs.android.xmp.browser.playlist.PlaylistUtils;
 import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.player.PlayerActivity;
@@ -28,7 +27,6 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -46,7 +44,6 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 	private int deletePosition;
 	private Context context;
 	private PlaylistAdapter playlistAdapter;
-	private List<PlaylistItem> mList;
 
 	@Override
 	public void onCreate(final Bundle icicle) {		
@@ -57,8 +54,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		final ListView listView = (ListView)findViewById(R.id.plist_menu_list);
 		listView.setOnItemClickListener(this);
 		
-		mList = new ArrayList<PlaylistItem>();
-		playlistAdapter = new PlaylistAdapter(PlaylistMenu.this, R.layout.playlist_item, R.id.plist_info, mList, false);
+		playlistAdapter = new PlaylistAdapter(PlaylistMenu.this, R.layout.playlist_item, R.id.plist_info, new ArrayList<PlaylistItem>(), false);
 		listView.setAdapter(playlistAdapter);
 
 		registerForContextMenu(listView);
@@ -72,13 +68,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 			updateList();
 		} else {
 			if (Preferences.DATA_DIR.mkdirs()) {
-				try {
-					final Playlist playlist = new Playlist(this, getString(R.string.empty_playlist));
-					playlist.setComment(getString(R.string.empty_comment));
-					playlist.commit();
-				} catch (IOException e) {
-					Message.error(this, getString(R.string.error_create_playlist));
-				}			
+				PlaylistUtils.createEmptyPlaylist(this, getString(R.string.empty_playlist), getString(R.string.empty_comment));		
 			} else {
 				Message.fatalError(this, getString(R.string.error_datadir), PlaylistMenu.this);
 			}
@@ -125,7 +115,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		}
 	}
 	
-	private boolean checkStorage() {
+	private static boolean checkStorage() {
 		final String state = Environment.getExternalStorageState();
 
 		if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
@@ -139,12 +129,12 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 	private void updateList() {
 		mediaPath = prefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 
-		mList.clear();
-		mList.add(new PlaylistItem("File browser", "Files in " + mediaPath,
+		playlistAdapter.clear();
+		playlistAdapter.add(new PlaylistItem("File browser", "Files in " + mediaPath,
 				R.drawable.browser));
 
 		for (final String name : PlaylistUtils.listNoSuffix()) {
-			mList.add(new PlaylistItem(name, Playlist.readComment(this, name), R.drawable.list));	// NOPMD
+			playlistAdapter.add(new PlaylistItem(name, Playlist.readComment(this, name), R.drawable.list));	// NOPMD
 		}
 
 		playlistAdapter.notifyDataSetChanged();
@@ -154,7 +144,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 	// Playlist context menu
 
 	@Override
-	public void onCreateContextMenu(final ContextMenu menu, final View view, final ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(final ContextMenu menu, final View view, final ContextMenu.ContextMenuInfo menuInfo) {
 		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
 		menu.setHeaderTitle("Playlist options");
 

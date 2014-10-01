@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Stack;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.browser.adapter.PlaylistAdapter;
-import org.helllabs.android.xmp.browser.model.PlaylistItem;
+import org.helllabs.android.xmp.browser.playlist.PlaylistAdapter;
+import org.helllabs.android.xmp.browser.playlist.PlaylistItem;
 import org.helllabs.android.xmp.browser.playlist.PlaylistUtils;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Crossfader;
@@ -219,8 +219,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 
 		alertDialog.setTitle("Path not found");
-		alertDialog.setMessage(media_path + " not found. " +
-				"Create this directory or change the module path.");
+		alertDialog.setMessage(media_path + " not found. Create this directory or change the module path.");
 		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Create", new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int which) {
 				Examples.install(context, media_path, mPrefs.getBoolean(Preferences.EXAMPLES, true));
@@ -264,7 +263,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 		context = this;
 
-		setTitle("File Browser");
+		setTitle(R.string.browser_filelist_title);
 
 		crossfade = new Crossfader(this);
 		crossfade.setup(R.id.modlist_content, R.id.modlist_spinner);

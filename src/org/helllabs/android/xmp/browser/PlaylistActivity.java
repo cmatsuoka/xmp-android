@@ -3,9 +3,9 @@ package org.helllabs.android.xmp.browser;
 import java.io.IOException;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.browser.adapter.PlaylistAdapter;
-import org.helllabs.android.xmp.browser.model.PlaylistItem;
 import org.helllabs.android.xmp.browser.playlist.Playlist;
+import org.helllabs.android.xmp.browser.playlist.PlaylistAdapter;
+import org.helllabs.android.xmp.browser.playlist.PlaylistItem;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
@@ -54,7 +54,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 			return;
 		}
 
-		setTitle("Playlist");
+		setTitle(R.string.browser_playlist_title);
 
 		final TouchListView listView = (TouchListView)findViewById(R.id.plist_list);
 		super.setOnItemClickListener(listView);
@@ -168,6 +168,4 @@ public class PlaylistActivity extends BasePlaylistActivity {
 
 		return true;
 	}
-
-	
 }

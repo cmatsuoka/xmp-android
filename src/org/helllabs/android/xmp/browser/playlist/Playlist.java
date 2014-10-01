@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.browser.model.PlaylistItem;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.FileUtils;
 import org.helllabs.android.xmp.util.InfoCache;
@@ -288,7 +287,7 @@ public class Playlist {
 	    		final String comment = fields.length > 1 ? fields[1] : "";
 	    		final String title = fields.length > 2 ? fields[2] : "";
 	    		if (InfoCache.fileExists(filename)) {
-	    			mList.add(new PlaylistItem(title, comment, filename, R.drawable.grabber));  // NPMD
+	    			mList.add(new PlaylistItem(title, comment, filename, R.drawable.grabber));  // NOPMD
 	    		} else {
 	    			invalidList.add(lineNum);
 	    		}

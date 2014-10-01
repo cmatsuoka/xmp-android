@@ -1,10 +1,9 @@
-package org.helllabs.android.xmp.browser.adapter;
+package org.helllabs.android.xmp.browser.playlist;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.browser.model.PlaylistItem;
 import org.helllabs.android.xmp.util.FileUtils;
 
 import android.content.Context;

@@ -89,6 +89,11 @@
     <string name="dialog_new_playlist">New playlist name</string>
     <string name="empty_playlist">Empty playlist</string>
     <string name="empty_comment">Long press modules to create new playlists or add to existing playlists. Long press playlists for more options.</string>
+    <string name="only_valid_files_added">Only valid files were added to playlist</string>
+    <string name="unrecognized_format">Unrecognized file format</string>
+    <string name="exit">Exit</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="error">Error</string>
     
     <string name="about_author">Written by Claudio Matsuoka</string>
     <string name="about_version">Version %s</string>
@@ -124,6 +129,9 @@
     <string name="button_play_pause">Play or pause</string>
     <string name="button_stop">Stop</string>
     <string name="button_next">Next pattern</string>
+    
+    <string name="browser_filelist_title">File browser</string>
+    <string name="browser_playlist_title">Playlist</string>
     
     <string name="sidebar_details">Module details</string>
     <string name="sidebar_patterns">Patterns:</string>
