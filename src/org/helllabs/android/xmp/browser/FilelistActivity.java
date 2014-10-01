@@ -450,7 +450,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	}
 	
 	private void playModuleRecursive(final String filename) {
-		
+		playModule(recursiveList(filename));
 	}
 
 	// Playlist context menu
