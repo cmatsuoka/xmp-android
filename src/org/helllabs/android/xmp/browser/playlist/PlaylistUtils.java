@@ -132,4 +132,9 @@ public final class PlaylistUtils {
 		}
 		return pList;
 	}
+	
+	public static String getPlaylistName(final int index) {
+		final String[] pList = list();
+		return pList[index].substring(0, pList[index].lastIndexOf(Playlist.PLAYLIST_SUFFIX));
+	}
 }

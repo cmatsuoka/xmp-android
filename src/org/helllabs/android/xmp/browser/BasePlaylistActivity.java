@@ -86,6 +86,25 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	};
 	
 
+	// Connection
+
+	private final ServiceConnection connection = new ServiceConnection() {
+		public void onServiceConnected(final ComponentName className, final IBinder service) {
+			mModPlayer = ModInterface.Stub.asInterface(service);
+			try {				
+				mModPlayer.add(mAddList);
+			} catch (RemoteException e) {
+				Message.toast(BasePlaylistActivity.this, "Error adding module");
+			}
+			unbindService(connection);
+		}
+
+		public void onServiceDisconnected(final ComponentName className) {
+			mModPlayer = null;	// NOPMD
+		}
+	};
+
+	
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -211,24 +230,6 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			break;
 		}
 	}
-
-	// Connection
-
-	private final ServiceConnection connection = new ServiceConnection() {
-		public void onServiceConnected(final ComponentName className, final IBinder service) {
-			mModPlayer = ModInterface.Stub.asInterface(service);
-			try {				
-				mModPlayer.add(mAddList);
-			} catch (RemoteException e) {
-				Message.toast(BasePlaylistActivity.this, "Error adding module");
-			}
-			unbindService(connection);
-		}
-
-		public void onServiceDisconnected(final ComponentName className) {
-			mModPlayer = null;
-		}
-	};
 	
 	protected static List<String> recursiveList(final String filename) {
 		final List<String> list = new ArrayList<String>();

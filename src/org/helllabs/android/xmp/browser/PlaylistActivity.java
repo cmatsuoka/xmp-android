@@ -25,6 +25,25 @@ public class PlaylistActivity extends BasePlaylistActivity {
 	private static final String TAG = "PlaylistActivity";
 	private Playlist playlist;
 
+	// List reorder
+
+	private final TouchListView.DropListener onDrop = new TouchListView.DropListener() {
+		@Override
+		public void drop(final int from, final int to) {
+			final PlaylistItem item = playlistAdapter.getItem(from);
+			playlistAdapter.remove(item);
+			playlistAdapter.insert(item, to);
+			playlist.setListChanged(true);
+		}
+	};
+
+	private final TouchListView.RemoveListener onRemove = new TouchListView.RemoveListener() {
+		@Override
+		public void remove(final int which) {
+			playlistAdapter.remove(playlistAdapter.getItem(which));
+		}
+	};	
+
 	@Override
 	public void onCreate(final Bundle icicle) {
 		super.onCreate(icicle);
@@ -150,23 +169,5 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		return true;
 	}
 
-
-	// List reorder
-
-	private final TouchListView.DropListener onDrop = new TouchListView.DropListener() {
-		@Override
-		public void drop(final int from, final int to) {
-			final PlaylistItem item = playlistAdapter.getItem(from);
-			playlistAdapter.remove(item);
-			playlistAdapter.insert(item, to);
-			playlist.setListChanged(true);
-		}
-	};
-
-	private final TouchListView.RemoveListener onRemove = new TouchListView.RemoveListener() {
-		@Override
-		public void remove(final int which) {
-			playlistAdapter.remove(playlistAdapter.getItem(which));
-		}
-	};		
+	
 }

@@ -35,6 +35,7 @@
             android:layout_marginTop="5dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/button_parent_dir"
+            android:onClick="upButtonClick"
             android:src="@drawable/parent_selector" />
     </LinearLayout>
 

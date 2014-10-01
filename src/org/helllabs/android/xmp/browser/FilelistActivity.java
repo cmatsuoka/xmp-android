@@ -33,7 +33,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -48,7 +47,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 	private boolean isPathMenu;
 	private TextView curPath;
-	private ImageButton upButton;
 	private String currentDir;
 	private String deleteName;
 	private int directoryNum;
@@ -104,7 +102,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					PlaylistUtils.filesToPlaylist(FilelistActivity.this, recursiveList(currentDir), PlaylistUtils.listNoSuffix()[playlistSelection]);
+					PlaylistUtils.filesToPlaylist(FilelistActivity.this, recursiveList(currentDir),
+							PlaylistUtils.getPlaylistName(playlistSelection));
 				}
 			}
 		}
@@ -118,7 +117,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
 					PlaylistUtils.filesToPlaylist(FilelistActivity.this, recursiveList(mList.get(fileSelection).filename),
-							PlaylistUtils.listNoSuffix()[playlistSelection]);
+							PlaylistUtils.getPlaylistName(playlistSelection));
 				}
 			}
 		}
@@ -131,7 +130,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					PlaylistUtils.filesToPlaylist(FilelistActivity.this, mList.get(fileSelection).filename, PlaylistUtils.listNoSuffix()[playlistSelection]);
+					PlaylistUtils.filesToPlaylist(FilelistActivity.this, mList.get(fileSelection).filename,
+							PlaylistUtils.getPlaylistName(playlistSelection));
 				}
 			}
 		}
@@ -144,7 +144,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					PlaylistUtils.filesToPlaylist(FilelistActivity.this, PlaylistItemAdapter.getFilenameList(mList, fileSelection), PlaylistUtils.listNoSuffix()[playlistSelection]);
+					PlaylistUtils.filesToPlaylist(FilelistActivity.this, PlaylistItemAdapter.getFilenameList(mList, fileSelection),
+							PlaylistUtils.getPlaylistName(playlistSelection));
 				}
 			}
 		}
@@ -182,6 +183,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		}
 	};
 
+	
 	class DirFilter implements FileFilter {
 		public boolean accept(final File dir) {
 			return dir.isDirectory();
@@ -289,14 +291,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 			}
 		});
 
-		upButton = (ImageButton)findViewById(R.id.up_button);
-		upButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(final View view) {
-				parentDir();
-			}
-		});
-
 		// Check if directory exists
 		final File modDir = new File(mediaPath);
 
@@ -312,6 +306,10 @@ public class FilelistActivity extends BasePlaylistActivity {
 		mPathStack = new Stack<String>();
 
 		setupButtons();
+	}
+	
+	public void upButtonClick(final View view) {
+		parentDir();
 	}
 
 	private void parentDir() {
@@ -384,8 +382,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		if (dirFiles != null) {
 			for (final File file : dirFiles) {
 				directoryNum++;
-				list.add(new PlaylistItem(file.getName(), "Directory",
-						file.getAbsolutePath(), R.drawable.folder));
+				list.add(new PlaylistItem(file.getName(), "Directory", file.getAbsolutePath(), R.drawable.folder));	// NOPMD
 			}
 		}
 		Collections.sort(list);
