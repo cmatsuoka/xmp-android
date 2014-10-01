@@ -288,7 +288,7 @@ public class Playlist {
 	    		final String comment = fields.length > 1 ? fields[1] : "";
 	    		final String title = fields.length > 2 ? fields[2] : "";
 	    		if (InfoCache.fileExists(filename)) {
-	    			mList.add(new PlaylistItem(title, comment, filename, R.drawable.grabber));
+	    			mList.add(new PlaylistItem(title, comment, filename, R.drawable.grabber));  // NPMD
 	    		} else {
 	    			invalidList.add(lineNum);
 	    		}

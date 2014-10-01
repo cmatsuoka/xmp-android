@@ -104,82 +104,6 @@
             <ruleset>Basic</ruleset>
         </rule>
         <rule>
-            <name>AssignmentInOperand</name>
-            <ruleset>Basic Ecmascript</ruleset>
-        </rule>
-        <rule>
-            <name>AvoidTrailingComma</name>
-            <ruleset>Basic Ecmascript</ruleset>
-        </rule>
-        <rule>
-            <name>ConsistentReturn</name>
-            <ruleset>Basic Ecmascript</ruleset>
-        </rule>
-        <rule>
-            <name>EqualComparison</name>
-            <ruleset>Basic Ecmascript</ruleset>
-        </rule>
-        <rule>
-            <name>GlobalVariable</name>
-            <ruleset>Basic Ecmascript</ruleset>
-        </rule>
-        <rule>
-            <name>InnaccurateNumericLiteral</name>
-            <ruleset>Basic Ecmascript</ruleset>
-        </rule>
-        <rule>
-            <name>ScopeForInVariable</name>
-            <ruleset>Basic Ecmascript</ruleset>
-        </rule>
-        <rule>
-            <name>UnreachableCode</name>
-            <ruleset>Basic Ecmascript</ruleset>
-        </rule>
-        <rule>
-            <name>DontNestJsfInJstlIteration</name>
-            <ruleset>Basic JSF</ruleset>
-        </rule>
-        <rule>
-            <name>DuplicateJspImports</name>
-            <ruleset>Basic JSP</ruleset>
-        </rule>
-        <rule>
-            <name>IframeMissingSrcAttribute</name>
-            <ruleset>Basic JSP</ruleset>
-        </rule>
-        <rule>
-            <name>JspEncoding</name>
-            <ruleset>Basic JSP</ruleset>
-        </rule>
-        <rule>
-            <name>NoClassAttribute</name>
-            <ruleset>Basic JSP</ruleset>
-        </rule>
-        <rule>
-            <name>NoHtmlComments</name>
-            <ruleset>Basic JSP</ruleset>
-        </rule>
-        <rule>
-            <name>NoInlineScript</name>
-            <ruleset>Basic JSP</ruleset>
-        </rule>
-        <rule>
-            <name>NoInlineStyleInformation</name>
-            <ruleset>Basic JSP</ruleset>
-        </rule>
-        <rule>
-            <name>NoJspForward</name>
-            <ruleset>Basic JSP</ruleset>
-        </rule>
-        <rule>
-            <name>NoLongScripts</name>
-            <ruleset>Basic JSP</ruleset>
-        </rule>
-        <rule>
-            <name>NoScriptlets</name>
-            <ruleset>Basic JSP</ruleset>
-        </rule>
-        <rule>
             <name>MistypedCDATASection</name>
             <ruleset>Basic XML</ruleset>
         </rule>
@@ -216,23 +140,11 @@
             <ruleset>Code Size</ruleset>
         </rule>
         <rule>
-            <name>ExcessiveMethodLength</name>
-            <ruleset>Code Size</ruleset>
-        </rule>
-        <rule>
-            <name>ExcessiveParameterList</name>
-            <ruleset>Code Size</ruleset>
-        </rule>
-        <rule>
             <name>ExcessivePublicCount</name>
             <ruleset>Code Size</ruleset>
         </rule>
         <rule>
             <name>NcssConstructorCount</name>
-            <ruleset>Code Size</ruleset>
-        </rule>
-        <rule>
-            <name>NcssMethodCount</name>
             <ruleset>Code Size</ruleset>
         </rule>
         <rule>
@@ -242,10 +154,6 @@
         <rule>
             <name>CommentContent</name>
             <ruleset>Comments</ruleset>
-        </rule>
-        <rule>
-            <name>AtLeastOneConstructor</name>
-            <ruleset>Controversial</ruleset>
         </rule>
         <rule>
             <name>AvoidAccessibilityAlteration</name>
@@ -293,6 +201,10 @@
         </rule>
         <rule>
             <name>UnnecessaryConstructor</name>
+            <ruleset>Controversial</ruleset>
+        </rule>
+        <rule>
+            <name>UnnecessaryParentheses</name>
             <ruleset>Controversial</ruleset>
         </rule>
         <rule>
@@ -348,10 +260,6 @@
             <ruleset>Design</ruleset>
         </rule>
         <rule>
-            <name>AvoidReassigningParameters</name>
-            <ruleset>Design</ruleset>
-        </rule>
-        <rule>
             <name>AvoidSynchronizedAtMethodLevel</name>
             <ruleset>Design</ruleset>
         </rule>
@@ -369,10 +277,6 @@
         </rule>
         <rule>
             <name>CompareObjectsWithEquals</name>
-            <ruleset>Design</ruleset>
-        </rule>
-        <rule>
-            <name>ConfusingTernary</name>
             <ruleset>Design</ruleset>
         </rule>
         <rule>
@@ -496,6 +400,10 @@
             <ruleset>Design</ruleset>
         </rule>
         <rule>
+            <name>UseUtilityClass</name>
+            <ruleset>Design</ruleset>
+        </rule>
+        <rule>
             <name>UseVarargs</name>
             <ruleset>Design</ruleset>
         </rule>
@@ -505,10 +413,6 @@
         </rule>
         <rule>
             <name>EmptyFinallyBlock</name>
-            <ruleset>Empty Code</ruleset>
-        </rule>
-        <rule>
-            <name>EmptyIfStmt</name>
             <ruleset>Empty Code</ruleset>
         </rule>
         <rule>

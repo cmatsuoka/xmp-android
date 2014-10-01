@@ -399,7 +399,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 				final String name = file.getName();
 				final String comment = date + String.format(" (%d kB)", file.length() / 1024);
-				list.add(new PlaylistItem(name, comment, filename));
+				list.add(new PlaylistItem(name, comment, filename));	// NOPMD
 			}
 			Collections.sort(list);
 			mList.addAll(list);

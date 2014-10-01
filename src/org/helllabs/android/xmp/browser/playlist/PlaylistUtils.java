@@ -128,7 +128,7 @@ public final class PlaylistUtils {
 	public static String[] listNoSuffix() {
 		String[] pList = list();
 		for (int i = 0; i < pList.length; i++) {
-			pList[i] = pList[i].substring(0, pList[i].lastIndexOf(Playlist.PLAYLIST_SUFFIX));
+			pList[i] = pList[i].substring(0, pList[i].lastIndexOf(Playlist.PLAYLIST_SUFFIX));	//NOPMD
 		}
 		return pList;
 	}
