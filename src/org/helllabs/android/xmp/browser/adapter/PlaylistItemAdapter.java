@@ -81,25 +81,8 @@ public class PlaylistItemAdapter extends ArrayAdapter<PlaylistItem> {
     	return list;
     }
     
-//    public List<String> getFilenameList(final int location) {
-//    	final List<PlaylistItem> subItems = items.subList(location, items.size() - 1);
-//    	final List<String> list = new ArrayList<String>();
-//    	for (final PlaylistItem item : subItems) {
-//    		list.add(item.filename);
-//    	}
-//    	return list;
-//    }
-    
-    public static List<String> getFilenameList(final List<PlaylistItem> items) {
-    	final List<String> list = new ArrayList<String>();
-    	for (final PlaylistItem item : items) {
-    		list.add(item.filename);
-    	}
-    	return list;
-    }
-    
-    public static List<String> getFilenameList(final List<PlaylistItem> items, final int location) {
-    	final List<PlaylistItem> subItems = items.subList(location, items.size());
+    public List<String> getFilenameList(final int location) {
+    	final List<PlaylistItem> subItems = items.subList(location, items.size() - 1);
     	final List<String> list = new ArrayList<String>();
     	for (final PlaylistItem item : subItems) {
     		list.add(item.filename);

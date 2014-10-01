@@ -231,25 +231,6 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		}
 	}
 	
-	protected static List<String> recursiveList(final String filename) {
-		final List<String> list = new ArrayList<String>();
-		final File file = new File(filename);
-		
-		if (file.isDirectory()) {
-			for (final File f : file.listFiles()) {
-				if (f.isDirectory()) {
-					list.addAll(recursiveList(f.getPath()));
-				} else {
-					list.add(f.getPath());
-				}
-			}
-		} else {
-			list.add(filename);
-		}
-		
-		return list;
-	}
-	
 	protected void addToQueue(final String filename) {
 		if (InfoCache.testModule(filename)) {
 			if (PlayerService.isAlive) {

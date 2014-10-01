@@ -26,7 +26,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,7 +53,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private int playlistSelection;
 	private int fileSelection;
 	private Context context;
-	protected List<PlaylistItem> mList;
 	private boolean mLoopMode;
 	private boolean mShuffleMode;
 	private boolean mBackButtonParentdir;
@@ -88,8 +86,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 //		public void onClick(final DialogInterface dialog, final int which) {
 //			if (which == DialogInterface.BUTTON_POSITIVE) {
 //				if (playlistSelection >= 0) {
-//					PlaylistUtils.filesToPlaylist(context, mList.get(fileSelection).filename,
-//							PlaylistUtils.listNoSuffix()[playlistSelection], false);
+//					PlaylistUtils.filesToPlaylist(context, playlistAdapter.getFilename(fileSelection),
+//							PlaylistUtils.getPlaylistName(playlistSelection));
 //				}
 //			}
 //		}
@@ -116,7 +114,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					PlaylistUtils.filesToPlaylist(FilelistActivity.this, recursiveList(mList.get(fileSelection).filename),
+					PlaylistUtils.filesToPlaylist(FilelistActivity.this, recursiveList(playlistAdapter.getFilename(fileSelection)),
 							PlaylistUtils.getPlaylistName(playlistSelection));
 				}
 			}
@@ -130,7 +128,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					PlaylistUtils.filesToPlaylist(FilelistActivity.this, mList.get(fileSelection).filename,
+					PlaylistUtils.filesToPlaylist(FilelistActivity.this, playlistAdapter.getFilename(fileSelection),
 							PlaylistUtils.getPlaylistName(playlistSelection));
 				}
 			}
@@ -144,7 +142,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					PlaylistUtils.filesToPlaylist(FilelistActivity.this, PlaylistItemAdapter.getFilenameList(mList, fileSelection),
+					PlaylistUtils.filesToPlaylist(FilelistActivity.this, playlistAdapter.getFilenameList(fileSelection),
 							PlaylistUtils.getPlaylistName(playlistSelection));
 				}
 			}
@@ -199,7 +197,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 	@Override
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
-		String name = mList.get(position).filename;
+		String name = playlistAdapter.getFilename(position);
 		final File file = new File(name);
 
 		if (file.isDirectory()) {
@@ -258,8 +256,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 			}		
 		});
 
-		mList = new ArrayList<PlaylistItem>();
-		playlistAdapter = new PlaylistItemAdapter(this, R.layout.song_item, R.id.info, mList, false);
+		playlistAdapter = new PlaylistItemAdapter(this, R.layout.song_item, R.id.info, new ArrayList<PlaylistItem>(), false);
 		listView.setAdapter(playlistAdapter);
 
 		registerForContextMenu(listView);
@@ -369,7 +366,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	}
 
 	public void updateModlist(final String path) {
-		mList.clear();
+		playlistAdapter.clear();
 
 		currentDir = path;
 		curPath.setText(path);
@@ -386,7 +383,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 			}
 		}
 		Collections.sort(list);
-		mList.addAll(list);
+		playlistAdapter.addAll(list);
 
 		list.clear();
 		final File[] modFiles = modDir.listFiles(new ModFilter());
@@ -402,7 +399,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				list.add(new PlaylistItem(name, comment, filename));	// NOPMD
 			}
 			Collections.sort(list);
-			mList.addAll(list);
+			playlistAdapter.addAll(list);
 		}
 
 		playlistAdapter.notifyDataSetChanged();
@@ -411,7 +408,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	}
 
 	private void deleteDirectory(final int position) {
-		deleteName = mList.get(position).filename;
+		deleteName = playlistAdapter.getFilename(position);
 		final String mediaPath = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 		if (deleteName.startsWith(mediaPath)) {
 			Message.yesNoDialog(this, "Delete directory", "Are you sure you want to delete directory \"" +
@@ -421,19 +418,59 @@ public class FilelistActivity extends BasePlaylistActivity {
 		}
 	}
 	
-	
-	private void addToQueueRecursive(final String filename) {
-		addToQueue(recursiveList(filename));
+	private static List<String> recursiveList(final String filename) {
+		final List<String> list = new ArrayList<String>();
+		final File file = new File(filename);
+		
+		if (file.isDirectory()) {
+			for (final File f : file.listFiles()) {
+				if (f.isDirectory()) {
+					list.addAll(recursiveList(f.getPath()));
+				} else {
+					list.add(f.getPath());
+				}
+			}
+		} else {
+			list.add(filename);
+		}
+		
+		return list;
 	}
 	
-	private void playModuleRecursive(final String filename) {
-		playModule(recursiveList(filename));
+	private void choosePlaylist(final int start, final DialogInterface.OnClickListener listener) {
+
+		// Return if no playlists exist
+		if (PlaylistUtils.list().length <= 0) {
+			Message.toast(this, getString(R.string.msg_no_playlists));
+			return;
+		}
+
+		fileSelection = start;
+		playlistSelection = 0;
+
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.msg_select_playlist)
+				.setPositiveButton(android.R.string.ok, listener)
+				.setNegativeButton(android.R.string.cancel, listener)
+				.setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int which) {
+				playlistSelection = which;
+			}
+		}).show();
+	}	
+
+	private void clearCachedEntries(final List<String> fileList) {
+		for (final String filename : fileList) {
+			InfoCache.clearCache(filename);
+		}
 	}
+
+
 
 	// Playlist context menu
 
 	@Override
-	public void onCreateContextMenu(final ContextMenu menu, final View view, final ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(final ContextMenu menu, final View view, final ContextMenu.ContextMenuInfo menuInfo) {
 		if (view.equals(curPath)) {
 			isPathMenu = true;
 			menu.setHeaderTitle("All files");
@@ -491,7 +528,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				choosePlaylist(2, addCurRecursiveToPlaylistDialogClickListener);
 				break;
 			case 2:						// Add all to queue
-				addToQueue(PlaylistItemAdapter.getFilenameList(mList, directoryNum));
+				addToQueue(playlistAdapter.getFilenameList(directoryNum));
 				break;
 			case 3:						// Set as default path
 				final SharedPreferences.Editor editor = mPrefs.edit();
@@ -500,7 +537,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				Message.toast(context, "Set as default module path");
 				break;
 			case 4:						// Clear cache
-				clearCachedEntries(directoryNum, mList.size() - directoryNum);
+				clearCachedEntries(playlistAdapter.getFilenameList(directoryNum));
 				break;
 			}
 
@@ -518,14 +555,13 @@ public class FilelistActivity extends BasePlaylistActivity {
 				//addToPlaylist(info.position, 1, addDirToPlaylistDialogClickListener);
 				break;
 			case 1:										//    Add to play queue (recursive)
-				addToQueueRecursive(mList.get(info.position).filename);
+				addToQueue(recursiveList(playlistAdapter.getFilename(info.position)));
 				break;
 			case 2:										//    Play now (recursive)
-				playModuleRecursive(mList.get(info.position).filename);
+				playModule(recursiveList(playlistAdapter.getFilename(info.position)));
 				break;
 			case 3:										//    delete directory
 				deleteDirectory(info.position);
-
 				break;
 			}
 		} else {										// Files
@@ -534,16 +570,16 @@ public class FilelistActivity extends BasePlaylistActivity {
 				choosePlaylist(info.position, addFileToPlaylistDialogClickListener);
 				break;
 			case 1:										//   Add to queue
-				addToQueue(mList.get(info.position).filename);
+				addToQueue(playlistAdapter.getFilename(info.position));
 				break;
 			case 2:										//   Play this module
-				playModule(mList.get(info.position).filename);
+				playModule(playlistAdapter.getFilename(info.position));
 				break;
 			case 3:										//   Play all starting here
-				playModule(PlaylistItemAdapter.getFilenameList(mList), info.position);
+				playModule(playlistAdapter.getFilenameList(), info.position);
 				break;
 			case 4:										//   Delete file
-				deleteName = mList.get(info.position).filename;
+				deleteName = playlistAdapter.getFilename(info.position);
 				Message.yesNoDialog(this, "Delete", "Are you sure you want to delete " +
 						FileUtils.basename(deleteName) + "?", deleteDialogClickListener);
 				break;
@@ -553,33 +589,5 @@ public class FilelistActivity extends BasePlaylistActivity {
 		return true;
 	}
 
-	protected void choosePlaylist(final int start, final DialogInterface.OnClickListener listener) {
-
-		// Return if no playlists exist
-		if (PlaylistUtils.list().length <= 0) {
-			Message.toast(this, getString(R.string.msg_no_playlists));
-			return;
-		}
-
-		fileSelection = start;
-		playlistSelection = 0;
-
-		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.msg_select_playlist)
-				.setPositiveButton(android.R.string.ok, listener)
-				.setNegativeButton(android.R.string.cancel, listener)
-				.setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int which) {
-				playlistSelection = which;
-			}
-		}).show();
-	}	
-
-	protected void clearCachedEntries(final int start, final int num) {
-		for (int i = 0; i < num; i++) {
-			final String filename = mList.get(start + i).filename;
-			InfoCache.clearCache(filename);
-		}
-	}
 
 }
