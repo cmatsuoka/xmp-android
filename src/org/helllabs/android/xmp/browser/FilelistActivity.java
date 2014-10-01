@@ -12,7 +12,6 @@ import java.util.Stack;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.browser.adapter.PlaylistItemAdapter;
 import org.helllabs.android.xmp.browser.model.PlaylistItem;
-import org.helllabs.android.xmp.browser.playlist.Playlist;
 import org.helllabs.android.xmp.browser.playlist.PlaylistUtils;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Crossfader;
@@ -20,7 +19,6 @@ import org.helllabs.android.xmp.util.FileUtils;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
-import org.helllabs.android.xmp.util.ModInfo;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -57,7 +55,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private int parentNum;
 	private int playlistSelection;
 	private int fileSelection;
-	private int fileNum;
 	private Context context;
 	protected List<PlaylistItem> mList;
 	private boolean mLoopMode;
@@ -107,8 +104,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					PlaylistUtils.filesToPlaylist(context, currentDir,
-							PlaylistUtils.listNoSuffix()[playlistSelection], true);
+					PlaylistUtils.filesToPlaylist(FilelistActivity.this, recursiveList(currentDir), PlaylistUtils.listNoSuffix()[playlistSelection]);
 				}
 			}
 		}
@@ -121,44 +117,39 @@ public class FilelistActivity extends BasePlaylistActivity {
 		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					PlaylistUtils.filesToPlaylist(context, mList.get(fileSelection).filename,
-							PlaylistUtils.listNoSuffix()[playlistSelection], true);
+					PlaylistUtils.filesToPlaylist(FilelistActivity.this, recursiveList(mList.get(fileSelection).filename),
+							PlaylistUtils.listNoSuffix()[playlistSelection]);
 				}
 			}
 		}
 	};
 
 	/*
-	 * Add Files to playlist
+	 * Add one file to playlist
 	 */	
 	private final DialogInterface.OnClickListener addFileToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(final DialogInterface dialog, final int which) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				if (playlistSelection >= 0) {
-					boolean invalid = false;
-					for (int i = fileSelection; i < fileSelection + fileNum; i++) {
-						final PlaylistItem info = mList.get(i);
-						final ModInfo modInfo = new ModInfo();
-						if (InfoCache.testModule(info.filename, modInfo)) {
-							info.name = modInfo.name;
-							info.comment = modInfo.type;
-							Playlist.addToList(context, PlaylistUtils.listNoSuffix()[playlistSelection], info);
-						} else {
-							invalid = true;
-						}
-					}
-					if (invalid) {
-						if (fileNum > 1) {
-							Message.toast(context, "Only valid files were added to playlist");
-						} else {
-							Message.error(context, "Unrecognized file format");
-						}
-					}
+					PlaylistUtils.filesToPlaylist(FilelistActivity.this, mList.get(fileSelection).filename, PlaylistUtils.listNoSuffix()[playlistSelection]);
 				}
 			}
 		}
 	};
 
+	/*
+	 * Add file list to playlist
+	 */	
+	private final DialogInterface.OnClickListener addFileListToPlaylistDialogClickListener = new DialogInterface.OnClickListener() {
+		public void onClick(final DialogInterface dialog, final int which) {
+			if (which == DialogInterface.BUTTON_POSITIVE) {
+				if (playlistSelection >= 0) {
+					PlaylistUtils.filesToPlaylist(FilelistActivity.this, PlaylistItemAdapter.getFilenameList(mList, fileSelection), PlaylistUtils.listNoSuffix()[playlistSelection]);
+				}
+			}
+		}
+	};
+	
 	/*
 	 * Delete file
 	 */
@@ -497,10 +488,10 @@ public class FilelistActivity extends BasePlaylistActivity {
 		if (isPathMenu) {
 			switch (id) {
 			case 0:						// Add all to playlist
-				choosePlaylist(directoryNum, mList.size() - directoryNum, addFileToPlaylistDialogClickListener);
+				choosePlaylist(directoryNum, addFileListToPlaylistDialogClickListener);
 				break;
 			case 1:						// Recursive add to playlist
-				choosePlaylist(2, mList.size() - 2, addCurRecursiveToPlaylistDialogClickListener);
+				choosePlaylist(2, addCurRecursiveToPlaylistDialogClickListener);
 				break;
 			case 2:						// Add all to queue
 				addToQueue(PlaylistItemAdapter.getFilenameList(mList, directoryNum));
@@ -526,7 +517,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		} else if (info.position < directoryNum) {		// Directories
 			switch (id) {
 			case 0:										//    Add to playlist (recursive)
-				choosePlaylist(info.position, 1, addRecursiveToPlaylistDialogClickListener);
+				choosePlaylist(info.position, addRecursiveToPlaylistDialogClickListener);
 				//addToPlaylist(info.position, 1, addDirToPlaylistDialogClickListener);
 				break;
 			case 1:										//    Add to play queue (recursive)
@@ -543,7 +534,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		} else {										// Files
 			switch (id) {
 			case 0:										//   Add to playlist
-				choosePlaylist(info.position, 1, addFileToPlaylistDialogClickListener);
+				choosePlaylist(info.position, addFileToPlaylistDialogClickListener);
 				break;
 			case 1:										//   Add to queue
 				addToQueue(mList.get(info.position).filename);
@@ -565,7 +556,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		return true;
 	}
 
-	protected void choosePlaylist(final int start, final int num, final DialogInterface.OnClickListener listener) {
+	protected void choosePlaylist(final int start, final DialogInterface.OnClickListener listener) {
 
 		// Return if no playlists exist
 		if (PlaylistUtils.list().length <= 0) {
@@ -574,7 +565,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 		}
 
 		fileSelection = start;
-		fileNum = num;
 		playlistSelection = 0;
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);

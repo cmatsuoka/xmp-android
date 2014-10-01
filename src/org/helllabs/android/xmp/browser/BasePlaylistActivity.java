@@ -50,29 +50,6 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	protected PlaylistItemAdapter playlistAdapter;
 	private boolean refresh;
 
-	@Override
-	public void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mContext = this;
-		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		mShowToasts = mPrefs.getBoolean(Preferences.SHOW_TOAST, true);
-		
-		// Action bar icon navigation
-	    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (refresh) {
-			update();
-		}
-	}
-	
-	protected abstract void setShuffleMode(boolean shuffleMode);
-	protected abstract void setLoopMode(boolean loopMode);
-	protected abstract boolean isShuffleMode();
-	protected abstract boolean isLoopMode();
 	
 	private final OnClickListener playAllButtonListener = new OnClickListener() {
 		@Override
@@ -107,6 +84,31 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			setShuffleMode(shuffleMode);
 		}
 	};
+	
+
+	@Override
+	public void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mContext = this;
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		mShowToasts = mPrefs.getBoolean(Preferences.SHOW_TOAST, true);
+		
+		// Action bar icon navigation
+	    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (refresh) {
+			update();
+		}
+	}
+	
+	protected abstract void setShuffleMode(boolean shuffleMode);
+	protected abstract void setLoopMode(boolean loopMode);
+	protected abstract boolean isShuffleMode();
+	protected abstract boolean isLoopMode();
 	
 	protected void setupButtons() {
 		final ImageButton playAllButton = (ImageButton)findViewById(R.id.play_all);
