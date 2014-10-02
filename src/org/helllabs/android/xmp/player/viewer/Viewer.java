@@ -1,5 +1,6 @@
-package org.helllabs.android.xmp.player;
+package org.helllabs.android.xmp.player.viewer;
 
+import org.helllabs.android.xmp.player.ScreenSizeHelper;
 import org.helllabs.android.xmp.service.ModInterface;
 import org.helllabs.android.xmp.util.Log;
 

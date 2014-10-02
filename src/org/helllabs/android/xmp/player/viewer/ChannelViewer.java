@@ -1,7 +1,8 @@
-package org.helllabs.android.xmp.player;
+package org.helllabs.android.xmp.player.viewer;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.Xmp;
+import org.helllabs.android.xmp.player.Util;
 import org.helllabs.android.xmp.service.ModInterface;
 import org.helllabs.android.xmp.util.Log;
 
