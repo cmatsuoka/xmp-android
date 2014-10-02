@@ -25,6 +25,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -109,7 +111,8 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 			filename.setText(module.getFilename());
 			final int size = module.getBytes() / 1024;
 			info.setText(String.format("%s by %s (%d KB)", module.getFormat(), module.getArtist(), size));
-			license.setText("License: " + module.getLicense());
+			license.setText(Html.fromHtml("License: <a href=\"" + module.getLegalUrl() + "\">" + module.getLicense() + "</a>"));
+			license.setMovementMethod(LinkMovementMethod.getInstance());
 			licenseDescription.setText(module.getLicenseDescription());
 			instruments.setText(module.getInstruments());
 			this.module = module;

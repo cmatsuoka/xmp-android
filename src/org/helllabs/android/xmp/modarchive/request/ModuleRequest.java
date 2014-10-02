@@ -83,6 +83,8 @@ public class ModuleRequest extends ModArchiveRequest {
 						module.setLicense(text);
 					} else if (end.equals("description")) {
 						module.setLicenseDescription(text);
+					} else if (end.equals("legalurl")) {
+						module.setLegalUrl(text);
 					} else if (end.equals("instruments")) {
 						module.setInstruments(text);
 					} else if (end.equals("id")) {

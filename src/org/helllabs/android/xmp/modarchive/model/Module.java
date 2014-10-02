@@ -12,6 +12,7 @@ public class Module {
 	private String songTitle;
 	private String license;
 	private String licenseDescription;
+	private String legalUrl;
 	private String instruments;
 	private long id;
 	
@@ -79,6 +80,14 @@ public class Module {
 	
 	public void setLicenseDescription(String licenseDescription) {
 		this.licenseDescription = Html.fromHtml(licenseDescription).toString();
+	}
+	
+	public String getLegalUrl() {
+		return legalUrl;
+	}
+	
+	public void setLegalUrl(String legalUrl) {
+		this.legalUrl = Html.fromHtml(legalUrl).toString();
 	}
 	
 	public String getSongTitle() {
