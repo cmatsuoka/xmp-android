@@ -60,8 +60,18 @@
                         android:id="@+id/module_license"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
                         android:text="license" />
 
+                    <TextView
+                        android:id="@+id/module_license_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="license description"
+                        android:textColor="@android:color/tertiary_text_dark"
+                        android:textSize="11sp"
+                        android:textStyle="italic" />
+                    
                     <TextView
                         android:id="@+id/module_instruments"
                         android:layout_width="wrap_content"

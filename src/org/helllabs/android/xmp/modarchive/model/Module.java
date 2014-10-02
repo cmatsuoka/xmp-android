@@ -11,6 +11,7 @@ public class Module {
 	private int bytes;
 	private String songTitle;
 	private String license;
+	private String licenseDescription;
 	private String instruments;
 	private long id;
 	
@@ -70,6 +71,14 @@ public class Module {
 	
 	public void setLicense(final String license) {
 		this.license = Html.fromHtml(license).toString();
+	}
+	
+	public String getLicenseDescription() {
+		return licenseDescription;
+	}
+	
+	public void setLicenseDescription(String licenseDescription) {
+		this.licenseDescription = Html.fromHtml(licenseDescription).toString();
 	}
 	
 	public String getSongTitle() {

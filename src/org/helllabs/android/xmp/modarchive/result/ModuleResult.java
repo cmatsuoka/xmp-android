@@ -37,6 +37,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	private TextView info;
 	private TextView instruments;
 	private TextView license;
+	private TextView licenseDescription;
 	private Module module;
 	private Downloader downloader;
 	private Button downloadButton;
@@ -60,6 +61,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 		info = (TextView)findViewById(R.id.module_info);
 		instruments = (TextView)findViewById(R.id.module_instruments);
 		license = (TextView)findViewById(R.id.module_license);
+		licenseDescription = (TextView)findViewById(R.id.module_license_description);
 
 		downloadButton = (Button)findViewById(R.id.module_download);
 		downloadButton.setEnabled(false);
@@ -108,6 +110,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 			final int size = module.getBytes() / 1024;
 			info.setText(String.format("%s by %s (%d KB)", module.getFormat(), module.getArtist(), size));
 			license.setText("License: " + module.getLicense());
+			licenseDescription.setText(module.getLicenseDescription());
 			instruments.setText(module.getInstruments());
 			this.module = module;
 
