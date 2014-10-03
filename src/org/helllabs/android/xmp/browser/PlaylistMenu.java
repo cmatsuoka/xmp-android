@@ -181,12 +181,11 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 			case 2:						// Delete
 				deletePosition = info.position - 1;
 				Message.yesNoDialog(this, "Delete", "Are you sure to delete playlist " +
-						PlaylistUtils.listNoSuffix()[deletePosition] + "?", new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int which) {
-						if (which == DialogInterface.BUTTON_POSITIVE) {
-							Playlist.delete(context, PlaylistUtils.listNoSuffix()[deletePosition]);
-							updateList();
-						}
+						PlaylistUtils.listNoSuffix()[deletePosition] + "?", new Runnable() {
+					@Override
+					public void run() {
+						Playlist.delete(context, PlaylistUtils.listNoSuffix()[deletePosition]);
+						updateList();
 					}
 				});
 

@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -952,23 +951,6 @@ public class PlayerActivity extends Activity {
 		}
 	}
 
-	private final DialogInterface.OnClickListener deleteDialogClickListener = new DialogInterface.OnClickListener() {
-		public void onClick(final DialogInterface dialog, final int which) {
-			if (which == DialogInterface.BUTTON_POSITIVE) {
-				try {
-					if (modPlayer.deleteFile()) {
-						Message.toast(activity, "File deleted");
-						setResult(RESULT_FIRST_USER);
-						modPlayer.nextSong();
-					} else {
-						Message.toast(activity, "Can\'t delete file");
-					}
-				} catch (RemoteException e) {
-					Message.toast(activity, "Can\'t connect service");
-				}
-			}
-		}
-	};
 
 	// Menu
 
@@ -984,7 +966,22 @@ public class PlayerActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		if (item.getItemId() == R.id.menu_delete) {
-			Message.yesNoDialog(activity, "Delete", "Are you sure to delete this file?", deleteDialogClickListener);
+			Message.yesNoDialog(activity, "Delete", "Are you sure to delete this file?", new Runnable() {
+				@Override
+				public void run() {
+					try {
+						if (modPlayer.deleteFile()) {
+							Message.toast(activity, "File deleted");
+							setResult(RESULT_FIRST_USER);
+							modPlayer.nextSong();
+						} else {
+							Message.toast(activity, "Can\'t delete file");
+						}
+					} catch (RemoteException e) {
+						Message.toast(activity, "Can\'t connect service");
+					}
+				}
+			});
 		}
 		return true;
 	}	

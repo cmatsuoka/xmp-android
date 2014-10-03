@@ -20,7 +20,6 @@ import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -160,16 +159,14 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	public void deleteClick(final View view) {
 		final File file = localFile(module);
 
-		Message.yesNoDialog(this, "Delete file", "Are you sure you want to delete " + module.getFilename() + "?", new DialogInterface.OnClickListener() {
+		Message.yesNoDialog(this, "Delete file", "Are you sure you want to delete " + module.getFilename() + "?", new Runnable() {
 			@Override
-			public void onClick(final DialogInterface dialog, final int which) {
-				if (which == DialogInterface.BUTTON_POSITIVE) {
-					Log.i(TAG, "Delete " + file.getPath());
-					if (file.delete()) {
-						updateButtons(module);
-					} else {
-						Message.toast(ModuleResult.this, "Error");
-					}
+			public void run() {
+				Log.i(TAG, "Delete " + file.getPath());
+				if (file.delete()) {
+					updateButtons(module);
+				} else {
+					Message.toast(ModuleResult.this, "Error");
 				}
 			}	
 		});

@@ -54,7 +54,17 @@ public final class Message {
 		toast(context, context.getString(resId));
 	}
 	
-	public static void yesNoDialog(final Context context, final String title, final String message, final DialogInterface.OnClickListener listener) {
+	public static void yesNoDialog(final Context context, final String title, final String message, final Runnable runnable) {
+		
+		final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(final DialogInterface dialog, final int which) {
+				if (which == DialogInterface.BUTTON_POSITIVE) {
+					runnable.run();
+				}
+			}
+		};
+		
 		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(title)
 			.setMessage(message)

@@ -122,12 +122,10 @@ public class Downloader {
 		mSize = size / 1024;
 
 		if (localFile(url, path).exists()) {
-			Message.yesNoDialog(mContext, "File exists!", "This module already exists. Do you want to overwrite?", new DialogInterface.OnClickListener() {
+			Message.yesNoDialog(mContext, "File exists!", "This module already exists. Do you want to overwrite?", new Runnable() {
 				@Override
-				public void onClick(final DialogInterface dialog, final int which) {
-					if (which == DialogInterface.BUTTON_POSITIVE) {
-						downloadUrl(url, path);
-					}
+				public void run() {
+					downloadUrl(url, path);
 				}	
 			});
 		} else {
