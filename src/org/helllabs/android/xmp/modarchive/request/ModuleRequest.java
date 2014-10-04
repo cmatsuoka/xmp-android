@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.helllabs.android.xmp.modarchive.model.Artist;
 import org.helllabs.android.xmp.modarchive.model.Module;
@@ -19,6 +21,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 public class ModuleRequest extends ModArchiveRequest {
 
 	private static final String TAG = "ModuleRequest";
+	private static final String[] UNSUPPORTED = {
+		"AHX", "HVL", "MO3"
+	};
 
 	public ModuleRequest(final String key, final String request) {
 		super(key, request);
@@ -37,6 +42,7 @@ public class ModuleRequest extends ModArchiveRequest {
 		final ModuleResponse moduleList = new ModuleResponse();
 		Module module = null;
 		boolean inArtistInfo = false;
+		final List<String> unsupported = Arrays.asList(UNSUPPORTED);
 
 		try {
 			final XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
@@ -94,7 +100,7 @@ public class ModuleRequest extends ModArchiveRequest {
 					} else if (end.equals("artist_info")) {
 						inArtistInfo = false;
 					} else if (end.equals("module")) {
-						if (!module.getFormat().equals("AHX")) {
+						if (!unsupported.contains(module.getFormat())) {
 							moduleList.add(module);
 						}
 					}
