@@ -159,6 +159,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 				break;
 			case 3:								// add to queue
 				addToQueue(adapter.getFilename(position));
+				Message.toast(this, "Added to queue");
 				break;
 			}
 		} else {
