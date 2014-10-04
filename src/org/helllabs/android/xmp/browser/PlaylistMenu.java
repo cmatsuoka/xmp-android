@@ -18,10 +18,13 @@ import org.helllabs.android.xmp.util.FileUtils;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -77,6 +80,15 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		
 		if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_NEW_TASK) != 0) {
 			startPlayerActivity();
+		}
+		
+		enableHomeButton();
+	}
+	
+	@TargetApi(14)
+	private void enableHomeButton() {
+		if (Build.VERSION.SDK_INT >= 14) {
+			getActionBar().setHomeButtonEnabled(true);
 		}
 	}
 	
@@ -315,6 +327,9 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch(item.getItemId()) {
+		case android.R.id.home:
+			startPlayerActivity();
+			break;
 		case R.id.menu_new_playlist:
 			PlaylistUtils.newPlaylistDialog(this, new Runnable() {
 				public void run() {
