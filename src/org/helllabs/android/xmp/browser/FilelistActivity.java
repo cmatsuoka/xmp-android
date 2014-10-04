@@ -347,7 +347,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		final String deleteName = playlistAdapter.getFilename(position);
 		final String mediaPath = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 		
-		if (deleteName.startsWith(mediaPath)) {
+		if (deleteName.startsWith(mediaPath) && !deleteName.equals(mediaPath)) {
 			Message.yesNoDialog(this, "Delete directory", "Are you sure you want to delete directory \"" +
 					FileUtils.basename(deleteName) + "\" and all its contents?", new Runnable() {
 				@Override
