@@ -6,7 +6,6 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.browser.playlist.PlaylistAdapter;
@@ -40,18 +39,16 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private static final boolean DEFAULT_SHUFFLE_MODE = true;
 	private static final boolean DEFAULT_LOOP_MODE = false;
 
-	private Stack<ListState> mPathStack;
-
+	private FilelistNavigation mNavigation;
 	private ListView listView;
 	private boolean isPathMenu;
 	private TextView curPath;
-	private String currentDir;
 	private int directoryNum;
 	private int parentNum;
 	private boolean mLoopMode;
 	private boolean mShuffleMode;
 	private boolean mBackButtonParentdir;
-	private Crossfader crossfade;
+	private Crossfader mCrossfade;
 	
 	/**
 	 * Recursively add current directory to playlist
@@ -59,7 +56,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private final PlaylistChoice addCurrentRecursiveChoice = new PlaylistChoice() {
 		@Override
 		public void execute(final int fileSelection, final int playlistSelection) {
-			PlaylistUtils.filesToPlaylist(FilelistActivity.this, recursiveList(currentDir),
+			PlaylistUtils.filesToPlaylist(FilelistActivity.this, recursiveList(mNavigation.getCurrentDir()),
 							PlaylistUtils.getPlaylistName(playlistSelection));
 		}
 	};
@@ -106,28 +103,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		void execute(final int fileSelection, final int playlistSelection);
 	}
 	
-	/**
-	 * To restore list position when traversing directories.
-	 */
-	private class ListState {
-		private final int index;
-		private final int top;
-		
-		public ListState(final ListView list) {
-			this.index = list.getFirstVisiblePosition();
-			final View view = list.getChildAt(0);
-			this.top = view == null ? 0 : view.getTop();
-		}
-		
-		public void restoreState(final ListView view) {
-			view.post(new Runnable() {
-				@Override
-				public void run() {
-					view.setSelectionFromTop(index, top);
-				}
-			});
-		}
-	}
+
 	
 	/**
 	 * Filter for directories.
@@ -174,18 +150,11 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 	@Override
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
-		String name = playlistAdapter.getFilename(position);
-		final File file = new File(name);
-
-		if (file.isDirectory()) {
-			if (file.getName().equals("..")) {
-				name = file.getParentFile().getParent();
-				if (name == null) {
-					name = "/";
-				}
-			}
-			mPathStack.push(new ListState(listView));
-			updateModlist(name);
+		final String name = playlistAdapter.getFilename(position);
+		
+		if (mNavigation.changeDirectory(name)) {
+			mNavigation.saveListPosition(listView);
+			updateModlist();
 		} else {
 			super.onListItemClick(list, view, position, id);
 		}
@@ -200,7 +169,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Create", new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int which) {
 				Examples.install(FilelistActivity.this, media_path, mPrefs.getBoolean(Preferences.EXAMPLES, true));
-				updateModlist(media_path);
+				mNavigation.startNavigation(media_path);
+				updateModlist();
 			}
 		});
 		alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Back", new DialogInterface.OnClickListener() {
@@ -239,9 +209,10 @@ public class FilelistActivity extends BasePlaylistActivity {
 		final String mediaPath = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 
 		setTitle(R.string.browser_filelist_title);
-
-		crossfade = new Crossfader(this);
-		crossfade.setup(R.id.modlist_content, R.id.modlist_spinner);
+		
+		mNavigation = new FilelistNavigation();
+		mCrossfade = new Crossfader(this);
+		mCrossfade.setup(R.id.modlist_content, R.id.modlist_spinner);
 
 		curPath = (TextView)findViewById(R.id.current_path);
 		registerForContextMenu(curPath);
@@ -266,7 +237,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 		final File modDir = new File(mediaPath);
 
 		if (modDir.isDirectory()) {
-			updateModlist(mediaPath);	
+			mNavigation.startNavigation(mediaPath);
+			updateModlist();	
 		} else {
 			pathNotFound(mediaPath);
 		}
@@ -274,28 +246,20 @@ public class FilelistActivity extends BasePlaylistActivity {
 		mShuffleMode = readShuffleModePref();
 		mLoopMode = readLoopModePref();
 
-		mPathStack = new Stack<ListState>();
+
 
 		setupButtons();
 	}
 	
+	private void parentDir() {
+		if (mNavigation.parentDir()) {
+			updateModlist();
+			mNavigation.restoreListPosition(listView);
+		}
+	}
+	
 	public void upButtonClick(final View view) {
 		parentDir();
-	}
-
-	private void parentDir() {
-		final File file = new File(currentDir + "/.");
-		String name = file.getParentFile().getParent();
-		if (name == null) {
-			name = "/";
-		}
-
-		updateModlist(name);
-		
-		if (!mPathStack.isEmpty()) {
-			final ListState state = mPathStack.pop();
-			state.restoreState(listView);
-		}
 	}
 
 	@Override
@@ -303,7 +267,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (mBackButtonParentdir) {
 				// Return to parent dir up to the starting level, then act as regular back
-				if (!mPathStack.isEmpty()) {
+				if (!mNavigation.isAtTopDir()) {
 					parentDir();
 					return true;
 				}
@@ -335,16 +299,14 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 	@Override
 	public void update() {
-		final String dir = currentDir;
-		if (dir != null) {
-			updateModlist(dir);
-		}
+		updateModlist();
 	}
 
-	private void updateModlist(final String path) {
+	private void updateModlist() {
+		final String path = mNavigation.getCurrentDir();
+		
 		playlistAdapter.clear();
 
-		currentDir = path;
 		curPath.setText(path);
 
 		parentNum = directoryNum = 0;
@@ -367,9 +329,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		if (modFiles != null) {
 			for (final File file : modFiles) {
 				final String filename = path + "/" + file.getName();
-				final String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
-						DateFormat.MEDIUM).format(file.lastModified());
-
+				final String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(file.lastModified());
 				final String name = file.getName();
 				final String comment = date + String.format(" (%d kB)", file.length() / 1024);
 				list.add(new PlaylistItem(name, comment, filename));	// NOPMD
@@ -380,7 +340,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 		playlistAdapter.notifyDataSetChanged();
 
-		crossfade.crossfade();
+		mCrossfade.crossfade();
 	}
 
 	private void deleteDirectory(final int position) {
@@ -393,7 +353,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				@Override
 				public void run() {
 					if (InfoCache.deleteRecursive(deleteName)) {
-						updateModlist(currentDir);
+						updateModlist();
 						Message.toast(FilelistActivity.this, getString(R.string.msg_dir_deleted));
 					} else {
 						Message.toast(FilelistActivity.this, getString(R.string.msg_cant_delete_dir));
@@ -528,7 +488,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				break;
 			case 3:						// Set as default path
 				final SharedPreferences.Editor editor = mPrefs.edit();
-				editor.putString(Preferences.MEDIA_PATH, currentDir);
+				editor.putString(Preferences.MEDIA_PATH, mNavigation.getCurrentDir());
 				editor.commit();
 				Message.toast(this, "Set as default module path");
 				break;
@@ -579,7 +539,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 					@Override
 					public void run() {
 						if (InfoCache.delete(deleteName)) {
-							updateModlist(currentDir);
+							updateModlist();
 							Message.toast(FilelistActivity.this, getString(R.string.msg_file_deleted));
 						} else {
 							Message.toast(FilelistActivity.this, getString(R.string.msg_cant_delete));
