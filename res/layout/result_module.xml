@@ -60,7 +60,7 @@
                         android:id="@+id/module_license"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="10dp"
                         android:text="license" />
 
                     <TextView
@@ -80,6 +80,16 @@
                         android:text="instruments"
                         android:textSize="11sp"
                         android:typeface="monospace" />
+                    
+                    <TextView
+                        android:id="@+id/module_sponsor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@android:color/tertiary_text_dark"
+                        android:layout_marginBottom="20dp"
+                        android:text="sponsor"
+                    	android:textSize="11sp" />
                 </LinearLayout>
             </ScrollView>
 

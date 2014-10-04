@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.helllabs.android.xmp.modarchive.model.Artist;
 import org.helllabs.android.xmp.modarchive.model.Module;
+import org.helllabs.android.xmp.modarchive.model.Sponsor;
 import org.helllabs.android.xmp.modarchive.response.HardErrorResponse;
 import org.helllabs.android.xmp.modarchive.response.ModArchiveResponse;
 import org.helllabs.android.xmp.modarchive.response.ModuleResponse;
@@ -41,6 +42,7 @@ public class ModuleRequest extends ModArchiveRequest {
 	protected ModArchiveResponse xmlParse(final String result) {
 		final ModuleResponse moduleList = new ModuleResponse();
 		Module module = null;
+		Sponsor sponsor = null;
 		boolean inArtistInfo = false;
 		final List<String> unsupported = Arrays.asList(UNSUPPORTED);
 
@@ -60,6 +62,8 @@ public class ModuleRequest extends ModArchiveRequest {
 						module = new Module(); // NOPMD
 					} else if (start.equals("artist_info")) {
 						inArtistInfo = true;
+					} else if (start.equals("sponsor")) {
+						sponsor = new Sponsor();	// NOPMD
 					}
 					break;
 				case XmlPullParser.TEXT:
@@ -68,7 +72,16 @@ public class ModuleRequest extends ModArchiveRequest {
 				case XmlPullParser.END_TAG:
 					final String end = myparser.getName();
 					//Log.d(TAG, "name=" + name + " text=" + text);
-					if (end.equals("error")) {
+					if (sponsor != null) {
+						if (end.equals("text")) {
+							sponsor.setName(text);
+						} else if (end.equals("link")) {
+							sponsor.setLink(text);
+						} else if (end.equals("sponsor")) {
+							moduleList.setSponsor(sponsor);
+							sponsor = null; // NOPMD
+						}
+					} else if (end.equals("error")) {
 						return new SoftErrorResponse(text);
 					} else if (end.equals("filename")) {
 						module.setFilename(text);

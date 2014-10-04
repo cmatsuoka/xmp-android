@@ -55,9 +55,6 @@ public abstract class ModArchiveRequest implements Response.Listener<String>, Re
 		final RequestQueue queue = XmpApplication.getInstance().getRequestQueue();
 		final StringRequest jsObjRequest = new StringRequest(url, this, this);
 		queue.add(jsObjRequest);
-		//		} catch (UnsupportedEncodingException e) {
-		//			mOnResponseListener.onError(new Throwable("Bad search string. "));
-		//		}
 	}
 
 	@Override

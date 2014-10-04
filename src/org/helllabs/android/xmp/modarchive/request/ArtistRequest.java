@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import org.helllabs.android.xmp.modarchive.model.Artist;
+import org.helllabs.android.xmp.modarchive.model.Sponsor;
 import org.helllabs.android.xmp.modarchive.response.ArtistResponse;
 import org.helllabs.android.xmp.modarchive.response.HardErrorResponse;
 import org.helllabs.android.xmp.modarchive.response.ModArchiveResponse;
@@ -35,6 +36,7 @@ public class ArtistRequest extends ModArchiveRequest {
 	protected ModArchiveResponse xmlParse(final String result) {
 		final ArtistResponse artistList = new ArtistResponse();
 		Artist artist = null;
+		Sponsor sponsor = null;
 
 		try {
 			final XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
@@ -50,6 +52,8 @@ public class ArtistRequest extends ModArchiveRequest {
 					final String start = myparser.getName();
 					if (start.equals("item")) {
 						artist = new Artist(); // NOPMD
+					} else if (start.equals("sponsor")) {
+						sponsor = new Sponsor();	// NOPMD
 					}
 					break;
 				}
@@ -58,7 +62,16 @@ public class ArtistRequest extends ModArchiveRequest {
 					break;
 				case XmlPullParser.END_TAG: {
 					final String end = myparser.getName();
-					if (end.equals("error")) {
+					if (sponsor != null) {
+						if (end.equals("text")) {
+							sponsor.setName(text);
+						} else if (end.equals("link")) {
+							sponsor.setLink(text);
+						} else if (end.equals("sponsor")) {
+							artistList.setSponsor(sponsor);
+							sponsor = null;	// NOPMD
+						}
+					} else if (end.equals("error")) {
 						return new SoftErrorResponse(text);
 					} else if (end.equals("id")) {
 						artist.setId(Long.parseLong(text));

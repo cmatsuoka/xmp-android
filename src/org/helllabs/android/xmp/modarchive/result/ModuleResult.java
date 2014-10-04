@@ -10,6 +10,7 @@ import org.helllabs.android.xmp.XmpApplication;
 import org.helllabs.android.xmp.modarchive.Downloader;
 import org.helllabs.android.xmp.modarchive.Search;
 import org.helllabs.android.xmp.modarchive.model.Module;
+import org.helllabs.android.xmp.modarchive.model.Sponsor;
 import org.helllabs.android.xmp.modarchive.request.ModuleRequest;
 import org.helllabs.android.xmp.modarchive.response.HardErrorResponse;
 import org.helllabs.android.xmp.modarchive.response.ModArchiveResponse;
@@ -39,6 +40,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	private TextView instruments;
 	private TextView license;
 	private TextView licenseDescription;
+	private TextView sponsorText;
 	private Module module;
 	private Downloader downloader;
 	private Button downloadButton;
@@ -63,6 +65,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 		instruments = (TextView)findViewById(R.id.module_instruments);
 		license = (TextView)findViewById(R.id.module_license);
 		licenseDescription = (TextView)findViewById(R.id.module_license_description);
+		sponsorText = (TextView)findViewById(R.id.module_sponsor);
 
 		downloadButton = (Button)findViewById(R.id.module_download);
 		downloadButton.setEnabled(false);
@@ -117,6 +120,12 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 			this.module = module;
 
 			updateButtons(module);
+		}
+		
+		final Sponsor sponsor = response.getSponsor();
+		if (sponsor != null) {
+			sponsorText.setText(Html.fromHtml("Download mirrors provided by <a href=\""+ sponsor.getLink() + "\">" + sponsor.getName() + "</a>"));
+			sponsorText.setMovementMethod(LinkMovementMethod.getInstance());
 		}
 
 		crossfade();

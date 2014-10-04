@@ -18,7 +18,6 @@ import org.helllabs.android.xmp.util.FileUtils;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
