@@ -2,7 +2,6 @@ package org.helllabs.android.xmp.browser;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FilenameFilter;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -100,11 +99,16 @@ public class FilelistActivity extends BasePlaylistActivity {
 		}
 	};
 
-	
+	/**
+	 * For actions based on playlist selection made using choosePlaylist()
+	 */
 	private interface PlaylistChoice {
 		void execute(final int fileSelection, final int playlistSelection);
 	}
 	
+	/**
+	 * To restore list position when traversing directories.
+	 */
 	private class ListState {
 		private final int index;
 		private final int top;
@@ -124,6 +128,27 @@ public class FilelistActivity extends BasePlaylistActivity {
 			});
 		}
 	}
+	
+	/**
+	 * Filter for directories.
+	 */
+	private class DirFilter implements FileFilter {
+		@Override
+		public boolean accept(final File file) {
+			return file.isDirectory();
+		}
+	}
+
+	/**
+	 * Filter for files.
+	 */
+	private class ModFilter implements FileFilter {
+		@Override
+		public boolean accept(final File file) {
+			return file.isFile();
+		}
+	}
+	
 
 	@Override
 	protected void setShuffleMode(final boolean shuffleMode) {
@@ -146,19 +171,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 		return mLoopMode;
 	}
 
-	
-	class DirFilter implements FileFilter {
-		public boolean accept(final File dir) {
-			return dir.isDirectory();
-		}
-	}
-
-	class ModFilter implements FilenameFilter {
-		public boolean accept(final File dir, final String name) {
-			final File file = new File(dir,name);
-			return !file.isDirectory();
-		}
-	}
 
 	@Override
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
@@ -321,6 +333,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		}
 	}
 
+	@Override
 	public void update() {
 		final String dir = currentDir;
 		if (dir != null) {
@@ -328,7 +341,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		}
 	}
 
-	public void updateModlist(final String path) {
+	private void updateModlist(final String path) {
 		playlistAdapter.clear();
 
 		currentDir = path;

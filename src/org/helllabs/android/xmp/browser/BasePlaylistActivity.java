@@ -151,8 +151,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		if (InfoCache.testModuleForceIfInvalid(filename)) {
 			switch (mode) {
 			case 1:								// play all starting at this one
-			default:
-				playModule(adapter.getFilenameList(), position, isShuffleMode(), isShuffleMode());
+				playModule(adapter.getFilenameList(), position, isShuffleMode());
 				break;
 			case 2:								// play this one
 				playModule(filename);
@@ -184,22 +183,22 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	protected void playModule(final String mod) {
 		final List<String> modList = new ArrayList<String>();
 		modList.add(mod);
-		playModule(modList, 0, isShuffleMode(), false);
+		playModule(modList, 0, false);
 	}
 
 	// Play all modules in list and honor default shuffle mode
 	protected void playModule(final List<String> modList) {
-		playModule(modList, 0, isShuffleMode(), false);
+		playModule(modList, 0, false);
 	}
 	
 	protected void playModule(final List<String> modList, final int start) {
-		playModule(modList, start, isShuffleMode(), false);
+		playModule(modList, start, false);
 	}
 	
-	protected void playModule(final List<String> modList, final int start, final boolean shuffle, final boolean keepFirst) {
+	protected void playModule(final List<String> modList, final int start, final boolean keepFirst) {
 		final Intent intent = new Intent(this, PlayerActivity.class);
 		((XmpApplication)getApplication()).setFileList(modList);
-		intent.putExtra("shuffle", shuffle);
+		intent.putExtra("shuffle", isShuffleMode());
 		intent.putExtra("loop", isLoopMode());
 		intent.putExtra("start", start);
 		intent.putExtra("keepFirst", keepFirst);

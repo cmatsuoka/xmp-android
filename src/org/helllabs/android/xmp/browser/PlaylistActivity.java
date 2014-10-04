@@ -114,6 +114,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		return playlist.isLoopMode();
 	}
 
+	@Override
 	public void update() {
 		playlistAdapter.notifyDataSetChanged();
 	}
