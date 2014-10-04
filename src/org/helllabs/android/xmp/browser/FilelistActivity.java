@@ -41,8 +41,9 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private static final boolean DEFAULT_SHUFFLE_MODE = true;
 	private static final boolean DEFAULT_LOOP_MODE = false;
 
-	private Stack<String> mPathStack;
+	private Stack<ListState> mPathStack;
 
+	private ListView listView;
 	private boolean isPathMenu;
 	private TextView curPath;
 	private String currentDir;
@@ -103,6 +104,26 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private interface PlaylistChoice {
 		void execute(final int fileSelection, final int playlistSelection);
 	}
+	
+	private class ListState {
+		private final int index;
+		private final int top;
+		
+		public ListState(final ListView list) {
+			this.index = list.getFirstVisiblePosition();
+			final View view = list.getChildAt(0);
+			this.top = view == null ? 0 : view.getTop();
+		}
+		
+		public void restoreState(final ListView view) {
+			view.post(new Runnable() {
+				@Override
+				public void run() {
+					view.setSelectionFromTop(index, top);
+				}
+			});
+		}
+	}
 
 	@Override
 	protected void setShuffleMode(final boolean shuffleMode) {
@@ -151,7 +172,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 					name = "/";
 				}
 			}
-			mPathStack.push(name);
+			mPathStack.push(new ListState(listView));
 			updateModlist(name);
 		} else {
 			super.onListItemClick(list, view, position, id);
@@ -191,7 +212,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.modlist);
 
-		final ListView listView = (ListView)findViewById(R.id.modlist_listview);
+		listView = (ListView)findViewById(R.id.modlist_listview);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
@@ -241,7 +262,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		mShuffleMode = readShuffleModePref();
 		mLoopMode = readLoopModePref();
 
-		mPathStack = new Stack<String>();
+		mPathStack = new Stack<ListState>();
 
 		setupButtons();
 	}
@@ -257,11 +278,12 @@ public class FilelistActivity extends BasePlaylistActivity {
 			name = "/";
 		}
 
-		if (!mPathStack.isEmpty()) {
-			mPathStack.pop();
-		}
-
 		updateModlist(name);
+		
+		if (!mPathStack.isEmpty()) {
+			final ListState state = mPathStack.pop();
+			state.restoreState(listView);
+		}
 	}
 
 	@Override
