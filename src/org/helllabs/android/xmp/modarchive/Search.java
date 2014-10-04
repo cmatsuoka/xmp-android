@@ -84,7 +84,7 @@ public class Search extends ActionBarActivity implements TextView.OnEditorAction
 	
 	private void performSearch() {
 		final int selectedId = searchType.getCheckedRadioButtonId();
-		final String searchText = searchEdit.getText().toString();
+		final String searchText = searchEdit.getText().toString().trim();
 
 		Intent intent;
 
