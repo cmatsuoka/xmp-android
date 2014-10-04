@@ -180,7 +180,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 
 		final Intent intent = new Intent(this, PlayerActivity.class);
 		((XmpApplication)getApplication()).setFileList(modList);
-		intent.putExtra("start", 0);
+		intent.putExtra(PlayerActivity.PARM_START, 0);
 		Log.i(TAG, "Play " + path);
 		startActivity(intent);
 	}

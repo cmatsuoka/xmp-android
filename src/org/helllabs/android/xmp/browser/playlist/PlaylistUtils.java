@@ -86,7 +86,7 @@ public final class PlaylistUtils {
 					@Override
 					public void run() {
 						if (list.size() > 1) {
-							Message.toast(activity, R.string.only_valid_files_added);
+							Message.toast(activity, R.string.msg_only_valid_files_added);
 						} else {
 							Message.error(activity, R.string.unrecognized_format);
 						}

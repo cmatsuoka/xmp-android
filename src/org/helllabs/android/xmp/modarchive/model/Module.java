@@ -78,7 +78,7 @@ public class Module {
 		return licenseDescription;
 	}
 	
-	public void setLicenseDescription(String licenseDescription) {
+	public void setLicenseDescription(final String licenseDescription) {
 		this.licenseDescription = Html.fromHtml(licenseDescription).toString();
 	}
 	
@@ -86,7 +86,7 @@ public class Module {
 		return legalUrl;
 	}
 	
-	public void setLegalUrl(String legalUrl) {
+	public void setLegalUrl(final String legalUrl) {
 		this.legalUrl = Html.fromHtml(legalUrl).toString();
 	}
 	

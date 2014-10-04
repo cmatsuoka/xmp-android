@@ -62,7 +62,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			((ImageButton)view).setImageResource(loopMode ?
 					R.drawable.list_loop_on : R.drawable.list_loop_off);
 			if (mShowToasts) {
-				Message.toast(view.getContext(), loopMode ? "Loop on" : "Loop off");
+				Message.toast(view.getContext(), loopMode ? R.string.msg_loop_on : R.string.msg_loop_off);
 			}
 			setLoopMode(loopMode);
 		}
@@ -75,7 +75,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			shuffleMode ^= true;
 			((ImageButton)view).setImageResource(shuffleMode ?	R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
 			if (mShowToasts) {
-				Message.toast(view.getContext(), shuffleMode ? "Shuffle on" : "Shuffle off");
+				Message.toast(view.getContext(), shuffleMode ? R.string.msg_shuffle_on : R.string.msg_shuffle_off);
 			}
 			setShuffleMode(shuffleMode);
 		}
@@ -90,7 +90,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			try {				
 				mModPlayer.add(mAddList);
 			} catch (RemoteException e) {
-				Message.toast(BasePlaylistActivity.this, "Error adding module");
+				Message.toast(BasePlaylistActivity.this, R.string.error_adding_mod);
 			}
 			unbindService(connection);
 		}
@@ -198,10 +198,10 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	protected void playModule(final List<String> modList, final int start, final boolean keepFirst) {
 		final Intent intent = new Intent(this, PlayerActivity.class);
 		((XmpApplication)getApplication()).setFileList(modList);
-		intent.putExtra("shuffle", isShuffleMode());
-		intent.putExtra("loop", isLoopMode());
-		intent.putExtra("start", start);
-		intent.putExtra("keepFirst", keepFirst);
+		intent.putExtra(PlayerActivity.PARM_SHUFFLE, isShuffleMode());
+		intent.putExtra(PlayerActivity.PARM_LOOP, isLoopMode());
+		intent.putExtra(PlayerActivity.PARM_START, start);
+		intent.putExtra(PlayerActivity.PARM_KEEPFIRST, keepFirst);
 		//intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);	// prevent screen flicker when starting player activity 
 		Log.i(TAG, "Start Player activity");
 		startActivityForResult(intent, PLAY_MOD_REQUEST);
@@ -254,7 +254,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		}
 
 		if (invalid) {
-			Message.toast(this, "Only valid files were sent to player");
+			Message.toast(this, R.string.msg_only_valid_files_sent);
 		}
 
 		if (realSize > 0) {

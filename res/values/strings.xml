@@ -89,11 +89,11 @@
     <string name="dialog_new_playlist">New playlist name</string>
     <string name="empty_playlist">Empty playlist</string>
     <string name="empty_comment">Long press modules to create new playlists or add to existing playlists. Long press playlists for more options.</string>
-    <string name="only_valid_files_added">Only valid files were added to playlist</string>
     <string name="unrecognized_format">Unrecognized file format</string>
     <string name="exit">Exit</string>
     <string name="dismiss">Dismiss</string>
     <string name="error">Error</string>
+    <string name="directory">Directory</string>
     
     <string name="about_author">Written by Claudio Matsuoka</string>
     <string name="about_version">Version %s</string>
@@ -106,7 +106,9 @@
     <string name="error_exist_dir">Directory does not exist.</string>
     <string name="error_write_to_playlist">Can\'t write to this playlist.</string>
     <string name="error_read_comment">Can\'t read comment.</string>
-    <string name="error_storage">Can\'t access external storage.</string>    
+    <string name="error_storage">Can\'t access external storage.</string>
+    <string name="error_adding_mod">Error adding module</string>
+    <string name="error_dir_not_under_moddir">Directory not under mod dir</string>
     
     <string name="cache_clear">File cache cleared</string>
     <string name="cache_clear_error">Error clearing cache</string> 
@@ -119,6 +121,12 @@
     <string name="msg_no_modules">No modules found.</string>
     <string name="msg_empty_playlist">Empty playlist.</string>
     <string name="msg_no_playlists">No playlists found.</string>
+    <string name="msg_shuffle_on">Shuffle on</string>
+    <string name="msg_shuffle_off">Shuffle off</string>
+    <string name="msg_loop_on">Loop on</string>
+    <string name="msg_loop_off">Loop off</string>
+    <string name="msg_only_valid_files_sent">Only valid files were sent to player</string>
+    <string name="msg_only_valid_files_added">Only valid files were added to playlist</string>
    
     <string name="button_parent_dir">Parent directory</string>
     <string name="button_play_all">Play all</string>

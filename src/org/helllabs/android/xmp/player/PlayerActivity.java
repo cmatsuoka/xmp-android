@@ -51,6 +51,12 @@ import android.widget.ViewFlipper;
 
 public class PlayerActivity extends Activity {
 	private static final String TAG = "PlayerActivity";
+	
+	public static final String PARM_SHUFFLE = "shuffle";
+	public static final String PARM_LOOP = "loop";
+	public static final String PARM_START = "start";
+	public static final String PARM_KEEPFIRST = "keepFirst";
+	
 	private ModInterface modPlayer;	/* actual mod player */
 	private ImageButton playButton;
 	private ImageButton loopButton;
@@ -437,10 +443,10 @@ public class PlayerActivity extends Activity {
 				//fileArray = extras.getStringArray("files");
 				final XmpApplication app = (XmpApplication)getApplication();
 				fileList = app.getFileList();
-				shuffleMode = extras.getBoolean("shuffle");
-				loopListMode = extras.getBoolean("loop");
-				keepFirst = extras.getBoolean("keepFirst");
-				start = extras.getInt("start");
+				shuffleMode = extras.getBoolean(PARM_SHUFFLE);
+				loopListMode = extras.getBoolean(PARM_LOOP);
+				keepFirst = extras.getBoolean(PARM_KEEPFIRST);
+				start = extras.getInt(PARM_START);
 				app.clearFileList();
 			} else {
 				reconnect = true;

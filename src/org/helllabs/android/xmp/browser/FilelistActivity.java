@@ -317,7 +317,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		if (dirFiles != null) {
 			for (final File file : dirFiles) {
 				directoryNum++;
-				list.add(new PlaylistItem(file.getName(), "Directory", file.getAbsolutePath(), R.drawable.folder));	// NOPMD
+				list.add(new PlaylistItem(file.getName(), getString(R.string.directory), file.getAbsolutePath(), R.drawable.folder));	// NOPMD
 			}
 		}
 		Collections.sort(list);
@@ -361,7 +361,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				}
 			});
 		} else {
-			Message.toast(this, "Directory not under mod dir");
+			Message.toast(this, R.string.error_dir_not_under_moddir);
 		}
 	}
 	
