@@ -42,13 +42,11 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 	private SharedPreferences prefs;
 	private String mediaPath;
 	private int deletePosition;
-	private Context context;
 	private PlaylistAdapter playlistAdapter;
 
 	@Override
 	public void onCreate(final Bundle icicle) {		
 		super.onCreate(icicle);
-		context = this;
 		setContentView(R.layout.playlist_menu);
 
 		final ListView listView = (ListView)findViewById(R.id.plist_menu_list);
@@ -184,7 +182,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 						PlaylistUtils.listNoSuffix()[deletePosition] + "?", new Runnable() {
 					@Override
 					public void run() {
-						Playlist.delete(context, PlaylistUtils.listNoSuffix()[deletePosition]);
+						Playlist.delete(PlaylistMenu.this, PlaylistUtils.listNoSuffix()[deletePosition]);
 						updateList();
 					}
 				});

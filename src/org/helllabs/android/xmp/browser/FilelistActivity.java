@@ -21,7 +21,6 @@ import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -49,7 +48,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private String currentDir;
 	private int directoryNum;
 	private int parentNum;
-	private Context context;
 	private boolean mLoopMode;
 	private boolean mShuffleMode;
 	private boolean mBackButtonParentdir;
@@ -168,7 +166,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		alertDialog.setMessage(media_path + " not found. Create this directory or change the module path.");
 		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Create", new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int which) {
-				Examples.install(context, media_path, mPrefs.getBoolean(Preferences.EXAMPLES, true));
+				Examples.install(FilelistActivity.this, media_path, mPrefs.getBoolean(Preferences.EXAMPLES, true));
 				updateModlist(media_path);
 			}
 		});
@@ -206,8 +204,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 		registerForContextMenu(listView);
 		final String mediaPath = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
-
-		context = this;
 
 		setTitle(R.string.browser_filelist_title);
 
@@ -363,9 +359,9 @@ public class FilelistActivity extends BasePlaylistActivity {
 				public void run() {
 					if (InfoCache.deleteRecursive(deleteName)) {
 						updateModlist(currentDir);
-						Message.toast(context, getString(R.string.msg_dir_deleted));
+						Message.toast(FilelistActivity.this, getString(R.string.msg_dir_deleted));
 					} else {
-						Message.toast(context, getString(R.string.msg_cant_delete_dir));
+						Message.toast(FilelistActivity.this, getString(R.string.msg_cant_delete_dir));
 					}
 				}
 			});
@@ -499,7 +495,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				final SharedPreferences.Editor editor = mPrefs.edit();
 				editor.putString(Preferences.MEDIA_PATH, currentDir);
 				editor.commit();
-				Message.toast(context, "Set as default module path");
+				Message.toast(this, "Set as default module path");
 				break;
 			case 4:						// Clear cache
 				clearCachedEntries(playlistAdapter.getFilenameList(directoryNum));
@@ -549,9 +545,9 @@ public class FilelistActivity extends BasePlaylistActivity {
 					public void run() {
 						if (InfoCache.delete(deleteName)) {
 							updateModlist(currentDir);
-							Message.toast(context, getString(R.string.msg_file_deleted));
+							Message.toast(FilelistActivity.this, getString(R.string.msg_file_deleted));
 						} else {
-							Message.toast(context, getString(R.string.msg_cant_delete));
+							Message.toast(FilelistActivity.this, getString(R.string.msg_cant_delete));
 						}
 					}
 				});

@@ -17,7 +17,6 @@ import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -40,8 +39,6 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAY_MOD_REQUEST = 669;
 	private static final int SEARCH_REQUEST = 47;
-	
-	private Context mContext;
 	private boolean mShowToasts;
 	private ModInterface mModPlayer;
 	private List<String> mAddList;
@@ -107,7 +104,6 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mContext = this;
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mShowToasts = mPrefs.getBoolean(Preferences.SHOW_TOAST, true);
 		
@@ -166,7 +162,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 				break;
 			}
 		} else {
-			Message.toast(mContext, "Unrecognized file format");
+			Message.toast(this, "Unrecognized file format");
 		}
 	}
 	
