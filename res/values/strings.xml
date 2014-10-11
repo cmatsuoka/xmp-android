@@ -3,14 +3,14 @@
 	<string name="app_name">Xmp Mod Player</string>
 	<string name="app_description">A modplayer that plays over 90 mainstream and obscure module formats, including Protracker (MOD), Scream Tracker 3 (S3M), Fast Tracker II (XM) and Impulse Tracker (IT).</string>
 	     
-    <string name="changelog_text">• Add Mod Archive search and download\n• Fix seek bar on player reconnect\n• Fix JNI crash on audio close\n• Fix crash on corrupt playlist entries\n• Fix crash on bluetooth receiver unregister\n• Fix crash on phone state change\n• Fix STM empty note event reading\n• Fix list position in file browser\n• Code cleanup and optimization\n
+    <string name="changelog_text">• Fix exception in Android 2.3\n• Fix memory violation in XM replay\n• Fix memory leaks in ABK loader\n• Fix Soundtracker 2.6 speed effect\n• Native code refactor and optimization\n
+\nVersion 4.1.0:\n• Add Mod Archive search and download\n• Fix seek bar on player reconnect\n• Fix JNI crash on audio close\n• Fix crash on corrupt playlist entries\n• Fix crash on bluetooth receiver unregister\n• Fix crash on phone state change\n• Fix STM empty note event reading\n• Fix list position in file browser\n• Code cleanup and optimization\n
 \nVersion 4.0.1:\n• Many stability fixes\n• Autopause on bluetooth disconnection\n• Smart back button in file browser\n• Launch in player screen if already playing\n
 \nVersion 4.0.0:\n• Use native OpenSL audio output\n• Add option to use back for parent dir\n• Fix subsong explorer preference persistence\n• Fix IT fadeout on virtual channel\n• Fix S3M tone portamento after note end\n 
 \nVersion 3.10.2:\n• Add support to play and pause media buttons\n• Add support to AMOS Music Bank format\n• Fix XM fadeout reset on note end\n• Fix IT portamento in sample mode\n• Fix fine volume slide effect memory\n
-\nVersion 3.10.1:\n• Fix end of envelope detection\n• Fix IT foreground channel reset\n• Fix IT unmapped sample parsing\n• Fix S3M effect memory sharing\n• Fix S3M default pan positions\n• Fix XM fine pitch slide effect memory\n• Fix XM finetune effect handling\n• Fix subsong list scrolling\n 
-\nVersion 3.10.0:\n• Add default pan separation option\n• Refactor and fix Amiga period limits\n• Fix XM and IT envelope loop quirks\n• Fix XM invalid offset handling\n• Fix MOD pattern break with jump\n• Fix IT portamento with offset\n• Fix IT NNA with invalid sample\n• Fix IT and S3M BPM limits\n• Fix IT envelope reset\n• Fix IT carry on note cut events\n• Fix IT compatible GXX mode\n• Fix XM release reset on new volume\n 
+\nVersion 3.10.1:\n• Fix end of envelope detection\n• Fix IT foreground channel reset\n• Fix IT unmapped sample parsing\n• Fix S3M effect memory sharing\n• Fix S3M default pan positions\n• Fix XM fine pitch slide effect memory\n• Fix XM finetune effect handling\n• Fix subsong list scrolling\n
     </string>
-    <string name="changelog_title">New in version 4.1.0</string>
+    <string name="changelog_title">New in version 4.1.1</string>
     <string name="changelog">Changelog</string>
     
 	<string name="pref_examples_title">Install modules</string>
