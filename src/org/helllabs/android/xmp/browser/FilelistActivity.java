@@ -321,7 +321,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 			}
 		}
 		Collections.sort(list);
-		playlistAdapter.addAll(list);
+		playlistAdapter.addList(list);
 
 		list.clear();
 		final File[] modFiles = modDir.listFiles(new ModFilter());
@@ -335,7 +335,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				list.add(new PlaylistItem(name, comment, filename));	// NOPMD
 			}
 			Collections.sort(list);
-			playlistAdapter.addAll(list);
+			playlistAdapter.addList(list);
 		}
 
 		playlistAdapter.notifyDataSetChanged();

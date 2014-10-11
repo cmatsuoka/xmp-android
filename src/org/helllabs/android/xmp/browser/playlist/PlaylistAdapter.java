@@ -7,8 +7,10 @@ import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.util.FileUtils;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,5 +91,16 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
     		list.add(item.filename);
     	}
     	return list;
+    }
+    
+    @TargetApi(11)
+    public void addList(final List<PlaylistItem> list) {
+    	if (Build.VERSION.SDK_INT >= 11) {
+    		addAll(list);
+    	} else {
+    		for (final PlaylistItem item : list) {
+    			add(item);
+    		}
+    	}
     }
 }
