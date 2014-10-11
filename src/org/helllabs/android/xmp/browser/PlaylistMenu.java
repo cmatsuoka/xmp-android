@@ -64,9 +64,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 			Message.fatalError(this, getString(R.string.error_storage), PlaylistMenu.this);
 		}
 
-		if (Preferences.DATA_DIR.isDirectory()) {
-			updateList();
-		} else {
+		if (!Preferences.DATA_DIR.isDirectory()) {
 			if (Preferences.DATA_DIR.mkdirs()) {
 				PlaylistUtils.createEmptyPlaylist(this, getString(R.string.empty_playlist), getString(R.string.empty_comment));		
 			} else {
@@ -82,6 +80,8 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		}
 		
 		enableHomeButton();
+		
+		updateList();
 	}
 	
 	@TargetApi(14)
