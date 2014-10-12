@@ -45,7 +45,7 @@
         <activity
             android:name=".player.PlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -135,10 +135,6 @@
         </activity>
         <activity
             android:name=".preferences.Preferences"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".player.CommentActivity"
-            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".browser.FilelistActivity"
