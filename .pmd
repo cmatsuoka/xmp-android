@@ -368,10 +368,6 @@
             <ruleset>Design</ruleset>
         </rule>
         <rule>
-            <name>SwitchDensity</name>
-            <ruleset>Design</ruleset>
-        </rule>
-        <rule>
             <name>UncommentedEmptyConstructor</name>
             <ruleset>Design</ruleset>
         </rule>
@@ -785,10 +781,6 @@
         </rule>
         <rule>
             <name>UnnecessaryFinalModifier</name>
-            <ruleset>Unnecessary</ruleset>
-        </rule>
-        <rule>
-            <name>UnnecessaryParentheses</name>
             <ruleset>Unnecessary</ruleset>
         </rule>
         <rule>

@@ -31,12 +31,12 @@ public class MediaButtons {
     
 	private static void initializeRemoteControlRegistrationMethods() {
 		try {
-			if (registerMediaButtonEventReceiver == null) {
+			if (registerMediaButtonEventReceiver == null) {		// NOPMD
 				registerMediaButtonEventReceiver = AudioManager.class
 						.getMethod("registerMediaButtonEventReceiver",
 								new Class[] { ComponentName.class });
 			}
-			if (unregisterMediaButtonEventReceiver == null) {
+			if (unregisterMediaButtonEventReceiver == null) {	// NOPMD
 				unregisterMediaButtonEventReceiver = AudioManager.class
 						.getMethod("unregisterMediaButtonEventReceiver",
 								new Class[] { ComponentName.class });
@@ -46,6 +46,7 @@ public class MediaButtons {
 		} catch (NoSuchMethodException nsme) {
 			/* failure, still using the legacy behavior, but this app */
 			/* is future-proof! */
+			Log.e(TAG, nsme.getMessage());
 		}
 	}
 
@@ -64,7 +65,7 @@ public class MediaButtons {
 				throw (Error) cause;
 			} else {
 				// unexpected checked exception; wrap and re-throw
-				throw new RuntimeException(ite);
+				throw new RuntimeException(ite);	// NOPMD
 			}
 		} catch (IllegalAccessException ie) {
 			Log.e(TAG, "Unexpected " + ie);
@@ -86,7 +87,7 @@ public class MediaButtons {
 				throw (Error) cause;
 			} else {
 				// unexpected checked exception; wrap and re-throw
-				throw new RuntimeException(ite);
+				throw new RuntimeException(ite);	// NOPMD
 			}
 		} catch (IllegalAccessException ie) {
 			Log.e(TAG, "Unexpected " + ie);
