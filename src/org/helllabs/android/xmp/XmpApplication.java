@@ -9,7 +9,7 @@ import android.app.Application;
 
 public class XmpApplication extends Application {
 	
-	private List<String> fileList;
+	private List<String> mFileList;
 	private RequestQueue mRequestQueue;
 	private static XmpApplication mInstance;
 	
@@ -23,20 +23,20 @@ public class XmpApplication extends Application {
         mInstance = instance;
     }
 	
-	public static synchronized XmpApplication getInstance() {
+	public static synchronized XmpApplication getInstance() {	// NOPMD
         return mInstance;
     }
 	
 	public List<String> getFileList() {
-		return fileList;
+		return mFileList;
 	}
 	
 	public void setFileList(final List<String> fileList) {
-		this.fileList = fileList;
+		mFileList = fileList;
 	}
 	
 	public void clearFileList() {
-		fileList = null;
+		mFileList = null;	// NOPMD
 	}
 	
 	public RequestQueue getRequestQueue() {
