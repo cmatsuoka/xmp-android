@@ -10,10 +10,10 @@ import org.helllabs.android.xmp.service.receiver.MediaButtonsReceiver;
 import org.helllabs.android.xmp.service.receiver.NotificationActionReceiver;
 import org.helllabs.android.xmp.service.utils.Notifier;
 import org.helllabs.android.xmp.service.utils.QueueManager;
-import org.helllabs.android.xmp.service.utils.RemoteControl;
 import org.helllabs.android.xmp.service.utils.Watchdog;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
+import org.helllabs.android.xmp.util.RemoteControl;
 
 import android.app.Service;
 import android.bluetooth.BluetoothA2dp;
@@ -412,6 +412,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			cmd = CMD_NONE;
 
 			final int[] vars = new int[8];
+			remoteControl.setStatePlaying();
 
 			do {    			
 				fileName = queue.getFilename();		// Used in reconnection
@@ -470,7 +471,6 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 					interpType = Xmp.INTERP_NEAREST;
 				}
 
-				remoteControl.setStatePlaying();
 				Xmp.startPlayer(sampleRate, bufferMs);
 
 				int numClients = callbacks.beginBroadcast();
@@ -547,7 +547,6 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 				} while (playNewSequence);
 
 				Xmp.endPlayer();
-				remoteControl.setStateStopped();
 
 				isLoaded = false;
 
@@ -605,6 +604,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			watchdog.stop();
 			notifier.cancel();
 			
+			remoteControl.setStateStopped();
 			audioManager.abandonAudioFocus(PlayerService.this);
 			
 			//end();

@@ -220,9 +220,9 @@
             android:exported="false" />
 
         <receiver
-            android:name=".service.receiver.RemoteControlReceiver"
+            android:name=".service.receiver.MediaButtonsReceiver"
             android:enabled="true" >
-            <intent-filter android:priority="2147483647" >
+            <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>

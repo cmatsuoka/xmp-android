@@ -1,8 +1,9 @@
-package org.helllabs.android.xmp.service.utils;
+package org.helllabs.android.xmp.util;
 
 import org.helllabs.android.xmp.service.receiver.MediaButtonsReceiver;
+import org.helllabs.android.xmp.service.utils.RemoteControlClientCompat;
+import org.helllabs.android.xmp.service.utils.RemoteControlHelper;
 import org.helllabs.android.xmp.service.utils.RemoteControlClientCompat.MetadataEditorCompat;
-import org.helllabs.android.xmp.util.Log;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
@@ -31,10 +32,11 @@ public class RemoteControl {
 
 			audioManager.registerMediaButtonEventReceiver(remoteControlReceiver);
 
-			final Intent remoteControlIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-			remoteControlIntent.setComponent(remoteControlReceiver);
+			final Intent intent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+			intent.setComponent(remoteControlReceiver);
 
-			remoteControlClient = new RemoteControlClientCompat(PendingIntent.getBroadcast(context, 0, remoteControlIntent, 0));
+			final PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+			remoteControlClient = new RemoteControlClientCompat(pendingIntent);
 
 			if (Build.VERSION.SDK_INT >= 14) {
 				remoteControlClient.setTransportControlFlags(

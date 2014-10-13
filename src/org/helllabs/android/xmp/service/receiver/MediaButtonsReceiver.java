@@ -38,7 +38,7 @@ public class MediaButtonsReceiver extends BroadcastReceiver {
 			default:
 				Log.i(TAG, "Unhandled key code " + code);
 			}
-			abortBroadcast();
+			//abortBroadcast();
 		}
 	}
 	
