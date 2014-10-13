@@ -411,6 +411,8 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		public void run() {
 			cmd = CMD_NONE;
 
+			final int[] vars = new int[8];
+
 			do {    			
 				fileName = queue.getFilename();		// Used in reconnection
 
@@ -493,10 +495,13 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 				Xmp.setSequence(sequenceNumber);
 
 				Xmp.playAudio();
-
+				
 				do {
+					Xmp.getModVars(vars);
+					remoteControl.setMetadata(Xmp.getModName(), Xmp.getModType(), vars[0]);
+					
 					while (cmd == CMD_NONE) {
-						while (paused) {					
+						while (paused) {
 							try {
 								Thread.sleep(100);
 							} catch (InterruptedException e) {

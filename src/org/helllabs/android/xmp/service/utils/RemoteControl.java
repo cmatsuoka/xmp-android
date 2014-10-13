@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp.service.utils;
 
 import org.helllabs.android.xmp.service.receiver.MediaButtonsReceiver;
+import org.helllabs.android.xmp.service.utils.RemoteControlClientCompat.MetadataEditorCompat;
 import org.helllabs.android.xmp.util.Log;
 
 import android.annotation.TargetApi;
@@ -9,6 +10,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
 import android.os.Build;
 
@@ -26,7 +28,7 @@ public class RemoteControl {
 
 		if (remoteControlClient == null) {
 			Log.i(TAG, "Register remote control client");
-			
+
 			audioManager.registerMediaButtonEventReceiver(remoteControlReceiver);
 
 			final Intent remoteControlIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
@@ -81,4 +83,20 @@ public class RemoteControl {
 			}
 		}
 	}
+
+	@TargetApi(10)
+	public void setMetadata(final String title, final String type, final long duration)
+	{
+		if (Build.VERSION.SDK_INT >= 10) {
+			if (remoteControlClient != null) {
+				final MetadataEditorCompat editor = remoteControlClient.editMetadata(true);
+				//editor.putBitmap(MetadataEditor.BITMAP_KEY_ARTWORK, dummyAlbumArt);
+				editor.putLong(MediaMetadataRetriever.METADATA_KEY_DURATION, duration);
+				editor.putString(MediaMetadataRetriever.METADATA_KEY_GENRE, type);
+				editor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, title);
+				editor.apply();
+			}
+		}
+	}
+
 }
