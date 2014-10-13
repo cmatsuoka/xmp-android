@@ -6,10 +6,11 @@ import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.service.receiver.BluetoothConnectionReceiver;
 import org.helllabs.android.xmp.service.receiver.HeadsetPlugReceiver;
-import org.helllabs.android.xmp.service.receiver.NotificationActionReceiver;
 import org.helllabs.android.xmp.service.receiver.MediaButtonsReceiver;
+import org.helllabs.android.xmp.service.receiver.NotificationActionReceiver;
 import org.helllabs.android.xmp.service.utils.Notifier;
 import org.helllabs.android.xmp.service.utils.QueueManager;
+import org.helllabs.android.xmp.service.utils.RemoteControl;
 import org.helllabs.android.xmp.service.utils.Watchdog;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
@@ -21,6 +22,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteCallbackList;
@@ -30,18 +33,20 @@ import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 
 
-public final class PlayerService extends Service {
+public final class PlayerService extends Service implements OnAudioFocusChangeListener {
 	private static final String TAG = "PlayerService";
 	private static final int CMD_NONE = 0;
 	private static final int CMD_NEXT = 1;
 	private static final int CMD_PREV = 2;
 	private static final int CMD_STOP = 3;
-	
+
 	private static final int MIN_BUFFER_MS = 80;
 	private static final int MAX_BUFFER_MS = 1000;
 	private static final int DEFAULT_BUFFER_MS = 400;
+
+	private AudioManager audioManager;
+	private RemoteControl remoteControl;
 	
-	//private AudioTrack audio;
 	private int bufferMs;
 	private Thread playThread;
 	private SharedPreferences prefs;
@@ -69,7 +74,7 @@ public final class PlayerService extends Service {
 	// Headset autopause
 	private HeadsetPlugReceiver headsetPlugReceiver;
 	private boolean headsetPause;
-	
+
 	// Bluetooth autopause
 	private BluetoothConnectionReceiver bluetoothConnectionReceiver;
 
@@ -86,6 +91,17 @@ public final class PlayerService extends Service {
 
 		Log.i(TAG, "Create service");
 
+		audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
+		//Request audio focus for playback
+		final int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+		if (result!=AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+			stopSelf();
+			return;
+		}
+		
+		remoteControl = new RemoteControl(this, audioManager);
+
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if (prefs.getBoolean(Preferences.HEADSET_PAUSE, true)) {
@@ -95,7 +111,7 @@ public final class PlayerService extends Service {
 			headsetPlugReceiver = new HeadsetPlugReceiver();
 			registerReceiver(headsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
 		}
-		
+
 		if (prefs.getBoolean(Preferences.BLUETOOTH_PAUSE, true)) {
 			Log.i(TAG, "Register bluetooth receiver");
 			bluetoothConnectionReceiver = new BluetoothConnectionReceiver();
@@ -115,9 +131,9 @@ public final class PlayerService extends Service {
 		} else if (bufferMs > MAX_BUFFER_MS) {
 			bufferMs = MAX_BUFFER_MS;
 		}
-		
+
 		sampleRate = Integer.parseInt(prefs.getString(Preferences.SAMPLING_RATE, "44100"));
-		
+
 		Xmp.init();
 
 		isAlive = false;
@@ -178,7 +194,7 @@ public final class PlayerService extends Service {
 			}
 		}
 	}
-	
+
 	private void doPauseAndNotify() {
 		paused ^= true;
 		updateNotification();
@@ -328,7 +344,7 @@ public final class PlayerService extends Service {
 			HeadsetPlugReceiver.setState(HeadsetPlugReceiver.NO_STATE);
 		}
 	}
-	
+
 	private void checkBluetoothState() {
 		final int state = BluetoothConnectionReceiver.getState();
 
@@ -367,14 +383,14 @@ public final class PlayerService extends Service {
 		}
 	}
 
-//	private int playFrame() {
-//		// Synchronize frame play with data gathering so we don't change playing variables
-//		// in the middle of e.g. sample data reading, which results in a segfault in C code
-//
-//		synchronized (playThread) {
-//			return Xmp.playBuffer();
-//		}
-//	}
+	//	private int playFrame() {
+	//		// Synchronize frame play with data gathering so we don't change playing variables
+	//		// in the middle of e.g. sample data reading, which results in a segfault in C code
+	//
+	//		synchronized (playThread) {
+	//			return Xmp.playBuffer();
+	//		}
+	//	}
 
 	private void notifyNewSequence() {
 		final int numClients = callbacks.beginBroadcast();
@@ -406,7 +422,7 @@ public final class PlayerService extends Service {
 					}
 					continue;
 				}
-				
+
 				final int defpan = prefs.getInt(Preferences.DEFAULT_PAN, 50);
 				Log.i(TAG, "Set default pan to " + defpan);
 				Xmp.setPlayer(Xmp.PLAYER_DEFPAN, defpan);
@@ -450,7 +466,7 @@ public final class PlayerService extends Service {
 				}
 
 				Xmp.startPlayer(sampleRate, bufferMs);
-				
+
 				int numClients = callbacks.beginBroadcast();
 				for (int j = 0; j < numClients; j++) {
 					try {
@@ -460,18 +476,18 @@ public final class PlayerService extends Service {
 					}
 				}
 				callbacks.finishBroadcast();
-				
+
 				Xmp.setPlayer(Xmp.PLAYER_AMP, Integer.parseInt(volBoost));
 				Xmp.setPlayer(Xmp.PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));				
 				Xmp.setPlayer(Xmp.PLAYER_INTERP, interpType);
 				Xmp.setPlayer(Xmp.PLAYER_DSP, Xmp.DSP_LOWPASS);
 
 				updateData = true;
-				
+
 				sequenceNumber = 0;
 				boolean playNewSequence;
 				Xmp.setSequence(sequenceNumber);
-				
+
 				Xmp.playAudio();
 
 				do {
@@ -495,11 +511,11 @@ public final class PlayerService extends Service {
 								Thread.sleep(40);
 							} catch (InterruptedException e) {	}
 						}
-						
+
 						if (Xmp.fillBuffer(looped) < 0) {
 							break;
 						}
-						
+
 						watchdog.refresh();
 						checkMediaButtons();
 						checkHeadsetState();
@@ -578,6 +594,9 @@ public final class PlayerService extends Service {
 			}
 			watchdog.stop();
 			notifier.cancel();
+			
+			audioManager.abandonAudioFocus(PlayerService.this);
+			
 			//end();
 			Log.i(TAG, "Stop service");
 			stopSelf();
@@ -696,16 +715,16 @@ public final class PlayerService extends Service {
 			looped ^= true;
 			return looped;
 		}
-		
+
 		public boolean toggleAllSequences() throws RemoteException {
 			allSequences ^= true;
 			return allSequences;
 		}
-		
+
 		public boolean getLoop() throws RemoteException {
 			return looped;
 		}
-		
+
 		public boolean getAllSequences() throws RemoteException {
 			return allSequences;
 		}
@@ -797,5 +816,22 @@ public final class PlayerService extends Service {
 		}	
 
 		return autoPaused;
+	}
+
+	@Override
+	public void onAudioFocusChange(final int focusChange) {
+		if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+			Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
+			// Pause playback
+		} else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+			Log.d(TAG, "AUDIOFOCUS_GAIN");
+			// Resume playback 
+		} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+			Log.e(TAG, "AUDIOFOCUS_LOSS");
+			// Stop playback
+			actionStop();
+			remoteControl.unregisterReceiver();
+			audioManager.abandonAudioFocus(this);		            
+		}
 	}
 }
