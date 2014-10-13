@@ -1,4 +1,4 @@
-package org.helllabs.android.xmp.service;
+package org.helllabs.android.xmp.service.utils;
 
 public class Watchdog implements Runnable {
 	private int timer;

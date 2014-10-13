@@ -7,7 +7,10 @@ import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.service.receiver.BluetoothConnectionReceiver;
 import org.helllabs.android.xmp.service.receiver.HeadsetPlugReceiver;
 import org.helllabs.android.xmp.service.receiver.NotificationActionReceiver;
-import org.helllabs.android.xmp.service.receiver.RemoteControlReceiver;
+import org.helllabs.android.xmp.service.receiver.MediaButtonsReceiver;
+import org.helllabs.android.xmp.service.utils.Notifier;
+import org.helllabs.android.xmp.service.utils.QueueManager;
+import org.helllabs.android.xmp.service.utils.Watchdog;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
 
@@ -224,9 +227,9 @@ public final class PlayerService extends Service {
 	}
 
 	private void checkMediaButtons() {
-		final int key = RemoteControlReceiver.getKeyCode();
+		final int key = MediaButtonsReceiver.getKeyCode();
 
-		if (key != RemoteControlReceiver.NO_KEY) {
+		if (key != MediaButtonsReceiver.NO_KEY) {
 			switch (key) {
 			case KeyEvent.KEYCODE_MEDIA_NEXT:
 				Log.i(TAG, "Handle KEYCODE_MEDIA_NEXT");
@@ -260,7 +263,7 @@ public final class PlayerService extends Service {
 				break;
 			}
 
-			RemoteControlReceiver.setKeyCode(RemoteControlReceiver.NO_KEY);
+			MediaButtonsReceiver.setKeyCode(MediaButtonsReceiver.NO_KEY);
 		}
 	}
 

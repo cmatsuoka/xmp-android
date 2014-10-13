@@ -1,7 +1,8 @@
-package org.helllabs.android.xmp.service;
+package org.helllabs.android.xmp.service.utils;
 
 import java.util.Collections;
 import java.util.List;
+
 
 
 public class QueueManager {

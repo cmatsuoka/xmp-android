@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.view.KeyEvent;
 
 
-public class RemoteControlReceiver extends BroadcastReceiver {
+public class MediaButtonsReceiver extends BroadcastReceiver {
 	private static final String TAG = "RemoteControlReceiver";
 	public static final int NO_KEY = -1;
 	private static int keyCode = NO_KEY;
@@ -25,7 +25,7 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 			}
 
 			int code;
-			switch (code = event.getKeyCode()) {
+			switch (code = event.getKeyCode()) {	// NOPMD
 			case KeyEvent.KEYCODE_MEDIA_NEXT:
 			case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
 			case KeyEvent.KEYCODE_MEDIA_STOP:
@@ -47,6 +47,6 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 	}
 	
 	public static void setKeyCode(final int keyCode) {
-		RemoteControlReceiver.keyCode = keyCode;
+		MediaButtonsReceiver.keyCode = keyCode;
 	}
 }

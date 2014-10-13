@@ -3,7 +3,7 @@ package org.helllabs.android.xmp.service;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.helllabs.android.xmp.service.receiver.RemoteControlReceiver;
+import org.helllabs.android.xmp.service.receiver.MediaButtonsReceiver;
 import org.helllabs.android.xmp.util.Log;
 
 import android.content.ComponentName;
@@ -16,20 +16,20 @@ import android.media.AudioManager;
 public class MediaButtons {
     private static final String TAG = "MediaButtons";
     private final AudioManager audioManager;
-	private final ComponentName remoteControlResponder;
+	private final ComponentName mediaButtonsResponder;
     private static Method registerMediaButtonEventReceiver;
     private static Method unregisterMediaButtonEventReceiver;
     
     static {
-    	initializeRemoteControlRegistrationMethods();
+    	initializeRegistrationMethods();
     }
 	
     public MediaButtons(final Context context) {
 		audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-		remoteControlResponder = new ComponentName(context.getPackageName(), RemoteControlReceiver.class.getName());
+		mediaButtonsResponder = new ComponentName(context.getPackageName(), MediaButtonsReceiver.class.getName());
     }
     
-	private static void initializeRemoteControlRegistrationMethods() {
+	private static void initializeRegistrationMethods() {
 		try {
 			if (registerMediaButtonEventReceiver == null) {		// NOPMD
 				registerMediaButtonEventReceiver = AudioManager.class
@@ -55,7 +55,7 @@ public class MediaButtons {
 			if (registerMediaButtonEventReceiver == null) {
 				return;
 			}
-			registerMediaButtonEventReceiver.invoke(audioManager, remoteControlResponder);
+			registerMediaButtonEventReceiver.invoke(audioManager, mediaButtonsResponder);
 		} catch (InvocationTargetException ite) {
 			// unpack original exception when possible
 			final Throwable cause = ite.getCause();
@@ -77,7 +77,7 @@ public class MediaButtons {
 			if (unregisterMediaButtonEventReceiver == null) {
 				return;
 			}
-			unregisterMediaButtonEventReceiver.invoke(audioManager,	remoteControlResponder);
+			unregisterMediaButtonEventReceiver.invoke(audioManager,	mediaButtonsResponder);
 		} catch (InvocationTargetException ite) {
 			// unpack original exception when possible
 			final Throwable cause = ite.getCause();

@@ -1,4 +1,4 @@
-package org.helllabs.android.xmp.service;
+package org.helllabs.android.xmp.service.utils;
 
 import java.util.Date;
 import java.util.Random;
