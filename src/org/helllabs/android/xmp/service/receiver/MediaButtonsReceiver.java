@@ -9,7 +9,7 @@ import android.view.KeyEvent;
 
 
 public class MediaButtonsReceiver extends BroadcastReceiver {
-	private static final String TAG = "RemoteControlReceiver";
+	private static final String TAG = "MediaButtonsReceiver";
 	public static final int NO_KEY = -1;
 	private static int keyCode = NO_KEY;
 

@@ -78,8 +78,8 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	// Bluetooth autopause
 	private BluetoothConnectionReceiver bluetoothConnectionReceiver;
 
-	// remote control
-	private MediaButtons mediaButtons;
+	// Media buttons
+	//private MediaButtons mediaButtons;
 
 	public static boolean isAlive;
 	public static boolean isLoaded;
@@ -93,9 +93,9 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 		audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
-		//Request audio focus for playback
-		final int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-		if (result!=AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+		//Request audio focus
+		final int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+		if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 			stopSelf();
 			return;
 		}
@@ -147,13 +147,14 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		final TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		tm.listen(listener, XmpPhoneStateListener.LISTEN_CALL_STATE);
 
-		mediaButtons = new MediaButtons(this);
-		mediaButtons.register();
+		//mediaButtons = new MediaButtons(this);
+		//mediaButtons.register();
 
 		watchdog = new Watchdog(5);
 		watchdog.setOnTimeoutListener(new Watchdog.OnTimeoutListener() {
 			public void onTimeout() {
 				Log.e(TAG, "Stopped by watchdog");
+				audioManager.abandonAudioFocus(PlayerService.this);
 				stopSelf();
 			}
 		});
@@ -173,7 +174,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		if (bluetoothConnectionReceiver != null) {		// Z933 (glaucus) needs this test
 			unregisterReceiver(bluetoothConnectionReceiver);
 		}
-		mediaButtons.unregister();
+		//mediaButtons.unregister();
 		watchdog.stop();
 		notifier.cancel();
 		end();
@@ -200,7 +201,9 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		updateNotification();
 		if (paused) {
 			Xmp.stopAudio();
+			remoteControl.setStatePaused();
 		} else {
+			remoteControl.setStatePlaying();
 			Xmp.restartAudio();
 		}
 	}
@@ -465,6 +468,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 					interpType = Xmp.INTERP_NEAREST;
 				}
 
+				remoteControl.setStatePlaying();
 				Xmp.startPlayer(sampleRate, bufferMs);
 
 				int numClients = callbacks.beginBroadcast();
@@ -538,6 +542,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 				} while (playNewSequence);
 
 				Xmp.endPlayer();
+				remoteControl.setStateStopped();
 
 				isLoaded = false;
 
@@ -820,18 +825,28 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 	@Override
 	public void onAudioFocusChange(final int focusChange) {
-		if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+		switch (focusChange) {
+		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
 			Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
 			// Pause playback
-		} else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+			break;
+		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+			Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+			// Lower volume
+			break;
+		case AudioManager.AUDIOFOCUS_GAIN:
 			Log.d(TAG, "AUDIOFOCUS_GAIN");
-			// Resume playback 
-		} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-			Log.e(TAG, "AUDIOFOCUS_LOSS");
+			// Resume playback/raise volume 
+			break;
+		case AudioManager.AUDIOFOCUS_LOSS:
+			Log.w(TAG, "AUDIOFOCUS_LOSS");
 			// Stop playback
 			actionStop();
 			remoteControl.unregisterReceiver();
-			audioManager.abandonAudioFocus(this);		            
+			audioManager.abandonAudioFocus(this);
+			break;
+		default:
+			break;
 		}
 	}
 }
