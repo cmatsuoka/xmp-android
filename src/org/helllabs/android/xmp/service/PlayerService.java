@@ -79,7 +79,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private BluetoothConnectionReceiver bluetoothConnectionReceiver;
 
 	// Media buttons
-	//private MediaButtons mediaButtons;
+	private MediaButtons mediaButtons;
 
 	public static boolean isAlive;
 	public static boolean isLoaded;
@@ -147,8 +147,8 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		final TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		tm.listen(listener, XmpPhoneStateListener.LISTEN_CALL_STATE);
 
-		//mediaButtons = new MediaButtons(this);
-		//mediaButtons.register();
+		mediaButtons = new MediaButtons(this);
+		mediaButtons.register();
 
 		watchdog = new Watchdog(5);
 		watchdog.setOnTimeoutListener(new Watchdog.OnTimeoutListener() {
@@ -174,7 +174,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		if (bluetoothConnectionReceiver != null) {		// Z933 (glaucus) needs this test
 			unregisterReceiver(bluetoothConnectionReceiver);
 		}
-		//mediaButtons.unregister();
+		mediaButtons.unregister();
 		watchdog.stop();
 		notifier.cancel();
 		end();
@@ -846,9 +846,11 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		case AudioManager.AUDIOFOCUS_LOSS:
 			Log.w(TAG, "AUDIOFOCUS_LOSS");
 			// Stop playback
-			actionStop();
-			remoteControl.unregisterReceiver();
-			audioManager.abandonAudioFocus(this);
+			
+			if (!paused) {
+				actionPlayPause();
+			}
+			 
 			break;
 		default:
 			break;

@@ -1,6 +1,6 @@
 package org.helllabs.android.xmp.util;
 
-import org.helllabs.android.xmp.service.receiver.MediaButtonsReceiver;
+import org.helllabs.android.xmp.service.receiver.RemoteControlReceiver;
 import org.helllabs.android.xmp.service.utils.RemoteControlClientCompat;
 import org.helllabs.android.xmp.service.utils.RemoteControlHelper;
 import org.helllabs.android.xmp.service.utils.RemoteControlClientCompat.MetadataEditorCompat;
@@ -25,7 +25,7 @@ public class RemoteControl {
 	public RemoteControl(final Context context, final AudioManager audioManager) {
 		this.audioManager = audioManager;
 
-		remoteControlReceiver = new ComponentName(context.getPackageName(), MediaButtonsReceiver.class.getName());
+		remoteControlReceiver = new ComponentName(context.getPackageName(), RemoteControlReceiver.class.getName());
 
 		if (remoteControlClient == null) {
 			Log.i(TAG, "Register remote control client");

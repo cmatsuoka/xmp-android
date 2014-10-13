@@ -12,6 +12,7 @@ public class MediaButtonsReceiver extends BroadcastReceiver {
 	private static final String TAG = "MediaButtonsReceiver";
 	public static final int NO_KEY = -1;
 	private static int keyCode = NO_KEY;
+	protected boolean ordered = true;
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
@@ -38,7 +39,10 @@ public class MediaButtonsReceiver extends BroadcastReceiver {
 			default:
 				Log.i(TAG, "Unhandled key code " + code);
 			}
-			//abortBroadcast();
+			
+			if (ordered) {
+				abortBroadcast();
+			}
 		}
 	}
 	
