@@ -96,8 +96,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		//Request audio focus
 		final int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
 		if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-			stopSelf();
-			return;
+			Log.e(TAG, "Can't get audio focus");
 		}
 		
 		remoteControl = new RemoteControl(this, audioManager);
@@ -834,6 +833,9 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
 			Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
 			// Pause playback
+			if (!paused) {
+				actionPlayPause();
+			}
 			break;
 		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
 			Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
@@ -841,16 +843,17 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			break;
 		case AudioManager.AUDIOFOCUS_GAIN:
 			Log.d(TAG, "AUDIOFOCUS_GAIN");
-			// Resume playback/raise volume 
+			// Resume playback/raise volume
+			if (paused && !autoPaused) {
+				actionPlayPause();
+			}
 			break;
 		case AudioManager.AUDIOFOCUS_LOSS:
 			Log.w(TAG, "AUDIOFOCUS_LOSS");
 			// Stop playback
-			
 			if (!paused) {
 				actionPlayPause();
 			}
-			 
 			break;
 		default:
 			break;
