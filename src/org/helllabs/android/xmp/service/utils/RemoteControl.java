@@ -1,9 +1,8 @@
-package org.helllabs.android.xmp.util;
+package org.helllabs.android.xmp.service.utils;
 
 import org.helllabs.android.xmp.service.receiver.RemoteControlReceiver;
-import org.helllabs.android.xmp.service.utils.RemoteControlClientCompat;
-import org.helllabs.android.xmp.service.utils.RemoteControlHelper;
 import org.helllabs.android.xmp.service.utils.RemoteControlClientCompat.MetadataEditorCompat;
+import org.helllabs.android.xmp.util.Log;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
@@ -94,7 +93,7 @@ public class RemoteControl {
 				final MetadataEditorCompat editor = remoteControlClient.editMetadata(true);
 				//editor.putBitmap(MetadataEditor.BITMAP_KEY_ARTWORK, dummyAlbumArt);
 				editor.putLong(MediaMetadataRetriever.METADATA_KEY_DURATION, duration);
-				editor.putString(MediaMetadataRetriever.METADATA_KEY_GENRE, type);
+				editor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, type);
 				editor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, title);
 				editor.apply();
 			}

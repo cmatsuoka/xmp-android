@@ -10,10 +10,10 @@ import org.helllabs.android.xmp.service.receiver.MediaButtonsReceiver;
 import org.helllabs.android.xmp.service.receiver.NotificationActionReceiver;
 import org.helllabs.android.xmp.service.utils.Notifier;
 import org.helllabs.android.xmp.service.utils.QueueManager;
+import org.helllabs.android.xmp.service.utils.RemoteControl;
 import org.helllabs.android.xmp.service.utils.Watchdog;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
-import org.helllabs.android.xmp.util.RemoteControl;
 
 import android.app.Service;
 import android.bluetooth.BluetoothA2dp;
@@ -46,6 +46,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 	private AudioManager audioManager;
 	private RemoteControl remoteControl;
+	private boolean hasAudioFocus;
 	
 	private int bufferMs;
 	private Thread playThread;
@@ -91,17 +92,11 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 		Log.i(TAG, "Create service");
 
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-
-		//Request audio focus
-		final int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
-		if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-			Log.e(TAG, "Can't get audio focus");
-		}
-		
 		remoteControl = new RemoteControl(this, audioManager);
 
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		requestAudioFocus();
 
 		if (prefs.getBoolean(Preferences.HEADSET_PAUSE, true)) {
 			Log.i(TAG, "Register headset receiver");
@@ -184,6 +179,21 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	public IBinder onBind(final Intent intent) {
 		return binder;
 	}
+	
+	private boolean requestAudioFocus() {
+		//Request audio focus
+		final int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+		final boolean granted = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+		
+		if (granted) {
+			Log.i(TAG, "Audio focus granted");
+			hasAudioFocus = true;
+		} else {
+			Log.e(TAG, "Can't get audio focus");
+		}
+		
+		return granted;
+	}
 
 	private void updateNotification() {
 		if (queue != null) {	// It seems that queue can be null if we're called from PhoneStateListener
@@ -202,6 +212,9 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			Xmp.stopAudio();
 			remoteControl.setStatePaused();
 		} else {
+			if (!hasAudioFocus) {
+				requestAudioFocus();
+			}
 			remoteControl.setStatePlaying();
 			Xmp.restartAudio();
 		}
@@ -838,11 +851,11 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			}
 			break;
 		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-			Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+			Log.w(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
 			// Lower volume
 			break;
 		case AudioManager.AUDIOFOCUS_GAIN:
-			Log.d(TAG, "AUDIOFOCUS_GAIN");
+			Log.w(TAG, "AUDIOFOCUS_GAIN");
 			// Resume playback/raise volume
 			if (paused && !autoPaused) {
 				actionPlayPause();
@@ -850,6 +863,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			break;
 		case AudioManager.AUDIOFOCUS_LOSS:
 			Log.w(TAG, "AUDIOFOCUS_LOSS");
+			hasAudioFocus = false;
 			// Stop playback
 			if (!paused) {
 				actionPlayPause();
