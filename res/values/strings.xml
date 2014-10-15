@@ -109,6 +109,7 @@
     <string name="error_storage">Can\'t access external storage.</string>
     <string name="error_adding_mod">Error adding module</string>
     <string name="error_dir_not_under_moddir">Directory not under mod dir</string>
+    <string name="error_no_files_to_play">No files to play</string>
     
     <string name="cache_clear">File cache cleared</string>
     <string name="cache_clear_error">Error clearing cache</string> 

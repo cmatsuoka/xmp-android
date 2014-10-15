@@ -114,7 +114,7 @@ public class PlayerActivity extends Activity {
 					Log.e(TAG, "Can't register player callback");
 				}
 
-				if (fileList != null && fileList.size() > 0) {
+				if (fileList != null && !fileList.isEmpty()) {
 					// Start new queue
 					playNewMod(fileList, start);
 				} else {
