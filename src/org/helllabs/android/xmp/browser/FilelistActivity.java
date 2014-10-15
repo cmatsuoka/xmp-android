@@ -136,7 +136,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 		mLoopMode = loopMode;
 	}
 
-
 	@Override
 	protected boolean isShuffleMode() {
 		return mShuffleMode;
@@ -146,7 +145,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 	protected boolean isLoopMode() {
 		return mLoopMode;
 	}
-
 
 	@Override
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
@@ -246,8 +244,6 @@ public class FilelistActivity extends BasePlaylistActivity {
 		mShuffleMode = readShuffleModePref();
 		mLoopMode = readLoopModePref();
 
-
-
 		setupButtons();
 	}
 	
@@ -317,7 +313,10 @@ public class FilelistActivity extends BasePlaylistActivity {
 		if (dirFiles != null) {
 			for (final File file : dirFiles) {
 				directoryNum++;
-				list.add(new PlaylistItem(file.getName(), getString(R.string.directory), file.getAbsolutePath(), R.drawable.folder));	// NOPMD
+				final PlaylistItem item = new PlaylistItem(PlaylistItem.TYPE_DIRECTORY, file.getName(), getString(R.string.directory));	// NOPMD
+				item.setFilename(file.getAbsolutePath());
+				item.setImageRes(R.drawable.folder);
+				list.add(item);
 			}
 		}
 		Collections.sort(list);
@@ -332,7 +331,9 @@ public class FilelistActivity extends BasePlaylistActivity {
 				final String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(file.lastModified());
 				final String name = file.getName();
 				final String comment = date + String.format(" (%d kB)", file.length() / 1024);
-				list.add(new PlaylistItem(name, comment, filename));	// NOPMD
+				final PlaylistItem item = new PlaylistItem(PlaylistItem.TYPE_FILE, name, comment);	// NOPMD
+				item.setFilename(filename);
+				list.add(item);
 			}
 			Collections.sort(list);
 			playlistAdapter.addList(list);
@@ -531,7 +532,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				playModule(playlistAdapter.getFilename(info.position));
 				break;
 			case 3:										//   Play all starting here
-				playModule(playlistAdapter.getFilenameList(), info.position);
+				playModule(playlistAdapter.getFilteredFilenameList(), info.position);
 				break;
 			case 4:										//   Delete file
 				final String deleteName = playlistAdapter.getFilename(info.position);

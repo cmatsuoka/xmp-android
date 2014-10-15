@@ -110,7 +110,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 			startActivityForResult(intent, PLAYLIST_REQUEST);
 		} else {
 			final Intent intent = new Intent(PlaylistMenu.this, PlaylistActivity.class);
-			intent.putExtra("name", adapter.getItem(position).name);
+			intent.putExtra("name", adapter.getItem(position).getName());
 			startActivityForResult(intent, PLAYLIST_REQUEST);
 		}
 	}
@@ -139,11 +139,14 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		mediaPath = prefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 
 		playlistAdapter.clear();
-		playlistAdapter.add(new PlaylistItem("File browser", "Files in " + mediaPath,
-				R.drawable.browser));
+		final PlaylistItem browserItem = new PlaylistItem(PlaylistItem.TYPE_PLAYLIST, "File browser", "Files in " + mediaPath);
+		browserItem.setImageRes(R.drawable.browser);
+		playlistAdapter.add(browserItem);
 
 		for (final String name : PlaylistUtils.listNoSuffix()) {
-			playlistAdapter.add(new PlaylistItem(name, Playlist.readComment(this, name), R.drawable.list));	// NOPMD
+			final PlaylistItem item = new PlaylistItem(PlaylistItem.TYPE_PLAYLIST, name, Playlist.readComment(this, name));	// NOPMD
+			item.setImageRes(R.drawable.list);
+			playlistAdapter.add(item);
 		}
 
 		playlistAdapter.notifyDataSetChanged();

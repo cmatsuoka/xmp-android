@@ -45,20 +45,21 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
     		final TextView infoText = (TextView)view.findViewById(R.id.plist_info);
     		final ImageView image = (ImageView)view.findViewById(R.id.plist_image);
     		
-   			titleText.setText(useFilename ? FileUtils.basename(info.filename) : info.name);
-   			infoText.setText(info.comment);
+   			titleText.setText(useFilename ? FileUtils.basename(info.getFilename()) : info.getName());
+   			infoText.setText(info.getComment());
    			
    			final Typeface typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
-   			if (info.imageRes == R.drawable.folder || info.imageRes == R.drawable.parent) {
-   				//tt.setTypeface(t, Typeface.ITALIC);
+   			final int imageRes = info.getImageRes();
+   			final int type = info.getType();
+   			
+   			if (type == PlaylistItem.TYPE_DIRECTORY) {
     			infoText.setTypeface(typeface, Typeface.ITALIC);
    			} else {
-   				//tt.setTypeface(t, Typeface.NORMAL);
     			infoText.setTypeface(typeface, Typeface.NORMAL);  			
    			}
 
-   			if (info.imageRes > 0) {
-   				image.setImageResource(info.imageRes);
+   			if (imageRes > 0) {
+   				image.setImageResource(imageRes);
    				image.setVisibility(View.VISIBLE);
    			} else {
    				image.setVisibility(View.GONE);
@@ -73,13 +74,23 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 	}
     
     public String getFilename(final int location) {
-    	return items.get(location).filename;
+    	return items.get(location).getFilename();
     }
     
     public List<String> getFilenameList() {
     	final List<String> list = new ArrayList<String>();
     	for (final PlaylistItem item : items) {
-    		list.add(item.filename);
+    		list.add(item.getFilename());
+    	}
+    	return list;
+    }
+    
+    public List<String> getFilteredFilenameList() {
+    	final List<String> list = new ArrayList<String>();
+    	for (final PlaylistItem item : items) {
+    		if (item.getType() == PlaylistItem.TYPE_FILE) {
+    			list.add(item.getFilename());
+    		}
     	}
     	return list;
     }
@@ -88,7 +99,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
     	final List<PlaylistItem> subItems = items.subList(location, items.size());
     	final List<String> list = new ArrayList<String>();
     	for (final PlaylistItem item : subItems) {
-    		list.add(item.filename);
+    		list.add(item.getFilename());
     	}
     	return list;
     }

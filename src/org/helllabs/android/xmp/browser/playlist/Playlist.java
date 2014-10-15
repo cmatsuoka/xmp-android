@@ -145,7 +145,7 @@ public class Playlist {
 	 * @param index The index of the item to be removed
 	 */
 	public void remove(final int index) {
-		Log.i(TAG, "Remove item #" + index + ": " + mList.get(index).name);
+		Log.i(TAG, "Remove item #" + index + ": " + mList.get(index).getName());
 		mList.remove(index);
 		mListChanged = true;
 	}
@@ -287,7 +287,10 @@ public class Playlist {
 	    		final String comment = fields.length > 1 ? fields[1] : "";
 	    		final String title = fields.length > 2 ? fields[2] : "";
 	    		if (InfoCache.fileExists(filename)) {
-	    			mList.add(new PlaylistItem(title, comment, filename, R.drawable.grabber));  // NOPMD
+	    			final PlaylistItem item = new PlaylistItem(PlaylistItem.TYPE_FILE, title, comment);	// NOPMD
+	    			item.setFilename(filename);
+	    			item.setImageRes(R.drawable.grabber);
+	    			mList.add(item);
 	    		} else {
 	    			invalidList.add(lineNum);
 	    		}

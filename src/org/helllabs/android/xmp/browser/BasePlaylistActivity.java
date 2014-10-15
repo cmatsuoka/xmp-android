@@ -45,12 +45,12 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	protected SharedPreferences mPrefs;
 	protected PlaylistAdapter playlistAdapter;
 	private boolean refresh;
-
+	
 	
 	private final OnClickListener playAllButtonListener = new OnClickListener() {
 		@Override
 		public void onClick(final View view) {
-			playModule(playlistAdapter.getFilenameList());
+			playModule(playlistAdapter.getFilteredFilenameList());
 		}
 	};
 	
@@ -123,6 +123,8 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	protected abstract void setLoopMode(boolean loopMode);
 	protected abstract boolean isShuffleMode();
 	protected abstract boolean isLoopMode();
+
+	public abstract void update();
 	
 	protected void setupButtons() {
 		final ImageButton playAllButton = (ImageButton)findViewById(R.id.play_all);
@@ -141,7 +143,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
 		final PlaylistAdapter adapter = (PlaylistAdapter)list.getAdapter();
-		final String filename = adapter.getItem(position).filename;
+		final String filename = adapter.getItem(position).getFilename();
 		
 		final int mode = Integer.parseInt(mPrefs.getString(Preferences.PLAYLIST_MODE, "1"));
 
@@ -176,8 +178,6 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			}
 		});
 	}
-
-	abstract public void update();
 
 	// Play this module
 	protected void playModule(final String mod) {
