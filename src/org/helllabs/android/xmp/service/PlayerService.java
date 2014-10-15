@@ -426,20 +426,25 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			final int[] vars = new int[8];
 			remoteControl.setStatePlaying();
 
+			int lastRecognized = 0;
 			do {    			
 				fileName = queue.getFilename();		// Used in reconnection
 
 				// If this file is unrecognized, and we're going backwards, go to previous
+				// If we're at the start of the list, go to the last recognized file
 				if (fileName == null || !InfoCache.testModule(fileName)) {
 					Log.w(TAG, fileName + ": unrecognized format");
 					if (cmd == CMD_PREV) {
-						if (queue.getIndex() < 0) {
-							break;
+						if (queue.getIndex() <= 0) {
+							queue.setIndex(lastRecognized - 1);		// -1 because we have queue.next() in the while condition
+							continue;
 						}
 						queue.previous();
 					}
 					continue;
 				}
+				
+				lastRecognized = queue.getIndex();
 
 				final int defpan = prefs.getInt(Preferences.DEFAULT_PAN, 50);
 				Log.i(TAG, "Set default pan to " + defpan);
