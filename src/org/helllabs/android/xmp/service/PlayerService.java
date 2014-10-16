@@ -43,6 +43,8 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private static final int MIN_BUFFER_MS = 80;
 	private static final int MAX_BUFFER_MS = 1000;
 	private static final int DEFAULT_BUFFER_MS = 400;
+	
+	private static final int DUCK_VOLUME = 20;
 
 	private AudioManager audioManager;
 	private RemoteControl remoteControl;
@@ -858,6 +860,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
 			Log.w(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
 			// Lower volume
+			Xmp.setPlayer(Xmp.PLAYER_VOLUME, DUCK_VOLUME);
 			break;
 		case AudioManager.AUDIOFOCUS_GAIN:
 			Log.w(TAG, "AUDIOFOCUS_GAIN");
@@ -865,6 +868,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			if (paused && !autoPaused) {
 				actionPlayPause();
 			}
+			Xmp.setPlayer(Xmp.PLAYER_VOLUME, 100);
 			break;
 		case AudioManager.AUDIOFOCUS_LOSS:
 			Log.w(TAG, "AUDIOFOCUS_LOSS");

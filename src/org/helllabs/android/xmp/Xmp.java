@@ -16,6 +16,7 @@ public final class Xmp {
 	public static final int PLAYER_MIX = 1;			// Stereo mixing
 	public static final int PLAYER_INTERP = 2;		// Interpolation type
 	public static final int PLAYER_DSP = 3;			// DSP effect flags
+	public static final int PLAYER_VOLUME = 7;		// Player volume (for audio focus duck)
 	public static final int PLAYER_DEFPAN = 10;		// Default pan separation
 
 	// Interpolation types
