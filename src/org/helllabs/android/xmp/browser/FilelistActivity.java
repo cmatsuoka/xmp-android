@@ -91,7 +91,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private final PlaylistChoice addFileListToPlaylistChoice = new PlaylistChoice() {
 		@Override
 		public void execute(final int fileSelection, final int playlistSelection) {
-			PlaylistUtils.filesToPlaylist(FilelistActivity.this, playlistAdapter.getFilenameList(fileSelection),
+			PlaylistUtils.filesToPlaylist(FilelistActivity.this, playlistAdapter.getFilenameList(),
 							PlaylistUtils.getPlaylistName(playlistSelection));
 		}
 	};
@@ -485,7 +485,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				choosePlaylist(2, addCurrentRecursiveChoice);
 				break;
 			case 2:						// Add all to queue
-				addToQueue(playlistAdapter.getFilenameList(directoryNum));
+				addToQueue(playlistAdapter.getFilenameList());
 				break;
 			case 3:						// Set as default path
 				final SharedPreferences.Editor editor = mPrefs.edit();
@@ -494,7 +494,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				Message.toast(this, "Set as default module path");
 				break;
 			case 4:						// Clear cache
-				clearCachedEntries(playlistAdapter.getFilenameList(directoryNum));
+				clearCachedEntries(playlistAdapter.getFilenameList());
 				break;
 			}
 
@@ -532,7 +532,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 				playModule(playlistAdapter.getFilename(info.position));
 				break;
 			case 3:										//   Play all starting here
-				playModule(playlistAdapter.getFilteredFilenameList(), info.position);
+				playModule(playlistAdapter.getFilenameList(), info.position);
 				break;
 			case 4:										//   Delete file
 				final String deleteName = playlistAdapter.getFilename(info.position);
