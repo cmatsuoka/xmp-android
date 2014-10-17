@@ -87,6 +87,17 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
     	return list;
     }
     
+    public int getDirectoryCount() {
+    	int count = 0;
+    	for (final PlaylistItem item : items) {
+    		if (item.getType() != PlaylistItem.TYPE_DIRECTORY) {
+    			break;
+    		}
+    		count++;
+    	}
+    	return count;
+    }
+    
     @TargetApi(11)
     public void addList(final List<PlaylistItem> list) {
     	if (Build.VERSION.SDK_INT >= 11) {

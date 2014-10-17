@@ -157,13 +157,16 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		if (InfoCache.testModuleForceIfInvalid(filename)) {
 			switch (mode) {
 			case 1:								// play all starting at this one
-				playModule(adapter.getFilenameList(), position, isShuffleMode());
+				final int count = position - adapter.getDirectoryCount();
+				if (count >= 0) {
+					playModule(adapter.getFilenameList(), count, isShuffleMode());
+				}
 				break;
 			case 2:								// play this one
 				playModule(filename);
 				break;
 			case 3:								// add to queue
-				addToQueue(adapter.getFilename(position));
+				addToQueue(filename);
 				Message.toast(this, "Added to queue");
 				break;
 			}
@@ -175,7 +178,6 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	// Item click	
 	protected void setOnItemClickListener(final ListView list) {
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
 			@Override
 			public void onItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
 				onListItemClick(list, view, position, id);

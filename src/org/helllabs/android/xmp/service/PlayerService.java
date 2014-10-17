@@ -858,7 +858,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	public void onAudioFocusChange(final int focusChange) {
 		switch (focusChange) {
 		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-			Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
+			Log.w(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
 			// Pause playback
 			if (!paused) {
 				actionPlayPause();
