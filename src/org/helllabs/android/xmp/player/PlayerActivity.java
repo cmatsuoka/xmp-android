@@ -139,8 +139,9 @@ public class PlayerActivity extends Activity {
 			
 			synchronized (playerLock) {
 				stopUpdate = true;
-				modPlayer = null;
+				//modPlayer = null;
 				Log.i(TAG, "Service disconnected");
+				finish();
 			}
 		}
 	};
@@ -166,10 +167,19 @@ public class PlayerActivity extends Activity {
 		}
 
 		@Override
-		public void endPlayCallback() throws RemoteException {
+		public void endPlayCallback(final int result) throws RemoteException {
 			synchronized (playerLock) {
 				Log.d(TAG, "endPlayCallback: End progress thread");
 				stopUpdate = true;
+				
+				if (result == PlayerService.RESULT_NO_AUDIO_FOCUS) {
+				 	runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Message.toast(PlayerActivity.this, R.string.error_audiofocus);
+						}
+					});
+				}
 
 				if (progressThread != null && progressThread.isAlive()) {
 					try {

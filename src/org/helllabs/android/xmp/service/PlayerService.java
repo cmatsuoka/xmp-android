@@ -34,6 +34,10 @@ import android.view.KeyEvent;
 
 public final class PlayerService extends Service implements OnAudioFocusChangeListener {
 	private static final String TAG = "PlayerService";
+	
+	public static final int RESULT_OK = 0;
+	public static final int RESULT_NO_AUDIO_FOCUS = 1;
+	
 	private static final int CMD_NONE = 0;
 	private static final int CMD_NEXT = 1;
 	private static final int CMD_PREV = 2;
@@ -66,8 +70,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private boolean updateData;
 	private String fileName;			// currently playing file
 	private QueueManager queue;
-	private final RemoteCallbackList<PlayerCallback> callbacks =
-			new RemoteCallbackList<PlayerCallback>();
+	private final RemoteCallbackList<PlayerCallback> callbacks = new RemoteCallbackList<PlayerCallback>();
 	private int sequenceNumber;
 
 	// Audio focus autopause
@@ -98,7 +101,10 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 		remoteControl = new RemoteControl(this, audioManager);
 
-		requestAudioFocus();
+		hasAudioFocus = requestAudioFocus();
+		if (!hasAudioFocus) {
+			Log.e(TAG, "Can't get audio focus");
+		}
 
 		if (prefs.getBoolean(Preferences.HEADSET_PAUSE, true)) {
 			Log.i(TAG, "Register headset receiver");
@@ -169,7 +175,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		mediaButtons.unregister();
 		watchdog.stop();
 		notifier.cancel();
-		end();
+		end(hasAudioFocus ? RESULT_OK : RESULT_NO_AUDIO_FOCUS);
 		super.onDestroy();
 	}
 
@@ -179,18 +185,8 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	}
 	
 	private boolean requestAudioFocus() {
-		//Request audio focus
-		final int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
-		final boolean granted = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
-		
-		if (granted) {
-			Log.i(TAG, "Audio focus granted");
-			hasAudioFocus = true;
-		} else {
-			Log.e(TAG, "Can't get audio focus");
-		}
-		
-		return granted;
+		return audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+				AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
 	}
 
 	private void updateNotification() {
@@ -210,9 +206,6 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			Xmp.stopAudio();
 			remoteControl.setStatePaused();
 		} else {
-			if (!hasAudioFocus) {
-				requestAudioFocus();
-			}
 			remoteControl.setStatePlaying();
 			Xmp.restartAudio();
 		}
@@ -634,12 +627,12 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		}
 	}
 
-	private void end() {    	
+	private void end(final int result) {    	
 		Log.i(TAG, "End service");
 		final int numClients = callbacks.beginBroadcast();
 		for (int i = 0; i < numClients; i++) {
 			try {
-				callbacks.getBroadcastItem(i).endPlayCallback();
+				callbacks.getBroadcastItem(i).endPlayCallback(result);
 			} catch (RemoteException e) {
 				Log.e(TAG, "Error notifying end of play to client");
 			}
@@ -655,7 +648,13 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	}
 
 	private final ModInterface.Stub binder = new ModInterface.Stub() {
-		public void play(final List<String> fileList, final int start, final boolean shuffle, final boolean loopList, final boolean keepFirst) {			
+		public void play(final List<String> fileList, final int start, final boolean shuffle, final boolean loopList, final boolean keepFirst) {
+			
+			if (!hasAudioFocus) {
+				stopSelf();
+				return;
+			}
+			
 			queue = new QueueManager(fileList, start, shuffle, loopList, keepFirst);
 			notifier.setQueue(queue);
 			//notifier.clean();
@@ -876,11 +875,8 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			break;
 		case AudioManager.AUDIOFOCUS_LOSS:
 			Log.w(TAG, "AUDIOFOCUS_LOSS");
-			hasAudioFocus = false;
 			// Stop playback
-			if (!paused) {
-				actionPlayPause();
-			}
+			actionStop();
 			break;
 		default:
 			break;
