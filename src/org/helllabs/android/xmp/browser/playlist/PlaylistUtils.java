@@ -1,5 +1,6 @@
 package org.helllabs.android.xmp.browser.playlist;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +74,7 @@ public final class PlaylistUtils {
 		for (final String filename : fileList) {
 			if (Xmp.testModule(filename, modInfo)) {
 				final PlaylistItem item = new PlaylistItem(PlaylistItem.TYPE_FILE, modInfo.name, modInfo.type);	// NOPMD
-				item.setFilename(filename);
+				item.setFile(new File(filename));	// NOPMD
 				list.add(item);
 			} else {
 				hasInvalid = true;

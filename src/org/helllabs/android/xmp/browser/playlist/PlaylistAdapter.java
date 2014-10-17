@@ -1,5 +1,6 @@
 package org.helllabs.android.xmp.browser.playlist;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
     		final TextView infoText = (TextView)view.findViewById(R.id.plist_info);
     		final ImageView image = (ImageView)view.findViewById(R.id.plist_image);
     		
-   			titleText.setText(useFilename ? FileUtils.basename(info.getFilename()) : info.getName());
+   			titleText.setText(useFilename ? FileUtils.basename(info.getFile().getPath()) : info.getName());
    			infoText.setText(info.getComment());
    			
    			final Typeface typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
@@ -74,14 +75,18 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 	}
     
     public String getFilename(final int location) {
-    	return items.get(location).getFilename();
+    	return items.get(location).getFile().getPath();
+    }
+    
+    public File getFile(final int location) {
+    	return items.get(location).getFile();
     }
     
     public List<String> getFilenameList() {
     	final List<String> list = new ArrayList<String>();
     	for (final PlaylistItem item : items) {
     		if (item.getType() == PlaylistItem.TYPE_FILE) {
-    			list.add(item.getFilename());
+    			list.add(item.getFile().getPath());
     		}
     	}
     	return list;

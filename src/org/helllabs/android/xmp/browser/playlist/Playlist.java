@@ -288,7 +288,7 @@ public class Playlist {
 	    		final String title = fields.length > 2 ? fields[2] : "";
 	    		if (InfoCache.fileExists(filename)) {
 	    			final PlaylistItem item = new PlaylistItem(PlaylistItem.TYPE_FILE, title, comment);	// NOPMD
-	    			item.setFilename(filename);
+	    			item.setFile(new File(filename));	// NOPMD
 	    			item.setImageRes(R.drawable.grabber);
 	    			mList.add(item);
 	    		} else {

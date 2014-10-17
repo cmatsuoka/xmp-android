@@ -139,7 +139,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		mediaPath = prefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 
 		playlistAdapter.clear();
-		final PlaylistItem browserItem = new PlaylistItem(PlaylistItem.TYPE_PLAYLIST, "File browser", "Files in " + mediaPath);
+		final PlaylistItem browserItem = new PlaylistItem(PlaylistItem.TYPE_SPECIAL, "File browser", "Files in " + mediaPath);
 		browserItem.setImageRes(R.drawable.browser);
 		playlistAdapter.add(browserItem);
 

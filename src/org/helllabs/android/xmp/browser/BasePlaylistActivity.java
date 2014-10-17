@@ -147,7 +147,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
 		final PlaylistAdapter adapter = (PlaylistAdapter)list.getAdapter();
-		final String filename = adapter.getItem(position).getFilename();
+		final String filename = adapter.getItem(position).getFile().getPath();
 		
 		final int mode = Integer.parseInt(mPrefs.getString(Preferences.PLAYLIST_MODE, "1"));
 

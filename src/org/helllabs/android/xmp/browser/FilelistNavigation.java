@@ -9,7 +9,7 @@ import android.widget.ListView;
 public class FilelistNavigation {
 	
 	private final Stack<ListState> mPathStack;
-	private String mCurrentDir;
+	private File mCurrentDir;
 	
 	
 	/**
@@ -46,18 +46,17 @@ public class FilelistNavigation {
 	 * 
 	 * @return True if current directory was changed.
 	 */
-	public boolean changeDirectory(String name) {
-		final File file = new File(name);
+	public boolean changeDirectory(File file) {
 		final boolean isDir = file.isDirectory();
 
 		if (isDir) {
 			if (file.getName().equals("..")) {
-				name = file.getParentFile().getParent();
-				if (name == null) {
-					name = "/";
+				file = file.getParentFile().getParentFile();
+				if (file == null) {
+					file = new File("/");
 				}
 			}
-			mCurrentDir = name;
+			mCurrentDir = file;
 		}
 		
 		return isDir;
@@ -89,7 +88,7 @@ public class FilelistNavigation {
 	 * 
 	 * @param currentDir The directory to start navigation at.
 	 */
-	public void startNavigation(final String currentDir) {
+	public void startNavigation(final File currentDir) {
 		mCurrentDir = currentDir;
 		mPathStack.clear();
 	}
@@ -99,7 +98,7 @@ public class FilelistNavigation {
 	 * 
 	 * @return The current directory pathname.
 	 */
-	public String getCurrentDir() {
+	public File getCurrentDir() {
 		return mCurrentDir;
 	}
 	
@@ -109,13 +108,12 @@ public class FilelistNavigation {
 	 * @return True if the current directory was changed.
 	 */
 	public boolean parentDir() {
-		final File file = new File(mCurrentDir);
-		final String name = file.getParent();
-		if (name == null) {
+		final File parent = mCurrentDir.getParentFile();
+		if (parent == null) {
 			return false;
 		}
 		
-		mCurrentDir = name;
+		mCurrentDir = parent;
 		return true;
 	}
 	
