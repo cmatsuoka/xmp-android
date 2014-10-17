@@ -434,25 +434,26 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 					}
 					continue;
 				}
-				
-				lastRecognized = queue.getIndex();
-
-				final int defpan = prefs.getInt(Preferences.DEFAULT_PAN, 50);
-				Log.i(TAG, "Set default pan to " + defpan);
-				Xmp.setPlayer(Xmp.PLAYER_DEFPAN, defpan);
-
+								
 				// Ditto if we can't load the module
 				Log.w(TAG, "Load " + fileName);
 				if (Xmp.loadModule(fileName) < 0) {
 					Log.e(TAG, "Error loading " + fileName);
 					if (cmd == CMD_PREV) {
-						if (queue.getIndex() < 0) {
-							break;
+						if (queue.getIndex() <= 0) {
+							queue.setIndex(lastRecognized - 1);	
+							continue;
 						}
 						queue.previous();
 					}
 					continue;
 				}
+
+				lastRecognized = queue.getIndex();
+
+				final int defpan = prefs.getInt(Preferences.DEFAULT_PAN, 50);
+				Log.i(TAG, "Set default pan to " + defpan);
+				Xmp.setPlayer(Xmp.PLAYER_DEFPAN, defpan);
 
 				cmd = CMD_NONE;
 
