@@ -29,7 +29,6 @@ import android.os.IBinder;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
-import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 
 
@@ -71,7 +70,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			new RemoteCallbackList<PlayerCallback>();
 	private int sequenceNumber;
 
-	// Telephony autopause
+	// Audio focus autopause
 	private boolean autoPaused;			// paused on phone call
 	private boolean previousPaused;		// save previous pause state
 
@@ -139,10 +138,6 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		allSequences = prefs.getBoolean(Preferences.ALL_SEQUENCES, false);
 
 		notifier = new Notifier(this);
-
-		final XmpPhoneStateListener listener = new XmpPhoneStateListener(this);
-		final TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-		tm.listen(listener, XmpPhoneStateListener.LISTEN_CALL_STATE);
 
 		mediaButtons = new MediaButtons(this);
 		mediaButtons.register();
@@ -834,7 +829,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	};
 
 
-	// for Telephony
+	// for audio focus loss
 
 	public boolean autoPause(final boolean pause) {
 		Log.i(TAG, "Auto pause changed to " + pause + ", previously " + autoPaused);
@@ -860,9 +855,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
 			Log.w(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
 			// Pause playback
-			if (!paused) {
-				actionPlayPause();
-			}
+			autoPause(true);
 			break;
 		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
 			Log.w(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
@@ -875,9 +868,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		case AudioManager.AUDIOFOCUS_GAIN:
 			Log.w(TAG, "AUDIOFOCUS_GAIN");
 			// Resume playback/raise volume
-			if (paused && !autoPaused) {
-				actionPlayPause();
-			}
+			autoPause(false);
 			synchronized (audioManager) {
 				Xmp.setPlayer(Xmp.PLAYER_VOLUME, 100);
 				ducking = false;
