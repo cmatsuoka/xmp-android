@@ -49,6 +49,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private AudioManager audioManager;
 	private RemoteControl remoteControl;
 	private boolean hasAudioFocus;
+	private boolean ducking;
 	
 	private int bufferMs;
 	private Thread playThread;
@@ -491,6 +492,12 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 				}
 
 				Xmp.startPlayer(sampleRate, bufferMs);
+				
+				synchronized (audioManager) {
+					if (ducking) {
+						Xmp.setPlayer(Xmp.PLAYER_VOLUME, DUCK_VOLUME);
+					}
+				}
 
 				int numClients = callbacks.beginBroadcast();
 				for (int j = 0; j < numClients; j++) {
@@ -712,7 +719,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			return Xmp.getModType();
 		}
 
-		public void getChannelData(int[] volumes, int[] finalvols, int[] pans, int[] instruments, int[] keys, int[] periods) {
+		public void getChannelData(final int[] volumes, final int[] finalvols, final int[] pans, final int[] instruments, final int[] keys, final int[] periods) {
 			if (updateData) {
 				synchronized (playThread) {
 					Xmp.getChannelData(volumes, finalvols, pans, instruments, keys, periods);
@@ -720,7 +727,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			}
 		}
 
-		public void getSampleData(boolean trigger, int ins, int key, int period, int chn, int width, byte[] buffer) {
+		public void getSampleData(final boolean trigger, final int ins, final int key, final int period, final int chn, final int width, final byte[] buffer) {
 			if (updateData) {
 				synchronized (playThread) {
 					Xmp.getSampleData(trigger, ins, key, period, chn, width, buffer);
@@ -860,7 +867,10 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
 			Log.w(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
 			// Lower volume
-			Xmp.setPlayer(Xmp.PLAYER_VOLUME, DUCK_VOLUME);
+			synchronized (audioManager) {
+				Xmp.setPlayer(Xmp.PLAYER_VOLUME, DUCK_VOLUME);
+				ducking = true;
+			}
 			break;
 		case AudioManager.AUDIOFOCUS_GAIN:
 			Log.w(TAG, "AUDIOFOCUS_GAIN");
@@ -868,7 +878,10 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			if (paused && !autoPaused) {
 				actionPlayPause();
 			}
-			Xmp.setPlayer(Xmp.PLAYER_VOLUME, 100);
+			synchronized (audioManager) {
+				Xmp.setPlayer(Xmp.PLAYER_VOLUME, 100);
+				ducking = false;
+			}
 			break;
 		case AudioManager.AUDIOFOCUS_LOSS:
 			Log.w(TAG, "AUDIOFOCUS_LOSS");
