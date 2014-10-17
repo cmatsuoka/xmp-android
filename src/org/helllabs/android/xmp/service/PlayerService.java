@@ -36,7 +36,8 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private static final String TAG = "PlayerService";
 	
 	public static final int RESULT_OK = 0;
-	public static final int RESULT_NO_AUDIO_FOCUS = 1;
+	public static final int RESULT_CANT_OPEN_AUDIO = 1;
+	public static final int RESULT_NO_AUDIO_FOCUS = 2;
 	
 	private static final int CMD_NONE = 0;
 	private static final int CMD_NEXT = 1;
@@ -53,6 +54,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private RemoteControl remoteControl;
 	private boolean hasAudioFocus;
 	private boolean ducking;
+	private boolean audioInitialized;
 	
 	private int bufferMs;
 	private Thread playThread;
@@ -136,7 +138,9 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 		sampleRate = Integer.parseInt(prefs.getString(Preferences.SAMPLING_RATE, "44100"));
 
-		Xmp.init();
+		if (Xmp.init(sampleRate, bufferMs)) {
+			audioInitialized = true;
+		}
 
 		isAlive = false;
 		isLoaded = false;
@@ -175,7 +179,11 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		mediaButtons.unregister();
 		watchdog.stop();
 		notifier.cancel();
-		end(hasAudioFocus ? RESULT_OK : RESULT_NO_AUDIO_FOCUS);
+		if (audioInitialized) {
+			end(hasAudioFocus ? RESULT_OK : RESULT_NO_AUDIO_FOCUS);
+		} else {
+			end(RESULT_CANT_OPEN_AUDIO);
+		}
 		super.onDestroy();
 	}
 
@@ -480,7 +488,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 					interpType = Xmp.INTERP_NEAREST;
 				}
 
-				Xmp.startPlayer(sampleRate, bufferMs);
+				Xmp.startPlayer(sampleRate);
 				
 				synchronized (audioManager) {
 					if (ducking) {
@@ -651,7 +659,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private final ModInterface.Stub binder = new ModInterface.Stub() {
 		public void play(final List<String> fileList, final int start, final boolean shuffle, final boolean loopList, final boolean keepFirst) {
 			
-			if (!hasAudioFocus) {
+			if (!audioInitialized || !hasAudioFocus) {
 				stopSelf();
 				return;
 			}

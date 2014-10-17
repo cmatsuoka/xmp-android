@@ -172,11 +172,15 @@ public class PlayerActivity extends Activity {
 				Log.d(TAG, "endPlayCallback: End progress thread");
 				stopUpdate = true;
 				
-				if (result == PlayerService.RESULT_NO_AUDIO_FOCUS) {
+				if (result != PlayerService.RESULT_OK) {
 				 	runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							Message.toast(PlayerActivity.this, R.string.error_audiofocus);
+							if (result == PlayerService.RESULT_CANT_OPEN_AUDIO) {
+								Message.toast(PlayerActivity.this, R.string.error_opensl);
+							} else if (result == PlayerService.RESULT_NO_AUDIO_FOCUS) {
+								Message.toast(PlayerActivity.this, R.string.error_audiofocus);
+							}
 						}
 					});
 				}

@@ -42,22 +42,29 @@ static char _buffer[MAX_BUFFER_SIZE];
 
 
 /* For ModList */
-JNIEXPORT void JNICALL
-Java_org_helllabs_android_xmp_Xmp_init(JNIEnv *env, jobject obj)
+JNIEXPORT jboolean JNICALL
+Java_org_helllabs_android_xmp_Xmp_init(JNIEnv *env, jobject obj, jint rate, jint ms)
 {
-	if (ctx != NULL)
-		return;
+	/*if (ctx != NULL)
+		return;*/
 
 	ctx = xmp_create_context();
 	pthread_mutex_init(&_lock, NULL);
+
+	if ((_buffer_num = open_audio(rate, ms)) < 0) {
+		return JNI_FALSE;
+	}
+	_buffer_num++;
+
+	return JNI_TRUE;
 }
 
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_deinit(JNIEnv *env, jobject obj)
 {
-
-	/*pthread_mutex_destroy(&_lock);*/
-	/* xmp_free_context(ctx); */
+	xmp_free_context(ctx);
+	pthread_mutex_destroy(&_lock);
+	close_audio();
 	return 0;
 }
 
@@ -154,14 +161,9 @@ Java_org_helllabs_android_xmp_Xmp_releaseModule(JNIEnv *env, jobject obj)
 }
 
 JNIEXPORT jint JNICALL
-Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint rate, jint ms)
+Java_org_helllabs_android_xmp_Xmp_startPlayer(JNIEnv *env, jobject obj, jint rate)
 {
 	int i, ret;
-
-	if ((_buffer_num = open_audio(rate, ms)) < 0) {
-		return -100;
-	}
-	_buffer_num++;
 
 	lock();
 
@@ -195,7 +197,6 @@ Java_org_helllabs_android_xmp_Xmp_endPlayer(JNIEnv *env, jobject obj)
 		xmp_end_player(ctx);
 		free(fi);
 		fi = NULL;
-		close_audio();
 	}
 	unlock();
 

@@ -111,6 +111,7 @@
     <string name="error_dir_not_under_moddir">Directory not under mod dir</string>
     <string name="error_no_files_to_play">No files to play</string>
     <string name="error_audiofocus">Audio focus request failed</string>
+    <string name="error_opensl">Can\'t open audio device</string>
     
     <string name="cache_clear">File cache cleared</string>
     <string name="cache_clear_error">Error clearing cache</string> 

@@ -35,12 +35,12 @@ public final class Xmp {
 		
 	}
 	
-	public static native void init();
+	public static native boolean init(int rate, int ms);
 	public static native void deinit();
 	public static native boolean testModule(String name, ModInfo info);
 	public static native int loadModule(String name);
 	public static native int releaseModule();
-	public static native int startPlayer(int rate, int ms);
+	public static native int startPlayer(int rate);
 	public static native int endPlayer();
 	public static native int playAudio();
 	public static native void stopAudio();
