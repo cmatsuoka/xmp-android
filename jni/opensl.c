@@ -207,10 +207,30 @@ int open_audio(int rate, int latency)
 	return buffer_num;
 }
 
+void flush_audio()
+{
+	SLAndroidSimpleBufferQueueState state;
+
+	lock();
+	if (buffer_queue != NULL) {
+		(*buffer_queue)->GetState(buffer_queue, &state);
+	}
+
+	while (state.count != 0) {
+		usleep(10000);
+		if (buffer_queue != NULL) {
+			(*buffer_queue)->GetState(buffer_queue, &state);
+		}
+	}
+	unlock();
+}
+
 int play_audio()
 {
 	SLresult r = SL_RESULT_SUCCESS;
 	int i;
+
+	flush_audio();
 
 	/* enqueue initial buffers */
 	for (i = 0; i < buffer_num; i++) {
@@ -226,13 +246,7 @@ int play_audio()
 	last_free = first_free = 0;
 
 	/* set player state to playing */
-	lock();
-	if (player_play != NULL) {
-		r = (*player_play)->SetPlayState(player_play,
-					SL_PLAYSTATE_PLAYING);
-	}
-	unlock();
-	if (r != SL_RESULT_SUCCESS) 
+	if (restart_audio() < 0)
 		return -1;
 
 	return 0;
@@ -261,20 +275,30 @@ int fill_buffer(int looped)
 	return ret;
 }
 
-void restart_audio()
+int restart_audio()
 {
+	int ret;
+
 	lock();
 	if (player_play != NULL) {
-		(*player_play)->SetPlayState(player_play, SL_PLAYSTATE_PLAYING);
+		ret = (*player_play)->SetPlayState(player_play,
+					SL_PLAYSTATE_PLAYING);
 	}
 	unlock();
+
+	return ret == SL_RESULT_SUCCESS ? 0 : -1;
 }
 
-void stop_audio()
+int stop_audio()
 {
+	int ret;
+
 	lock();
 	if (player_play != NULL) {
-		(*player_play)->SetPlayState(player_play, SL_PLAYSTATE_STOPPED);
+		ret = (*player_play)->SetPlayState(player_play,
+					SL_PLAYSTATE_STOPPED);
 	}
 	unlock();
+
+	return ret == SL_RESULT_SUCCESS ? 0 : -1;
 }

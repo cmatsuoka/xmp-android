@@ -230,16 +230,16 @@ Java_org_helllabs_android_xmp_Xmp_playAudio(JNIEnv *env, jobject obj)
 	return play_audio();
 }
 
-JNIEXPORT void JNICALL
+JNIEXPORT jboolean JNICALL
 Java_org_helllabs_android_xmp_Xmp_stopAudio(JNIEnv *env, jobject obj)
 {
-	stop_audio();
+	return stop_audio() == 0 ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT void JNICALL
+JNIEXPORT jboolean JNICALL
 Java_org_helllabs_android_xmp_Xmp_restartAudio(JNIEnv *env, jobject obj)
 {
-	restart_audio();
+	return restart_audio() == 0 ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT jboolean JNICALL

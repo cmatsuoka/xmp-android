@@ -43,8 +43,8 @@ public final class Xmp {
 	public static native int startPlayer(int rate);
 	public static native int endPlayer();
 	public static native int playAudio();
-	public static native void stopAudio();
-	public static native void restartAudio();
+	public static native boolean stopAudio();
+	public static native boolean restartAudio();
 	public static native boolean hasFreeBuffer();
 	public static native int fillBuffer(boolean loop);
 	public static native int nextPosition();
