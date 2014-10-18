@@ -68,6 +68,7 @@ public class PlayerActivity extends Activity {
 	private boolean keepFirst;
 	private boolean paused;
 	private boolean showElapsed;
+	private boolean skipToPrevious;
 	private final TextView[] infoName = new TextView[2];
 	private final TextView[] infoType = new TextView[2];
 	private TextView infoStatus;
@@ -614,6 +615,7 @@ public class PlayerActivity extends Activity {
 						}
 					} else {
 						modPlayer.prevSong();
+						skipToPrevious = true;
 					}
 					unpause();
 				} catch (RemoteException e) {
@@ -696,9 +698,6 @@ public class PlayerActivity extends Activity {
 		if (prefs.getBoolean(Preferences.KEEP_SCREEN_ON, false)) {
 			titleFlipper.setKeepScreenOn(true);
 		}
-
-		titleFlipper.setInAnimation(this, R.anim.slide_in_right_slow);
-		titleFlipper.setOutAnimation(this, R.anim.slide_out_left_slow);
 
 		final Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/Michroma.ttf");
 
@@ -934,6 +933,15 @@ public class PlayerActivity extends Activity {
 
 					infoName[flipperPage].setText(name);
 					infoType[flipperPage].setText(type);
+					
+					if (skipToPrevious) {
+						titleFlipper.setInAnimation(PlayerActivity.this, R.anim.slide_in_left_slow);
+						titleFlipper.setOutAnimation(PlayerActivity.this, R.anim.slide_out_right_slow);
+					} else {
+						titleFlipper.setInAnimation(PlayerActivity.this, R.anim.slide_in_right_slow);
+						titleFlipper.setOutAnimation(PlayerActivity.this, R.anim.slide_out_left_slow);
+					}
+					skipToPrevious = false;
 
 					titleFlipper.showNext();
 
