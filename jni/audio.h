@@ -5,6 +5,10 @@
 	if (++(x) >= (max)) { (x) = 0; } \
 } while (0)
 
+#define DEC(x,max) do { \
+	if (--(x) < 0) { (x) = (max) - 1; } \
+} while (0)
+
 int open_audio(int, int);
 void close_audio(void);
 int play_audio(void);

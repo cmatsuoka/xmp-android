@@ -29,6 +29,11 @@ static pthread_mutex_t _lock;
 static void player_callback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
 	INC(last_free, buffer_num);
+
+	/* underrun, shouldn't happen */
+	if (last_free == first_free) {
+		DEC(last_free, buffer_num);
+	}
 }
 
 static int opensl_open(int sr, int num)
