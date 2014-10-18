@@ -111,7 +111,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		notifier = new Notifier(this);
 
 
-		watchdog = new Watchdog(5);
+		watchdog = new Watchdog(10);
 		watchdog.setOnTimeoutListener(new Watchdog.OnTimeoutListener() {
 			public void onTimeout() {
 				Log.e(TAG, "Stopped by watchdog");
@@ -333,11 +333,13 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 				Xmp.playAudio();
 				
+				Log.i(TAG, "Enter play loop");
 				do {
 					Xmp.getModVars(vars);
 					remoteControl.setMetadata(Xmp.getModName(), Xmp.getModType(), vars[0]);
 					
 					while (cmd == CMD_NONE) {
+						// Wait if paused
 						while (paused) {
 							try {
 								Thread.sleep(100);
@@ -349,12 +351,14 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 							receiverHelper.checkReceivers();
 						}
 
+						// Wait if no buffers available
 						while (!Xmp.hasFreeBuffer() && !paused && cmd == CMD_NONE) {
 							try {
 								Thread.sleep(40);
 							} catch (InterruptedException e) {	}
 						}
 
+						// Fill a new buffer
 						if (Xmp.fillBuffer(looped) < 0) {
 							break;
 						}
@@ -549,13 +553,17 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		public void nextSong() {
 			Xmp.stopModule();
 			cmd = CMD_NEXT;
-			paused = false;
+			if (paused) {
+				doPauseAndNotify();
+			}
 		}
 
 		public void prevSong() {
 			Xmp.stopModule();
 			cmd = CMD_PREV;
-			paused = false;
+			if (paused) {
+				doPauseAndNotify();
+			}
 		}
 
 		public boolean toggleLoop() throws RemoteException {

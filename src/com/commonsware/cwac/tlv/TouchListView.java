@@ -37,6 +37,7 @@ import android.widget.ListView;
 
 import org.helllabs.android.xmp.R;
 
+@SuppressWarnings("PMD")
 public class TouchListView extends ListView {
 	private ImageView mDragView;
 	private WindowManager mWindowManager;

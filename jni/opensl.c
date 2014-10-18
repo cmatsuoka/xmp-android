@@ -91,7 +91,7 @@ static int opensl_open(int sr, int num)
 		goto err1;
 
 	SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {
-		SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, num
+		SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, num - 1
 	};
 
 	SLDataFormat_PCM format_pcm = {
@@ -193,8 +193,8 @@ int open_audio(int rate, int latency)
 	buffer_num = latency / BUFFER_TIME;
 	buffer_size = rate * 2 * 2 * BUFFER_TIME / 1000;
 
-	if (buffer_num < 2)
-		buffer_num = 2;
+	if (buffer_num < 3)
+		buffer_num = 3;
 
 	buffer = malloc(buffer_size * buffer_num);
 	if (buffer == NULL)
@@ -203,6 +203,9 @@ int open_audio(int rate, int latency)
 	ret = opensl_open(rate, buffer_num);
 	if (ret < 0)
 		return ret;
+
+	first_free = 0;
+	last_free = buffer_num - 1;
 
 	return buffer_num;
 }
@@ -221,29 +224,30 @@ void flush_audio()
 		if (buffer_queue != NULL) {
 			(*buffer_queue)->GetState(buffer_queue, &state);
 		}
+
 	}
+	unlock();
+}
+
+void drop_audio()
+{
+	lock();
+
+	if (buffer_queue != NULL) {
+		(*buffer_queue)->Clear(buffer_queue);
+	}
+
+	first_free = 0;
+	last_free = buffer_num - 1;
+
 	unlock();
 }
 
 int play_audio()
 {
 	SLresult r = SL_RESULT_SUCCESS;
-	int i;
 
 	flush_audio();
-
-	/* enqueue initial buffers */
-	for (i = 0; i < buffer_num; i++) {
-		char *b = &buffer[i * buffer_size];
-		play_buffer(b, buffer_size, 0);
-		lock();
-		if (buffer_queue != NULL) {
-			(*buffer_queue)->Enqueue(buffer_queue, b, buffer_size);
-		}
-		unlock();
-	}
-
-	last_free = first_free = 0;
 
 	/* set player state to playing */
 	if (restart_audio() < 0)
@@ -277,7 +281,12 @@ int fill_buffer(int looped)
 
 int restart_audio()
 {
-	int ret;
+	int i, ret;
+
+	/* enqueue initial buffers */
+	while (has_free_buffer()) {
+		fill_buffer(0);
+	}
 
 	lock();
 	if (player_play != NULL) {
@@ -292,6 +301,8 @@ int restart_audio()
 int stop_audio()
 {
 	int ret;
+
+	drop_audio();
 
 	lock();
 	if (player_play != NULL) {

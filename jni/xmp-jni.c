@@ -54,7 +54,6 @@ Java_org_helllabs_android_xmp_Xmp_init(JNIEnv *env, jobject obj, jint rate, jint
 	if ((_buffer_num = open_audio(rate, ms)) < 0) {
 		return JNI_FALSE;
 	}
-	_buffer_num++;
 
 	return JNI_TRUE;
 }
