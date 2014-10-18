@@ -4,10 +4,6 @@ import java.util.List;
 
 import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.preferences.Preferences;
-import org.helllabs.android.xmp.service.receiver.BluetoothConnectionReceiver;
-import org.helllabs.android.xmp.service.receiver.HeadsetPlugReceiver;
-import org.helllabs.android.xmp.service.receiver.MediaButtonsReceiver;
-import org.helllabs.android.xmp.service.receiver.NotificationActionReceiver;
 import org.helllabs.android.xmp.service.utils.Notifier;
 import org.helllabs.android.xmp.service.utils.QueueManager;
 import org.helllabs.android.xmp.service.utils.RemoteControl;
@@ -16,20 +12,15 @@ import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
 
 import android.app.Service;
-import android.bluetooth.BluetoothA2dp;
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
-import android.view.KeyEvent;
 
 
 public final class PlayerService extends Service implements OnAudioFocusChangeListener {
@@ -56,7 +47,6 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private boolean ducking;
 	private boolean audioInitialized;
 	
-	private int bufferMs;
 	private Thread playThread;
 	private SharedPreferences prefs;
 	private Watchdog watchdog;
@@ -66,6 +56,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private boolean restart;
 	private boolean canRelease;
 	private boolean paused;
+	private boolean previousPaused;		// save previous pause state
 	private boolean looped;
 	private boolean allSequences;
 	private int startIndex;
@@ -74,20 +65,8 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private QueueManager queue;
 	private final RemoteCallbackList<PlayerCallback> callbacks = new RemoteCallbackList<PlayerCallback>();
 	private int sequenceNumber;
-
-	// Audio focus autopause
-	private boolean autoPaused;			// paused on phone call
-	private boolean previousPaused;		// save previous pause state
-
-	// Headset autopause
-	private HeadsetPlugReceiver headsetPlugReceiver;
-	private boolean headsetPause;
-
-	// Bluetooth autopause
-	private BluetoothConnectionReceiver bluetoothConnectionReceiver;
-
-	// Media buttons
-	private MediaButtons mediaButtons;
+	
+	private ReceiverHelper receiverHelper;
 
 	public static boolean isAlive;
 	public static boolean isLoaded;
@@ -108,28 +87,10 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			Log.e(TAG, "Can't get audio focus");
 		}
 
-		if (prefs.getBoolean(Preferences.HEADSET_PAUSE, true)) {
-			Log.i(TAG, "Register headset receiver");
-			// For listening to headset changes, the broadcast receiver cannot be
-			// declared in the manifest, it must be dynamically registered. 
-			headsetPlugReceiver = new HeadsetPlugReceiver();
-			registerReceiver(headsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
-		}
-
-		if (prefs.getBoolean(Preferences.BLUETOOTH_PAUSE, true)) {
-			Log.i(TAG, "Register bluetooth receiver");
-			bluetoothConnectionReceiver = new BluetoothConnectionReceiver();
-			final IntentFilter filter = new IntentFilter();
-			filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
-			filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
-			filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-			if (Build.VERSION.SDK_INT >= 11) {
-				filter.addAction(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
-			}
-			registerReceiver(bluetoothConnectionReceiver, filter);
-		}
-
-		bufferMs = prefs.getInt(Preferences.BUFFER_MS, DEFAULT_BUFFER_MS);
+		receiverHelper = new ReceiverHelper(this);
+		receiverHelper.registerReceivers();
+		
+		int bufferMs = prefs.getInt(Preferences.BUFFER_MS, DEFAULT_BUFFER_MS);
 		if (bufferMs < MIN_BUFFER_MS) {
 			bufferMs = MIN_BUFFER_MS;
 		} else if (bufferMs > MAX_BUFFER_MS) {
@@ -149,8 +110,6 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 		notifier = new Notifier(this);
 
-		mediaButtons = new MediaButtons(this);
-		mediaButtons.register();
 
 		watchdog = new Watchdog(5);
 		watchdog.setOnTimeoutListener(new Watchdog.OnTimeoutListener() {
@@ -170,13 +129,8 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 	@Override
 	public void onDestroy() {
-		if (headsetPlugReceiver != null) {
-			unregisterReceiver(headsetPlugReceiver);
-		}
-		if (bluetoothConnectionReceiver != null) {		// Z933 (glaucus) needs this test
-			unregisterReceiver(bluetoothConnectionReceiver);
-		}
-		mediaButtons.unregister();
+		receiverHelper.unregisterReceivers();
+
 		watchdog.stop();
 		notifier.cancel();
 		if (audioInitialized) {
@@ -219,13 +173,13 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		}
 	}
 
-	private void actionStop() {
+	public void actionStop() {
 		Xmp.stopModule();
 		paused = false;
 		cmd = CMD_STOP;
 	}
 
-	private void actionPlayPause() {
+	public void actionPlayPause() {
 		doPauseAndNotify();
 
 		// Notify clients that we paused
@@ -240,7 +194,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		callbacks.finishBroadcast();
 	}
 
-	private void actionPrev() {
+	public void actionPrev() {
 		if (Xmp.time() > 2000) {
 			Xmp.seek(0);
 		} else {
@@ -250,152 +204,12 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		paused = false;
 	}
 
-	private void actionNext() {
+	public void actionNext() {
 		Xmp.stopModule();
 		paused = false;
 		cmd = CMD_NEXT;
 	}
 
-	private void checkMediaButtons() {
-		final int key = MediaButtonsReceiver.getKeyCode();
-
-		if (key != MediaButtonsReceiver.NO_KEY) {
-			switch (key) {
-			case KeyEvent.KEYCODE_MEDIA_NEXT:
-				Log.i(TAG, "Handle KEYCODE_MEDIA_NEXT");
-				actionNext();
-				break;
-			case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-				Log.i(TAG, "Handle KEYCODE_MEDIA_PREVIOUS");
-				actionPrev();
-				break;
-			case KeyEvent.KEYCODE_MEDIA_STOP:
-				Log.i(TAG, "Handle KEYCODE_MEDIA_STOP");
-				actionStop();
-				break;
-			case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-				Log.i(TAG, "Handle KEYCODE_MEDIA_PLAY_PAUSE");
-				actionPlayPause();
-				headsetPause = false;
-				break;
-			case KeyEvent.KEYCODE_MEDIA_PLAY:
-				Log.i(TAG, "Handle KEYCODE_MEDIA_PLAY");
-				if (paused) {
-					actionPlayPause();
-				}
-				break;
-			case KeyEvent.KEYCODE_MEDIA_PAUSE:
-				Log.i(TAG, "Handle KEYCODE_MEDIA_PAUSE");
-				if (!paused) {
-					actionPlayPause();
-					headsetPause = false;
-				}
-				break;
-			}
-
-			MediaButtonsReceiver.setKeyCode(MediaButtonsReceiver.NO_KEY);
-		}
-	}
-
-	private void checkNotificationButtons() {
-		final int key = NotificationActionReceiver.getKeyCode();
-
-		if (key != NotificationActionReceiver.NO_KEY) {
-			switch (key) {
-			case NotificationActionReceiver.STOP:
-				Log.i(TAG, "Handle notification stop");
-				actionStop();
-				break;
-			case NotificationActionReceiver.PAUSE:
-				Log.i(TAG, "Handle notification pause");
-				actionPlayPause();
-				headsetPause = false;
-				break;
-			case NotificationActionReceiver.NEXT:
-				Log.i(TAG, "Handle notification next");
-				actionNext();
-				break;
-			}
-
-			NotificationActionReceiver.setKeyCode(NotificationActionReceiver.NO_KEY);
-		}
-	}
-
-	private void checkHeadsetState() {
-		final int state = HeadsetPlugReceiver.getState();
-
-		if (state != HeadsetPlugReceiver.NO_STATE) {
-			switch (state) {
-			case HeadsetPlugReceiver.HEADSET_UNPLUGGED:
-				Log.i(TAG, "Handle headset unplugged");
-
-				// If not already paused
-				if (!paused && !autoPaused) {
-					headsetPause = true;
-					actionPlayPause();
-				} else {
-					Log.i(TAG, "Already paused");
-				}
-				break;
-			case HeadsetPlugReceiver.HEADSET_PLUGGED:
-				Log.i(TAG, "Handle headset plugged");
-
-				// If paused by headset unplug
-				if (headsetPause) {
-					// Don't unpause if we're paused due to phone call
-					if (!autoPaused) {
-						actionPlayPause();
-					} else {
-						Log.i(TAG, "Paused by phone state, don't unpause");
-					}
-					headsetPause = false;
-				} else {
-					Log.i(TAG, "Manual pause, don't unpause");
-				}
-				break;
-			}
-
-			HeadsetPlugReceiver.setState(HeadsetPlugReceiver.NO_STATE);
-		}
-	}
-
-	private void checkBluetoothState() {
-		final int state = BluetoothConnectionReceiver.getState();
-
-		if (state != BluetoothConnectionReceiver.NO_STATE) {
-			switch (state) {
-			case BluetoothConnectionReceiver.DISCONNECTED:
-				Log.i(TAG, "Handle bluetooth disconnection");
-
-				// If not already paused
-				if (!paused && !autoPaused) {
-					headsetPause = true;
-					actionPlayPause();
-				} else {
-					Log.i(TAG, "Already paused");
-				}
-				break;
-			case BluetoothConnectionReceiver.CONNECTED:
-				Log.i(TAG, "Handle bluetooth connection");
-
-				// If paused by headset unplug
-				if (headsetPause) {
-					// Don't unpause if we're paused due to phone call
-					if (!autoPaused) {
-						actionPlayPause();
-					} else {
-						Log.i(TAG, "Paused by phone state, don't unpause");
-					}
-					headsetPause = false;
-				} else {
-					Log.i(TAG, "Manual pause, don't unpause");
-				}
-				break;
-			}
-
-			BluetoothConnectionReceiver.setState(BluetoothConnectionReceiver.NO_STATE);
-		}
-	}
 
 	//	private int playFrame() {
 	//		// Synchronize frame play with data gathering so we don't change playing variables
@@ -532,10 +346,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 							}
 
 							watchdog.refresh();
-							checkMediaButtons();
-							checkHeadsetState();
-							checkBluetoothState();
-							checkNotificationButtons();
+							receiverHelper.checkReceivers();
 						}
 
 						while (!Xmp.hasFreeBuffer() && !paused && cmd == CMD_NONE) {
@@ -549,10 +360,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 						}
 
 						watchdog.refresh();
-						checkMediaButtons();
-						checkHeadsetState();
-						checkBluetoothState();
-						checkNotificationButtons();
+						receiverHelper.checkReceivers();
 					}
 
 					// Subsong explorer
@@ -695,7 +503,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 		public void pause() {
 			doPauseAndNotify();
-			headsetPause = false;
+			receiverHelper.setHeadsetPaused(false);
 		}
 
 		public void getInfo(final int[] values) {
@@ -840,21 +648,21 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	// for audio focus loss
 
 	public boolean autoPause(final boolean pause) {
-		Log.i(TAG, "Auto pause changed to " + pause + ", previously " + autoPaused);
+		Log.i(TAG, "Auto pause changed to " + pause + ", previously " + receiverHelper.isAutoPaused());
 		if (pause) {
 			previousPaused = paused;
-			autoPaused = true;
+			receiverHelper.setAutoPaused(true);
 			paused = false;				// set to complement, flip on doPause()
 			doPauseAndNotify();
 		} else {
-			if (autoPaused && !headsetPause) {
-				autoPaused = false;
+			if (receiverHelper.isAutoPaused() && !receiverHelper.isHeadsetPaused()) {
+				receiverHelper.setAutoPaused(false);
 				paused = !previousPaused;	// set to complement, flip on doPause()
 				doPauseAndNotify();
 			}
 		}	
 
-		return autoPaused;
+		return receiverHelper.isAutoPaused();
 	}
 
 	@Override
@@ -890,5 +698,13 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		default:
 			break;
 		}
+	}
+	
+	public boolean isPaused() {
+		return paused;
+	}
+	
+	public void setPaused(final boolean paused) {
+		this.paused = paused;
 	}
 }
