@@ -96,7 +96,7 @@ static int opensl_open(int sr, int num)
 		goto err1;
 
 	SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {
-		SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, num - 1
+		SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, num
 	};
 
 	SLDataFormat_PCM format_pcm = {
