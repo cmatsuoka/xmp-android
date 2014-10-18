@@ -275,6 +275,9 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 	private void updateModlist() {
 		final File modDir = mNavigation.getCurrentDir();
+		if (modDir == null) {
+			return;
+		}
 		
 		playlistAdapter.clear();
 

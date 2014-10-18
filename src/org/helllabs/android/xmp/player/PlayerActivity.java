@@ -191,7 +191,9 @@ public class PlayerActivity extends Activity {
 						progressThread.join();
 					} catch (InterruptedException e) { }
 				}
-				finish();
+				if (!isFinishing()) {
+					finish();
+				}
 			}
 		}
 
