@@ -2,8 +2,7 @@
 #define XMP_JNI_AUDIO_H
 
 #define INC(x,max) do { \
-	if (((x) + 1) >= (max)) { (x) = 0; } \
-	else { (x)++; } \
+	if (++(x) >= (max)) { (x) = 0; } \
 } while (0)
 
 int open_audio(int, int);
