@@ -47,6 +47,10 @@ public class FilelistNavigation {
 	 * @return True if current directory was changed.
 	 */
 	public boolean changeDirectory(File file) {
+		if (file == null) {
+			return false;
+		}
+		
 		final boolean isDir = file.isDirectory();
 
 		if (isDir) {
@@ -108,6 +112,10 @@ public class FilelistNavigation {
 	 * @return True if the current directory was changed.
 	 */
 	public boolean parentDir() {
+		if (mCurrentDir == null) {
+			return false;
+		}
+		
 		final File parent = mCurrentDir.getParentFile();
 		if (parent == null) {
 			return false;
