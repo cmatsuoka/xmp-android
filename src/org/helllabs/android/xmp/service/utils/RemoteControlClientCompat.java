@@ -33,7 +33,7 @@ import java.lang.reflect.Method;
  * before the RemoteControlClient can be registered through
  * {@link android.media.AudioManager#registerRemoteControlClient(android.media.RemoteControlClient)}.
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked", "PMD"})
 public class RemoteControlClientCompat {
 
 	private static final String TAG = "RemoteControlCompat";
