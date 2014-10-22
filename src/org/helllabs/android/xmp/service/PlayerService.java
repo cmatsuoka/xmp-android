@@ -154,9 +154,9 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private void updateNotification() {
 		if (queue != null) {	// It seems that queue can be null if we're called from PhoneStateListener
 			if (paused) {
-				notifier.pauseNotification(Xmp.getModName(), queue.getIndex());
+				notifier.pauseNotification(Xmp.getModName(), Xmp.getModType(), queue.getIndex());
 			} else {
-				notifier.unpauseNotification(Xmp.getModName(), queue.getIndex());
+				notifier.unpauseNotification(Xmp.getModName(), Xmp.getModType(), queue.getIndex());
 			}
 		}
 	}
@@ -279,7 +279,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 				cmd = CMD_NONE;
 
-				notifier.tickerNotification(Xmp.getModName(), queue.getIndex());
+				notifier.tickerNotification(Xmp.getModName(), Xmp.getModType(), queue.getIndex());
 				isLoaded = true;
 
 				// Unmute all channels

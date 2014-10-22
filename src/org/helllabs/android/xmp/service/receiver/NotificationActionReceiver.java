@@ -14,6 +14,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
 	public static final int STOP = 1;
 	public static final int PAUSE = 2;
 	public static final int NEXT = 3;
+	public static final int PREV = 4;
 	private static int keyCode = NO_KEY;
 
 	@Override
@@ -27,7 +28,9 @@ public class NotificationActionReceiver extends BroadcastReceiver {
 			keyCode = PAUSE;
 		} else if (action.equals(Notifier.ACTION_NEXT)) {
 			keyCode = NEXT;
-		}		
+		} else if (action.equals(Notifier.ACTION_PREV)) {
+			keyCode = PREV;
+		}
 	}
 	
 	public static int getKeyCode() {

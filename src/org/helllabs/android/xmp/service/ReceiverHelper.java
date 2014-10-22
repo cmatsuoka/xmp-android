@@ -139,6 +139,10 @@ public class ReceiverHelper {
 				Log.i(TAG, "Handle notification next");
 				player.actionNext();
 				break;
+			case NotificationActionReceiver.PREV:
+				Log.i(TAG, "Handle notification prev");
+				player.actionPrev();
+				break;
 			}
 
 			NotificationActionReceiver.setKeyCode(NotificationActionReceiver.NO_KEY);
