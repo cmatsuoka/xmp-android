@@ -23,51 +23,63 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
     private final List<PlaylistItem> items;
     private final Context context;
     private final boolean useFilename;
+    
+    static class ViewHolder {
+    	public TextView titleText;
+    	public TextView infoText;
+    	public ImageView image;
+    }
 
     public PlaylistAdapter(final Context context, final int resource, final int textViewResId, final List<PlaylistItem> items, final boolean useFilename) {
     	super(context, resource, textViewResId, items);
     	this.items = items;
     	this.context = context;
     	this.useFilename = useFilename;
+    	
+    	
     }
     
     @SuppressLint("InflateParams")
 	@Override
-    public View getView(final int position, final View convertView, final ViewGroup parent) {
-    	View view = convertView;
-    	if (view == null) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
+    	ViewHolder holder;
+    	
+    	if (convertView == null) {
     		final LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    		view = inflater.inflate(R.layout.playlist_item, null);
+    		convertView = inflater.inflate(R.layout.playlist_item, null);
+    		holder = new ViewHolder();
+    		holder.titleText = (TextView)convertView.findViewById(R.id.plist_title);
+    		holder.infoText = (TextView)convertView.findViewById(R.id.plist_info);
+    		holder.image = (ImageView)convertView.findViewById(R.id.plist_image);
+    		convertView.setTag(holder);
+    	} else {
+    		holder = (ViewHolder)convertView.getTag();
     	}
     	final PlaylistItem info = getItem(position);
     	           
-    	if (info != null) {                		
-    		final TextView titleText = (TextView)view.findViewById(R.id.plist_title);
-    		final TextView infoText = (TextView)view.findViewById(R.id.plist_info);
-    		final ImageView image = (ImageView)view.findViewById(R.id.plist_image);
-    		
-   			titleText.setText(useFilename ? FileUtils.basename(info.getFile().getPath()) : info.getName());
-   			infoText.setText(info.getComment());
+    	if (info != null) {                		    		
+   			holder.titleText.setText(useFilename ? FileUtils.basename(info.getFile().getPath()) : info.getName());
+   			holder.infoText.setText(info.getComment());
    			
    			final Typeface typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
    			final int imageRes = info.getImageRes();
    			final int type = info.getType();
    			
    			if (type == PlaylistItem.TYPE_DIRECTORY) {
-    			infoText.setTypeface(typeface, Typeface.ITALIC);
+    			holder.infoText.setTypeface(typeface, Typeface.ITALIC);
    			} else {
-    			infoText.setTypeface(typeface, Typeface.NORMAL);  			
+    			holder.infoText.setTypeface(typeface, Typeface.NORMAL);  			
    			}
 
    			if (imageRes > 0) {
-   				image.setImageResource(imageRes);
-   				image.setVisibility(View.VISIBLE);
+   				holder.image.setImageResource(imageRes);
+   				holder.image.setVisibility(View.VISIBLE);
    			} else {
-   				image.setVisibility(View.GONE);
+   				holder.image.setVisibility(View.GONE);
    			}
      	}
             
-    	return view;
+    	return convertView;
     }
     
     public List<PlaylistItem> getItems() {
