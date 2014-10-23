@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.preferences.Preferences;
+import org.helllabs.android.xmp.service.utils.MediaSessionWrapper;
 import org.helllabs.android.xmp.service.utils.Notifier;
 import org.helllabs.android.xmp.service.utils.QueueManager;
 import org.helllabs.android.xmp.service.utils.RemoteControl;
@@ -47,6 +48,8 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private boolean ducking;
 	private boolean audioInitialized;
 	
+	private MediaSessionWrapper session;
+	
 	private Thread playThread;
 	private SharedPreferences prefs;
 	private Watchdog watchdog;
@@ -70,7 +73,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 	public static boolean isAlive;
 	public static boolean isLoaded;
-
+	
 
 	@Override
 	public void onCreate() {
@@ -108,8 +111,10 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		paused = false;
 		allSequences = prefs.getBoolean(Preferences.ALL_SEQUENCES, false);
 
-		notifier = new Notifier(this);
-
+		session = new MediaSessionWrapper(this, getPackageName());
+		session.setActive(true);
+		
+		notifier = new Notifier(this, session.getSessionToken());
 
 		watchdog = new Watchdog(10);
 		watchdog.setOnTimeoutListener(new Watchdog.OnTimeoutListener() {
@@ -133,6 +138,9 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 		watchdog.stop();
 		notifier.cancel();
+		
+		session.setActive(false);
+		
 		if (audioInitialized) {
 			end(hasAudioFocus ? RESULT_OK : RESULT_NO_AUDIO_FOCUS);
 		} else {

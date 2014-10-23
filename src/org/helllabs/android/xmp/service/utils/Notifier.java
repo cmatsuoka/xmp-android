@@ -5,7 +5,6 @@ import java.util.Locale;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.player.PlayerActivity;
 import org.helllabs.android.xmp.service.receiver.NotificationActionReceiver;
-import org.helllabs.android.xmp.util.Log;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -14,6 +13,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.session.MediaSession;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
@@ -28,9 +28,11 @@ public class Notifier {
 	private QueueManager queue;
 	private final Service service;
 	private final long when;
+	private final MediaSession.Token token;
 
-	public Notifier(final Service service) {
+	public Notifier(final Service service, final MediaSession.Token token) {
 		this.service = service;
+		this.token = token;
 		final Intent intent = new Intent(service, PlayerActivity.class);
 		contentIntent = PendingIntent.getActivity(service, 0, intent, 0);
 		when = System.currentTimeMillis();
@@ -100,7 +102,8 @@ public class Notifier {
 			.setContentIntent(contentIntent)
 			.setSmallIcon(R.drawable.notification_icon)
 			.setLargeIcon(icon)
-			.setStyle(new Notification.MediaStyle())
+			.setStyle(new Notification.MediaStyle().setMediaSession(token))
+			.setVisibility(Notification.VISIBILITY_PUBLIC)
 			.addAction(R.drawable.ic_action_previous, "Prev", prevIntent)
 			.addAction(R.drawable.ic_action_stop, "Stop", stopIntent);
 
