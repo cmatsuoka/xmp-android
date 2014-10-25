@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.helllabs.android.xmp.Xmp;
 import org.helllabs.android.xmp.preferences.Preferences;
+import org.helllabs.android.xmp.service.notifier.LegacyNotifier;
+import org.helllabs.android.xmp.service.notifier.LollipopNotifier;
+import org.helllabs.android.xmp.service.notifier.Notifier;
 import org.helllabs.android.xmp.service.utils.MediaSessionWrapper;
-import org.helllabs.android.xmp.service.utils.Notifier;
 import org.helllabs.android.xmp.service.utils.QueueManager;
 import org.helllabs.android.xmp.service.utils.RemoteControl;
 import org.helllabs.android.xmp.service.utils.Watchdog;
@@ -18,6 +20,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
@@ -114,7 +117,11 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		session = new MediaSessionWrapper(this, getPackageName());
 		session.setActive(true);
 		
-		notifier = new Notifier(this, session.getSessionToken());
+		if (Build.VERSION.SDK_INT >= 21) {
+			notifier = new LollipopNotifier(this, session.getSessionToken());
+		} else {
+			notifier = new LegacyNotifier(this);
+		}
 
 		watchdog = new Watchdog(10);
 		watchdog.setOnTimeoutListener(new Watchdog.OnTimeoutListener() {
@@ -161,11 +168,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 	private void updateNotification() {
 		if (queue != null) {	// It seems that queue can be null if we're called from PhoneStateListener
-			if (paused) {
-				notifier.pauseNotification(Xmp.getModName(), Xmp.getModType(), queue.getIndex());
-			} else {
-				notifier.unpauseNotification(Xmp.getModName(), Xmp.getModType(), queue.getIndex());
-			}
+			notifier.notify(Xmp.getModName(), Xmp.getModType(), queue.getIndex(), paused ? Notifier.TYPE_PAUSE : 0);
 		}
 	}
 
@@ -287,7 +290,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 				cmd = CMD_NONE;
 
-				notifier.tickerNotification(Xmp.getModName(), Xmp.getModType(), queue.getIndex());
+				notifier.notify(Xmp.getModName(), Xmp.getModType(), queue.getIndex(), Notifier.TYPE_TICKER);
 				isLoaded = true;
 
 				// Unmute all channels

@@ -14,6 +14,9 @@ import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
 import android.os.Build;
 
+
+@SuppressWarnings("deprecation")
+@TargetApi(19)
 public class RemoteControl {
 
 	private static final String TAG = "RemoteControl";
@@ -21,6 +24,7 @@ public class RemoteControl {
 	private RemoteControlClientCompat remoteControlClient;
 	private final AudioManager audioManager;
 
+	
 	public RemoteControl(final Context context, final AudioManager audioManager) {
 		this.audioManager = audioManager;
 

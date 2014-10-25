@@ -1,6 +1,6 @@
 package org.helllabs.android.xmp.service.receiver;
 
-import org.helllabs.android.xmp.service.utils.Notifier;
+import org.helllabs.android.xmp.service.notifier.Notifier;
 import org.helllabs.android.xmp.util.Log;
 
 import android.content.BroadcastReceiver;
