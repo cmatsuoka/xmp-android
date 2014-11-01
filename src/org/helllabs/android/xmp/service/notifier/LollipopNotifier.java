@@ -45,6 +45,7 @@ public class LollipopNotifier extends Notifier {
 
 		if (type == TYPE_PAUSE) {
 			builder.addAction(R.drawable.ic_action_play, "Play", pauseIntent);
+			builder.setContentText("(paused)");
 		} else {
 			builder.addAction(R.drawable.ic_action_pause, "Pause", pauseIntent);
 		}
