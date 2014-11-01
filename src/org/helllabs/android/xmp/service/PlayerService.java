@@ -7,7 +7,6 @@ import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.service.notifier.LegacyNotifier;
 import org.helllabs.android.xmp.service.notifier.LollipopNotifier;
 import org.helllabs.android.xmp.service.notifier.Notifier;
-import org.helllabs.android.xmp.service.utils.MediaSessionWrapper;
 import org.helllabs.android.xmp.service.utils.QueueManager;
 import org.helllabs.android.xmp.service.utils.RemoteControl;
 import org.helllabs.android.xmp.service.utils.Watchdog;
@@ -51,7 +50,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private boolean ducking;
 	private boolean audioInitialized;
 	
-	private MediaSessionWrapper session;
+	//private MediaSessionCompat session;
 	
 	private Thread playThread;
 	private SharedPreferences prefs;
@@ -114,11 +113,11 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		paused = false;
 		allSequences = prefs.getBoolean(Preferences.ALL_SEQUENCES, false);
 
-		session = new MediaSessionWrapper(this, getPackageName());
-		session.setActive(true);
+		//session = new MediaSessionCompat(this, getPackageName());
+		//session.setActive(true);
 		
 		if (Build.VERSION.SDK_INT >= 21) {
-			notifier = new LollipopNotifier(this, session.getSessionToken());
+			notifier = new LollipopNotifier(this);
 		} else {
 			notifier = new LegacyNotifier(this);
 		}
@@ -146,7 +145,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		watchdog.stop();
 		notifier.cancel();
 		
-		session.setActive(false);
+		//session.setActive(false);
 		
 		if (audioInitialized) {
 			end(hasAudioFocus ? RESULT_OK : RESULT_NO_AUDIO_FOCUS);

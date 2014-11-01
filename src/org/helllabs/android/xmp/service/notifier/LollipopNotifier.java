@@ -5,15 +5,15 @@ import org.helllabs.android.xmp.R;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.Service;
-import android.media.session.MediaSession;
+//import android.media.session.MediaSession;
 
 public class LollipopNotifier extends Notifier {
 	
-	private final MediaSession.Token token;
+	//private final MediaSession.Token token;
 	
-	public LollipopNotifier(final Service service, final MediaSession.Token token) {
+	public LollipopNotifier(final Service service /*, final MediaSession.Token token*/) {
 		super(service);
-		this.token = token;
+		//this.token = token;
 	}
 
 	@TargetApi(21)
@@ -38,7 +38,7 @@ public class LollipopNotifier extends Notifier {
 			.setLargeIcon(icon)
 			.setOngoing(true)
 			.setWhen(0)
-			.setStyle(new Notification.MediaStyle().setMediaSession(token).setShowActionsInCompactView(2))
+			.setStyle(new Notification.MediaStyle().setShowActionsInCompactView(2))
 			.setVisibility(Notification.VISIBILITY_PUBLIC)
 			.addAction(R.drawable.ic_action_previous, "Prev", prevIntent)
 			.addAction(R.drawable.ic_action_stop, "Stop", stopIntent);
