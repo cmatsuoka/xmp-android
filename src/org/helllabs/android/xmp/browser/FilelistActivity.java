@@ -139,14 +139,14 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 		alertDialog.setTitle("Path not found");
 		alertDialog.setMessage(media_path + " not found. Create this directory or change the module path.");
-		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Create", new DialogInterface.OnClickListener() {
+		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.create), new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int which) {
 				Examples.install(FilelistActivity.this, media_path, mPrefs.getBoolean(Preferences.EXAMPLES, true));
 				mNavigation.startNavigation(new File(media_path));
 				updateModlist();
 			}
 		});
-		alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Back", new DialogInterface.OnClickListener() {
+		alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int which) {
 				finish();
 			}
@@ -368,8 +368,8 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.msg_select_playlist)
-				.setPositiveButton(android.R.string.ok, listener)
-				.setNegativeButton(android.R.string.cancel, listener)
+				.setPositiveButton(R.string.ok, listener)
+				.setNegativeButton(R.string.cancel, listener)
 				.setSingleChoiceItems(PlaylistUtils.listNoSuffix(), 0, new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int which) {
 				playlistSelection[0] = which;

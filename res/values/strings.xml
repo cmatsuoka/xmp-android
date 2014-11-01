@@ -12,6 +12,16 @@
     <string name="changelog_title">New in version 4.2.0</string>
     <string name="changelog">Changelog</string>
     
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="exit">Exit</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="error">Error</string>
+    <string name="directory">Directory</string>
+    <string name="create">Create</string>
+    
 	<string name="pref_examples_title">Install modules</string>
     <string name="pref_examples_summary">Install example music files when creating modules directory</string>
     <string name="pref_sampling_rate_summary">Set the mixer sampling rate</string>
@@ -89,10 +99,7 @@
     <string name="empty_playlist">Empty playlist</string>
     <string name="empty_comment">Long press modules to create new playlists or add to existing playlists. Long press playlists for more options.</string>
     <string name="unrecognized_format">Unrecognized file format</string>
-    <string name="exit">Exit</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="error">Error</string>
-    <string name="directory">Directory</string>
+
     
     <string name="about_author">Written by Claudio Matsuoka</string>
     <string name="about_version">Version %s</string>

@@ -217,7 +217,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		alert.setMessage("Enter the new playlist name:");
 		alert.input.setText(name);		
 
-		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
+		alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {
 				final String value = alert.input.getText().toString();
 				
@@ -229,7 +229,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 			}  
 		});  
 
-		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {  
+		alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {  
 				// Canceled.  
 			}  
@@ -244,7 +244,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		alert.setMessage("Enter the mod directory:");
 		alert.input.setText(mediaPath);
 
-		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
+		alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {  
 				final String value = alert.input.getText().toString();
 				if (!value.equals(mediaPath)) {
@@ -256,7 +256,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 			}  
 		});  
 
-		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {  
+		alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {  
 				// Canceled.  
 			}  
@@ -272,7 +272,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		alert.setMessage("Enter the new comment for " + name + ":");  
 		alert.input.setText(Playlist.readComment(context, name));
 
-		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
+		alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {  
 				final String value = alert.input.getText().toString().replace("\n", " ");				
 				final File file = new File(Preferences.DATA_DIR, name + Playlist.COMMENT_SUFFIX);
@@ -288,7 +288,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 			}  
 		});  
 
-		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {  
+		alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {
 				// Canceled.  
 			}  

@@ -41,7 +41,7 @@ public final class PlaylistUtils {
 
 		alert.setView(layout);
 
-		alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {  
+		alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {
 				final EditText e1 = (EditText)layout.findViewById(R.id.new_playlist_name);
 				final EditText e2 = (EditText)layout.findViewById(R.id.new_playlist_comment);
@@ -54,7 +54,7 @@ public final class PlaylistUtils {
 			}  
 		});  
 
-		alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {  
+		alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {  
 				// Canceled.  
 			}  
