@@ -120,6 +120,11 @@ public class FilelistActivity extends BasePlaylistActivity {
 	protected boolean isLoopMode() {
 		return mLoopMode;
 	}
+	
+	@Override
+	protected List<String> getAllFiles() {
+		return recursiveList(mNavigation.getCurrentDir());
+	}
 
 	@Override
 	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {

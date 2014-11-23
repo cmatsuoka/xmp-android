@@ -49,11 +49,11 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private final OnClickListener playAllButtonListener = new OnClickListener() {
 		@Override
 		public void onClick(final View view) {
-			final List<String> list = playlistAdapter.getFilenameList();
+			final List<String> list = getAllFiles();
 			if (list.isEmpty()) {
 				Message.toast(BasePlaylistActivity.this, R.string.error_no_files_to_play);
 			} else {
-				playModule(playlistAdapter.getFilenameList());
+				playModule(list);
 			}
 		}
 	};
@@ -127,7 +127,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	protected abstract void setLoopMode(boolean loopMode);
 	protected abstract boolean isShuffleMode();
 	protected abstract boolean isLoopMode();
-
+	protected abstract List<String> getAllFiles();
 	public abstract void update();
 	
 	protected void setupButtons() {

@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp.browser;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.browser.playlist.Playlist;
@@ -112,6 +113,11 @@ public class PlaylistActivity extends BasePlaylistActivity {
 	@Override
 	protected boolean isLoopMode() {
 		return playlist.isLoopMode();
+	}
+
+	@Override
+	protected List<String> getAllFiles() {
+		return playlistAdapter.getFilenameList();
 	}
 
 	@Override
