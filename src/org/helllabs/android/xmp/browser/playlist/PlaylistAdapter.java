@@ -35,8 +35,6 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
     	this.items = items;
     	this.context = context;
     	this.useFilename = useFilename;
-    	
-    	
     }
     
     @SuppressLint("InflateParams")
@@ -55,15 +53,15 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
     	} else {
     		holder = (ViewHolder)convertView.getTag();
     	}
-    	final PlaylistItem info = getItem(position);
+    	final PlaylistItem item = getItem(position);
     	           
-    	if (info != null) {                		    		
-   			holder.titleText.setText(useFilename ? FileUtils.basename(info.getFile().getPath()) : info.getName());
-   			holder.infoText.setText(info.getComment());
+    	if (item != null) {                		    		
+   			holder.titleText.setText(useFilename ? FileUtils.basename(item.getFile().getPath()) : item.getName());
+   			holder.infoText.setText(item.getComment());
    			
    			final Typeface typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
-   			final int imageRes = info.getImageRes();
-   			final int type = info.getType();
+   			final int imageRes = item.getImageRes();
+   			final int type = item.getType();
    			
    			if (type == PlaylistItem.TYPE_DIRECTORY) {
     			holder.infoText.setTypeface(typeface, Typeface.ITALIC);

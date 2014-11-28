@@ -64,10 +64,11 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		listView.setRemoveListener(onRemove);
 
 		final String name = extras.getString("name");
+		final boolean useFilename = mPrefs.getBoolean(Preferences.USE_FILENAME, false);
 
 		try {
 			playlist = new Playlist(this, name);
-			playlistAdapter = new PlaylistAdapter(this, R.layout.song_item, R.id.info, playlist.getList(), false);
+			playlistAdapter = new PlaylistAdapter(this, R.layout.song_item, R.id.info, playlist.getList(), useFilename);
 			listView.setAdapter(playlistAdapter);
 		} catch (IOException e) {
 			Log.e(TAG, "Can't read playlist " + name);
