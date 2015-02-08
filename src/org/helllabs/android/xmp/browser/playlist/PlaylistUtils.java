@@ -28,15 +28,15 @@ public final class PlaylistUtils {
 
 	}
 
-	public static void newPlaylistDialog(final Context context) {
-		newPlaylistDialog(context, null);
+	public static void newPlaylistDialog(final Activity activity) {
+		newPlaylistDialog(activity, null);
 	}
 
 	@SuppressLint("InflateParams")
-	public static void newPlaylistDialog(final Context context, final Runnable runnable) {
-		final AlertDialog.Builder alert = new AlertDialog.Builder(context);		  
+	public static void newPlaylistDialog(final Activity activity, final Runnable runnable) {
+		final AlertDialog.Builder alert = new AlertDialog.Builder(activity);		  
 		alert.setTitle("New playlist");  	
-		final LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		final LayoutInflater inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		final View layout = inflater.inflate(R.layout.newlist, null);
 
 		alert.setView(layout);
@@ -48,7 +48,7 @@ public final class PlaylistUtils {
 				final String name = e1.getText().toString();
 				final String comment = e2.getText().toString();
 
-				if (createEmptyPlaylist(context, name, comment) && runnable != null) {
+				if (createEmptyPlaylist(activity, name, comment) && runnable != null) {
 					runnable.run();
 				}
 			}  
@@ -134,14 +134,14 @@ public final class PlaylistUtils {
 		return pList[index].substring(0, pList[index].lastIndexOf(Playlist.PLAYLIST_SUFFIX));
 	}
 	
-	public static boolean createEmptyPlaylist(final Context context, final String name, final String comment) {
+	public static boolean createEmptyPlaylist(final Activity activity, final String name, final String comment) {
 		try {
-			final Playlist playlist = new Playlist(context, name);
+			final Playlist playlist = new Playlist(activity, name);
 			playlist.setComment(comment);
 			playlist.commit();
 			return true;
 		} catch (IOException e) {
-			Message.error(context, context.getString(R.string.error_create_playlist));
+			Message.error(activity, activity.getString(R.string.error_create_playlist));
 			return false;
 		}	
 	}

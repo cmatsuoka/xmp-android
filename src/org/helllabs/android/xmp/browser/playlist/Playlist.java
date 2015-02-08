@@ -18,6 +18,7 @@ import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -235,7 +236,7 @@ public class Playlist {
 	 * @param name The playlist name
 	 * @param items The list of playlist items to add
 	 */
-	public static void addToList(final Context context, final String name, final List<PlaylistItem> items) {
+	public static void addToList(final Activity activity, final String name, final List<PlaylistItem> items) {
 		final String[] lines = new String[items.size()];
 		
 		int i = 0;
@@ -245,7 +246,7 @@ public class Playlist {
 		try {
 			FileUtils.writeToFile(new File(Preferences.DATA_DIR, name + PLAYLIST_SUFFIX), lines);
 		} catch (IOException e) {
-			Message.error(context, context.getString(R.string.error_write_to_playlist));
+			Message.error(activity, activity.getString(R.string.error_write_to_playlist));
 		}
 	}
 	
@@ -257,15 +258,15 @@ public class Playlist {
 	 * 
 	 * @return The playlist comment
 	 */
-	public static String readComment(final Context context, final String name) {
+	public static String readComment(final Activity activity, final String name) {
 		String comment = null;
 		try {
 			comment = FileUtils.readFromFile(new CommentFile(name));
 		} catch (IOException e) {
-			Message.error(context, context.getString(R.string.error_read_comment));
+			Message.error(activity, activity.getString(R.string.error_read_comment));
 		}	    
 	    if (comment == null || comment.trim().isEmpty()) {
-	    	comment = context.getString(R.string.no_comment);
+	    	comment = activity.getString(R.string.no_comment);
 	    }
 		return comment;		
 	}

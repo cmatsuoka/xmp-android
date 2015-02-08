@@ -19,6 +19,7 @@ import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -210,9 +211,9 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		return true;
 	}
 
-	private void renameList(final Context context, final int index) {
+	private void renameList(final Activity activity, final int index) {
 		final String name = PlaylistUtils.listNoSuffix()[index];
-		final InputDialog alert = new InputDialog(context);		  
+		final InputDialog alert = new InputDialog(activity);		  
 		alert.setTitle("Rename playlist");
 		alert.setMessage("Enter the new playlist name:");
 		alert.input.setText(name);		
@@ -221,8 +222,8 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 			public void onClick(final DialogInterface dialog, final int whichButton) {
 				final String value = alert.input.getText().toString();
 				
-				if (!Playlist.rename(context, name, value)) {
-					Message.error(context, getString(R.string.error_rename_playlist));
+				if (!Playlist.rename(activity, name, value)) {
+					Message.error(activity, getString(R.string.error_rename_playlist));
 				}
 
 				updateList();
@@ -265,12 +266,12 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		alert.show(); 
 	}
 
-	private void editComment(final Context context, final int index) {
+	private void editComment(final Activity activity, final int index) {
 		final String name = PlaylistUtils.listNoSuffix()[index];
-		final InputDialog alert = new InputDialog(context);		  
+		final InputDialog alert = new InputDialog(activity);		  
 		alert.setTitle("Edit comment");
 		alert.setMessage("Enter the new comment for " + name + ":");  
-		alert.input.setText(Playlist.readComment(context, name));
+		alert.input.setText(Playlist.readComment(activity, name));
 
 		alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {  
 			public void onClick(final DialogInterface dialog, final int whichButton) {  
@@ -281,7 +282,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 					file.createNewFile();
 					FileUtils.writeToFile(file, value);
 				} catch (IOException e) {
-					Message.error(context, getString(R.string.error_edit_comment));
+					Message.error(activity, getString(R.string.error_edit_comment));
 				}
 
 				updateList();

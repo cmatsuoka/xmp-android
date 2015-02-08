@@ -20,7 +20,6 @@ public final class Message {
 			@Override
 			public void run() {
 				final AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
-
 				alertDialog.setTitle(R.string.error);
 				alertDialog.setMessage(message);
 				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, activity.getString(R.string.exit), new DialogInterface.OnClickListener() {
@@ -34,21 +33,26 @@ public final class Message {
 		});
 	}
 
-	public static void error(final Context context, final String message) {
-		final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-
-		alertDialog.setTitle(R.string.error);
-		alertDialog.setMessage(message);
-		alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.dismiss), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int which) {
-				//
+	public static void error(final Activity activity, final String message) {
+		
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				final AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+				alertDialog.setTitle(R.string.error);
+				alertDialog.setMessage(message);
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, activity.getString(R.string.dismiss), new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int which) {
+						//
+					}
+				});
+				alertDialog.show();
 			}
 		});
-		alertDialog.show();		
 	}
 
-	public static void error(final Context context, final int resId) {
-		error(context, context.getString(resId));
+	public static void error(final Activity activity, final int resId) {
+		error(activity, activity.getString(resId));
 	}
 
 
