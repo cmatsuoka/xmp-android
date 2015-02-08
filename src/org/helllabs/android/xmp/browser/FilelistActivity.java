@@ -339,7 +339,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 		if (file.isDirectory()) {
 			final File[] fileArray = file.listFiles();
 			
-			if (fileArray != null) {			// prevent crash reported in Play Store
+			if (fileArray != null) {			// prevent crash reported in dev console
 				for (final File f : fileArray) {
 					if (f.isDirectory()) {
 						list.addAll(recursiveList(f));

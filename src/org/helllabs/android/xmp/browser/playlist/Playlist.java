@@ -86,6 +86,10 @@ public class Playlist {
 			mListChanged = true;
 			mCommentChanged = true;
 		}
+		
+		if (mComment == null) {
+			mComment = "";
+		}
 	}	
 	
 	/**
