@@ -61,14 +61,14 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if (!checkStorage()) {
-			Message.fatalError(this, getString(R.string.error_storage), PlaylistMenu.this);
+			Message.fatalError(this, getString(R.string.error_storage));
 		}
 
 		if (!Preferences.DATA_DIR.isDirectory()) {
 			if (Preferences.DATA_DIR.mkdirs()) {
 				PlaylistUtils.createEmptyPlaylist(this, getString(R.string.empty_playlist), getString(R.string.empty_comment));		
 			} else {
-				Message.fatalError(this, getString(R.string.error_datadir), PlaylistMenu.this);
+				Message.fatalError(this, getString(R.string.error_datadir));
 			}
 		}
 

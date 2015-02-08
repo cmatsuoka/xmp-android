@@ -220,13 +220,13 @@ public class Playlist {
 	 * @param name The playlist name
 	 * @param item The playlist item to add
 	 */
-	public static void addToList(final Context context, final String name, final PlaylistItem item) {
+	/*public static void addToList(final Context context, final String name, final PlaylistItem item) {
 		try {
 			FileUtils.writeToFile(new File(Preferences.DATA_DIR, name + PLAYLIST_SUFFIX), item.toString());
 		} catch (IOException e) {
 			Message.error(context, context.getString(R.string.error_write_to_playlist));
 		}
-	}
+	}*/
 	
 	/**
 	 * Add a list of items to the specified playlist file.
