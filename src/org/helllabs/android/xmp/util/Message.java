@@ -34,7 +34,7 @@ public final class Message {
 	}
 
 	public static void error(final Activity activity, final String message) {
-		
+
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -55,7 +55,6 @@ public final class Message {
 		error(activity, activity.getString(resId));
 	}
 
-
 	public static void toast(final Context context, final String message) {
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();		
 	}
@@ -64,22 +63,27 @@ public final class Message {
 		toast(context, context.getString(resId));
 	}
 
-	public static void yesNoDialog(final Context context, final String title, final String message, final Runnable runnable) {
+	public static void yesNoDialog(final Activity activity, final String title, final String message, final Runnable runnable) {
 
-		final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+		activity.runOnUiThread(new Runnable() {
 			@Override
-			public void onClick(final DialogInterface dialog, final int which) {
-				if (which == DialogInterface.BUTTON_POSITIVE) {
-					runnable.run();
-				}
-			}
-		};
+			public void run() {
+				final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(final DialogInterface dialog, final int which) {
+						if (which == DialogInterface.BUTTON_POSITIVE) {
+							runnable.run();
+						}
+					}
+				};
 
-		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(title)
-		.setMessage(message)
-		.setPositiveButton(R.string.yes, listener)
-		.setNegativeButton(R.string.no, listener)
-		.show();		
+				final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+				builder.setTitle(title)
+					.setMessage(message)
+					.setPositiveButton(R.string.yes, listener)
+					.setNegativeButton(R.string.no, listener)
+					.show();
+			}
+		});
 	}
 }

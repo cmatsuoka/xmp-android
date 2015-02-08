@@ -6,20 +6,23 @@ import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.os.Build;
+import android.widget.Toast;
+
 import com.telly.groundy.Groundy;
 import com.telly.groundy.GroundyManager;
 import com.telly.groundy.GroundyTask;
 import com.telly.groundy.TaskHandler;
 import com.telly.groundy.TaskResult;
-import com.telly.groundy.annotations.*;
+import com.telly.groundy.annotations.OnFailure;
+import com.telly.groundy.annotations.OnProgress;
+import com.telly.groundy.annotations.OnSuccess;
+import com.telly.groundy.annotations.Param;
 import com.telly.groundy.util.DownloadUtils;
-
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Build;
-import android.widget.Toast;
 
 /*
  * Based on the Groundy download example
@@ -27,7 +30,7 @@ import android.widget.Toast;
 public class Downloader {
 
 	protected static final String TAG = "Downloader";
-	private final Context mContext;
+	private final Activity mActivity;
 	private ProgressDialog mProgressDialog;
 	private TaskHandler mTaskHandler;
 	private int mSize;
@@ -51,7 +54,7 @@ public class Downloader {
 		@OnSuccess(DownloadTask.class)
 		public void onSuccess() {
 			Log.d(TAG, "download success");
-			Toast.makeText(mContext, R.string.file_downloaded, Toast.LENGTH_LONG).show();
+			Toast.makeText(mActivity, R.string.file_downloaded, Toast.LENGTH_LONG).show();
 			mProgressDialog.dismiss();
 			if (listener != null) {
 				listener.onSuccess();
@@ -64,7 +67,7 @@ public class Downloader {
 			if (error == null) {
 				error = "Download failed";
 			}
-			Toast.makeText(mContext, error, Toast.LENGTH_LONG).show();
+			Toast.makeText(mActivity, error, Toast.LENGTH_LONG).show();
 			mProgressDialog.dismiss();
 			if (listener != null) {
 				listener.onFailure();
@@ -109,8 +112,8 @@ public class Downloader {
 	}
 
 
-	public Downloader(final Context context) {
-		this.mContext = context;
+	public Downloader(final Activity activity) {
+		this.mActivity = activity;
 	}
 	
 	public void setDownloaderListener(final DownloaderListener listener) {
@@ -122,7 +125,7 @@ public class Downloader {
 		mSize = size / 1024;
 
 		if (localFile(url, path).exists()) {
-			Message.yesNoDialog(mContext, "File exists!", "This module already exists. Do you want to overwrite?", new Runnable() {
+			Message.yesNoDialog(mActivity, "File exists!", "This module already exists. Do you want to overwrite?", new Runnable() {
 				@Override
 				public void run() {
 					downloadUrl(url, path);
@@ -139,7 +142,7 @@ public class Downloader {
 		final File pathFile = new File(path);
 		pathFile.mkdirs();
 
-		mProgressDialog = new ProgressDialog(mContext);
+		mProgressDialog = new ProgressDialog(mActivity);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		mProgressDialog.setCancelable(true);
 		mProgressDialog.setMax(mSize);
@@ -150,10 +153,10 @@ public class Downloader {
 			@Override
 			public void onCancel(final DialogInterface dialogInterface){
 				if (mTaskHandler != null) {
-					mTaskHandler.cancel(mContext, 0, new GroundyManager.SingleCancelListener() {
+					mTaskHandler.cancel(mActivity, 0, new GroundyManager.SingleCancelListener() {
 						@Override
 						public void onCancelResult(final long id, final int result){
-							Toast.makeText(mContext, R.string.download_cancelled, Toast.LENGTH_LONG).show();
+							Toast.makeText(mActivity, R.string.download_cancelled, Toast.LENGTH_LONG).show();
 						}
 					});
 				}
@@ -165,7 +168,7 @@ public class Downloader {
 				.callback(mCallback)
 				.arg(DownloadTask.PARAM_URL, url)
 				.arg(DownloadTask.PARAM_PATH, path)
-				.queueUsing(mContext);
+				.queueUsing(mActivity);
 	}
 	
 	private static File localFile(final String url, final String path) {
