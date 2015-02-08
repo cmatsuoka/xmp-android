@@ -337,11 +337,15 @@ public class FilelistActivity extends BasePlaylistActivity {
 		final List<String> list = new ArrayList<String>();
 		
 		if (file.isDirectory()) {
-			for (final File f : file.listFiles()) {
-				if (f.isDirectory()) {
-					list.addAll(recursiveList(f));
-				} else {
-					list.add(f.getPath());
+			final File[] fileArray = file.listFiles();
+			
+			if (fileArray != null) {			// prevent crash reported in Play Store
+				for (final File f : fileArray) {
+					if (f.isDirectory()) {
+						list.addAll(recursiveList(f));
+					} else {
+						list.add(f.getPath());
+					}
 				}
 			}
 		} else {
