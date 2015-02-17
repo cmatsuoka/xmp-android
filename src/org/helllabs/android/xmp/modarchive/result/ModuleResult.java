@@ -1,6 +1,7 @@
 package org.helllabs.android.xmp.modarchive.result;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,16 +70,16 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 
 		downloadButton = (Button)findViewById(R.id.module_download);
 		downloadButton.setEnabled(false);
-		
+
 		deleteButton = (Button)findViewById(R.id.module_delete);
 		deleteButton.setEnabled(false);
 
 		playButton = (Button)findViewById(R.id.module_play);
 		playButton.setEnabled(false);
-		
+
 		errorMessage = (TextView)findViewById(R.id.error_message);
 		dataView = findViewById(R.id.result_data);
-				
+
 		downloader = new Downloader(this);
 		downloader.setDownloaderListener(this);
 
@@ -96,7 +97,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 			handleQueryError();
 		}
 	}
-	
+
 
 	// ModuleRequest callbacks
 
@@ -121,7 +122,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 
 			updateButtons(module);
 		}
-		
+
 		final Sponsor sponsor = response.getSponsor();
 		if (sponsor != null) {
 			sponsorText.setText(Html.fromHtml("Download mirrors provided by <a href=\""+ sponsor.getLink() + "\">" + sponsor.getName() + "</a>"));
@@ -177,6 +178,25 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 				} else {
 					Message.toast(ModuleResult.this, "Error");
 				}
+
+				// Delete parent directory if empty
+				if (mPrefs.getBoolean(Preferences.ARTIST_FOLDER, true)) {
+					final File parent = file.getParentFile();
+					final File[] contents = parent.listFiles();
+					if (contents != null && contents.length == 0) {
+						try {
+						final String mediaPath = new File(mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH)).getCanonicalPath();
+						final String parentPath = parent.getCanonicalPath();
+
+						if (parentPath.startsWith(mediaPath) && !parentPath.equals(mediaPath)) {
+							Log.i(TAG, "Remove empty directory " + parent.getPath());
+							parent.delete();
+						}
+						} catch (IOException e) {
+							Log.e(TAG, e.getMessage());
+						}
+					}
+				}
 			}	
 		});
 	}
@@ -184,7 +204,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	public void playClick(final View view) {
 		final String path = localFile(module).getPath();
 		final List<String> modList = new ArrayList<String>();
-		
+
 		modList.add(path);	
 
 		final Intent intent = new Intent(this, PlayerActivity.class);
