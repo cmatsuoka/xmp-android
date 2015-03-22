@@ -118,7 +118,8 @@ public final class PlaylistUtils {
 	}
 
 	public static String[] list() {		
-		return Preferences.DATA_DIR.list(new PlaylistFilter());
+		final String[] ret = Preferences.DATA_DIR.list(new PlaylistFilter());
+		return ret == null ? new String[0] : ret;
 	}
 
 	public static String[] listNoSuffix() {
