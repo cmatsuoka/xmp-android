@@ -3,13 +3,13 @@
 	<string name="app_name">Xmp Mod Player</string>
 	<string name="app_description">A modplayer that plays over 90 mainstream and obscure module formats, including Protracker (MOD), Scream Tracker 3 (S3M), Fast Tracker II (XM) and Impulse Tracker (IT).</string>
 	     
-    <string name="changelog_text">• Fix sample count and size limits\n• Fix loading of OpenMPT 1.17 IT files\n• Fix Oktalyzer sample loops\n• Fix crashes caused by corrupt input files\n
+    <string name="changelog_text">• Add IT random volume variation\n• Add IT random pan variation\n• Add Oktalyzer split channel support\n• Fix IT filter envelope memory\n• Fix IT volume column volslide memory\n• Fix ThePlayer pattern decoding\n• Fix crashes caused by invalid input files\n
+\nVersion 4.4.1:\n• Fix sample count and size limits\n• Fix loading of OpenMPT 1.17 IT files\n• Fix Oktalyzer sample loops\n• Fix crashes caused by corrupt input files\n
 \nVersion 4.4.0:\n• Better sound quality\n• Fix XM keyoff with delay\n• Fix XM fine pitch slide with pattern delay\n• Other minor XM fixes\n• Fix infinite loop in scan\n• Fix overflow in linear interpolator\n• Fix sample loop adjustment\n• Fix crashes caused by corrupt input files\n
 \nVersion 4.3.1:\n• Fix IT invalid instrument recovery\n• Fix IT note retrig on portamento\n• Fix XM volume on note delay\n• Fix XM out-of-range note delays\n• Fix XM envelope loop length\n• Fix option to show filename in playlist\n
 \nVersion 4.3.0:\n• Fix IT filter envelope limits\n• Fix IT portamento after keyoff\n• Fix XM K00 effect handling\n• Fix XM note limits\n• Fix XM note off with volume command\n• Fix XM keyoff with instrument\n• Fix XM pattern loop start\n• Fix XM portamento target reset\n• Fix XM portamento with offset\n• Fix MOD note range enforcing\n• Fix MOD sample offset handling\n
-\nVersion 4.2.0:\n• Code cleanup and refactoring\n• Fix OpenSL deadlock on buffer drain\n• Fix row delay on replay start\n• Fix buffer overrun on track change\n• Fix audio focus handling\n• Fix player activity launch mode\n• Fix skip to previous with invalid module\n• Fix crash with invalid XM instrument\n• Fix crash when releasing corrupt module\n
     </string>
-    <string name="changelog_title">New in version 4.4.1</string>
+    <string name="changelog_title">New in version 4.5.0</string>
     <string name="changelog">Changelog</string>
     
     <string name="yes">Yes</string>
