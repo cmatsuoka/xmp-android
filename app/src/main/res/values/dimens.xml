@@ -1,6 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="patternview_font_size">14sp</dimen>
     <dimen name="channelview_font_size">12sp</dimen>
     <dimen name="instrumentview_font_size">14sp</dimen>
     <dimen name="channelview_channel_font_size">14sp</dimen>
+
+    <dimen name="round_button_diameter">56dp</dimen>
+    <dimen name="add_button_margin">16dp</dimen>
+    <dimen name="elevation_low">8dp</dimen>
+    <dimen name="elevation_high">14dp</dimen>
 </resources>

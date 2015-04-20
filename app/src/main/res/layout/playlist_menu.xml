@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
     <ListView android:id="@+id/plist_menu_list"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"/>
-</LinearLayout>
+
+    <ImageButton
+            android:id="@+id/add_button"
+            android:layout_width="@dimen/round_button_diameter"
+            android:layout_height="@dimen/round_button_diameter"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="@dimen/add_button_margin"
+            android:layout_marginEnd="@dimen/add_button_margin"
+            android:layout_marginRight="@dimen/add_button_margin"
+            android:background="@drawable/ripple_oval"
+            android:elevation="8dp"
+            android:src="@drawable/ic_add_white_24dp"/>
+
+</FrameLayout>
