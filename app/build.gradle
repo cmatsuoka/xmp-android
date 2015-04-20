@@ -1,0 +1,37 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "org.helllabs.android.xmp"
+        minSdkVersion 9
+        targetSdkVersion 21
+
+        ndk {
+            moduleName "xmp-prebuilt"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+        }
+    }
+
+    // Temporarily disable ndk build
+    sourceSets.main {
+        jni.srcDirs = []
+        jniLibs.srcDir 'src/main/libs'
+    }
+}
+
+dependencies {
+    compile 'com.android.support:gridlayout-v7:18.0.0'
+    compile 'com.android.support:appcompat-v7:19.1.0'
+    compile files('libs/android-support-v7-recyclerview.jar')
+    compile files('libs/groundy-1.5.jar')
+    compile files('libs/volley.jar')
+}

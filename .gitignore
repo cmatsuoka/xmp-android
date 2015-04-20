@@ -1,5 +1,33 @@
+# Project files
+res/values-v1
+
+# Generated files
+*.apk
+*.ap_
+*.dex
+*.class
+
+# Eclipse
+.classpath
+.project
 bin/
 gen/
 obj/
 out/
-res/values-v1
+
+# IntelliJ IDEA
+.gradle
+/local.properties
+build/
+.idea
+app/app.iml
+*.iml
+
+# MacOS
+.DS_Store
+
+# Other files
+*.bak
+*~
+*.swp
+
