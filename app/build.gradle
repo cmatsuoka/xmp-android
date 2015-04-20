@@ -30,8 +30,9 @@ android {
 
 dependencies {
     compile 'com.android.support:gridlayout-v7:18.0.0'
-    compile 'com.android.support:appcompat-v7:19.1.0'
-    compile files('libs/android-support-v7-recyclerview.jar')
     compile files('libs/groundy-1.5.jar')
     compile files('libs/volley.jar')
+    compile "com.android.support:appcompat-v7:21.0.+"
+    compile 'com.android.support:cardview-v7:21.0.+'
+    compile 'com.android.support:recyclerview-v7:21.0.+'
 }

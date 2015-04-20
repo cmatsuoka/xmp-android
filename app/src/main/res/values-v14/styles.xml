@@ -7,6 +7,7 @@
     -->
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat">
         <!-- API 14 theme customizations can go here. -->
+        <item name="colorPrimary">@color/primary</item>
     </style>
 
 </resources>

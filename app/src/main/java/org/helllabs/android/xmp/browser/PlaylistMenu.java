@@ -88,7 +88,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 	@TargetApi(14)
 	private void enableHomeButton() {
 		if (Build.VERSION.SDK_INT >= 14) {
-			getActionBar().setHomeButtonEnabled(true);
+			getSupportActionBar().setHomeButtonEnabled(true);
 		}
 	}
 	

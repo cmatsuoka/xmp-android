@@ -10,15 +10,19 @@
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
+
+        <item name="colorPrimary">@color/primary</item>
+        <!-- <item name="colorAccent">@color/material_green_A200</item> -->
     </style>
-    
+
     <color name="black">#FF000000</color>
     <color name="darkgray">#FF102030</color>
     <color name="gray">#FF282828</color>
     <color name="lightgray">#FFc0c0c0</color>
     <color name="white">#FFF0F0F0</color>
-    
+
     <color name="section_background">#FF202020</color>
+    <color name="primary">#1a305d</color>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
