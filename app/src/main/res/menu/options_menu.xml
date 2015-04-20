@@ -11,16 +11,17 @@
     <item
         android:id="@+id/menu_refresh"
         android:icon="@drawable/ic_refresh_white_24dp"
-        xmp:showAsAction="ifRoom|withText"
+        xmp:showAsAction="ifRoom"
         android:title="@string/menu_refresh"/>
     <item
         android:id="@+id/menu_download"
         android:icon="@drawable/ic_file_download_white_24dp"
-        xmp:showAsAction="ifRoom|withText"
+        xmp:showAsAction="ifRoom"
         android:title="@string/menu_download"/>
     <item
         android:id="@+id/menu_prefs"
         android:icon="@drawable/ic_settings_white_24dp"
+        xmp:showAsAction="ifRoom"
         android:title="@string/menu_prefs"/>
 
 </menu>

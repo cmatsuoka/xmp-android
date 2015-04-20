@@ -16,8 +16,9 @@
             android:layout_marginBottom="@dimen/add_button_margin"
             android:layout_marginEnd="@dimen/add_button_margin"
             android:layout_marginRight="@dimen/add_button_margin"
-            android:background="@drawable/ripple_oval"
+            android:background="@drawable/oval"
             android:elevation="8dp"
+            android:onClick="fabClick"
             android:src="@drawable/ic_add_white_24dp"/>
 
 </FrameLayout>

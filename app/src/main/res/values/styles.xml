@@ -23,6 +23,7 @@
 
     <color name="section_background">#FF202020</color>
     <color name="primary">#1a305d</color>
+    <color name="primary_dark">#801a305d</color>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">

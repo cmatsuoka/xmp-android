@@ -67,7 +67,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 
 		if (!Preferences.DATA_DIR.isDirectory()) {
 			if (Preferences.DATA_DIR.mkdirs()) {
-				PlaylistUtils.createEmptyPlaylist(this, getString(R.string.empty_playlist), getString(R.string.empty_comment));		
+				PlaylistUtils.createEmptyPlaylist(this, getString(R.string.empty_playlist), getString(R.string.empty_comment));
 			} else {
 				Message.fatalError(this, getString(R.string.error_datadir));
 			}
@@ -354,4 +354,12 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+    public void fabClick(final View view) {
+        PlaylistUtils.newPlaylistDialog(this, new Runnable() {
+            public void run() {
+                updateList();
+            }
+        });
+    }
 }
