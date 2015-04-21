@@ -1,9 +1,7 @@
 package org.helllabs.android.xmp.browser.playlist;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +12,7 @@ import android.widget.TextView;
 
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
 import org.helllabs.android.xmp.R;
@@ -23,7 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder>  implements DraggableItemAdapter<PlaylistAdapter.ViewHolder> {
+
+public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> implements DraggableItemAdapter<PlaylistAdapter.ViewHolder> {
     private static final String TAG = "PlaylistAdapter";
     private final List<PlaylistItem> items;
     private final Context context;
@@ -126,7 +126,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         final int dragState = holder.getDragStateFlags();
 
         if (((dragState & RecyclerViewDragDropManager.STATE_FLAG_IS_UPDATED) != 0)) {
-            int bgResId;
+            final int bgResId;
 
             if ((dragState & RecyclerViewDragDropManager.STATE_FLAG_IS_ACTIVE) != 0) {
                 bgResId = R.drawable.bg_item_dragging_active_state;
@@ -136,10 +136,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                 bgResId = R.drawable.bg_item_normal_state;
             }
 
-            holder.mContainer.setBackgroundResource(bgResId);
+            holder.container.setBackgroundResource(bgResId);
         }*/
-
-
     }
 
     @Override
@@ -173,7 +171,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         this.position = position;
     }
 
-    public PlaylistAdapter(final Context context, final int resource, final int textViewResId, final List<PlaylistItem> items, final boolean useFilename) {
+    public PlaylistAdapter(final Context context, final List<PlaylistItem> items, final boolean useFilename) {
     	this.items = items;
     	this.context = context;
     	this.useFilename = useFilename;
@@ -211,16 +209,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     	}
     	return count;
     }
-    
-    @TargetApi(11)
+
     public void addList(final List<PlaylistItem> list) {
-    	if (Build.VERSION.SDK_INT >= 11) {
-    		items.addAll(list);
-    	} else {
-    		for (final PlaylistItem item : list) {
-    			items.add(item);
-    		}
-    	}
+    	items.addAll(list);
     }
 
     @Override
@@ -241,6 +232,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
     @Override
     public boolean onCheckCanStartDrag(final ViewHolder holder, final int x, final int y) {
+        Log.d(TAG, "onCheckCanStartDrag");
         // x, y --- relative from the itemView's top-left
         final View containerView = holder.container;
         final View dragHandleView = holder.image;
@@ -252,7 +244,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     }
 
     @Override
-    public ItemDraggableRange onGetItemDraggableRange(ViewHolder holder) {
+    public ItemDraggableRange onGetItemDraggableRange(final ViewHolder holder) {
+        Log.d(TAG, "onGetItemDraggableRange");
         // no drag-sortable range specified
         return null;
     }
