@@ -44,7 +44,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	private ModInterface mModPlayer;
 	private List<String> mAddList;
 	protected SharedPreferences mPrefs;
-	protected PlaylistAdapter playlistAdapter;
+	protected PlaylistAdapter mPlaylistAdapter;
 	private boolean refresh;
 	
 	private final OnClickListener playAllButtonListener = new OnClickListener() {
@@ -146,7 +146,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		toggleShuffleButton.setOnClickListener(toggleShuffleButtonListener);
 	}
 
-	protected void onListItemClick(final PlaylistAdapter adapter, final View view, final int position) {
+	public void onItemClick(final PlaylistAdapter adapter, final View view, final int position) {
 		final String filename = adapter.getItem(position).getFile().getPath();
 		
 		final int mode = Integer.parseInt(mPrefs.getString(Preferences.PLAYLIST_MODE, "1"));
@@ -174,16 +174,18 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 			Message.toast(this, "Unrecognized file format");
 		}
 	}
-	
+
+    /*
 	// Item click	
 	protected void setOnItemClickListener(final RecyclerView list) {
-		/*list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
 				onListItemClick(list, view, position, id);
 			}
-		});*/
+		});
 	}
+    */
 
 	// Play this module
 	protected void playModule(final String mod) {

@@ -29,9 +29,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
+
+import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
 
 public class FilelistActivity extends BasePlaylistActivity implements PlaylistAdapter.OnItemClickListener {
 	private static final String TAG = "BasePlaylistActivity";
@@ -67,7 +67,7 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 	private final PlaylistChoice addRecursiveToPlaylistChoice = new PlaylistChoice() {
 		@Override
 		public void execute(final int fileSelection, final int playlistSelection) {
-			PlaylistUtils.filesToPlaylist(FilelistActivity.this, recursiveList(playlistAdapter.getFile(fileSelection)),
+			PlaylistUtils.filesToPlaylist(FilelistActivity.this, recursiveList(mPlaylistAdapter.getFile(fileSelection)),
 							PlaylistUtils.getPlaylistName(playlistSelection));
 		}	
 	};
@@ -78,7 +78,7 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 	private final PlaylistChoice addFileToPlaylistChoice = new PlaylistChoice() {
 		@Override
 		public void execute(final int fileSelection, final int playlistSelection) {
-			PlaylistUtils.filesToPlaylist(FilelistActivity.this, playlistAdapter.getFilename(fileSelection),
+			PlaylistUtils.filesToPlaylist(FilelistActivity.this, mPlaylistAdapter.getFilename(fileSelection),
 							PlaylistUtils.getPlaylistName(playlistSelection));
 		}
 		
@@ -90,7 +90,7 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 	private final PlaylistChoice addFileListToPlaylistChoice = new PlaylistChoice() {
 		@Override
 		public void execute(final int fileSelection, final int playlistSelection) {
-			PlaylistUtils.filesToPlaylist(FilelistActivity.this, playlistAdapter.getFilenameList(),
+			PlaylistUtils.filesToPlaylist(FilelistActivity.this, mPlaylistAdapter.getFilenameList(),
 							PlaylistUtils.getPlaylistName(playlistSelection));
 		}
 	};
@@ -130,13 +130,13 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 
 	@Override
 	public void onItemClick(final PlaylistAdapter adapter, final View view, final int position) {
-		final File file = playlistAdapter.getFile(position);
+		final File file = mPlaylistAdapter.getFile(position);
 		
 		if (mNavigation.changeDirectory(file)) {
 			//mNavigation.saveListPosition(recyclerView);
 			updateModlist();
 		} else {
-			super.onListItemClick(adapter, view, position);
+			super.onItemClick(adapter, view, position);
 		}
 	}
 
@@ -180,9 +180,10 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-		playlistAdapter = new PlaylistAdapter(this, R.layout.song_item, R.id.info, new ArrayList<PlaylistItem>(), false);
-        playlistAdapter.setOnItemClickListener(this);
-		recyclerView.setAdapter(playlistAdapter);
+		mPlaylistAdapter = new PlaylistAdapter(this, R.layout.song_item, R.id.info, new ArrayList<PlaylistItem>(), false);
+        mPlaylistAdapter.setOnItemClickListener(this);
+		recyclerView.setAdapter(mPlaylistAdapter);
+        recyclerView.addItemDecoration(new SimpleListDividerDecorator(getResources().getDrawable(R.drawable.list_divider), true));
 
 		registerForContextMenu(recyclerView);
 		final String mediaPath = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
@@ -285,7 +286,7 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 			return;
 		}
 		
-		playlistAdapter.clear();
+		mPlaylistAdapter.clear();
 
 		curPath.setText(modDir.getPath());
 
@@ -306,14 +307,14 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 			}
 		}
 		Collections.sort(list);
-		playlistAdapter.addList(list);
-		playlistAdapter.notifyDataSetChanged();
+		mPlaylistAdapter.addList(list);
+		mPlaylistAdapter.notifyDataSetChanged();
 
 		mCrossfade.crossfade();
 	}
 
 	private void deleteDirectory(final int position) {
-		final String deleteName = playlistAdapter.getFilename(position);
+		final String deleteName = mPlaylistAdapter.getFilename(position);
 		final String mediaPath = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 		
 		if (deleteName.startsWith(mediaPath) && !deleteName.equals(mediaPath)) {
@@ -414,9 +415,9 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 
 		isPathMenu = false;
 
-		final int position = playlistAdapter.getPosition();
+		final int position = mPlaylistAdapter.getPosition();
 
-		if (playlistAdapter.getFile(position).isDirectory()) {			// For directory
+		if (mPlaylistAdapter.getFile(position).isDirectory()) {			// For directory
 			menu.setHeaderTitle("This directory");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
 			menu.add(Menu.NONE, 1, 1, "Add to play queue");
@@ -453,7 +454,7 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 				choosePlaylist(0, addCurrentRecursiveChoice);
 				break;
 			case 2:						// Add all to queue
-				addToQueue(playlistAdapter.getFilenameList());
+				addToQueue(mPlaylistAdapter.getFilenameList());
 				break;
 			case 3:						// Set as default path
 				final SharedPreferences.Editor editor = mPrefs.edit();
@@ -462,25 +463,25 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 				Message.toast(this, "Set as default module path");
 				break;
 			case 4:						// Clear cache
-				clearCachedEntries(playlistAdapter.getFilenameList());
+				clearCachedEntries(mPlaylistAdapter.getFilenameList());
 				break;
 			}
 
 			return true;
 		}
 
-		final int position = playlistAdapter.getPosition();
+		final int position = mPlaylistAdapter.getPosition();
 
-		if (playlistAdapter.getFile(position).isDirectory()) {		// Directories
+		if (mPlaylistAdapter.getFile(position).isDirectory()) {		// Directories
 			switch (id) {
 			case 0:										//    Add to playlist (recursive)
 				choosePlaylist(position, addRecursiveToPlaylistChoice);
 				break;
 			case 1:										//    Add to play queue (recursive)
-				addToQueue(recursiveList(playlistAdapter.getFile(position)));
+				addToQueue(recursiveList(mPlaylistAdapter.getFile(position)));
 				break;
 			case 2:										//    Play now (recursive)
-				playModule(recursiveList(playlistAdapter.getFile(position)));
+				playModule(recursiveList(mPlaylistAdapter.getFile(position)));
 				break;
 			case 3:										//    delete directory
 				deleteDirectory(position);
@@ -492,16 +493,16 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 				choosePlaylist(position, addFileToPlaylistChoice);
 				break;
 			case 1:										//   Add to queue
-				addToQueue(playlistAdapter.getFilename(position));
+				addToQueue(mPlaylistAdapter.getFilename(position));
 				break;
 			case 2:										//   Play this module
-				playModule(playlistAdapter.getFilename(position));
+				playModule(mPlaylistAdapter.getFilename(position));
 				break;
 			case 3:										//   Play all starting here
-				playModule(playlistAdapter.getFilenameList(), position);
+				playModule(mPlaylistAdapter.getFilenameList(), position);
 				break;
 			case 4:										//   Delete file
-				final String deleteName = playlistAdapter.getFilename(position);
+				final String deleteName = mPlaylistAdapter.getFilename(position);
 				Message.yesNoDialog(this, "Delete", "Are you sure you want to delete " + FileUtils.basename(deleteName) + "?", new Runnable() {
 					@Override
 					public void run() {

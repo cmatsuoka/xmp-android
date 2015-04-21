@@ -1,5 +1,6 @@
 # Project files
 res/values-v1
+app/src/main/res/values-v1
 
 # Generated files
 *.apk

@@ -1,28 +1,29 @@
 package org.helllabs.android.xmp.browser.playlist;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.util.FileUtils;
-import org.helllabs.android.xmp.util.Log;
-
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> {
+import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
+import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
+
+import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.util.Log;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder>  implements DraggableItemAdapter<PlaylistAdapter.ViewHolder> {
     private static final String TAG = "PlaylistAdapter";
     private final List<PlaylistItem> items;
     private final Context context;
@@ -34,7 +35,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         void onItemClick(PlaylistAdapter adapter, View view, int position);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends AbstractDraggableItemViewHolder implements View.OnClickListener {
+        public View container;
         public TextView titleText;
         public TextView infoText;
         public ImageView image;
@@ -44,6 +46,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         public ViewHolder(final View itemView, final PlaylistAdapter adapter) {
             super(itemView);
             itemView.setOnClickListener(this);
+            container = itemView.findViewById(R.id.plist_container);
             titleText = (TextView)itemView.findViewById(R.id.plist_title);
             infoText = (TextView)itemView.findViewById(R.id.plist_info);
             image = (ImageView)itemView.findViewById(R.id.plist_image);
@@ -60,6 +63,17 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                 onItemClickListener.onItemClick(adapter, view, getPosition());
             }
         }
+    }
+
+    private static boolean hitTest(final View v, final int x, final int y) {
+        final int tx = (int) (ViewCompat.getTranslationX(v) + 0.5f);
+        final int ty = (int) (ViewCompat.getTranslationY(v) + 0.5f);
+        final int left = v.getLeft() + tx;
+        final int right = v.getRight() + tx;
+        final int top = v.getTop() + ty;
+        final int bottom = v.getBottom() + ty;
+
+        return (x >= left) && (x <= right) && (y >= top) && (y <= bottom);
     }
 
     public void setOnItemClickListener(final OnItemClickListener listener) {
@@ -105,6 +119,27 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                 return false;
             }
         });
+
+        // Advanced RecyclerView
+        // set background resource (target view ID: container)
+        /*
+        final int dragState = holder.getDragStateFlags();
+
+        if (((dragState & RecyclerViewDragDropManager.STATE_FLAG_IS_UPDATED) != 0)) {
+            int bgResId;
+
+            if ((dragState & RecyclerViewDragDropManager.STATE_FLAG_IS_ACTIVE) != 0) {
+                bgResId = R.drawable.bg_item_dragging_active_state;
+            } else if ((dragState & RecyclerViewDragDropManager.STATE_FLAG_DRAGGING) != 0) {
+                bgResId = R.drawable.bg_item_dragging_state;
+            } else {
+                bgResId = R.drawable.bg_item_normal_state;
+            }
+
+            holder.mContainer.setBackgroundResource(bgResId);
+        }*/
+
+
     }
 
     @Override
@@ -186,5 +221,39 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     			items.add(item);
     		}
     	}
+    }
+
+    @Override
+    public void onMoveItem(final int fromPosition, final int toPosition) {
+        Log.d(TAG, "onMoveItem(fromPosition = " + fromPosition + ", toPosition = " + toPosition + ")");
+
+        if (fromPosition == toPosition) {
+            return;
+        }
+
+        final PlaylistItem item = items.get(fromPosition);
+        items.remove(item);
+        items.add(toPosition, item);
+        //playlist.setListChanged(true);
+
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    @Override
+    public boolean onCheckCanStartDrag(final ViewHolder holder, final int x, final int y) {
+        // x, y --- relative from the itemView's top-left
+        final View containerView = holder.container;
+        final View dragHandleView = holder.image;
+
+        final int offsetX = containerView.getLeft() + (int) (ViewCompat.getTranslationX(containerView) + 0.5f);
+        final int offsetY = containerView.getTop() + (int) (ViewCompat.getTranslationY(containerView) + 0.5f);
+
+        return hitTest(dragHandleView, x - offsetX, y - offsetY);
+    }
+
+    @Override
+    public ItemDraggableRange onGetItemDraggableRange(ViewHolder holder) {
+        // no drag-sortable range specified
+        return null;
     }
 }

@@ -6,11 +6,12 @@ import java.util.List;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.browser.playlist.Playlist;
 import org.helllabs.android.xmp.browser.playlist.PlaylistAdapter;
-import org.helllabs.android.xmp.browser.playlist.PlaylistItem;
 import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
+import android.graphics.drawable.NinePatchDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,11 +23,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import com.commonsware.cwac.tlv.TouchListView;
+import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.decoration.ItemShadowDecorator;
+import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 
-public class PlaylistActivity extends BasePlaylistActivity {
+
+public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAdapter.OnItemClickListener {
 	private static final String TAG = "PlaylistActivity";
-	private Playlist playlist;
+	private Playlist mPlaylist;
+    private RecyclerView.Adapter mWrappedAdapter;
+    private RecyclerViewDragDropManager mRecyclerViewDragDropManager;
 
 	// List reorder
 
@@ -59,33 +67,56 @@ public class PlaylistActivity extends BasePlaylistActivity {
 
 		setTitle(R.string.browser_playlist_title);
 
+        final String name = extras.getString("name");
+        final boolean useFilename = mPrefs.getBoolean(Preferences.USE_FILENAME, false);
+
 		final RecyclerView recyclerView = (RecyclerView)findViewById(R.id.plist_list);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-		super.setOnItemClickListener(recyclerView);
+		//super.setOnItemClickListener(recyclerView);
 
 		//listView.setDropListener(onDrop);
 		//listView.setRemoveListener(onRemove);
 
-		final String name = extras.getString("name");
-		final boolean useFilename = mPrefs.getBoolean(Preferences.USE_FILENAME, false);
+        // drag & drop manager
+        mRecyclerViewDragDropManager = new RecyclerViewDragDropManager();
+        mRecyclerViewDragDropManager.setDraggingItemShadowDrawable(
+                (NinePatchDrawable) getResources().getDrawable(R.drawable.material_shadow_z3));
 
 		try {
-			playlist = new Playlist(this, name);
-			playlistAdapter = new PlaylistAdapter(this, R.layout.song_item, R.id.info, playlist.getList(), useFilename);
-			recyclerView.setAdapter(playlistAdapter);
+			mPlaylist = new Playlist(this, name);
+			mPlaylistAdapter = new PlaylistAdapter(this, R.layout.song_item, R.id.info, mPlaylist.getList(), useFilename);
+            mWrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(mPlaylistAdapter);
+			recyclerView.setAdapter(mWrappedAdapter);
 		} catch (IOException e) {
 			Log.e(TAG, "Can't read playlist " + name);
 		}
+
+        final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
+        recyclerView.setItemAnimator(animator);
+
+        // additional decorations
+        //noinspection StatementWithEmptyBody
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Lollipop or later has native drop shadow feature. ItemShadowDecorator is not required.
+        } else {
+            recyclerView.addItemDecoration(new ItemShadowDecorator((NinePatchDrawable) getResources().getDrawable(R.drawable.material_shadow_z1)));
+        }
+        recyclerView.addItemDecoration(new SimpleListDividerDecorator(getResources().getDrawable(R.drawable.list_divider), true));
+
+        mRecyclerViewDragDropManager.attachRecyclerView(recyclerView);
+
+        mPlaylistAdapter.setOnItemClickListener(this);
+
 
 		final TextView curListName = (TextView)findViewById(R.id.current_list_name);
 		final TextView curListDesc = (TextView)findViewById(R.id.current_list_description);
 
 		curListName.setText(name);
-		curListDesc.setText(playlist.getComment());
+		curListDesc.setText(mPlaylist.getComment());
 		registerForContextMenu(recyclerView);
 
 		setupButtons();
@@ -96,7 +127,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		super.onPause();
 
 		try {
-			playlist.commit();
+			mPlaylist.commit();
 		} catch (IOException e) {
 			Message.toast(this, getString(R.string.error_write_to_playlist));
 		}
@@ -105,32 +136,32 @@ public class PlaylistActivity extends BasePlaylistActivity {
 
 	@Override
 	protected void setShuffleMode(final boolean shuffleMode) {
-		playlist.setShuffleMode(shuffleMode);
+		mPlaylist.setShuffleMode(shuffleMode);
 	}
 
 	@Override
 	protected void setLoopMode(final boolean loopMode) {
-		playlist.setLoopMode(loopMode);
+		mPlaylist.setLoopMode(loopMode);
 	}
 
 	@Override
 	protected boolean isShuffleMode() {
-		return playlist.isShuffleMode();
+		return mPlaylist.isShuffleMode();
 	}
 
 	@Override
 	protected boolean isLoopMode() {
-		return playlist.isLoopMode();
+		return mPlaylist.isLoopMode();
 	}
 
 	@Override
 	protected List<String> getAllFiles() {
-		return playlistAdapter.getFilenameList();
+		return mPlaylistAdapter.getFilenameList();
 	}
 
 	@Override
 	public void update() {
-		playlistAdapter.notifyDataSetChanged();
+		mPlaylistAdapter.notifyDataSetChanged();
 	}
 
 	// Playlist context menu
@@ -159,25 +190,25 @@ public class PlaylistActivity extends BasePlaylistActivity {
 
 		switch (itemId) {
 		case 0:										// Remove from playlist
-			playlist.remove(info.position);
+			mPlaylist.remove(info.position);
 			try {
-				playlist.commit();
+				mPlaylist.commit();
 			} catch (IOException e) {
 				Message.toast(this, getString(R.string.error_write_to_playlist));
 			}
 			update();
 			break;
 		case 1:										// Add to play queue
-			addToQueue(playlistAdapter.getFilename(info.position));
+			addToQueue(mPlaylistAdapter.getFilename(info.position));
 			break;
 		case 2:										// Add all to play queue
-			addToQueue(playlistAdapter.getFilenameList());
+			addToQueue(mPlaylistAdapter.getFilenameList());
 			break;
 		case 3:										// Play only this module
-			playModule(playlistAdapter.getFilename(info.position));
+			playModule(mPlaylistAdapter.getFilename(info.position));
 			break;
 		case 4:										// Play all starting here
-			playModule(playlistAdapter.getFilenameList(), info.position);
+			playModule(mPlaylistAdapter.getFilenameList(), info.position);
 			break;
 		}
 
