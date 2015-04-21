@@ -6,8 +6,8 @@
     android:versionName="4.9.0" >
 
     <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="21" />
+        android:minSdkVersion="11"
+        android:targetSdkVersion="22" />
 
     <supports-screens />
 

@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "org.helllabs.android.xmp"
-        minSdkVersion 9
-        targetSdkVersion 21
+        minSdkVersion 11
+        targetSdkVersion 22
 
         ndk {
             moduleName "xmp-prebuilt"
