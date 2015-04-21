@@ -61,7 +61,7 @@ public class PlaylistMenu extends ActionBarActivity implements PlaylistAdapter.O
 		
 		playlistAdapter = new PlaylistAdapter(PlaylistMenu.this, R.layout.playlist_item, R.id.plist_info, new ArrayList<PlaylistItem>(), false);
         playlistAdapter.setOnItemClickListener(this);
-		recyclerView.setAdapter(playlistAdapter);
+   		recyclerView.setAdapter(playlistAdapter);
 
 		registerForContextMenu(recyclerView);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -161,10 +161,12 @@ public class PlaylistMenu extends ActionBarActivity implements PlaylistAdapter.O
 
 	@Override
 	public void onCreateContextMenu(final ContextMenu menu, final View view, final ContextMenu.ContextMenuInfo menuInfo) {
-		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+		//final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
 		menu.setHeaderTitle("Playlist options");
 
-		if (info.position == 0) {					// Module list
+        final int position = playlistAdapter.getPosition();
+
+		if (position == 0) {					// Module list
 			menu.add(Menu.NONE, 0, 0, "Change directory");
 			//menu.add(Menu.NONE, 1, 1, "Add to playlist");
 		} else {									// Playlists
@@ -176,10 +178,12 @@ public class PlaylistMenu extends ActionBarActivity implements PlaylistAdapter.O
 
 	@Override
 	public boolean onContextItemSelected(final MenuItem item) {
-		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-		final int index = item.getItemId();
+		//final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
 
-		if (info.position == 0) {		// First item of list
+        final int index = item.getItemId();
+        final int position = playlistAdapter.getPosition();
+
+		if (position == 0) {		// First item of list
 			if (index == 0) {			// First item of context menu
 				changeDir(this);
 				return true;
@@ -187,15 +191,15 @@ public class PlaylistMenu extends ActionBarActivity implements PlaylistAdapter.O
 		} else {
 			switch (index) {
 			case 0:						// Rename
-				renameList(this, info.position -1);
+				renameList(this, position -1);
 				updateList();
 				return true;
 			case 1:						// Edit comment
-				editComment(this, info.position -1);
+				editComment(this, position -1);
 				updateList();
 				return true;
 			case 2:						// Delete
-				deletePosition = info.position - 1;
+				deletePosition = position - 1;
 				Message.yesNoDialog(this, "Delete", "Are you sure to delete playlist " +
 						PlaylistUtils.listNoSuffix()[deletePosition] + "?", new Runnable() {
 					@Override

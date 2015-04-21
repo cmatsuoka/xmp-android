@@ -414,9 +414,9 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 
 		isPathMenu = false;
 
-		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+		final int position = playlistAdapter.getPosition();
 
-		if (playlistAdapter.getFile(info.position).isDirectory()) {			// For directory
+		if (playlistAdapter.getFile(position).isDirectory()) {			// For directory
 			menu.setHeaderTitle("This directory");
 			menu.add(Menu.NONE, 0, 0, "Add to playlist");
 			menu.add(Menu.NONE, 1, 1, "Add to play queue");
@@ -469,39 +469,39 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 			return true;
 		}
 
-		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+		final int position = playlistAdapter.getPosition();
 
-		if (playlistAdapter.getFile(info.position).isDirectory()) {		// Directories
+		if (playlistAdapter.getFile(position).isDirectory()) {		// Directories
 			switch (id) {
 			case 0:										//    Add to playlist (recursive)
-				choosePlaylist(info.position, addRecursiveToPlaylistChoice);
+				choosePlaylist(position, addRecursiveToPlaylistChoice);
 				break;
 			case 1:										//    Add to play queue (recursive)
-				addToQueue(recursiveList(playlistAdapter.getFile(info.position)));
+				addToQueue(recursiveList(playlistAdapter.getFile(position)));
 				break;
 			case 2:										//    Play now (recursive)
-				playModule(recursiveList(playlistAdapter.getFile(info.position)));
+				playModule(recursiveList(playlistAdapter.getFile(position)));
 				break;
 			case 3:										//    delete directory
-				deleteDirectory(info.position);
+				deleteDirectory(position);
 				break;
 			}
 		} else {										// Files
 			switch (id) {
 			case 0:										//   Add to playlist
-				choosePlaylist(info.position, addFileToPlaylistChoice);
+				choosePlaylist(position, addFileToPlaylistChoice);
 				break;
 			case 1:										//   Add to queue
-				addToQueue(playlistAdapter.getFilename(info.position));
+				addToQueue(playlistAdapter.getFilename(position));
 				break;
 			case 2:										//   Play this module
-				playModule(playlistAdapter.getFilename(info.position));
+				playModule(playlistAdapter.getFilename(position));
 				break;
 			case 3:										//   Play all starting here
-				playModule(playlistAdapter.getFilenameList(), info.position);
+				playModule(playlistAdapter.getFilenameList(), position);
 				break;
 			case 4:										//   Delete file
-				final String deleteName = playlistAdapter.getFilename(info.position);
+				final String deleteName = playlistAdapter.getFilename(position);
 				Message.yesNoDialog(this, "Delete", "Are you sure you want to delete " + FileUtils.basename(deleteName) + "?", new Runnable() {
 					@Override
 					public void run() {

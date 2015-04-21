@@ -14,6 +14,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     private final List<PlaylistItem> items;
     private final Context context;
     private final boolean useFilename;
+    private int position;
     private OnItemClickListener onItemClickListener;
 
     public static interface OnItemClickListener {
@@ -73,7 +75,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final PlaylistItem item = items.get(position);
         final Typeface typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
         final int imageRes = item.getImageRes();
@@ -94,6 +96,21 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
    		} else {
    			holder.image.setVisibility(View.GONE);
    		}
+
+        // See http://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setPosition(holder.getPosition());
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void onViewRecycled(ViewHolder holder) {
+        holder.itemView.setOnLongClickListener(null);
+        super.onViewRecycled(holder);
     }
 
     @Override
@@ -113,8 +130,15 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         items.add(item);
     }
 
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
     public PlaylistAdapter(final Context context, final int resource, final int textViewResId, final List<PlaylistItem> items, final boolean useFilename) {
-    	//super(context, resource, textViewResId, items);
     	this.items = items;
     	this.context = context;
     	this.useFilename = useFilename;
