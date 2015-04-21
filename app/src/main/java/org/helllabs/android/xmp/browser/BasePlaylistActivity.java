@@ -25,6 +25,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -145,8 +146,7 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 		toggleShuffleButton.setOnClickListener(toggleShuffleButtonListener);
 	}
 
-	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
-		final PlaylistAdapter adapter = (PlaylistAdapter)list.getAdapter();
+	protected void onListItemClick(final PlaylistAdapter adapter, final View view, final int position) {
 		final String filename = adapter.getItem(position).getFile().getPath();
 		
 		final int mode = Integer.parseInt(mPrefs.getString(Preferences.PLAYLIST_MODE, "1"));
@@ -176,13 +176,13 @@ public abstract class BasePlaylistActivity extends ActionBarActivity {
 	}
 	
 	// Item click	
-	protected void setOnItemClickListener(final ListView list) {
-		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	protected void setOnItemClickListener(final RecyclerView list) {
+		/*list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
 				onListItemClick(list, view, position, id);
 			}
-		});
+		});*/
 	}
 
 	// Play this module

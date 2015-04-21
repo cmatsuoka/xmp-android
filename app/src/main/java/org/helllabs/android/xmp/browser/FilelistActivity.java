@@ -21,6 +21,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -31,7 +33,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class FilelistActivity extends BasePlaylistActivity {
+public class FilelistActivity extends BasePlaylistActivity implements PlaylistAdapter.OnItemClickListener {
 	private static final String TAG = "BasePlaylistActivity";
 	private static final String OPTIONS_SHUFFLE_MODE = "options_shuffleMode";
 	private static final String OPTIONS_LOOP_MODE = "options_loopMode";
@@ -39,7 +41,7 @@ public class FilelistActivity extends BasePlaylistActivity {
 	private static final boolean DEFAULT_LOOP_MODE = false;
 
 	private FilelistNavigation mNavigation;
-	private ListView listView;
+	private RecyclerView recyclerView;
 	private boolean isPathMenu;
 	private TextView curPath;
 	private boolean mLoopMode;
@@ -127,14 +129,14 @@ public class FilelistActivity extends BasePlaylistActivity {
 	}
 
 	@Override
-	protected void onListItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
+	public void onItemClick(final PlaylistAdapter adapter, final View view, final int position) {
 		final File file = playlistAdapter.getFile(position);
 		
 		if (mNavigation.changeDirectory(file)) {
-			mNavigation.saveListPosition(listView);
+			//mNavigation.saveListPosition(recyclerView);
 			updateModlist();
 		} else {
-			super.onListItemClick(list, view, position, id);
+			super.onListItemClick(adapter, view, position);
 		}
 	}
 
@@ -172,18 +174,17 @@ public class FilelistActivity extends BasePlaylistActivity {
 		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.modlist);
 
-		listView = (ListView)findViewById(R.id.modlist_listview);
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(final AdapterView<?> list, final View view, final int position, final long id) {
-				onListItemClick(list, view, position, id);
-			}		
-		});
+		recyclerView = (RecyclerView)findViewById(R.id.modlist_listview);
+
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
 
 		playlistAdapter = new PlaylistAdapter(this, R.layout.song_item, R.id.info, new ArrayList<PlaylistItem>(), false);
-		listView.setAdapter(playlistAdapter);
+        playlistAdapter.setOnItemClickListener(this);
+		recyclerView.setAdapter(playlistAdapter);
 
-		registerForContextMenu(listView);
+		registerForContextMenu(recyclerView);
 		final String mediaPath = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 
 		setTitle(R.string.browser_filelist_title);
@@ -226,11 +227,11 @@ public class FilelistActivity extends BasePlaylistActivity {
 
 		setupButtons();
 	}
-	
-	private void parentDir() {
+
+    private void parentDir() {
 		if (mNavigation.parentDir()) {
 			updateModlist();
-			mNavigation.restoreListPosition(listView);
+			//mNavigation.restoreListPosition(recyclerView);
 		}
 	}
 	

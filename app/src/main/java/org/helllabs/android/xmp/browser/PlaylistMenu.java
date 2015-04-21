@@ -29,16 +29,17 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 
-public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnItemClickListener {
+public class PlaylistMenu extends ActionBarActivity implements PlaylistAdapter.OnItemClickListener {
 	private static final String TAG = "PlaylistMenu";
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAYLIST_REQUEST = 46;
@@ -52,13 +53,17 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 		super.onCreate(icicle);
 		setContentView(R.layout.playlist_menu);
 
-		final ListView listView = (ListView)findViewById(R.id.plist_menu_list);
-		listView.setOnItemClickListener(this);
+		final RecyclerView recyclerView = (RecyclerView)findViewById(R.id.plist_menu_list);
+
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
 		
 		playlistAdapter = new PlaylistAdapter(PlaylistMenu.this, R.layout.playlist_item, R.id.plist_info, new ArrayList<PlaylistItem>(), false);
-		listView.setAdapter(playlistAdapter);
+        playlistAdapter.setOnItemClickListener(this);
+		recyclerView.setAdapter(playlistAdapter);
 
-		registerForContextMenu(listView);
+		registerForContextMenu(recyclerView);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if (!checkStorage()) {
@@ -103,9 +108,7 @@ public class PlaylistMenu extends ActionBarActivity implements AdapterView.OnIte
 	}
 
 	@Override
-	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-		final PlaylistAdapter adapter = (PlaylistAdapter)parent.getAdapter();
-		
+	public void onItemClick(final PlaylistAdapter adapter, final View view, final int position) {
 		if (position == 0) {
 			final Intent intent = new Intent(PlaylistMenu.this, FilelistActivity.class);
 			startActivityForResult(intent, PLAYLIST_REQUEST);

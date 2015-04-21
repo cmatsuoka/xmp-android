@@ -12,6 +12,8 @@ import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -28,7 +30,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 
 	// List reorder
 
-	private final TouchListView.DropListener onDrop = new TouchListView.DropListener() {
+	/*private final TouchListView.DropListener onDrop = new TouchListView.DropListener() {
 		@Override
 		public void drop(final int from, final int to) {
 			final PlaylistItem item = playlistAdapter.getItem(from);
@@ -43,7 +45,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		public void remove(final int which) {
 			playlistAdapter.remove(playlistAdapter.getItem(which));
 		}
-	};	
+	};	*/
 
 	@Override
 	public void onCreate(final Bundle icicle) {
@@ -57,11 +59,16 @@ public class PlaylistActivity extends BasePlaylistActivity {
 
 		setTitle(R.string.browser_playlist_title);
 
-		final TouchListView listView = (TouchListView)findViewById(R.id.plist_list);
-		super.setOnItemClickListener(listView);
+		final RecyclerView recyclerView = (RecyclerView)findViewById(R.id.plist_list);
 
-		listView.setDropListener(onDrop);
-		listView.setRemoveListener(onRemove);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+		super.setOnItemClickListener(recyclerView);
+
+		//listView.setDropListener(onDrop);
+		//listView.setRemoveListener(onRemove);
 
 		final String name = extras.getString("name");
 		final boolean useFilename = mPrefs.getBoolean(Preferences.USE_FILENAME, false);
@@ -69,7 +76,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 		try {
 			playlist = new Playlist(this, name);
 			playlistAdapter = new PlaylistAdapter(this, R.layout.song_item, R.id.info, playlist.getList(), useFilename);
-			listView.setAdapter(playlistAdapter);
+			recyclerView.setAdapter(playlistAdapter);
 		} catch (IOException e) {
 			Log.e(TAG, "Can't read playlist " + name);
 		}
@@ -79,7 +86,7 @@ public class PlaylistActivity extends BasePlaylistActivity {
 
 		curListName.setText(name);
 		curListDesc.setText(playlist.getComment());
-		registerForContextMenu(listView);
+		registerForContextMenu(recyclerView);
 
 		setupButtons();
 	}
