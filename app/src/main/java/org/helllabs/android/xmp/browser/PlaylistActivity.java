@@ -69,50 +69,50 @@ public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAd
 
 		setTitle(R.string.browser_playlist_title);
 
-        final String name = extras.getString("name");
-        final boolean useFilename = mPrefs.getBoolean(Preferences.USE_FILENAME, false);
+		final String name = extras.getString("name");
+		final boolean useFilename = mPrefs.getBoolean(Preferences.USE_FILENAME, false);
 
-        try {
-            mPlaylist = new Playlist(this, name);
-        } catch (IOException e) {
-            Log.e(TAG, "Can't read playlist " + name);
-        }
+		try {
+			mPlaylist = new Playlist(this, name);
+		} catch (IOException e) {
+			Log.e(TAG, "Can't read playlist " + name);
+		}
 
-		mRecyclerView = (RecyclerView)findViewById(R.id.plist_list);
+		mRecyclerView = (RecyclerView) findViewById(R.id.plist_list);
 
-        // layout manager
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+		// layout manager
+		final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        // drag & drop manager
-        mRecyclerViewDragDropManager = new RecyclerViewDragDropManager();
-        mRecyclerViewDragDropManager.setDraggingItemShadowDrawable((NinePatchDrawable)getResources().getDrawable(R.drawable.material_shadow_z3));
+		// drag & drop manager
+		mRecyclerViewDragDropManager = new RecyclerViewDragDropManager();
+		mRecyclerViewDragDropManager.setDraggingItemShadowDrawable((NinePatchDrawable) getResources().getDrawable(R.drawable.material_shadow_z3));
 
-        // adapter
-        mPlaylistAdapter = new PlaylistAdapter(this, mPlaylist.getList(), useFilename);
-        mWrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(mPlaylistAdapter);
+		// adapter
+		mPlaylistAdapter = new PlaylistAdapter(this, mPlaylist.getList(), useFilename);
+		mWrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(mPlaylistAdapter);
 
-        final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
+		final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
 
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mWrappedAdapter);
-        mRecyclerView.setItemAnimator(animator);
+		mRecyclerView.setLayoutManager(layoutManager);
+		mRecyclerView.setAdapter(mWrappedAdapter);
+		mRecyclerView.setItemAnimator(animator);
 
-        // additional decorations
-        //noinspection StatementWithEmptyBody
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Lollipop or later has native drop shadow feature. ItemShadowDecorator is not required.
-        } else {
-            mRecyclerView.addItemDecoration(new ItemShadowDecorator((NinePatchDrawable) getResources().getDrawable(R.drawable.material_shadow_z1)));
-        }
-        mRecyclerView.addItemDecoration(new SimpleListDividerDecorator(getResources().getDrawable(R.drawable.list_divider), true));
+		// additional decorations
+		//noinspection StatementWithEmptyBody
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			// Lollipop or later has native drop shadow feature. ItemShadowDecorator is not required.
+		} else {
+			mRecyclerView.addItemDecoration(new ItemShadowDecorator((NinePatchDrawable) getResources().getDrawable(R.drawable.material_shadow_z1)));
+		}
+		mRecyclerView.addItemDecoration(new SimpleListDividerDecorator(getResources().getDrawable(R.drawable.list_divider), true));
 
-        mRecyclerViewDragDropManager.attachRecyclerView(mRecyclerView);
+		mRecyclerViewDragDropManager.attachRecyclerView(mRecyclerView);
 
-        mPlaylistAdapter.setOnItemClickListener(this);
+		mPlaylistAdapter.setOnItemClickListener(this);
 
-		final TextView curListName = (TextView)findViewById(R.id.current_list_name);
-		final TextView curListDesc = (TextView)findViewById(R.id.current_list_description);
+		final TextView curListName = (TextView) findViewById(R.id.current_list_name);
+		final TextView curListDesc = (TextView) findViewById(R.id.current_list_description);
 
 		curListName.setText(name);
 		curListDesc.setText(mPlaylist.getComment());
@@ -125,7 +125,7 @@ public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAd
 	public void onPause() {
 		super.onPause();
 
-        mRecyclerViewDragDropManager.cancelDrag();
+		mRecyclerViewDragDropManager.cancelDrag();
 
 		try {
 			mPlaylist.commit();
@@ -134,27 +134,27 @@ public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAd
 		}
 	}
 
-    @Override
-    public void onDestroy() {
-        if (mRecyclerViewDragDropManager != null) {
-            mRecyclerViewDragDropManager.release();
-            mRecyclerViewDragDropManager = null;
-        }
+	@Override
+	public void onDestroy() {
+		if (mRecyclerViewDragDropManager != null) {
+			mRecyclerViewDragDropManager.release();
+			mRecyclerViewDragDropManager = null;
+		}
 
-        if (mRecyclerView != null) {
-            mRecyclerView.setItemAnimator(null);
-            mRecyclerView.setAdapter(null);
-            mRecyclerView = null;
-        }
+		if (mRecyclerView != null) {
+			mRecyclerView.setItemAnimator(null);
+			mRecyclerView.setAdapter(null);
+			mRecyclerView = null;
+		}
 
-        if (mWrappedAdapter != null) {
-            WrapperAdapterUtils.releaseAll(mWrappedAdapter);
-            mWrappedAdapter = null;
-        }
-        mPlaylistAdapter = null;
+		if (mWrappedAdapter != null) {
+			WrapperAdapterUtils.releaseAll(mWrappedAdapter);
+			mWrappedAdapter = null;
+		}
+		mPlaylistAdapter = null;
 
-        super.onDestroy();
-    }
+		super.onDestroy();
+	}
 
 	@Override
 	protected void setShuffleMode(final boolean shuffleMode) {
