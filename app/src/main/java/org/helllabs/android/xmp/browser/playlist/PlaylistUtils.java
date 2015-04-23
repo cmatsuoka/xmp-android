@@ -71,9 +71,10 @@ public final class PlaylistUtils {
 		final ModInfo modInfo = new ModInfo();
 		boolean hasInvalid = false;
 
+		int id = 0;
 		for (final String filename : fileList) {
 			if (Xmp.testModule(filename, modInfo)) {
-				final PlaylistItem item = new PlaylistItem(PlaylistItem.TYPE_FILE, modInfo.name, modInfo.type);	// NOPMD
+				final PlaylistItem item = new PlaylistItem(id++, PlaylistItem.TYPE_FILE, modInfo.name, modInfo.type);	// NOPMD
 				item.setFile(new File(filename));	// NOPMD
 				list.add(item);
 			} else {

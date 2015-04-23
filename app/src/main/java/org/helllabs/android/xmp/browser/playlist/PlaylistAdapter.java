@@ -140,6 +140,16 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         }*/
     }
 
+	public PlaylistAdapter(final Context context, final List<PlaylistItem> items, final boolean useFilename) {
+		this.items = items;
+		this.context = context;
+		this.useFilename = useFilename;
+
+		// DraggableItemAdapter requires stable ID, and also
+        // have to implement the getItemId() method appropriately.
+		setHasStableIds(true);
+	}
+
     @Override
     public void onViewRecycled(ViewHolder holder) {
         holder.itemView.setOnLongClickListener(null);
@@ -150,6 +160,11 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public int getItemCount() {
         return items.size();
     }
+
+	@Override
+	public long getItemId(final int position) {
+		return items.get(position).getId();
+	}
 
     public PlaylistItem getItem(final int num) {
         return items.get(num);
@@ -171,11 +186,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         this.position = position;
     }
 
-    public PlaylistAdapter(final Context context, final List<PlaylistItem> items, final boolean useFilename) {
-    	this.items = items;
-    	this.context = context;
-    	this.useFilename = useFilename;
-    }
     
     public List<PlaylistItem> getItems() {
 		return items;
@@ -213,6 +223,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public void addList(final List<PlaylistItem> list) {
     	items.addAll(list);
     }
+
+	// Advanced RecyclerView
 
     @Override
     public void onMoveItem(final int fromPosition, final int toPosition) {
