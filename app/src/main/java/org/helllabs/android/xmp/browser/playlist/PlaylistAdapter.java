@@ -65,17 +65,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         }
     }
 
-    private static boolean hitTest(final View v, final int x, final int y) {
-        final int tx = (int) (ViewCompat.getTranslationX(v) + 0.5f);
-        final int ty = (int) (ViewCompat.getTranslationY(v) + 0.5f);
-        final int left = v.getLeft() + tx;
-        final int right = v.getRight() + tx;
-        final int top = v.getTop() + ty;
-        final int bottom = v.getBottom() + ty;
-
-        return (x >= left) && (x <= right) && (y >= top) && (y <= bottom);
-    }
-
     public void setOnItemClickListener(final OnItemClickListener listener) {
         onItemClickListener = listener;
     }
@@ -228,7 +217,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
     @Override
     public void onMoveItem(final int fromPosition, final int toPosition) {
-        Log.d(TAG, "onMoveItem(fromPosition = " + fromPosition + ", toPosition = " + toPosition + ")");
+        //Log.d(TAG, "onMoveItem(fromPosition = " + fromPosition + ", toPosition = " + toPosition + ")");
 
         if (fromPosition == toPosition) {
             return;
@@ -244,21 +233,30 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
     @Override
     public boolean onCheckCanStartDrag(final ViewHolder holder, final int x, final int y) {
-        Log.d(TAG, "onCheckCanStartDrag");
         // x, y --- relative from the itemView's top-left
         final View containerView = holder.container;
         final View dragHandleView = holder.image;
 
         final int offsetX = containerView.getLeft() + (int) (ViewCompat.getTranslationX(containerView) + 0.5f);
-        final int offsetY = containerView.getTop() + (int) (ViewCompat.getTranslationY(containerView) + 0.5f);
+        //final int offsetY = containerView.getTop() + (int) (ViewCompat.getTranslationY(containerView) + 0.5f);
 
-        return hitTest(dragHandleView, x - offsetX, y - offsetY);
+        return hitTest(dragHandleView, x - offsetX, y /*- offsetY*/);
     }
 
     @Override
     public ItemDraggableRange onGetItemDraggableRange(final ViewHolder holder) {
-        Log.d(TAG, "onGetItemDraggableRange");
         // no drag-sortable range specified
         return null;
     }
+
+	private static boolean hitTest(final View v, final int x, final int y) {
+		final int tx = (int) (ViewCompat.getTranslationX(v) + 0.5f);
+		final int ty = (int) (ViewCompat.getTranslationY(v) + 0.5f);
+		final int left = v.getLeft() + tx;
+		final int right = v.getRight() + tx;
+		final int top = v.getTop() + ty;
+		final int bottom = v.getBottom() + ty;
+
+		return (x >= left) && (x <= right) && (y >= top) && (y <= bottom);
+	}
 }
