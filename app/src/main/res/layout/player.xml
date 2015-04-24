@@ -7,34 +7,31 @@
 	<ViewFlipper android:id="@+id/title_flipper"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:paddingLeft="2dp"
+		android:elevation="10dp"
 		android:background="@color/primary">
 
 		<LinearLayout
 			android:orientation="vertical"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
+			android:layout_height="wrap_content" >
 
 			<TextView android:id="@+id/info_name_0"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:textAppearance="?android:attr/textAppearanceLarge"
 				android:singleLine="true"
-				android:shadowColor="#101010"
-				android:shadowDx="1.0"
-				android:shadowDy="1.0"
-				android:shadowRadius="1.0" />
+                android:paddingLeft="2dp"
+				 />
 
 			<TextView android:id="@+id/info_type_0"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:textAppearance="?android:attr/textAppearanceMedium"
+                android:paddingLeft="2dp"
+                android:paddingBottom="2dp"
 				android:singleLine="true"
 				android:textColor="#c0c0c0"
-				android:shadowColor="#101010"
-				android:shadowDx="1.0"
-				android:shadowDy="1.0"
-				android:shadowRadius="1.0" />
+				 />
 
 		</LinearLayout>
 
@@ -48,30 +45,18 @@
 				android:layout_height="wrap_content"
 				android:textAppearance="?android:attr/textAppearanceLarge"
 				android:singleLine="true"
-				android:shadowColor="#101010"
-				android:shadowDx="1.0"
-				android:shadowDy="1.0"
-				android:shadowRadius="1.0" />
+                android:paddingLeft="2dp"
+				 />
 
 			<TextView android:id="@+id/info_type_1"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:textAppearance="?android:attr/textAppearanceMedium"
+                android:paddingLeft="2dp"
+                android:paddingBottom="2dp"
 				android:singleLine="true"
 				android:textColor="#c0c0c0"
-				android:shadowColor="#101010"
-				android:shadowDx="1.0"
-				android:shadowDy="1.0"
-				android:shadowRadius="1.0" />
-
-			<View
-				android:layout_width="fill_parent"
-				android:layout_height="2dp" />
-
-			<View
-				android:layout_width="fill_parent"
-				android:layout_height="2dp"
-				android:background="#122241" />
+				 />
 
 		</LinearLayout>	
 	</ViewFlipper>	
@@ -81,15 +66,10 @@
 		android:layout_width="fill_parent"
 		android:layout_height="0dp" />
 
-	<View
-		android:layout_width="fill_parent"
-		android:layout_height="2dp"
-		android:background="#282828" />
-
 	<LinearLayout android:orientation="horizontal"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:paddingTop="2dp"
+		android:paddingTop="4dp"
 		android:background="#181818">
 
 		<TextView android:id="@+id/info_status"
