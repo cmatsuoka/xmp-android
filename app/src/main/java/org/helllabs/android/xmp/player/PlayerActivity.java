@@ -1014,5 +1014,5 @@ public class PlayerActivity extends Activity {
 			});
 		}
 		return true;
-	}	
+	}
 }
