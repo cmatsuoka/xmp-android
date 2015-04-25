@@ -180,7 +180,7 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-		mPlaylistAdapter = new PlaylistAdapter(this, new ArrayList<PlaylistItem>(), false);
+		mPlaylistAdapter = new PlaylistAdapter(this, new ArrayList<PlaylistItem>(), false, PlaylistAdapter.LAYOUT_LIST);
         mPlaylistAdapter.setOnItemClickListener(this);
 		recyclerView.setAdapter(mPlaylistAdapter);
         recyclerView.addItemDecoration(new SimpleListDividerDecorator(getResources().getDrawable(R.drawable.list_divider), true));

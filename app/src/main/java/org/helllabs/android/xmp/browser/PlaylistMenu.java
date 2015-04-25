@@ -59,7 +59,7 @@ public class PlaylistMenu extends ActionBarActivity implements PlaylistAdapter.O
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 		
-		playlistAdapter = new PlaylistAdapter(PlaylistMenu.this, new ArrayList<PlaylistItem>(), false);
+		playlistAdapter = new PlaylistAdapter(PlaylistMenu.this, new ArrayList<PlaylistItem>(), false, PlaylistAdapter.LAYOUT_CARD);
         playlistAdapter.setOnItemClickListener(this);
    		recyclerView.setAdapter(playlistAdapter);
 

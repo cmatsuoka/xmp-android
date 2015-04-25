@@ -22,13 +22,17 @@ import java.util.List;
 
 
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> implements DraggableItemAdapter<PlaylistAdapter.ViewHolder> {
-    private static final String TAG = "PlaylistAdapter";
+	public static final int LAYOUT_LIST = 0;
+    public static final int LAYOUT_CARD = 1;
+
+	private static final String TAG = "PlaylistAdapter";
 	private final Playlist playlist;
     private final List<PlaylistItem> items;
     private final Context context;
     private final boolean useFilename;
     private int position;
     private OnItemClickListener onItemClickListener;
+	private int layoutType;
 
     public static interface OnItemClickListener {
         void onItemClick(PlaylistAdapter adapter, View view, int position);
@@ -70,7 +74,14 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.playlist_item, parent, false);
+	    final int layout;
+
+	    if (layoutType == LAYOUT_CARD) {
+		    layout = R.layout.playlist_card;
+	    } else {
+		    layout = R.layout.playlist_item;
+	    }
+        final View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         final ViewHolder holder = new ViewHolder(view, this);
         holder.setOnItemClickListener(onItemClickListener);
         return holder;
@@ -94,6 +105,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
         if (imageRes > 0) {
    			holder.image.setImageResource(imageRes);
+	        holder.image.setBackgroundResource(R.drawable.oval_gray);
    			holder.image.setVisibility(View.VISIBLE);
    		} else {
    			holder.image.setVisibility(View.GONE);
@@ -128,22 +140,24 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         }*/
     }
 
-	public PlaylistAdapter(final Context context, final List<PlaylistItem> items, final boolean useFilename) {
+	public PlaylistAdapter(final Context context, final List<PlaylistItem> items, final boolean useFilename, final int layoutType) {
 		this.playlist = null;
 		this.items = items;
 		this.context = context;
 		this.useFilename = useFilename;
+		this.layoutType = layoutType;
 
 		// DraggableItemAdapter requires stable ID, and also
 		// have to implement the getItemId() method appropriately.
 		setHasStableIds(true);
 	}
 
-	public PlaylistAdapter(final Context context, final Playlist playlist, final boolean useFilename) {
+	public PlaylistAdapter(final Context context, final Playlist playlist, final boolean useFilename, final int layoutType) {
 		this.playlist = playlist;
 		this.items = playlist.getList();
 		this.context = context;
 		this.useFilename = useFilename;
+		this.layoutType = layoutType;
 
 		// DraggableItemAdapter requires stable ID, and also
         // have to implement the getItemId() method appropriately.

@@ -1,3 +1,4 @@
 <resources>
     <color name="pressed_color">#606060</color>
+    <color name="browser_icon_bg">#404040</color>
 </resources>
