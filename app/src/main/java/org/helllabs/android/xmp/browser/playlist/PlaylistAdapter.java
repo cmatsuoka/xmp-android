@@ -12,11 +12,9 @@ import android.widget.TextView;
 
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
-import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
 import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,6 +23,7 @@ import java.util.List;
 
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> implements DraggableItemAdapter<PlaylistAdapter.ViewHolder> {
     private static final String TAG = "PlaylistAdapter";
+	private final Playlist playlist;
     private final List<PlaylistItem> items;
     private final Context context;
     private final boolean useFilename;
@@ -130,7 +129,19 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     }
 
 	public PlaylistAdapter(final Context context, final List<PlaylistItem> items, final boolean useFilename) {
+		this.playlist = null;
 		this.items = items;
+		this.context = context;
+		this.useFilename = useFilename;
+
+		// DraggableItemAdapter requires stable ID, and also
+		// have to implement the getItemId() method appropriately.
+		setHasStableIds(true);
+	}
+
+	public PlaylistAdapter(final Context context, final Playlist playlist, final boolean useFilename) {
+		this.playlist = playlist;
+		this.items = playlist.getList();
 		this.context = context;
 		this.useFilename = useFilename;
 
@@ -175,10 +186,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         this.position = position;
     }
 
-    
-    public List<PlaylistItem> getItems() {
-		return items;
-	}
+    //public List<PlaylistItem> getItems() {
+	//	return items;
+	//}
     
     public String getFilename(final int location) {
     	return items.get(location).getFile().getPath();
@@ -229,6 +239,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         //playlist.setListChanged(true);
 
         notifyItemMoved(fromPosition, toPosition);
+	    if (playlist != null) {
+		    playlist.setListChanged(true);
+	    }
     }
 
     @Override
