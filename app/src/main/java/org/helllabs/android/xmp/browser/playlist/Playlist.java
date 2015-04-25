@@ -292,7 +292,7 @@ public class Playlist {
 	    		final String comment = fields.length > 1 ? fields[1] : "";
 	    		final String title = fields.length > 2 ? fields[2] : "";
 	    		if (InfoCache.fileExists(filename)) {
-	    			final PlaylistItem item = new PlaylistItem(lineNum, PlaylistItem.TYPE_FILE, title, comment);	// NOPMD
+	    			final PlaylistItem item = new PlaylistItem(PlaylistItem.TYPE_FILE, title, comment);	// NOPMD
 	    			item.setFile(new File(filename));	// NOPMD
 	    			item.setImageRes(R.drawable.grabber);
 	    			mList.add(item);
@@ -302,6 +302,7 @@ public class Playlist {
 	    		lineNum++;
 	    	}
 	    	reader.close();
+		    PlaylistUtils.renumberIds(mList);
 	    } catch (IOException e) {
 	    	Log.e(TAG, "Error reading playlist " + file.getPath());
 	    	return false;

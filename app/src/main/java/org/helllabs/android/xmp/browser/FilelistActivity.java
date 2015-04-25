@@ -293,19 +293,17 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 		final List<PlaylistItem> list = new ArrayList<PlaylistItem>();
 		final File[] dirFiles = modDir.listFiles();
 		if (dirFiles != null) {
-			int id = 0;
 			for (final File file : dirFiles) {
 				PlaylistItem item;
 				if (file.isDirectory()) {
-					item = new PlaylistItem(id, PlaylistItem.TYPE_DIRECTORY, file.getName(), getString(R.string.directory));	// NOPMD
+					item = new PlaylistItem(PlaylistItem.TYPE_DIRECTORY, file.getName(), getString(R.string.directory));	// NOPMD
 				} else {
 					final String date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(file.lastModified());
 					final String comment = date + String.format(" (%d kB)", file.length() / 1024);
-					item = new PlaylistItem(id, PlaylistItem.TYPE_FILE, file.getName(), comment);	// NOPMD
+					item = new PlaylistItem(PlaylistItem.TYPE_FILE, file.getName(), comment);	// NOPMD
 				}
 				item.setFile(file);
 				list.add(item);
-				id++;
 			}
 		}
 		Collections.sort(list);

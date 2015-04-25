@@ -10,19 +10,18 @@ public class PlaylistItem implements Comparable<PlaylistItem> {
 	public static final int TYPE_FILE = 3;
 	public static final int TYPE_SPECIAL = 4;
 
-	private final int id;
+	private int id;
 	private final int type;
 	private final String name;
 	private final String comment;
 	private File file;
 	private int imageRes;
 
-	public PlaylistItem(final int id, final int type, final String name, final String comment) {
-		this.id = id;
+	public PlaylistItem(final int type, final String name, final String comment) {
 		this.type = type;
 		this.name = name;
 		this.comment = comment;
-		
+
 		switch (type) {
 		case TYPE_DIRECTORY:
 			imageRes = R.drawable.folder;
@@ -57,6 +56,10 @@ public class PlaylistItem implements Comparable<PlaylistItem> {
 
 	public int getId() {
 		return id;
+	}
+
+	public void setId(final int id) {
+		this.id = id;
 	}
 	
 	public int getType() {

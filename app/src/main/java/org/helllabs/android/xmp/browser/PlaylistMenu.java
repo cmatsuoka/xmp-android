@@ -142,14 +142,13 @@ public class PlaylistMenu extends ActionBarActivity implements PlaylistAdapter.O
 	private void updateList() {
 		mediaPath = prefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);
 
-		int id = 0;
 		playlistAdapter.clear();
-		final PlaylistItem browserItem = new PlaylistItem(id++, PlaylistItem.TYPE_SPECIAL, "File browser", "Files in " + mediaPath);
+		final PlaylistItem browserItem = new PlaylistItem(PlaylistItem.TYPE_SPECIAL, "File browser", "Files in " + mediaPath);
 		browserItem.setImageRes(R.drawable.browser);
 		playlistAdapter.add(browserItem);
 
 		for (final String name : PlaylistUtils.listNoSuffix()) {
-			final PlaylistItem item = new PlaylistItem(id++, PlaylistItem.TYPE_PLAYLIST, name, Playlist.readComment(this, name));	// NOPMD
+			final PlaylistItem item = new PlaylistItem(PlaylistItem.TYPE_PLAYLIST, name, Playlist.readComment(this, name));	// NOPMD
 			item.setImageRes(R.drawable.list);
 			playlistAdapter.add(item);
 		}

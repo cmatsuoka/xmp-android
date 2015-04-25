@@ -74,7 +74,7 @@ public final class PlaylistUtils {
 		int id = 0;
 		for (final String filename : fileList) {
 			if (Xmp.testModule(filename, modInfo)) {
-				final PlaylistItem item = new PlaylistItem(id++, PlaylistItem.TYPE_FILE, modInfo.name, modInfo.type);	// NOPMD
+				final PlaylistItem item = new PlaylistItem(PlaylistItem.TYPE_FILE, modInfo.name, modInfo.type);	// NOPMD
 				item.setFile(new File(filename));	// NOPMD
 				list.add(item);
 			} else {
@@ -98,6 +98,8 @@ public final class PlaylistUtils {
 				});
 			}
 		}
+
+		renumberIds(list);
 	}
 
 	public static void filesToPlaylist(final Activity activity, final List<String> fileList, final String playlistName) {
@@ -146,5 +148,13 @@ public final class PlaylistUtils {
 			Message.error(activity, activity.getString(R.string.error_create_playlist));
 			return false;
 		}	
+	}
+
+	// Stable IDs for used by Advanced RecyclerView
+	public static void renumberIds(final List<PlaylistItem> list) {
+		int id = 0;
+		for (final PlaylistItem item : list) {
+			item.setId(id++);
+		}
 	}
 }
