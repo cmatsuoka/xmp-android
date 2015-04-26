@@ -42,7 +42,7 @@
     </style>
     
     <style name="StatusTheme" parent="AppTheme">
-        <item name="android:background">@color/darkgray</item>
+        <item name="android:background">@color/primary_dark</item>
     </style>
     
     <style name="SidebarTheme" parent="AppTheme">
