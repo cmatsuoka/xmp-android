@@ -43,11 +43,7 @@
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:fastScrollEnabled="true"
-			android:drawSelectorOnTop="false"
-			tlv:normal_height="44dip"
-			tlv:expanded_height="44dip"
-			tlv:grabber="@+id/plist_image"
-			tlv:remove_mode="none" />
+			android:drawSelectorOnTop="false" />
 
 		<TextView android:id="@id/android:empty"
 			android:gravity="top"
