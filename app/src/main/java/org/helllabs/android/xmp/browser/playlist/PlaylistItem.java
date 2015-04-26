@@ -29,6 +29,9 @@ public class PlaylistItem implements Comparable<PlaylistItem> {
 		case TYPE_PLAYLIST:
 			imageRes = R.drawable.list;
 			break;
+		case TYPE_FILE:
+			imageRes = R.drawable.file;
+			break;
 		default:
 			imageRes = -1;
 			break;
