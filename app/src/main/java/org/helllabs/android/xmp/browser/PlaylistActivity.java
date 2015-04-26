@@ -89,7 +89,7 @@ public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAd
 		mRecyclerViewDragDropManager.setDraggingItemShadowDrawable((NinePatchDrawable) getResources().getDrawable(R.drawable.material_shadow_z3));
 
 		// adapter
-		mPlaylistAdapter = new PlaylistAdapter(this, mPlaylist, useFilename, PlaylistAdapter.LAYOUT_LIST);
+		mPlaylistAdapter = new PlaylistAdapter(this, mPlaylist, useFilename, PlaylistAdapter.LAYOUT_DRAG);
 		mWrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(mPlaylistAdapter);
 
 		final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();

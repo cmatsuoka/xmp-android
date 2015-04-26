@@ -1,4 +1,4 @@
 <resources>
     <color name="pressed_color">#606060</color>
-    <color name="browser_icon_bg">#404040</color>
+    <color name="drag_handle_color">#202020</color>
 </resources>

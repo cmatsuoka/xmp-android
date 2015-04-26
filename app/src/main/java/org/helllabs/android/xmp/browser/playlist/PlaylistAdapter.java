@@ -24,6 +24,7 @@ import java.util.List;
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> implements DraggableItemAdapter<PlaylistAdapter.ViewHolder> {
 	public static final int LAYOUT_LIST = 0;
     public static final int LAYOUT_CARD = 1;
+	public static final int LAYOUT_DRAG = 2;
 
 	private static final String TAG = "PlaylistAdapter";
 	private final Playlist playlist;
@@ -40,6 +41,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
     public static class ViewHolder extends AbstractDraggableItemViewHolder implements View.OnClickListener {
         public View container;
+	    public View handle;
         public TextView titleText;
         public TextView infoText;
         public ImageView image;
@@ -50,6 +52,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
             super(itemView);
             itemView.setOnClickListener(this);
             container = itemView.findViewById(R.id.plist_container);
+	        handle = itemView.findViewById(R.id.plist_handle);
             titleText = (TextView)itemView.findViewById(R.id.plist_title);
             infoText = (TextView)itemView.findViewById(R.id.plist_info);
             image = (ImageView)itemView.findViewById(R.id.plist_image);
@@ -76,9 +79,14 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
 	    final int layout;
 
-	    if (layoutType == LAYOUT_CARD) {
+	    switch (layoutType) {
+		case LAYOUT_CARD:
 		    layout = R.layout.playlist_card;
-	    } else {
+			break;
+		case LAYOUT_DRAG:
+			layout = R.layout.playlist_item_drag;
+			break;
+		default:
 		    layout = R.layout.playlist_item;
 	    }
         final View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
@@ -105,11 +113,15 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
         if (imageRes > 0) {
    			holder.image.setImageResource(imageRes);
-	        holder.image.setBackgroundResource(R.drawable.oval_gray);
    			holder.image.setVisibility(View.VISIBLE);
    		} else {
-   			holder.image.setVisibility(View.GONE);
-   		}
+	        holder.image.setVisibility(View.GONE);
+        }
+
+	    if (layoutType == LAYOUT_DRAG) {
+		    holder.handle.setBackgroundColor(context.getResources().getColor(R.color.drag_handle_color));
+		    //holder.image.setAlpha(0.5f);
+	    }
 
         // See http://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -262,7 +274,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public boolean onCheckCanStartDrag(final ViewHolder holder, final int x, final int y) {
         // x, y --- relative from the itemView's top-left
         final View containerView = holder.container;
-        final View dragHandleView = holder.image;
+        final View dragHandleView = holder.handle;
 
         final int offsetX = containerView.getLeft() + (int) (ViewCompat.getTranslationX(containerView) + 0.5f);
         //final int offsetY = containerView.getTop() + (int) (ViewCompat.getTranslationY(containerView) + 0.5f);
