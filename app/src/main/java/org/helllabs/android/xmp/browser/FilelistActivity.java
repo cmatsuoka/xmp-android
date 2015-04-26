@@ -133,7 +133,7 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 		final File file = mPlaylistAdapter.getFile(position);
 		
 		if (mNavigation.changeDirectory(file)) {
-			//mNavigation.saveListPosition(recyclerView);
+			mNavigation.saveListPosition(recyclerView);
 			updateModlist();
 		} else {
 			super.onItemClick(adapter, view, position);
@@ -232,7 +232,7 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
     private void parentDir() {
 		if (mNavigation.parentDir()) {
 			updateModlist();
-			//mNavigation.restoreListPosition(recyclerView);
+			mNavigation.restoreListPosition(recyclerView);
 		}
 	}
 	
@@ -243,13 +243,13 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 	@Override
 	public boolean onKeyDown(final int keyCode, final KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (mBackButtonParentdir) {
+			//if (mBackButtonParentdir) {
 				// Return to parent dir up to the starting level, then act as regular back
 				if (!mNavigation.isAtTopDir()) {
 					parentDir();
 					return true;
 				}
-			}
+			//}
 		}
 		return super.onKeyDown(keyCode, event);
 	}

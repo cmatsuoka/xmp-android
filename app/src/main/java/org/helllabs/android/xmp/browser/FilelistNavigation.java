@@ -3,6 +3,8 @@ package org.helllabs.android.xmp.browser;
 import java.io.File;
 import java.util.Stack;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ListView;
 
@@ -10,26 +12,27 @@ public class FilelistNavigation {
 	
 	private final Stack<ListState> mPathStack;
 	private File mCurrentDir;
-	
-	
+
 	/**
 	 * To restore list position when traversing directories.
 	 */
 	private class ListState {
 		private final int index;
 		private final int top;
-		
-		public ListState(final ListView list) {
-			this.index = list.getFirstVisiblePosition();
-			final View view = list.getChildAt(0);
+
+		public ListState(final RecyclerView recyclerView) {
+			final LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+			this.index = layoutManager.findFirstVisibleItemPosition();
+			final View view = recyclerView.getChildAt(0);
 			this.top = view == null ? 0 : view.getTop();
 		}
 		
-		public void restoreState(final ListView view) {
-			view.post(new Runnable() {
+		public void restoreState(final RecyclerView recyclerView) {
+			final LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+			recyclerView.post(new Runnable() {
 				@Override
 				public void run() {
-					view.setSelectionFromTop(index, top);
+					layoutManager.scrollToPositionWithOffset(index, top);
 				}
 			});
 		}
@@ -42,7 +45,7 @@ public class FilelistNavigation {
 	/**
 	 * Change to the specified directory.
 	 * 
-	 * @param The name of the directory to change to.
+	 * @param file The name of the directory to change to.
 	 * 
 	 * @return True if current directory was changed.
 	 */
@@ -67,23 +70,23 @@ public class FilelistNavigation {
 	}
 	
 	/**
-	 * Save ListView position.
+	 * Save RecyclerView position.
 	 * 
-	 * @param listView The ListView whose position is to be saved. 
+	 * @param recyclerView The RecyclerView whose position is to be saved.
 	 */
-	public void saveListPosition(final ListView listView) {
-		mPathStack.push(new ListState(listView));
+	public void saveListPosition(final RecyclerView recyclerView) {
+		mPathStack.push(new ListState(recyclerView));
 	}
 	
 	/**
-	 * Restore ListView position.
+	 * Restore RecyclerView position.
 	 * 
-	 * @param listView The ListView whose position is to be restored.
+	 * @param recyclerView The RecyclerView whose position is to be restored.
 	 */
-	public void restoreListPosition(final ListView listView) {
+	public void restoreListPosition(final RecyclerView recyclerView) {
 		if (!mPathStack.isEmpty()) {
 			final ListState state = mPathStack.pop();
-			state.restoreState(listView);
+			state.restoreState(recyclerView);
 		}
 	}
 	
