@@ -9,7 +9,9 @@
           android:layout_marginLeft="8dp"
           android:layout_marginRight="8dp"
           android:layout_marginTop="8dp"
+          android:layout_marginBottom="0dp"
           cardview:contentPadding="8dp"
+          cardview:cardCornerRadius="0dp"
           android:foreground="?android:attr/selectableItemBackground" >
 
     <LinearLayout
