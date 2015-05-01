@@ -27,6 +27,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 	public static final int LAYOUT_DRAG = 2;
 
 	private static final String TAG = "PlaylistAdapter";
+    private final Typeface typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
 	private final Playlist playlist;
     private final List<PlaylistItem> items;
     private final Context context;
@@ -98,7 +99,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final PlaylistItem item = items.get(position);
-        final Typeface typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
         final int imageRes = item.getImageRes();
         final int type = item.getType();
 
