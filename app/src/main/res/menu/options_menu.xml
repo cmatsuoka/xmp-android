@@ -24,4 +24,10 @@
         xmp:showAsAction="ifRoom"
         android:title="@string/menu_prefs"/>
 
+    <item
+        android:id="@+id/menu_help"
+        android:icon="@drawable/ic_help_white_24dp"
+        xmp:showAsAction="ifRoom"
+        android:title="@string/menu_help"/>
+
 </menu>
