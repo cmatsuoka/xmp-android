@@ -7,7 +7,7 @@
     </item>
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/primary" />
+            <solid android:color="@color/accent" />
         </shape>
     </item>
 </selector>
