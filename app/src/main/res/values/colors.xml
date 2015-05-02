@@ -1,4 +1,15 @@
 <resources>
+    <color name="black">#FF000000</color>
+    <color name="darkgray">#FF102030</color>
+    <color name="gray">#FF282828</color>
+    <color name="lightgray">#FFc0c0c0</color>
+    <color name="white">#FFF0F0F0</color>
+
+    <color name="section_background">#FF202020</color>
+    <color name="primary">#1a305d</color>
+    <color name="primary_dark">#801a305d</color>
+    <color name="accent">#68c0ff</color>
+
     <color name="pressed_color">#606060</color>
     <color name="drag_handle_color">#202020</color>
 </resources>

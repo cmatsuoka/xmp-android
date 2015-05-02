@@ -57,8 +57,9 @@ public class Preferences extends PreferenceActivity {
 	private String oldPath;
 
 	@Override
-	protected void onCreate(final Bundle icicle) {
-		super.onCreate(icicle);
+	protected void onCreate(final Bundle savedInstanceState) {
+		setTheme(R.style.AppTheme);
+		super.onCreate(savedInstanceState);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		oldPath = prefs.getString(MEDIA_PATH, DEFAULT_MEDIA_PATH);
