@@ -58,7 +58,7 @@ public class Preferences extends PreferenceActivity {
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
-		setTheme(R.style.AppTheme);
+		setTheme(R.style.PreferencesTheme);
 		super.onCreate(savedInstanceState);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);

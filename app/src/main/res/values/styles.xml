@@ -21,6 +21,7 @@
         
         <item name="android:windowBackground">@color/black</item>
         <item name="android:buttonStyle">@style/ButtonTheme</item>
+        <item name="android:checkboxStyle">@style/CheckboxTheme</item>
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -32,6 +33,10 @@
     
     <style name="ButtonTheme" parent="AppTheme">
         <item name="android:background">@android:drawable/btn_default</item>
+    </style>
+
+    <style name="CheckboxTheme">
+        <item name="android:button">@drawable/checkbox_selector</item>
     </style>
     
     <style name="StatusTheme" parent="AppTheme">
@@ -60,6 +65,10 @@
         <item name="android:textSize">16sp</item>
         <item name="android:background">@drawable/section_background</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="PreferencesTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:windowBackground">@color/black</item>
     </style>
 
 </resources>
