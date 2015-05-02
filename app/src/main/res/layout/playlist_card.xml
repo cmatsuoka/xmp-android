@@ -6,11 +6,11 @@
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
           cardview:cardBackgroundColor="@color/cardview_dark_background"
-          android:layout_marginLeft="8dp"
-          android:layout_marginRight="8dp"
-          android:layout_marginTop="8dp"
+          android:layout_marginLeft="9dp"
+          android:layout_marginRight="9dp"
+          android:layout_marginTop="10dp"
           android:layout_marginBottom="0dp"
-          cardview:contentPadding="8dp"
+          cardview:contentPadding="10dp"
           cardview:cardCornerRadius="0dp"
           android:foreground="?android:attr/selectableItemBackground" >
 
