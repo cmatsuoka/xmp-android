@@ -28,7 +28,8 @@
     </style>
     
     <style name="AppTheme.NoActionBar" parent="AppTheme">
-        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
     
     <style name="ButtonTheme" parent="AppTheme">

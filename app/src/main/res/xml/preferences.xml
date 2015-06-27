@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/settings" android:key="settings">
 
     <PreferenceCategory android:title="@string/pref_category_preferences" >
         <PreferenceScreen android:title="@string/pref_category_files" >
+            <PreferenceCategory>
             <EditTextPreference
                 android:defaultValue="/sdcard/mod"
                 android:key="media_path"
@@ -43,10 +45,12 @@
                 android:key="clear_cache"
                 android:summary="@string/pref_clear_cache_summary"
                 android:title="@string/pref_clear_cache_title" />
+            </PreferenceCategory>
         </PreferenceScreen>
         <PreferenceScreen
             android:key="sound_screen"
             android:title="@string/pref_category_sound" >
+            <PreferenceCategory>
             <ListPreference
                 android:defaultValue="44100"
                 android:entries="@array/sampling_rate_array"
@@ -110,6 +114,7 @@
                 android:summary="@string/pref_default_pan_summary"
                 android:text="%"
                 android:title="@string/pref_default_pan_title" />
+            </PreferenceCategory>
 
             <PreferenceCategory android:title="@string/pref_category_player_control" >
                 <CheckBoxPreference
@@ -133,6 +138,7 @@
             </PreferenceCategory>
         </PreferenceScreen>
         <PreferenceScreen android:title="@string/pref_category_interface" >
+            <PreferenceCategory>
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="show_info_line"
@@ -157,6 +163,7 @@
                 android:persistent="true"
                 android:summary="@string/pref_start_on_player_summary"
                 android:title="@string/pref_start_on_player_title" />
+            </PreferenceCategory>
 
             <PreferenceCategory android:title="@string/pref_category_experimental" >
                 <CheckBoxPreference

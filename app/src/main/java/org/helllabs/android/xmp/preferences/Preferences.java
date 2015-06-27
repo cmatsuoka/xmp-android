@@ -7,17 +7,18 @@ import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.util.Message;
 import org.helllabs.android.xmp.service.PlayerService;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.view.KeyEvent;
 
-public class Preferences extends PreferenceActivity {
+public class Preferences extends com.fnp.materialpreferences.PreferenceActivity {
 	public static final File SD_DIR = Environment.getExternalStorageDirectory();
 	public static final File DATA_DIR = new File(SD_DIR, "Xmp for Android");
 	public static final File CACHE_DIR = new File(SD_DIR, "Android/data/org.helllabs.android.xmp/cache/");
@@ -53,59 +54,88 @@ public class Preferences extends PreferenceActivity {
 	public static final String MODARCHIVE_FOLDER = "modarchive_folder";
 	public static final String ARTIST_FOLDER = "artist_folder";
 
-	private SharedPreferences prefs;
-	private String oldPath;
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		setTheme(R.style.PreferencesTheme);
-		super.onCreate(savedInstanceState);
+	//private String oldPath;
 
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		oldPath = prefs.getString(MEDIA_PATH, DEFAULT_MEDIA_PATH);
-		addPreferencesFromResource(R.xml.preferences);
+	 @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		final PreferenceScreen soundScreen = (PreferenceScreen)findPreference("sound_screen");
-		soundScreen.setEnabled(!PlayerService.isAlive);
+        /**
+         * We load a PreferenceFragment which is the recommended way by Android
+         * see @http://developer.android.com/guide/topics/ui/settings.html#Fragment
+         * @TargetApi(11)
+         */
+        setPreferenceFragment(new MyPreferenceFragment());
+    }
 
-		final Preference clearCache = (Preference)findPreference("clear_cache");
-		clearCache.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			public boolean onPreferenceClick(final Preference preference) {
-				try {
-					deleteCache(CACHE_DIR);
-					Message.toast(getBaseContext(), getString(R.string.cache_clear));
-				} catch (IOException e) {
-					Message.toast(getBaseContext(), getString(R.string.cache_clear_error));
-				}
-				return true;
-			}
-		});
-	}
+	 public static class MyPreferenceFragment extends com.fnp.materialpreferences.PreferenceFragment {
+		 private SharedPreferences prefs;
+		 private Context context;
+
+		 @Override
+		 public int addPreferencesFromResource() {
+			 return R.xml.preferences;
+		 }
+
+		 @Override
+		 public void onAttach(final Activity activity) {
+			 super.onAttach(activity);
+			 context = activity.getBaseContext();
+			 prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+		 }
+
+		 @Override
+		 public void onCreate(final Bundle savedInstanceState) {
+			 //setTheme(R.style.PreferencesTheme);
+			 super.onCreate(savedInstanceState);
+
+			 //oldPath = prefs.getString(MEDIA_PATH, DEFAULT_MEDIA_PATH);
+			 //addPreferencesFromResource(R.xml.preferences);
+
+			 final PreferenceScreen soundScreen = (PreferenceScreen) findPreference("sound_screen");
+			 soundScreen.setEnabled(!PlayerService.isAlive);
+
+			 final Preference clearCache = findPreference("clear_cache");
+			 clearCache.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+				 public boolean onPreferenceClick(final Preference preference) {
+					 try {
+						 deleteCache(CACHE_DIR);
+						 Message.toast(context, getString(R.string.cache_clear));
+					 } catch (IOException e) {
+						 Message.toast(context, getString(R.string.cache_clear_error));
+					 }
+					 return true;
+				 }
+			 });
+		 }
 
 
-	@Override
-	public boolean onKeyDown(final int keyCode, final KeyEvent event) { 	
-		if(event.getAction() == KeyEvent.ACTION_DOWN) {
-			if (keyCode == KeyEvent.KEYCODE_BACK) { 
-				final String newPath = prefs.getString(MEDIA_PATH, DEFAULT_MEDIA_PATH);
-				setResult(newPath.equals(oldPath) ? RESULT_CANCELED : RESULT_OK);        				
-				finish();   			
-			}
-		}
 
-		return super.onKeyDown(keyCode, event);
-	}
+		 public static void deleteCache(final File file) throws IOException {
+			 if (!file.exists()) {
+				 return;
+			 }
 
-	public static void deleteCache(final File file) throws IOException {
-		if (!file.exists()) {
-			return;
-		}
+			 if (file.isDirectory()) {
+				 for (final File cacheFile : file.listFiles()) {
+					 deleteCache(cacheFile);
+				 }
+			 }
+			 file.delete();
+		 }
+	 }
 
-		if (file.isDirectory()) {
-			for (final File cacheFile : file.listFiles()) {
-				deleteCache(cacheFile);
-			}
-		}
-		file.delete();
-	}
+	//@Override
+	//public boolean onKeyDown(final int keyCode, final KeyEvent event) {
+	//	if (event.getAction() == KeyEvent.ACTION_DOWN) {
+	//		if (keyCode == KeyEvent.KEYCODE_BACK) {
+	//			final String newPath = prefs.getString(MEDIA_PATH, DEFAULT_MEDIA_PATH);
+	//			setResult(newPath.equals(oldPath) ? RESULT_CANCELED : RESULT_OK);
+	//			finish();
+	//		}
+	//	}
+	//
+	//	return super.onKeyDown(keyCode, event);
+	//}
 }
