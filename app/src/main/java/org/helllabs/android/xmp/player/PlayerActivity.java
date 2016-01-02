@@ -240,7 +240,7 @@ public class PlayerActivity extends Activity {
 		private int oldTime = -1;
 		private boolean oldShowElapsed;
 		private final char[] c = new char[2];
-		private StringBuilder s = new StringBuilder();
+		private final StringBuilder s = new StringBuilder();
 
 		@Override
 		public void run() {
@@ -398,7 +398,7 @@ public class PlayerActivity extends Activity {
 				}
 			});
 		}
-	};
+	}
 
 	private void pause() {
 		paused = true;
@@ -479,7 +479,6 @@ public class PlayerActivity extends Activity {
 		if (!bindService(service, connection, 0)) {
 			Log.e(TAG, "Can't bind to service");
 			finish();
-			return;
 		}
 	}
 
@@ -767,7 +766,7 @@ public class PlayerActivity extends Activity {
 						Log.w(TAG, "Write all sequences preference");
 						final SharedPreferences.Editor editor = prefs.edit();
 						editor.putBoolean(Preferences.ALL_SEQUENCES, allSeq);
-						editor.commit();
+						editor.apply();
 					}
 				} catch (RemoteException e) {
 					Log.e(TAG, "Can't save all sequences preference");

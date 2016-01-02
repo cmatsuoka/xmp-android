@@ -2,11 +2,11 @@ package org.helllabs.android.xmp.player;
 
 public final class Util {
 	
-	private static char[] digits = {
+	private final static char[] digits = {
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
 	};
 
-	private static char[] hexDigits = {
+	private final static char[] hexDigits = {
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
 	};
 

@@ -26,7 +26,7 @@ public class ChannelViewer extends Viewer {
 	private String[] insName, insNameTrim;		
 	private final Rect rect = new Rect();
 	private final byte[][] buffer;		// keep several buffers to hold data in pause
-	private float[] bufferXY;
+	private final float[] bufferXY;
 	private int[] holdKey;
 	private String[] channelNumber;
 	private ModInterface modPlayer;
@@ -38,7 +38,7 @@ public class ChannelViewer extends Viewer {
 	private int volWidth;
 	private int panLeft;
 	private int panWidth;
-	private int[] keyRow = new int[Xmp.MAX_CHANNELS];
+	private final int[] keyRow = new int[Xmp.MAX_CHANNELS];
 
 	public ChannelViewer(final Context context) {
 		super(context);

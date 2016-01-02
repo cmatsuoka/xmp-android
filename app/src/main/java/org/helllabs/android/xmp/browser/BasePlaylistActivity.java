@@ -25,6 +25,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +36,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-public abstract class BasePlaylistActivity extends ActionBarActivity {
+public abstract class BasePlaylistActivity extends AppCompatActivity {
 	private static final String TAG = "PlaylistActivity";
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAY_MOD_REQUEST = 669;

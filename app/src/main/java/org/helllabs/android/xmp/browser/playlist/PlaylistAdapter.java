@@ -34,20 +34,20 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     private final boolean useFilename;
     private int position;
     private OnItemClickListener onItemClickListener;
-	private int layoutType;
+	private final int layoutType;
 
-    public static interface OnItemClickListener {
+    public interface OnItemClickListener {
         void onItemClick(PlaylistAdapter adapter, View view, int position);
     }
 
     public static class ViewHolder extends AbstractDraggableItemViewHolder implements View.OnClickListener {
-        public View container;
-	    public View handle;
-        public TextView titleText;
-        public TextView infoText;
-        public ImageView image;
+        public final View container;
+	    public final View handle;
+        public final TextView titleText;
+        public final TextView infoText;
+        public final ImageView image;
         private OnItemClickListener onItemClickListener;
-        private PlaylistAdapter adapter;
+        private final PlaylistAdapter adapter;
 
         public ViewHolder(final View itemView, final PlaylistAdapter adapter) {
             super(itemView);
@@ -271,7 +271,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     }
 
     @Override
-    public boolean onCheckCanStartDrag(final ViewHolder holder, final int x, final int y) {
+    public boolean onCheckCanStartDrag(final ViewHolder holder, final int position, final int x, final int y) {
         // x, y --- relative from the itemView's top-left
         final View containerView = holder.container;
         final View dragHandleView = holder.handle;
@@ -283,7 +283,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     }
 
     @Override
-    public ItemDraggableRange onGetItemDraggableRange(final ViewHolder holder) {
+    public ItemDraggableRange onGetItemDraggableRange(final ViewHolder holder, final int position) {
         // no drag-sortable range specified
         return null;
     }

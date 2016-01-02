@@ -271,7 +271,7 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 			final SharedPreferences.Editor editor = mPrefs.edit();
 			editor.putBoolean(OPTIONS_SHUFFLE_MODE, mShuffleMode);
 			editor.putBoolean(OPTIONS_LOOP_MODE, mLoopMode);
-			editor.commit();
+			editor.apply();
 		}
 	}
 
@@ -459,7 +459,7 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 			case 3:						// Set as default path
 				final SharedPreferences.Editor editor = mPrefs.edit();
 				editor.putString(Preferences.MEDIA_PATH, mNavigation.getCurrentDir().getPath());
-				editor.commit();
+				editor.apply();
 				Message.toast(this, "Set as default module path");
 				break;
 			case 4:						// Clear cache

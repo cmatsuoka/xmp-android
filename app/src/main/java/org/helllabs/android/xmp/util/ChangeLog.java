@@ -16,7 +16,6 @@ import android.view.View;
 
 public class ChangeLog {
 	private static final String TAG = "ChangeLog";
-	private int versionCode;
 	private final Context context;
 	
 	public ChangeLog(final Context context) {
@@ -26,7 +25,7 @@ public class ChangeLog {
 	public int show() {
 	    try {
 	        final PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-	        versionCode = packageInfo.versionCode; 
+		    final int versionCode = packageInfo.versionCode;
 
 	        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	        final int lastViewed = prefs.getInt(Preferences.CHANGELOG_VERSION, 0);
@@ -34,7 +33,7 @@ public class ChangeLog {
 	        if (lastViewed < versionCode) {
 	            final Editor editor = prefs.edit();
 	            editor.putInt(Preferences.CHANGELOG_VERSION, versionCode);
-	            editor.commit();
+	            editor.apply();
 	            showLog();
 	            return 0;
 	        } else {

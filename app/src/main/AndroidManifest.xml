@@ -7,7 +7,7 @@
 
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="22" />
+        android:targetSdkVersion="23" />
 
     <supports-screens />
 

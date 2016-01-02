@@ -36,14 +36,12 @@ public final class FileUtils {
 		return line;
 	}
 
-	public static boolean removeLineFromFile(final File file, final int num)
-			throws FileNotFoundException, IOException {
+	public static boolean removeLineFromFile(final File file, final int num) throws IOException {
 		final int[] nums = { num };
 		return removeLineFromFile(file, nums);
 	}
 
-	public static boolean removeLineFromFile(final File file, final int[] num)
-			throws IOException, FileNotFoundException {
+	public static boolean removeLineFromFile(final File file, final int[] num) throws IOException {
 
 		final File tempFile = new File(file.getAbsolutePath() + ".tmp");
 

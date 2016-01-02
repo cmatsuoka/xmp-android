@@ -40,7 +40,7 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 		public int[] instruments = new int[64];
 		public int[] keys = new int[64];
 		public int[] periods = new int[64];
-	};
+	}
 	
 	private void limitPosition() {
 		if (posX > maxX - canvasWidth) {

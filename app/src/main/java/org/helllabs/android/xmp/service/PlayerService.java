@@ -435,11 +435,9 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 					queue.setIndex(startIndex - 1);
 					cmd = CMD_NONE;
 					restart = false;
-					continue;
 				} else if (cmd == CMD_PREV) {
 					queue.previous();
 					//returnToPrev = false;
-					continue;
 				}
 			} while (cmd != CMD_STOP && queue.next());
 

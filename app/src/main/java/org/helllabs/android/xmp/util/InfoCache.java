@@ -184,4 +184,4 @@ public final class InfoCache {
 			return Xmp.testModule(filename, info);
 		}	
 	}
-};
+}

@@ -120,7 +120,7 @@ public class Playlist {
 			final SharedPreferences.Editor editor = mPrefs.edit();
 			editor.putBoolean(optionName(mName, SHUFFLE_MODE), mShuffleMode);
 			editor.putBoolean(optionName(mName, LOOP_MODE), mLoopMode);
-			editor.commit();
+			editor.apply();
 		}
 	}
 	
@@ -192,7 +192,7 @@ public class Playlist {
 		editor.putBoolean(optionName(newName, LOOP_MODE), prefs.getBoolean(optionName(oldName, LOOP_MODE), DEFAULT_LOOP_MODE));
 		editor.remove(optionName(oldName, SHUFFLE_MODE));
 		editor.remove(optionName(oldName, LOOP_MODE));
-		editor.commit();
+		editor.apply();
 		
 		return true;
 	}
@@ -211,7 +211,7 @@ public class Playlist {
 		final SharedPreferences.Editor editor = prefs.edit();
 		editor.remove(optionName(name, SHUFFLE_MODE));
 		editor.remove(optionName(name, LOOP_MODE));
-		editor.commit();
+		editor.apply();
 	}
 	
 	/**

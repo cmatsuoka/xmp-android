@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -39,7 +40,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 
-public class PlaylistMenu extends ActionBarActivity implements PlaylistAdapter.OnItemClickListener {
+public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.OnItemClickListener {
 	private static final String TAG = "PlaylistMenu";
 	private static final int SETTINGS_REQUEST = 45;
 	private static final int PLAYLIST_REQUEST = 46;
