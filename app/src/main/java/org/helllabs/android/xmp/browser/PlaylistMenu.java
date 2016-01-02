@@ -18,16 +18,20 @@ import org.helllabs.android.xmp.util.FileUtils;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,16 +71,15 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 		registerForContextMenu(recyclerView);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+
+
 		if (!checkStorage()) {
 			Message.fatalError(this, getString(R.string.error_storage));
 		}
 
 		if (!Preferences.DATA_DIR.isDirectory()) {
-			if (Preferences.DATA_DIR.mkdirs()) {
-				PlaylistUtils.createEmptyPlaylist(this, getString(R.string.empty_playlist), getString(R.string.empty_comment));
-			} else {
-				Message.fatalError(this, getString(R.string.error_datadir));
-			}
+			getStoragePermissions();
+
 		}
 
 		final ChangeLog changeLog = new ChangeLog(this);
@@ -90,7 +93,30 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 		
 		updateList();
 	}
-	
+
+	private static final int REQUEST_WRITE_STORAGE = 112;
+
+	private void getStoragePermissions() {
+		boolean hasPermission = (ContextCompat.checkSelfPermission(this,
+				Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+		if (!hasPermission) {
+			ActivityCompat.requestPermissions(this,
+					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+					REQUEST_WRITE_STORAGE);
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+		if (Preferences.DATA_DIR.mkdirs()) {
+			PlaylistUtils.createEmptyPlaylist(this, getString(R.string.empty_playlist), getString(R.string.empty_comment));
+		} else {
+			Message.fatalError(this, getString(R.string.error_datadir));
+		}
+	}
+
 	@TargetApi(14)
 	private void enableHomeButton() {
 		if (Build.VERSION.SDK_INT >= 14) {
