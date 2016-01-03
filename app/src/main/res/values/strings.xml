@@ -3,13 +3,13 @@
 	<string name="app_name">Xmp Mod Player</string>
 	<string name="app_description">A modplayer that plays over 90 mainstream and obscure module formats, including Protracker (MOD), Scream Tracker 3 (S3M), Fast Tracker II (XM) and Impulse Tracker (IT).</string>
 	     
-    <string name="changelog_text">• Many envelope-related fixes\n• Add IT high offset command (SAx)\n• Add IT surround command (S9x)\n• Add IT surround channel support\n• Add IT sample pan setting support\n• Fix MMD3 16-bit samples\n
+    <string name="changelog_text">• Application interface updates\n• Fix Android 6 compatibility issues\n• Many module loading error fixes\n• Fix IT portamento issues\n• Fix IT envelope fadeout issues\n• Fix IT autovibrato depth\n• Fix Oktalyzer split channels\n• Fix Oktalyzer note slides\n• Fix SoundFX effects\n
+\nVersion 4.6.0:\n• Many envelope-related fixes\n• Add IT high offset command (SAx)\n• Add IT surround command (S9x)\n• Add IT surround channel support\n• Add IT sample pan setting support\n• Fix MMD3 16-bit samples\n
 \nVersion 4.5:1:\n• Fix IT sample mode note cut on invalid sample\n• Fix IT sample mode note end detection\n• Fix IT envelope handling with carry and fadeout\n• Fix IT tone portamento with sample changes\n• Fix IT initial global volume setting\n• Fix IT old FX keyoff with instrument\n• Fix IT random volume variation\n
 \nVersion 4.5.0:\n• Add IT random volume variation\n• Add IT random pan variation\n• Add Oktalyzer split channel support\n• Fix IT filter envelope memory\n• Fix IT volume column volslide memory\n• Fix ThePlayer pattern decoding\n• Fix crashes caused by invalid input files\n
 \nVersion 4.4.1:\n• Fix sample count and size limits\n• Fix loading of OpenMPT 1.17 IT files\n• Fix Oktalyzer sample loops\n• Fix crashes caused by corrupt input files\n
-\nVersion 4.4.0:\n• Better sound quality\n• Fix XM keyoff with delay\n• Fix XM fine pitch slide with pattern delay\n• Other minor XM fixes\n• Fix infinite loop in scan\n• Fix overflow in linear interpolator\n• Fix sample loop adjustment\n• Fix crashes caused by corrupt input files\n
     </string>
-    <string name="changelog_title">New in version 4.6.0</string>
+    <string name="changelog_title">New in version 4.7.0</string>
     <string name="changelog">Changelog</string>
     
     <string name="yes">Yes</string>
