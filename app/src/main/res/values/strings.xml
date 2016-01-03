@@ -169,10 +169,18 @@
     <string name="search_no_result">Search returned no results.</string>
     <string name="search_error">Something wrong happened.</string>
     <string name="search_artist_no_mods">This artist has no modules.</string>
-    
+    <string name="search_title_or_filename">Title or file name</string>
+    <string name="search_artist">Artist</string>
+    <string name="search_random_pick">Random pick</string>
+
+    <string name="result_title">Title</string>
+    <string name="result_download">Download</string>
+    <string name="result_delete">Delete</string>
+    <string name="result_play">Play</string>
+
     <string name="download_cancelled">Download cancelled</string>
     <string name="file_downloaded">Module downloaded</string>
     <string name="menu_help">Help</string>
     <string name="settings">Settings</string>
-
+    
 </resources>

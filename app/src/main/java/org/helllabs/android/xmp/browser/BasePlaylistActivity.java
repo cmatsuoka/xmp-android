@@ -130,7 +130,7 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 	protected abstract boolean isShuffleMode();
 	protected abstract boolean isLoopMode();
 	protected abstract List<String> getAllFiles();
-	public abstract void update();
+	protected abstract void update();
 	
 	protected void setupButtons() {
 		final ImageButton playAllButton = (ImageButton)findViewById(R.id.play_all);
@@ -204,7 +204,7 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 		playModule(modList, start, false);
 	}
 	
-	protected void playModule(final List<String> modList, final int start, final boolean keepFirst) {
+	private void playModule(final List<String> modList, final int start, final boolean keepFirst) {
 		final Intent intent = new Intent(this, PlayerActivity.class);
 		((XmpApplication)getApplication()).setFileList(modList);
 		intent.putExtra(PlayerActivity.PARM_SHUFFLE, isShuffleMode());

@@ -19,6 +19,7 @@
             android:layout_marginRight="@dimen/add_button_margin"
             android:background="@drawable/oval"
             android:elevation="8dp"
+            android:contentDescription="New playlist"
             android:onClick="fabClick"
             android:src="@drawable/ic_add_white_24dp"/>
 

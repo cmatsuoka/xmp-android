@@ -99,10 +99,9 @@ public class Preferences extends com.fnp.materialpreferences.PreferenceActivity 
 			 final Preference clearCache = findPreference("clear_cache");
 			 clearCache.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 				 public boolean onPreferenceClick(final Preference preference) {
-					 try {
-						 deleteCache(CACHE_DIR);
+					 if (deleteCache(CACHE_DIR)) {
 						 Message.toast(context, getString(R.string.cache_clear));
-					 } catch (IOException e) {
+					 } else {
 						 Message.toast(context, getString(R.string.cache_clear_error));
 					 }
 					 return true;
@@ -110,19 +109,23 @@ public class Preferences extends com.fnp.materialpreferences.PreferenceActivity 
 			 });
 		 }
 
+		 public static boolean deleteCache(final File file) {
+			 return deleteCache(file, true);
+		 }
 
-
-		 public static void deleteCache(final File file) throws IOException {
+		 private static boolean deleteCache(final File file, boolean flag) {
 			 if (!file.exists()) {
-				 return;
+				 return true;
 			 }
 
 			 if (file.isDirectory()) {
 				 for (final File cacheFile : file.listFiles()) {
-					 deleteCache(cacheFile);
+					 flag &= deleteCache(cacheFile);
 				 }
 			 }
-			 file.delete();
+			 flag &= file.delete();
+
+			 return flag;
 		 }
 	 }
 

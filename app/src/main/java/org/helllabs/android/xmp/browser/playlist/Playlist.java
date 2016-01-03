@@ -95,10 +95,8 @@ public class Playlist {
 	
 	/**
 	 * Save the current playlist.
-	 * 
-	 * @throws IOException
 	 */
-	public void commit() throws IOException {
+	public void commit() {
 		Log.i(TAG, "Commit playlist " + mName);
 		if (mListChanged) {
 			writeList(mName);

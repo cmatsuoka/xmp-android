@@ -285,7 +285,7 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 				if (!value.equals(mediaPath)) {
 					final SharedPreferences.Editor editor = prefs.edit();
 					editor.putString(Preferences.MEDIA_PATH, value);
-					editor.commit();
+					editor.apply();
 					updateList();
 				}
 			}  

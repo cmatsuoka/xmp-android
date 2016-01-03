@@ -663,7 +663,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 	// for audio focus loss
 
-	public boolean autoPause(final boolean pause) {
+	private boolean autoPause(final boolean pause) {
 		Log.i(TAG, "Auto pause changed to " + pause + ", previously " + receiverHelper.isAutoPaused());
 		if (pause) {
 			previousPaused = paused;

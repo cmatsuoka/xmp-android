@@ -3,7 +3,6 @@ package org.helllabs.android.xmp.util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -52,8 +51,8 @@ public final class FileUtils {
 		boolean flag;
 		for (int lineNum = 0; (line = reader.readLine()) != null; lineNum++) {
 			flag = false;
-			for (int i = 0; i < num.length; i++) {
-				if (lineNum == num[i]) {
+			for (int n : num) {
+				if (lineNum == n) {
 					flag = true;
 					break;
 				}

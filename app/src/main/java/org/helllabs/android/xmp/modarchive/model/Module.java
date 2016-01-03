@@ -3,7 +3,7 @@ package org.helllabs.android.xmp.modarchive.model;
 import android.text.Html;
 
 public class Module {
-	public static final String UNTITLED = "(untitled)";
+	private static final String UNTITLED = "(untitled)";
 	private String artist;
 	private String filename;
 	private String format;

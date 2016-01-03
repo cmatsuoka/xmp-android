@@ -29,7 +29,7 @@ import com.telly.groundy.util.DownloadUtils;
  */
 public class Downloader {
 
-	protected static final String TAG = "Downloader";
+	private static final String TAG = "Downloader";
 	private final Activity mActivity;
 	private ProgressDialog mProgressDialog;
 	private TaskHandler mTaskHandler;

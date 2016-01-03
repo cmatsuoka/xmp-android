@@ -16,14 +16,14 @@ import android.view.View;
 
 public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callback, View.OnClickListener {
 	private static final String TAG = "Viewer";
-	protected Context context;
+	protected final Context context;
 	protected SurfaceHolder surfaceHolder;
 	protected int canvasHeight, canvasWidth;
 	protected int[] modVars;
 	protected ModInterface modPlayer;
 	protected boolean[] isMuted;
 	protected int rotation;
-	protected int screenSize;
+	protected final int screenSize;
 	private final GestureDetector gestureDetector;
 
 	// Touch tracking
@@ -33,13 +33,13 @@ public abstract class Viewer extends SurfaceView implements SurfaceHolder.Callba
 	
 	public static class Info {
 		public int time;
-		public int[] values = new int[7];	// order pattern row num_rows frame speed bpm
-		public int[] volumes = new int[64];
-		public int[] finalvols = new int[64];
-		public int[] pans = new int[64];
-		public int[] instruments = new int[64];
-		public int[] keys = new int[64];
-		public int[] periods = new int[64];
+		public final int[] values = new int[7];	// order pattern row num_rows frame speed bpm
+		public final int[] volumes = new int[64];
+		public final int[] finalvols = new int[64];
+		public final int[] pans = new int[64];
+		public final int[] instruments = new int[64];
+		public final int[] keys = new int[64];
+		public final int[] periods = new int[64];
 	}
 	
 	private void limitPosition() {

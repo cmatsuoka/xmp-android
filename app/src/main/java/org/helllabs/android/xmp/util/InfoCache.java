@@ -33,7 +33,7 @@ public final class InfoCache {
 		return ret;
 	}
 	
-	public static boolean removeCacheDir(final String filename) {
+	private static boolean removeCacheDir(final String filename) {
 		final File cacheFile = new File(Preferences.CACHE_DIR, filename + ".cache");
 		boolean ret = false;
 
@@ -125,7 +125,7 @@ public final class InfoCache {
 		return ret;
 	}
 
-	public static boolean testModule(final String filename, final ModInfo info) {
+	private static boolean testModule(final String filename, final ModInfo info) {
 		if (!Preferences.CACHE_DIR.isDirectory() && !Preferences.CACHE_DIR.mkdirs()) {
 			// Can't use cache
 			return Xmp.testModule(filename, info);

@@ -203,7 +203,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 
 	public void playClick(final View view) {
 		final String path = localFile(module).getPath();
-		final List<String> modList = new ArrayList<String>();
+		final List<String> modList = new ArrayList<>();
 
 		modList.add(path);	
 
@@ -215,7 +215,7 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 	}
 
 	private String getDownloadPath(final Module module) {
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 
 		sb.append(mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH));
 

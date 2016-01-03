@@ -126,12 +126,7 @@ public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAd
 		super.onPause();
 
 		mRecyclerViewDragDropManager.cancelDrag();
-
-		try {
-			mPlaylist.commit();
-		} catch (IOException e) {
-			Message.toast(this, getString(R.string.error_write_to_playlist));
-		}
+		mPlaylist.commit();
 	}
 
 	@Override
@@ -213,11 +208,7 @@ public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAd
 		switch (itemId) {
 		case 0:										// Remove from playlist
 			mPlaylist.remove(info.position);
-			try {
-				mPlaylist.commit();
-			} catch (IOException e) {
-				Message.toast(this, getString(R.string.error_write_to_playlist));
-			}
+			mPlaylist.commit();
 			update();
 			break;
 		case 1:										// Add to play queue

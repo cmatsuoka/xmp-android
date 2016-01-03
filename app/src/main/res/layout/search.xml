@@ -15,13 +15,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Title or file name" />
+            android:text="@string/search_title_or_filename" />
 
         <RadioButton
             android:id="@+id/artist_radio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Artist" />
+            android:text="@string/search_artist" />
     </RadioGroup>
 
     <EditText
@@ -65,6 +65,6 @@
         android:layout_alignRight="@+id/search_text"
         android:layout_marginRight="30dp"
         style="@android:style/Widget.Button"
-        android:text="Random pick" />
+        android:text="@string/search_random_pick" />
 
 </RelativeLayout>
