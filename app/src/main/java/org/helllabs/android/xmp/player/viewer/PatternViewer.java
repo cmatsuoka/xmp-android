@@ -76,7 +76,7 @@ public class PatternViewer extends Viewer {
 		fontHeight = fontSize * 12 / 10;
 
 		for (int i = 0; i < MAX_NOTES; i++) {
-			allNotes[i] = new String(NOTES[i % 12] + (i / 12));
+			allNotes[i] = NOTES[i % 12] + (i / 12);
 		}
 
 		final char[] c = new char[2];

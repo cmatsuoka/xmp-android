@@ -131,7 +131,7 @@ public class RemoteControlClientCompat {
 	 * displayed for the associated client. Once the metadata has been "applied", you cannot reuse
 	 * this instance of the MetadataEditor.
 	 */
-	public class MetadataEditorCompat {
+	public static class MetadataEditorCompat {
 
 		private Method mPutStringMethod;
 		private Method mPutBitmapMethod;

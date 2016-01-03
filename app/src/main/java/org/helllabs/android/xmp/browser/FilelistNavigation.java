@@ -16,7 +16,7 @@ public class FilelistNavigation {
 	/**
 	 * To restore list position when traversing directories.
 	 */
-	private class ListState {
+	private static class ListState {
 		private final int index;
 		private final int top;
 

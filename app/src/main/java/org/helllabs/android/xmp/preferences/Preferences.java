@@ -70,7 +70,7 @@ public class Preferences extends com.fnp.materialpreferences.PreferenceActivity 
     }
 
 	 public static class MyPreferenceFragment extends com.fnp.materialpreferences.PreferenceFragment {
-		 private SharedPreferences prefs;
+		 //private SharedPreferences prefs;
 		 private Context context;
 
 		 @Override
@@ -82,7 +82,7 @@ public class Preferences extends com.fnp.materialpreferences.PreferenceActivity 
 		 public void onAttach(final Activity activity) {
 			 super.onAttach(activity);
 			 context = activity.getBaseContext();
-			 prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+			 //prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 		 }
 
 		 @Override

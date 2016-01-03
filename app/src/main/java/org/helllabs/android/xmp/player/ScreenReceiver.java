@@ -12,7 +12,7 @@ import android.content.Intent;
 public class ScreenReceiver extends BroadcastReceiver {
 	
 	// THANKS JASON
-	public static boolean wasScreenOn = true;
+	static boolean wasScreenOn = true;
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
