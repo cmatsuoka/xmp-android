@@ -133,7 +133,7 @@
         </activity>
         <activity
             android:name=".preferences.Preferences"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.Preferences" />
         <activity
             android:name=".browser.FilelistActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />

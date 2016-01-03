@@ -31,6 +31,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="AppTheme.Preferences" parent="AppTheme.NoActionBar">
+
+    </style>
     
     <style name="ButtonTheme" parent="AppTheme">
         <item name="android:background">@android:drawable/btn_default</item>
