@@ -190,7 +190,10 @@ public class ModuleResult extends Result implements ModuleRequest.OnResponseList
 
 						if (parentPath.startsWith(mediaPath) && !parentPath.equals(mediaPath)) {
 							Log.i(TAG, "Remove empty directory " + parent.getPath());
-							parent.delete();
+							if (!parent.delete()) {
+								Message.toast(ModuleResult.this, "Error removing directory");
+								Log.e(TAG, "error removing directory");
+							}
 						}
 						} catch (IOException e) {
 							Log.e(TAG, e.getMessage());

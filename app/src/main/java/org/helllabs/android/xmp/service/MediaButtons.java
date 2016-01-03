@@ -13,7 +13,7 @@ import android.media.AudioManager;
 // for media buttons
 // see http://android-developers.blogspot.com/2010/06/allowing-applications-to-play-nicer.html
 
-public class MediaButtons {
+class MediaButtons {
     private static final String TAG = "MediaButtons";
     private final AudioManager audioManager;
 	private final ComponentName mediaButtonsResponder;

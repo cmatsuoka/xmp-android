@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
-public final class AppInfo {
+final class AppInfo {
 	
 	private AppInfo() {
 		
