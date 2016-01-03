@@ -73,48 +73,67 @@ public class ModuleRequest extends ModArchiveRequest {
 					final String end = myparser.getName();
 					//Log.d(TAG, "name=" + name + " text=" + text);
 					if (sponsor != null) {
-						if (end.equals("text")) {
-							sponsor.setName(text);
-						} else if (end.equals("link")) {
-							sponsor.setLink(text);
-						} else if (end.equals("sponsor")) {
-							moduleList.setSponsor(sponsor);
-							sponsor = null; // NOPMD
+						switch (end) {
+							case "text":
+								sponsor.setName(text);
+								break;
+							case "link":
+								sponsor.setLink(text);
+								break;
+							case "sponsor":
+								moduleList.setSponsor(sponsor);
+								sponsor = null; // NOPMD
+								break;
 						}
 					} else if (end.equals("error")) {
 						return new SoftErrorResponse(text);
-					} else if (end.equals("filename")) {
-						module.setFilename(text);
-					} else if (end.equals("format")) {
-						module.setFormat(text);
-					} else if (end.equals("url")) {
-						module.setUrl(text);
-					} else if (end.equals("bytes")) {
-						module.setBytes(Integer.parseInt(text));
-					} else if (end.equals("songtitle")) {
-						module.setSongTitle(text);
-					} else if (end.equals("alias")) {
-						// Use non-guessed artist if available
-						if (module.getArtist().equals(Artist.UNKNOWN)) {
-							module.setArtist(text);
-						}
-					} else if (end.equals("title")) {
-						module.setLicense(text);
-					} else if (end.equals("description")) {
-						module.setLicenseDescription(text);
-					} else if (end.equals("legalurl")) {
-						module.setLegalUrl(text);
-					} else if (end.equals("instruments")) {
-						module.setInstruments(text);
-					} else if (end.equals("id")) {
-						if (!inArtistInfo) {
-							module.setId(Long.parseLong(text));
-						}
 					} else if (end.equals("artist_info")) {
-						inArtistInfo = false;
-					} else if (end.equals("module")) {
-						if (!unsupported.contains(module.getFormat())) {
-							moduleList.add(module);
+							inArtistInfo = false;
+					} else if (module != null) {
+						switch (end) {
+							case "filename":
+								module.setFilename(text);
+								break;
+							case "format":
+								module.setFormat(text);
+								break;
+							case "url":
+								module.setUrl(text);
+								break;
+							case "bytes":
+								module.setBytes(Integer.parseInt(text));
+								break;
+							case "songtitle":
+								module.setSongTitle(text);
+								break;
+							case "alias":
+								// Use non-guessed artist if available
+								if (module.getArtist().equals(Artist.UNKNOWN)) {
+									module.setArtist(text);
+								}
+								break;
+							case "title":
+								module.setLicense(text);
+								break;
+							case "description":
+								module.setLicenseDescription(text);
+								break;
+							case "legalurl":
+								module.setLegalUrl(text);
+								break;
+							case "instruments":
+								module.setInstruments(text);
+								break;
+							case "id":
+								if (!inArtistInfo) {
+									module.setId(Long.parseLong(text));
+								}
+								break;
+							case "module":
+								if (!unsupported.contains(module.getFormat())) {
+									moduleList.add(module);
+								}
+								break;
 						}
 					}
 					break;

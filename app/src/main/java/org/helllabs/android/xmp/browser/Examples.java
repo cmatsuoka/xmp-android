@@ -39,8 +39,8 @@ public final class Examples {
 				return 0;
 			}
 		
-			for (int i = 0; i < assets.length; i++) {
-				copyAsset(am.open("mod/" + assets[i]), path + "/" + assets[i]);
+			for (final String a : assets) {
+				copyAsset(am.open("mod/" + a), path + "/" + a);
 			}
 		} catch (IOException e) {
 			return -1;

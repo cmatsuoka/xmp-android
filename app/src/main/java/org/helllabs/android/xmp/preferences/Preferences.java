@@ -1,22 +1,18 @@
 package org.helllabs.android.xmp.preferences;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.util.Message;
-import org.helllabs.android.xmp.service.PlayerService;
-
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.view.KeyEvent;
+
+import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.service.PlayerService;
+import org.helllabs.android.xmp.util.Message;
+
+import java.io.File;
 
 public class Preferences extends com.fnp.materialpreferences.PreferenceActivity {
 	public static final File SD_DIR = Environment.getExternalStorageDirectory();

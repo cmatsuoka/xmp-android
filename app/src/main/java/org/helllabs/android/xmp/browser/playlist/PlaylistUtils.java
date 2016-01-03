@@ -67,7 +67,7 @@ public final class PlaylistUtils {
 	 * Send files to the specified playlist
 	 */
 	private static void addFiles(final Activity activity, final List<String> fileList, final String playlistName) {
-		final List<PlaylistItem> list = new ArrayList<PlaylistItem>();
+		final List<PlaylistItem> list = new ArrayList<>();
 		final ModInfo modInfo = new ModInfo();
 		boolean hasInvalid = false;
 
@@ -115,7 +115,7 @@ public final class PlaylistUtils {
 	}
 
 	public static void filesToPlaylist(final Activity activity, final String filename, final String playlistName) {
-		final List<String> fileList = new ArrayList<String>();
+		final List<String> fileList = new ArrayList<>();
 		fileList.add(filename);
 		addFiles(activity, fileList, playlistName);
 	}

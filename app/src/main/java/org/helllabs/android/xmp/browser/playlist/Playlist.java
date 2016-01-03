@@ -66,7 +66,7 @@ public class Playlist {
 	
 	public Playlist(final Context context, final String name) throws IOException {
 		mName = name;
-		mList = new ArrayList<PlaylistItem>();
+		mList = new ArrayList<>();
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
 		final File file = new ListFile(name);
@@ -279,7 +279,7 @@ public class Playlist {
 		String line;
 		int lineNum;
 		
-		final List<Integer> invalidList = new ArrayList<Integer>();
+		final List<Integer> invalidList = new ArrayList<>();
 		
 	    try {
 	    	final BufferedReader reader = new BufferedReader(new FileReader(file), 512);

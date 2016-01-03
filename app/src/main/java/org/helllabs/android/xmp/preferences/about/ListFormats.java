@@ -18,6 +18,6 @@ public class ListFormats extends ListActivity {
 		super.onCreate(icicle);
 		setContentView(R.layout.list_formats);
 		Arrays.sort(formats);
-		setListAdapter(new ArrayAdapter<String>(this, R.layout.format_list_item, formats));
+		setListAdapter(new ArrayAdapter<>(this, R.layout.format_list_item, formats));
 	}
 }

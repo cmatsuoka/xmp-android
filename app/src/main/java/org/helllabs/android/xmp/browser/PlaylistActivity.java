@@ -1,15 +1,5 @@
 package org.helllabs.android.xmp.browser;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.helllabs.android.xmp.R;
-import org.helllabs.android.xmp.browser.playlist.Playlist;
-import org.helllabs.android.xmp.browser.playlist.PlaylistAdapter;
-import org.helllabs.android.xmp.preferences.Preferences;
-import org.helllabs.android.xmp.util.Log;
-import org.helllabs.android.xmp.util.Message;
-
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +19,15 @@ import com.h6ah4i.android.widget.advrecyclerview.decoration.ItemShadowDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
+
+import org.helllabs.android.xmp.R;
+import org.helllabs.android.xmp.browser.playlist.Playlist;
+import org.helllabs.android.xmp.browser.playlist.PlaylistAdapter;
+import org.helllabs.android.xmp.preferences.Preferences;
+import org.helllabs.android.xmp.util.Log;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAdapter.OnItemClickListener {

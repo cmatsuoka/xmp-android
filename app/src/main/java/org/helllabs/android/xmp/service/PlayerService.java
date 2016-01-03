@@ -68,7 +68,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private boolean updateData;
 	private String fileName;			// currently playing file
 	private QueueManager queue;
-	private final RemoteCallbackList<PlayerCallback> callbacks = new RemoteCallbackList<PlayerCallback>();
+	private final RemoteCallbackList<PlayerCallback> callbacks = new RemoteCallbackList<>();
 	private int sequenceNumber;
 	
 	private ReceiverHelper receiverHelper;

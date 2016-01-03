@@ -225,7 +225,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     }
     
     public List<String> getFilenameList() {
-    	final List<String> list = new ArrayList<String>();
+    	final List<String> list = new ArrayList<>();
     	for (final PlaylistItem item : items) {
     		if (item.getType() == PlaylistItem.TYPE_FILE) {
     			list.add(item.getFile().getPath());

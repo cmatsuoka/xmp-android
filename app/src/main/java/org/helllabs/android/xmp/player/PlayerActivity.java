@@ -439,7 +439,7 @@ public class PlayerActivity extends Activity {
 
 		if (path != null) {		// from intent filter
 			Log.i(TAG, "Player started from intent filter");
-			fileList = new ArrayList<String>();
+			fileList = new ArrayList<>();
 			fileList.add(path);
 			shuffleMode = false;
 			loopListMode = false;

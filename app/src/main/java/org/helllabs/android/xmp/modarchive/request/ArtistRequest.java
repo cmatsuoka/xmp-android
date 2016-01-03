@@ -63,22 +63,32 @@ public class ArtistRequest extends ModArchiveRequest {
 				case XmlPullParser.END_TAG: {
 					final String end = myparser.getName();
 					if (sponsor != null) {
-						if (end.equals("text")) {
-							sponsor.setName(text);
-						} else if (end.equals("link")) {
-							sponsor.setLink(text);
-						} else if (end.equals("sponsor")) {
-							artistList.setSponsor(sponsor);
-							sponsor = null;	// NOPMD
+						switch (end) {
+							case "text":
+								sponsor.setName(text);
+								break;
+							case "link":
+								sponsor.setLink(text);
+								break;
+							case "sponsor":
+								artistList.setSponsor(sponsor);
+								sponsor = null;    // NOPMD
+								break;
 						}
-					} else if (end.equals("error")) {
-						return new SoftErrorResponse(text);
-					} else if (end.equals("id")) {
-						artist.setId(Long.parseLong(text));
-					} else if (end.equals("alias")) {
-						artist.setAlias(text);
-					} else if (end.equals("item")) {
-						artistList.add(artist);
+					} else {
+						switch (end) {
+							case "error":
+								return new SoftErrorResponse(text);
+							case "id":
+								artist.setId(Long.parseLong(text));
+								break;
+							case "alias":
+								artist.setAlias(text);
+								break;
+							case "item":
+								artistList.add(artist);
+								break;
+						}
 					}
 					break;
 				}

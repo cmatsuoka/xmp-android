@@ -1,7 +1,20 @@
 package org.helllabs.android.xmp.browser;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.XmpApplication;
@@ -16,25 +29,8 @@ import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.ListView;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class BasePlaylistActivity extends AppCompatActivity {
 	private static final String TAG = "PlaylistActivity";
@@ -190,7 +186,7 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 
 	// Play this module
 	protected void playModule(final String mod) {
-		final List<String> modList = new ArrayList<String>();
+		final List<String> modList = new ArrayList<>();
 		modList.add(mod);
 		playModule(modList, 0, false);
 	}
@@ -239,7 +235,7 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 		if (InfoCache.testModule(filename)) {
 			if (PlayerService.isAlive) {
 				final Intent service = new Intent(this, PlayerService.class);
-				mAddList = new ArrayList<String>();
+				mAddList = new ArrayList<>();
 				mAddList.add(filename);		
 				bindService(service, connection, 0);
 			} else {
@@ -249,7 +245,7 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 	}
 	
 	protected void addToQueue(final List<String> list) {
-		final List<String> realList = new ArrayList<String>();
+		final List<String> realList = new ArrayList<>();
 		int realSize = 0;
 		boolean invalid = false;
 

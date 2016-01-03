@@ -290,7 +290,7 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 
 		curPath.setText(modDir.getPath());
 
-		final List<PlaylistItem> list = new ArrayList<PlaylistItem>();
+		final List<PlaylistItem> list = new ArrayList<>();
 		final File[] dirFiles = modDir.listFiles();
 		if (dirFiles != null) {
 			for (final File file : dirFiles) {
@@ -336,7 +336,7 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 	}
 	
 	private static List<String> recursiveList(final File file) {
-		final List<String> list = new ArrayList<String>();
+		final List<String> list = new ArrayList<>();
 		
 		if (file.isDirectory()) {
 			final File[] fileArray = file.listFiles();

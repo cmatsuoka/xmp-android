@@ -1,12 +1,11 @@
 package org.helllabs.android.xmp.browser;
 
-import java.io.File;
-import java.util.Stack;
-
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ListView;
+
+import java.io.File;
+import java.util.Stack;
 
 public class FilelistNavigation {
 	
@@ -39,7 +38,7 @@ public class FilelistNavigation {
 	}
 	
 	public FilelistNavigation() {
-		mPathStack = new Stack<ListState>();
+		mPathStack = new Stack<>();
 	}
 	
 	/**
