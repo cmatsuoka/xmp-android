@@ -8,8 +8,9 @@ import org.helllabs.android.xmp.util.Crossfader;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
-public abstract class Result extends ActionBarActivity  {
+public abstract class Result extends AppCompatActivity {
 
 	private Crossfader crossfader;
 

@@ -8,10 +8,11 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.widget.TextView;
 
-public class SearchError extends ActionBarActivity implements Runnable {
+public class SearchError extends AppCompatActivity implements Runnable {
 
 	private static final int PERIOD = 1337;
 	private static final String UNKNOWN_ERROR = "Software Failure.   Press back to continue.\n\nGuru Meditation #35068035.48454C50";

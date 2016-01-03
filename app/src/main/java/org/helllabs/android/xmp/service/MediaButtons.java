@@ -33,13 +33,11 @@ public class MediaButtons {
 		try {
 			if (registerMediaButtonEventReceiver == null) {		// NOPMD
 				registerMediaButtonEventReceiver = AudioManager.class
-						.getMethod("registerMediaButtonEventReceiver",
-								new Class[] { ComponentName.class });
+						.getMethod("registerMediaButtonEventReceiver", ComponentName.class);
 			}
 			if (unregisterMediaButtonEventReceiver == null) {	// NOPMD
 				unregisterMediaButtonEventReceiver = AudioManager.class
-						.getMethod("unregisterMediaButtonEventReceiver",
-								new Class[] { ComponentName.class });
+						.getMethod("unregisterMediaButtonEventReceiver", ComponentName.class);
 			}
 			/* success, this device will take advantage of better remote */
 			/* control event handling */

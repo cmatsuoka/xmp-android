@@ -53,7 +53,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="15dp"
         style="@android:style/Widget.Button"
-        android:text="Search" />
+        android:text="@string/search_search" />
 
     <Button
         android:id="@+id/random_button"

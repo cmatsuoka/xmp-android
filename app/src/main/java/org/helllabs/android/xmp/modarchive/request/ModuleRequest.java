@@ -58,12 +58,16 @@ public class ModuleRequest extends ModArchiveRequest {
 				switch (event){		// NOPMD
 				case XmlPullParser.START_TAG:
 					final String start = myparser.getName();
-					if (start.equals("module")) {
-						module = new Module(); // NOPMD
-					} else if (start.equals("artist_info")) {
-						inArtistInfo = true;
-					} else if (start.equals("sponsor")) {
-						sponsor = new Sponsor();	// NOPMD
+					switch (start) {
+						case "module":
+							module = new Module(); // NOPMD
+							break;
+						case "artist_info":
+							inArtistInfo = true;
+							break;
+						case "sponsor":
+							sponsor = new Sponsor();    // NOPMD
+							break;
 					}
 					break;
 				case XmlPullParser.TEXT:

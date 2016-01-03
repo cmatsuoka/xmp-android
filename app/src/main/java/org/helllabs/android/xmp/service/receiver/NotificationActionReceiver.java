@@ -21,15 +21,20 @@ public class NotificationActionReceiver extends BroadcastReceiver {
 	public void onReceive(final Context context, final Intent intent) {
 		final String action = intent.getAction();
 		Log.i(TAG, "Action " + action);
-		
-		if (action.equals(Notifier.ACTION_STOP)) {
-			keyCode = STOP;
-		} else if (action.equals(Notifier.ACTION_PAUSE)) {
-			keyCode = PAUSE;
-		} else if (action.equals(Notifier.ACTION_NEXT)) {
-			keyCode = NEXT;
-		} else if (action.equals(Notifier.ACTION_PREV)) {
-			keyCode = PREV;
+
+		switch (action) {
+			case Notifier.ACTION_STOP:
+				keyCode = STOP;
+				break;
+			case Notifier.ACTION_PAUSE:
+				keyCode = PAUSE;
+				break;
+			case Notifier.ACTION_NEXT:
+				keyCode = NEXT;
+				break;
+			case Notifier.ACTION_PREV:
+				keyCode = PREV;
+				break;
 		}
 	}
 	

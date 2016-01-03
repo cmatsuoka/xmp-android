@@ -58,7 +58,7 @@ public class Module {
 	
 	public void setInstruments(final String instruments) {
 		final String[] lines = instruments.split("\n");
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		for (final String line : lines) {
 			buffer.append(Html.fromHtml(line).toString());
 			buffer.append('\n');

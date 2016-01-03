@@ -230,7 +230,7 @@ public class Playlist {
 	/**
 	 * Add a list of items to the specified playlist file.
 	 * 
-	 * @param context The context we're running in
+	 * @param activity The activity we're running
 	 * @param name The playlist name
 	 * @param items The list of playlist items to add
 	 */
@@ -250,8 +250,8 @@ public class Playlist {
 	
 	/**
 	 * Read comment from a playlist file.
-	 * 
-	 * @param context The context we're running in
+	 *
+	 * @param activity The activity we're running
 	 * @param name The playlist name
 	 * 
 	 * @return The playlist comment
@@ -310,7 +310,7 @@ public class Playlist {
 	    	final int[] array = new int[invalidList.size()];
 	    	final Iterator<Integer> iterator = invalidList.iterator();
 	    	for (int i = 0; i < array.length; i++) {
-	    		array[i] = iterator.next().intValue();
+	    		array[i] = iterator.next();
 	    	}
 	    	
 			try {
@@ -325,7 +325,7 @@ public class Playlist {
 	    return true;
 	}
 	
-	private final void writeList(final String name) {
+	private void writeList(final String name) {
 		Log.i(TAG, "Write list");
 		final File file = new ListFile(name,  ".new");
 		file.delete();
@@ -345,7 +345,7 @@ public class Playlist {
 		}
 	}
 
-	private final void writeComment(final String name) {
+	private void writeComment(final String name) {
 		Log.i(TAG, "Write comment");
 		final File file = new CommentFile(name,  ".new");
 		file.delete();		
