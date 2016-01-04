@@ -69,15 +69,17 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 		registerForContextMenu(recyclerView);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-
-
 		if (!checkStorage()) {
 			Message.fatalError(this, getString(R.string.error_storage));
 		}
 
+		// Create application directory and populate with empty playlist
 		if (!Preferences.DATA_DIR.isDirectory()) {
-			getStoragePermissions();
-
+			if (Build.VERSION.SDK_INT >= 23) {
+				getStoragePermissions();
+			} else {
+				setupDataDir();
+			}
 		}
 
 		final ChangeLog changeLog = new ChangeLog(this);
@@ -107,7 +109,16 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		switch (requestCode) {
+			case REQUEST_WRITE_STORAGE: {
+				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					setupDataDir();
+				}
+			}
+		}
+	}
 
+	private void setupDataDir() {
 		if (Preferences.DATA_DIR.mkdirs()) {
 			PlaylistUtils.createEmptyPlaylist(this, getString(R.string.empty_playlist), getString(R.string.empty_comment));
 		} else {
