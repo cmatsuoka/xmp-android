@@ -201,26 +201,26 @@ public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAd
 
 	@Override
 	public boolean onContextItemSelected(final MenuItem item) {
-		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
 		final int itemId = item.getItemId();
+		final int position = mPlaylistAdapter.getPosition();
 
 		switch (itemId) {
 		case 0:										// Remove from playlist
-			mPlaylist.remove(info.position);
+			mPlaylist.remove(position);
 			mPlaylist.commit();
 			update();
 			break;
 		case 1:										// Add to play queue
-			addToQueue(mPlaylistAdapter.getFilename(info.position));
+			addToQueue(mPlaylistAdapter.getFilename(position));
 			break;
 		case 2:										// Add all to play queue
 			addToQueue(mPlaylistAdapter.getFilenameList());
 			break;
 		case 3:										// Play only this module
-			playModule(mPlaylistAdapter.getFilename(info.position));
+			playModule(mPlaylistAdapter.getFilename(position));
 			break;
 		case 4:										// Play all starting here
-			playModule(mPlaylistAdapter.getFilenameList(), info.position);
+			playModule(mPlaylistAdapter.getFilenameList(), position);
 			break;
 		}
 
