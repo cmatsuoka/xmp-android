@@ -338,6 +338,10 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 	
 	private static List<String> recursiveList(final File file) {
 		final List<String> list = new ArrayList<>();
+
+		if (file == null) {
+			return list;
+		}
 		
 		if (file.isDirectory()) {
 			final File[] fileArray = file.listFiles();

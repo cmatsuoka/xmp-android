@@ -4,11 +4,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import org.helllabs.android.xmp.util.Log;
+
 import java.io.File;
 import java.util.Stack;
 
 public class FilelistNavigation {
-	
+
+	private static final String TAG = "FilelistNavigation";
 	private final Stack<ListState> mPathStack;
 	private File mCurrentDir;
 
@@ -95,6 +98,7 @@ public class FilelistNavigation {
 	 * @param currentDir The directory to start navigation at.
 	 */
 	public void startNavigation(final File currentDir) {
+		Log.d(TAG, "start navigation at " + currentDir.getPath());
 		mCurrentDir = currentDir;
 		mPathStack.clear();
 	}
