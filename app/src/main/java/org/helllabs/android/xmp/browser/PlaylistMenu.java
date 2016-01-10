@@ -40,6 +40,7 @@ import org.helllabs.android.xmp.util.Message;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.OnItemClickListener {
@@ -189,6 +190,7 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 			playlistAdapter.add(item);
 		}
 
+		PlaylistUtils.renumberIds(playlistAdapter.getItems());
 		playlistAdapter.notifyDataSetChanged();
 	}
 

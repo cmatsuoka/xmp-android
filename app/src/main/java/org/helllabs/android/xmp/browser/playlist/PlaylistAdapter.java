@@ -196,6 +196,10 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         return items.get(num);
     }
 
+    public List<PlaylistItem> getItems() {
+        return items;
+    }
+
     public void clear() {
         items.clear();
     }
