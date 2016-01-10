@@ -1,78 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:gravity="top"
-	android:layout_weight="1.0"
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:layout_weight="1.0"
+              android:gravity="top"
+              android:orientation="vertical">
 
-	<LinearLayout android:id="@+id/current_list"
-		android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:longClickable="true"
-		android:focusable="true"
-		style="@style/StatusTheme">
+    <LinearLayout
+        android:id="@+id/current_list"
+        style="@style/StatusTheme"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:longClickable="true"
+        android:orientation="vertical">
 
-	   <TextView android:id="@+id/current_list_name"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="8dp"
-			android:layout_marginLeft="2dp"
-			android:textSize="16sp"
-			android:textStyle="bold" />
+        <TextView
+            android:id="@+id/current_list_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
-	   <TextView android:id="@+id/current_list_description"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="2dp"
-			android:layout_marginBottom="8dp"
-			android:textSize="13sp" />
+        <TextView
+            android:id="@+id/current_list_description"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="2dp"
+            android:textSize="13sp"/>
 
-	</LinearLayout>
+    </LinearLayout>
 
-	<LinearLayout android:gravity="top"
-		android:layout_weight="1.0"
-		android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="0dp">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:gravity="top"
+        android:orientation="vertical">
 
-		<android.support.v7.widget.RecyclerView
-            android:id="@+id/plist_list"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:fastScrollEnabled="true"
-			android:drawSelectorOnTop="false" />
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-		<TextView android:id="@id/android:empty"
-			android:gravity="top"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:text="@string/msg_empty_playlist" />
-	</LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/plist_list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:drawSelectorOnTop="false"
+                android:fastScrollEnabled="true"/>
 
-	<LinearLayout android:gravity="bottom"
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
-		<ImageButton android:id="@+id/play_all"
-			android:layout_weight="0.34"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			style="@style/ButtonTheme"
-			android:contentDescription="@string/button_play_all" />
-		<ImageButton android:id="@+id/toggle_loop"
-			android:layout_weight="0.33"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			style="@style/ButtonTheme"
-			android:contentDescription="@string/button_toggle_loop" />
-		<ImageButton android:id="@+id/toggle_shuffle"
-			android:layout_weight="0.33"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			style="@style/ButtonTheme"
-			android:contentDescription="@string/button_toggle_shuffle" />
-	</LinearLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <TextView
+            android:id="@id/android:empty"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="top"
+            android:text="@string/msg_empty_playlist"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/play_all"
+            style="@style/ButtonTheme"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.34"
+            android:contentDescription="@string/button_play_all"/>
+
+        <ImageButton
+            android:id="@+id/toggle_loop"
+            style="@style/ButtonTheme"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:contentDescription="@string/button_toggle_loop"/>
+
+        <ImageButton
+            android:id="@+id/toggle_shuffle"
+            style="@style/ButtonTheme"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:contentDescription="@string/button_toggle_shuffle"/>
+    </LinearLayout>
 
 </LinearLayout>

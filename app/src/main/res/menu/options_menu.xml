@@ -8,11 +8,11 @@
         android:icon="@drawable/ic_action_new"
         xmp:showAsAction="never"
         android:title="@string/menu_new_playlist"/>
-    <item
+    <!-- <item
         android:id="@+id/menu_refresh"
         android:icon="@drawable/ic_refresh_white_24dp"
         xmp:showAsAction="ifRoom"
-        android:title="@string/menu_refresh"/>
+        android:title="@string/menu_refresh"/> -->
     <item
         android:id="@+id/menu_download"
         android:icon="@drawable/ic_file_download_white_24dp"

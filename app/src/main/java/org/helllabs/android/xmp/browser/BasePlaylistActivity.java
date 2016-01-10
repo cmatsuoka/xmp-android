@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,7 +44,7 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 	protected SharedPreferences mPrefs;
 	protected PlaylistAdapter mPlaylistAdapter;
 	private boolean refresh;
-	
+
 	private final OnClickListener playAllButtonListener = new OnClickListener() {
 		@Override
 		public void onClick(final View view) {
@@ -55,13 +56,13 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 			}
 		}
 	};
-	
+
 	private final OnClickListener toggleLoopButtonListener = new OnClickListener() {
 		@Override
 		public void onClick(final View view) {
 			boolean loopMode = isLoopMode();
 			loopMode ^= true;
-			((ImageButton)view).setImageResource(loopMode ?
+			((ImageButton) view).setImageResource(loopMode ?
 					R.drawable.list_loop_on : R.drawable.list_loop_off);
 			if (mShowToasts) {
 				Message.toast(view.getContext(), loopMode ? R.string.msg_loop_on : R.string.msg_loop_off);
@@ -69,27 +70,27 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 			setLoopMode(loopMode);
 		}
 	};
-	
+
 	private final OnClickListener toggleShuffleButtonListener = new OnClickListener() {
 		@Override
 		public void onClick(final View view) {
 			boolean shuffleMode = isShuffleMode();
 			shuffleMode ^= true;
-			((ImageButton)view).setImageResource(shuffleMode ?	R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
+			((ImageButton) view).setImageResource(shuffleMode ? R.drawable.list_shuffle_on : R.drawable.list_shuffle_off);
 			if (mShowToasts) {
 				Message.toast(view.getContext(), shuffleMode ? R.string.msg_shuffle_on : R.string.msg_shuffle_off);
 			}
 			setShuffleMode(shuffleMode);
 		}
 	};
-	
+
 
 	// Connection
 
 	private final ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(final ComponentName className, final IBinder service) {
 			mModPlayer = ModInterface.Stub.asInterface(service);
-			try {				
+			try {
 				mModPlayer.add(mAddList);
 			} catch (RemoteException e) {
 				Message.toast(BasePlaylistActivity.this, R.string.error_adding_mod);
@@ -98,21 +99,21 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 		}
 
 		public void onServiceDisconnected(final ComponentName className) {
-			mModPlayer = null;	// NOPMD
+			mModPlayer = null;    // NOPMD
 		}
 	};
 
-	
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mShowToasts = mPrefs.getBoolean(Preferences.SHOW_TOAST, true);
-		
+
 		// Action bar icon navigation
-	    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -120,18 +121,36 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 			update();
 		}
 	}
-	
+
 	protected abstract void setShuffleMode(boolean shuffleMode);
+
 	protected abstract void setLoopMode(boolean loopMode);
+
 	protected abstract boolean isShuffleMode();
+
 	protected abstract boolean isLoopMode();
+
 	protected abstract List<String> getAllFiles();
+
 	protected abstract void update();
-	
+
+	protected void setSwipeRefresh() {
+		final SwipeRefreshLayout swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+		// Setup refresh listener which triggers new data loading
+		swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				update();
+				swipeRefresh.setRefreshing(false);
+			}
+		});
+		swipeRefresh.setColorSchemeResources(R.color.accent);
+	}
+
 	protected void setupButtons() {
-		final ImageButton playAllButton = (ImageButton)findViewById(R.id.play_all);
-		final ImageButton toggleLoopButton = (ImageButton)findViewById(R.id.toggle_loop);
-		final ImageButton toggleShuffleButton = (ImageButton)findViewById(R.id.toggle_shuffle);
+		final ImageButton playAllButton = (ImageButton) findViewById(R.id.play_all);
+		final ImageButton toggleLoopButton = (ImageButton) findViewById(R.id.toggle_loop);
+		final ImageButton toggleShuffleButton = (ImageButton) findViewById(R.id.toggle_shuffle);
 
 		playAllButton.setImageResource(R.drawable.list_play);
 		playAllButton.setOnClickListener(playAllButtonListener);
@@ -145,7 +164,7 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 
 	public void onItemClick(final PlaylistAdapter adapter, final View view, final int position) {
 		final String filename = adapter.getItem(position).getFile().getPath();
-		
+
 		final int mode = Integer.parseInt(mPrefs.getString(Preferences.PLAYLIST_MODE, "1"));
 
 		/* Test module again if invalid, in case a new file format is added to the
@@ -153,19 +172,19 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 		 */
 		if (InfoCache.testModuleForceIfInvalid(filename)) {
 			switch (mode) {
-			case 1:								// play all starting at this one
-				final int count = position - adapter.getDirectoryCount();
-				if (count >= 0) {
-					playModule(adapter.getFilenameList(), count, isShuffleMode());
-				}
-				break;
-			case 2:								// play this one
-				playModule(filename);
-				break;
-			case 3:								// add to queue
-				addToQueue(filename);
-				Message.toast(this, "Added to queue");
-				break;
+				case 1:                                // play all starting at this one
+					final int count = position - adapter.getDirectoryCount();
+					if (count >= 0) {
+						playModule(adapter.getFilenameList(), count, isShuffleMode());
+					}
+					break;
+				case 2:                                // play this one
+					playModule(filename);
+					break;
+				case 3:                                // add to queue
+					addToQueue(filename);
+					Message.toast(this, "Added to queue");
+					break;
 			}
 		} else {
 			Message.toast(this, "Unrecognized file format");
@@ -195,14 +214,14 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 	protected void playModule(final List<String> modList) {
 		playModule(modList, 0, false);
 	}
-	
+
 	protected void playModule(final List<String> modList, final int start) {
 		playModule(modList, start, false);
 	}
-	
+
 	private void playModule(final List<String> modList, final int start, final boolean keepFirst) {
 		final Intent intent = new Intent(this, PlayerActivity.class);
-		((XmpApplication)getApplication()).setFileList(modList);
+		((XmpApplication) getApplication()).setFileList(modList);
 		intent.putExtra(PlayerActivity.PARM_SHUFFLE, isShuffleMode());
 		intent.putExtra(PlayerActivity.PARM_LOOP, isLoopMode());
 		intent.putExtra(PlayerActivity.PARM_START, start);
@@ -216,34 +235,34 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		Log.i(TAG, "Activity result " + requestCode + "," + resultCode);
 		switch (requestCode) {
-		case SETTINGS_REQUEST:
-			update();			
-			mShowToasts = mPrefs.getBoolean(Preferences.SHOW_TOAST, true);
-			break;
-		case PLAY_MOD_REQUEST:
-			if (resultCode != RESULT_OK) {
+			case SETTINGS_REQUEST:
 				update();
-			}
-			break;
-		case SEARCH_REQUEST:
-			refresh = true;
-			break;
+				mShowToasts = mPrefs.getBoolean(Preferences.SHOW_TOAST, true);
+				break;
+			case PLAY_MOD_REQUEST:
+				if (resultCode != RESULT_OK) {
+					update();
+				}
+				break;
+			case SEARCH_REQUEST:
+				refresh = true;
+				break;
 		}
 	}
-	
+
 	protected void addToQueue(final String filename) {
 		if (InfoCache.testModule(filename)) {
 			if (PlayerService.isAlive) {
 				final Intent service = new Intent(this, PlayerService.class);
 				mAddList = new ArrayList<>();
-				mAddList.add(filename);		
+				mAddList.add(filename);
 				bindService(service, connection, 0);
 			} else {
 				playModule(filename);
 			}
 		}
 	}
-	
+
 	protected void addToQueue(final List<String> list) {
 		final List<String> realList = new ArrayList<>();
 		int realSize = 0;
@@ -265,7 +284,7 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 		if (realSize > 0) {
 			if (PlayerService.isAlive) {
 				final Intent service = new Intent(this, PlayerService.class);
-				mAddList = realList;		
+				mAddList = realList;
 				bindService(service, connection, 0);
 			} else {
 				playModule(realList);
@@ -287,25 +306,25 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch(item.getItemId()) {
-		case android.R.id.home:
-			final Intent intent = new Intent(this, PlaylistMenu.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			return true;
-		case R.id.menu_new_playlist:
-			PlaylistUtils.newPlaylistDialog(this);
-			break;
-		case R.id.menu_prefs:		
-			startActivityForResult(new Intent(this, Preferences.class), SETTINGS_REQUEST);
-			break;
-		case R.id.menu_refresh:
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				final Intent intent = new Intent(this, PlaylistMenu.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				return true;
+			case R.id.menu_new_playlist:
+				PlaylistUtils.newPlaylistDialog(this);
+				break;
+			case R.id.menu_prefs:
+				startActivityForResult(new Intent(this, Preferences.class), SETTINGS_REQUEST);
+				break;
+		/*case R.id.menu_refresh:
 			update();
-			break;
-		case R.id.menu_download:
-			startActivityForResult(new Intent(this, Search.class), SEARCH_REQUEST);
-			break;
+			break;*/
+			case R.id.menu_download:
+				startActivityForResult(new Intent(this, Search.class), SEARCH_REQUEST);
+				break;
 		}
 		return super.onOptionsItemSelected(item);
-	}	
+	}
 }

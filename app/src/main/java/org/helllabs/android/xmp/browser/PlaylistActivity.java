@@ -3,6 +3,7 @@ package org.helllabs.android.xmp.browser;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -10,7 +11,6 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
@@ -76,6 +76,8 @@ public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAd
 		} catch (IOException e) {
 			Log.e(TAG, "Can't read playlist " + name);
 		}
+
+		setSwipeRefresh();
 
 		mRecyclerView = (RecyclerView) findViewById(R.id.plist_list);
 

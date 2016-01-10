@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -79,6 +80,16 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 			});
 		}
 
+		final SwipeRefreshLayout swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+		// Setup refresh listener which triggers new data loading
+		swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				updateList();
+				swipeRefresh.setRefreshing(false);
+			}
+		});
+		swipeRefresh.setColorSchemeResources(R.color.accent);
 
 		final RecyclerView recyclerView = (RecyclerView)findViewById(R.id.plist_menu_list);
 
@@ -413,9 +424,9 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 		case R.id.menu_prefs:		
 			startActivityForResult(new Intent(this, Preferences.class), SETTINGS_REQUEST);
 			break;
-		case R.id.menu_refresh:
+		/* case R.id.menu_refresh:
 			updateList();
-			break;
+			break; */
 		case R.id.menu_download:
 			startActivity(new Intent(this, Search.class));
 			break;
