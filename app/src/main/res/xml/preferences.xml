@@ -4,7 +4,7 @@
 
     <PreferenceCategory android:title="@string/pref_category_preferences" >
         <PreferenceScreen android:title="@string/pref_category_files" >
-            <PreferenceCategory>
+            <PreferenceCategory android:title="@string/pref_category_file_general">
             <EditTextPreference
                 android:defaultValue="/sdcard/mod"
                 android:key="media_path"
@@ -18,7 +18,9 @@
                 android:persistent="true"
                 android:summary="@string/pref_examples_summary"
                 android:title="@string/pref_examples_title" />
+            </PreferenceCategory>
 
+            <PreferenceCategory android:title="@string/pref_category_file_playlists">
             <ListPreference
                 android:defaultValue="1"
                 android:entries="@array/playlist_mode_array"
@@ -138,7 +140,7 @@
             </PreferenceCategory>
         </PreferenceScreen>
         <PreferenceScreen android:title="@string/pref_category_interface" >
-            <PreferenceCategory>
+            <PreferenceCategory android:title="@string/pref_category_iface_info">
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="show_info_line"
@@ -151,6 +153,8 @@
                 android:persistent="true"
                 android:summary="@string/pref_show_toast_summary"
                 android:title="@string/pref_show_toast_title" />
+            </PreferenceCategory>
+            <PreferenceCategory android:title="@string/pref_category_iface_screen">
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="keep_screen_on"

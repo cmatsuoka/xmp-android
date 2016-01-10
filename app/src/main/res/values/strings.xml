@@ -84,6 +84,10 @@
     <string name="pref_category_download">Download location</string>
     <string name="pref_category_experimental">Experimental (be careful)</string>
     <string name="pref_category_preferences">Preferences</string>
+    <string name="pref_category_iface_info">Information</string>
+    <string name="pref_category_iface_screen">Screen</string>
+    <string name="pref_category_file_general">General</string>
+    <string name="pref_category_file_playlists">Playlists</string>
     
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
     <string name="preferences_default_pan_dialog">Set the default pan separation:</string>
