@@ -1,26 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"/>
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/plist_menu_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        android:id="@+id/plist_menu_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <ImageButton
-            android:id="@+id/add_button"
-            android:layout_width="@dimen/round_button_diameter"
-            android:layout_height="@dimen/round_button_diameter"
-            android:layout_gravity="end|bottom"
-            android:layout_marginBottom="@dimen/add_button_margin"
-            android:layout_marginEnd="@dimen/add_button_margin"
-            android:layout_marginRight="@dimen/add_button_margin"
-            android:background="@drawable/oval"
-            android:elevation="8dp"
-            android:contentDescription="New playlist"
-            android:onClick="fabClick"
-            android:src="@drawable/ic_add_white_24dp"/>
+        android:id="@+id/add_button"
+        android:layout_width="@dimen/round_button_diameter"
+        android:layout_height="@dimen/round_button_diameter"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="@dimen/add_button_margin"
+        android:layout_marginEnd="@dimen/add_button_margin"
+        android:layout_marginRight="@dimen/add_button_margin"
+        android:background="@drawable/oval"
+        android:contentDescription="New playlist"
+        android:elevation="8dp"
+        android:onClick="fabClick"
+        android:src="@drawable/ic_add_white_24dp"/>
 
-</merge>
+</LinearLayout>

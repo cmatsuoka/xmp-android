@@ -17,11 +17,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.browser.playlist.Playlist;
@@ -57,6 +59,27 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 		super.onCreate(icicle);
 		setContentView(R.layout.playlist_menu);
 
+		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setElevation(0); // or other
+        }
+
+		setTitle("");
+
+		final TextView title = (TextView)findViewById(R.id.toolbar_title);
+		if (title != null) {
+			title.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(final View v) {
+					startPlayerActivity();
+				}
+			});
+		}
+
+
 		final RecyclerView recyclerView = (RecyclerView)findViewById(R.id.plist_menu_list);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -90,7 +113,7 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 			startPlayerActivity();
 		}
 		
-		enableHomeButton();
+		//enableHomeButton();
 		
 		updateList();
 	}
@@ -127,12 +150,14 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 		}
 	}
 
+	/*
 	@TargetApi(14)
 	private void enableHomeButton() {
 		if (Build.VERSION.SDK_INT >= 14) {
 			getSupportActionBar().setHomeButtonEnabled(true);
 		}
 	}
+	*/
 	
 	@Override
 	public void onNewIntent(final Intent intent) {
