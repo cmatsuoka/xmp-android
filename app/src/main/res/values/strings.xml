@@ -92,7 +92,7 @@
     <string name="preferences_pan_separation_dialog">Set the mixer stereo separation:</string>
     <string name="preferences_default_pan_dialog">Set the default pan separation:</string>
     
-    <string name="menu_refresh">Rescan</string>
+    <string name="menu_refresh">Refresh</string>
     <string name="menu_prefs">Settings</string>
     <string name="menu_download">Download</string>          
     <string name="menu_new_playlist">New playlist</string>

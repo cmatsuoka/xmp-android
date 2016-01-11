@@ -452,9 +452,9 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 		case R.id.menu_prefs:		
 			startActivityForResult(new Intent(this, Preferences.class), SETTINGS_REQUEST);
 			break;
-		/* case R.id.menu_refresh:
+		case R.id.menu_refresh:
 			updateList();
-			break; */
+			break;
 		case R.id.menu_download:
 			startActivity(new Intent(this, Search.class));
 			break;

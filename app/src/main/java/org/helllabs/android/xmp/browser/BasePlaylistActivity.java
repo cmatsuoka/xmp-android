@@ -344,9 +344,9 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 			case R.id.menu_prefs:
 				startActivityForResult(new Intent(this, Preferences.class), SETTINGS_REQUEST);
 				break;
-		/*case R.id.menu_refresh:
-			update();
-			break;*/
+			case R.id.menu_refresh:
+				update();
+				break;
 			case R.id.menu_download:
 				startActivityForResult(new Intent(this, Search.class), SEARCH_REQUEST);
 				break;
