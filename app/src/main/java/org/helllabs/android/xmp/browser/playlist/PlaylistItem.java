@@ -72,6 +72,10 @@ public class PlaylistItem implements Comparable<PlaylistItem> {
 	public String getName() {
 		return name;
 	}
+
+	public String getFilename() {
+		return file.getName();
+	}
 	
 	public String getComment() {
 		return comment;

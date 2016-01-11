@@ -123,6 +123,14 @@ public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAd
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+
+		mPlaylistAdapter.setUseFilename(mPrefs.getBoolean(Preferences.USE_FILENAME, false));
+		update();
+	}
+
+	@Override
 	public void onPause() {
 		super.onPause();
 

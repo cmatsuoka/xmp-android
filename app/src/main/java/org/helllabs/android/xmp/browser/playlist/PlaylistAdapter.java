@@ -31,7 +31,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 	private final Playlist playlist;
     private final List<PlaylistItem> items;
     private final Context context;
-    private final boolean useFilename;
+    private boolean useFilename;
     private int position;
     private OnItemClickListener onItemClickListener;
 	private final int layoutType;
@@ -108,7 +108,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
             holder.infoText.setTypeface(typeface, Typeface.NORMAL);
         }
 
-        holder.titleText.setText(item.getName());
+        holder.titleText.setText(useFilename ? item.getFilename() : item.getName());
         holder.infoText.setText(item.getComment());
 
         if (imageRes > 0) {
@@ -215,6 +215,10 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public void setPosition(int position) {
         this.position = position;
     }
+
+	public void setUseFilename(final boolean useFilename) {
+		this.useFilename = useFilename;
+	}
 
     //public List<PlaylistItem> getItems() {
 	//	return items;
