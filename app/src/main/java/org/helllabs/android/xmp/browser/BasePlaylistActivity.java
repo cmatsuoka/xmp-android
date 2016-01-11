@@ -10,9 +10,11 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -134,9 +136,8 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 
 	protected abstract void update();
 
-	protected void setSwipeRefresh() {
+	protected void setSwipeRefresh(final RecyclerView recyclerView) {
 		final SwipeRefreshLayout swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-		// Setup refresh listener which triggers new data loading
 		swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
@@ -145,6 +146,31 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 			}
 		});
 		swipeRefresh.setColorSchemeResources(R.color.accent);
+
+		recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+			@Override
+			public boolean onInterceptTouchEvent(final RecyclerView rv, final MotionEvent e) {
+				if (e.getAction() == MotionEvent.ACTION_DOWN) {
+					boolean enable = false;
+					if (recyclerView.getChildCount() > 0) {
+						enable = !recyclerView.canScrollVertically(-1);
+					}
+					swipeRefresh.setEnabled(enable);
+				}
+
+				return false;
+			}
+
+			@Override
+			public void onTouchEvent(final RecyclerView rv, final MotionEvent e) {
+				// do nothing
+			}
+
+			@Override
+			public void onRequestDisallowInterceptTouchEvent(final boolean disallowIntercept) {
+				// do nothing
+			}
+		});
 	}
 
 	protected void setupButtons() {

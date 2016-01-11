@@ -76,9 +76,8 @@ public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAd
 			Log.e(TAG, "Can't read playlist " + name);
 		}
 
-		setSwipeRefresh();
-
 		mRecyclerView = (RecyclerView) findViewById(R.id.plist_list);
+		setSwipeRefresh(mRecyclerView);
 
 		// layout manager
 		final LinearLayoutManager layoutManager = new LinearLayoutManager(this);

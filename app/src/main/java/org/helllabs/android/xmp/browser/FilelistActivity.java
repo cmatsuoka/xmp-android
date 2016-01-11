@@ -171,12 +171,10 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);	
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.modlist);
-
-		setSwipeRefresh();
-
-		recyclerView = (RecyclerView)findViewById(R.id.modlist_listview);
+		recyclerView = (RecyclerView) findViewById(R.id.modlist_listview);
+		setSwipeRefresh(recyclerView);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

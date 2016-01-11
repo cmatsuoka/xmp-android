@@ -6,7 +6,7 @@
     android:versionName="4.7.0" >
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="14"
         android:targetSdkVersion="23" />
 
     <supports-screens />
