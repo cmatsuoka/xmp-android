@@ -62,6 +62,8 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 		super.onCreate(icicle);
 		setContentView(R.layout.playlist_menu);
 
+		Log.i(TAG, "start application");
+
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         if (toolbar != null) {
@@ -91,7 +93,7 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 				swipeRefresh.setRefreshing(false);
 			}
 		});
-		swipeRefresh.setColorSchemeResources(R.color.accent);
+		swipeRefresh.setColorSchemeResources(R.color.refresh_color);
 
 		final RecyclerView recyclerView = (RecyclerView)findViewById(R.id.plist_menu_list);
 
@@ -136,13 +138,10 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 			Message.fatalError(this, getString(R.string.error_storage));
 		}
 
-		// Create application directory and populate with empty playlist
-		if (!Preferences.DATA_DIR.isDirectory()) {
-			if (Build.VERSION.SDK_INT >= 23) {
-				getStoragePermissions();
-			} else {
-				setupDataDir();
-			}
+		if (Build.VERSION.SDK_INT >= 23) {
+			getStoragePermissions();
+		} else {
+			setupDataDir();
 		}
 
 		final ChangeLog changeLog = new ChangeLog(this);
@@ -153,7 +152,7 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 		}
 		
 		//enableHomeButton();
-		
+
 		updateList();
 	}
 
@@ -162,7 +161,10 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 	private void getStoragePermissions() {
 		boolean hasPermission = (ContextCompat.checkSelfPermission(this,
 				Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-		if (!hasPermission) {
+		if (hasPermission) {
+			setupDataDir();
+			updateList();
+		} else {
 			ActivityCompat.requestPermissions(this,
 					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 					REQUEST_WRITE_STORAGE);
@@ -176,16 +178,20 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 			case REQUEST_WRITE_STORAGE: {
 				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					setupDataDir();
+					updateList();
 				}
 			}
 		}
 	}
 
+	// Create application directory and populate with empty playlist
 	private void setupDataDir() {
-		if (Preferences.DATA_DIR.mkdirs()) {
-			PlaylistUtils.createEmptyPlaylist(this, getString(R.string.empty_playlist), getString(R.string.empty_comment));
-		} else {
-			Message.fatalError(this, getString(R.string.error_datadir));
+		if (!Preferences.DATA_DIR.isDirectory()) {
+			if (Preferences.DATA_DIR.mkdirs()) {
+				PlaylistUtils.createEmptyPlaylist(this, getString(R.string.empty_playlist), getString(R.string.empty_comment));
+			} else {
+				Message.fatalError(this, getString(R.string.error_datadir));
+			}
 		}
 	}
 

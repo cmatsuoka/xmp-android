@@ -145,7 +145,7 @@ public abstract class BasePlaylistActivity extends AppCompatActivity {
 				swipeRefresh.setRefreshing(false);
 			}
 		});
-		swipeRefresh.setColorSchemeResources(R.color.accent);
+		swipeRefresh.setColorSchemeResources(R.color.refresh_color);
 
 		recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
 			@Override
