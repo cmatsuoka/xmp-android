@@ -12,5 +12,5 @@
 
     <color name="pressed_color">#606060</color>
     <color name="drag_handle_color">#202020</color>
-    <color name="refresh_color">#388e3c</color>
+    <color name="refresh_color">#229e3c</color>
 </resources>
