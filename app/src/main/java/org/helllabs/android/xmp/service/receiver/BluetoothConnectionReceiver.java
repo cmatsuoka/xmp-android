@@ -22,9 +22,9 @@ public class BluetoothConnectionReceiver extends BroadcastReceiver {
 		final String action = intent.getAction();
 		Log.i(TAG, "Action " + action);
 		
-		if (Build.VERSION.SDK_INT >= 11 && intent.getAction().equals(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED)) {			
+		if (intent.getAction().equals(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED)) {
 			final int bluetoothState = intent.getIntExtra(BluetoothA2dp.EXTRA_STATE, -1);
-			Log.i(TAG, "Extra state = " + bluetoothState);
+			Log.i(TAG, "Extra state: " + bluetoothState);
 			if (bluetoothState == BluetoothProfile.STATE_DISCONNECTING || bluetoothState == BluetoothProfile.STATE_DISCONNECTED) {
 				Log.i(TAG, "Bluetooth state changed to disconnected");
 				state = DISCONNECTED;
@@ -32,7 +32,7 @@ public class BluetoothConnectionReceiver extends BroadcastReceiver {
 				Log.i(TAG, "Bluetooth state changed to connected");
 				state = CONNECTED;
 			}
-		} else if (intent.getAction().equals(BluetoothDevice.ACTION_ACL_CONNECTED)) {
+		} /* else if (intent.getAction().equals(BluetoothDevice.ACTION_ACL_CONNECTED)) {
 			Log.i(TAG, "Bluetooth connected");
 			//state = CONNECTED;
 		} else if (intent.getAction().equals(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED)) {
@@ -41,7 +41,7 @@ public class BluetoothConnectionReceiver extends BroadcastReceiver {
 		} else if (intent.getAction().equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)) {
 			Log.i(TAG, "Bluetooth disconnected");
 			state = DISCONNECTED;
-		}
+		} */
 	}
 	
 	public static int getState() {
