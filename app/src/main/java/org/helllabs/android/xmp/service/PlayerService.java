@@ -10,6 +10,7 @@ import org.helllabs.android.xmp.service.notifier.Notifier;
 import org.helllabs.android.xmp.service.utils.QueueManager;
 import org.helllabs.android.xmp.service.utils.RemoteControl;
 import org.helllabs.android.xmp.service.utils.Watchdog;
+import org.helllabs.android.xmp.util.FileUtils;
 import org.helllabs.android.xmp.util.InfoCache;
 import org.helllabs.android.xmp.util.Log;
 
@@ -167,7 +168,11 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 	private void updateNotification() {
 		if (queue != null) {	// It seems that queue can be null if we're called from PhoneStateListener
-			notifier.notify(Xmp.getModName(), Xmp.getModType(), queue.getIndex(), paused ? Notifier.TYPE_PAUSE : 0);
+			String name = Xmp.getModName();
+			if (name.isEmpty()) {
+				name = FileUtils.basename(queue.getFilename());
+			}
+			notifier.notify(name, Xmp.getModType(), queue.getIndex(), paused ? Notifier.TYPE_PAUSE : 0);
 		}
 	}
 
@@ -289,7 +294,11 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 				cmd = CMD_NONE;
 
-				notifier.notify(Xmp.getModName(), Xmp.getModType(), queue.getIndex(), Notifier.TYPE_TICKER);
+				String name = Xmp.getModName();
+				if (name.isEmpty()) {
+					name = FileUtils.basename(fileName);
+				}
+				notifier.notify(name, Xmp.getModType(), queue.getIndex(), Notifier.TYPE_TICKER);
 				isLoaded = true;
 
 				// Unmute all channels

@@ -14,6 +14,7 @@ import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.service.ModInterface;
 import org.helllabs.android.xmp.service.PlayerCallback;
 import org.helllabs.android.xmp.service.PlayerService;
+import org.helllabs.android.xmp.util.FileUtils;
 import org.helllabs.android.xmp.util.Log;
 import org.helllabs.android.xmp.util.Message;
 
@@ -899,7 +900,7 @@ public class PlayerActivity extends Activity {
 						loop = modPlayer.getLoop();
 
 						if (name.trim().isEmpty()) {
-							name = "<untitled>";
+							name = FileUtils.basename(modPlayer.getFileName());
 						}
 					} catch (RemoteException e) {
 						name = "";

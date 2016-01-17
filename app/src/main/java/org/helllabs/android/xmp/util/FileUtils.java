@@ -79,6 +79,10 @@ public final class FileUtils {
 	}
 
 	static public String basename(final String pathname) {
-		return new File(pathname).getName();
+		if (pathname != null && !pathname.isEmpty()) {
+			return new File(pathname).getName();
+		} else {
+			return "";
+		}
 	}
 }
