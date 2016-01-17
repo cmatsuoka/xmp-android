@@ -32,6 +32,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
+import com.pluscubed.recyclerfastscroll.RecyclerFastScroller;
 
 public class FilelistActivity extends BasePlaylistActivity implements PlaylistAdapter.OnItemClickListener {
 	private static final String TAG = "BasePlaylistActivity";
@@ -184,6 +185,10 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
         mPlaylistAdapter.setOnItemClickListener(this);
 		recyclerView.setAdapter(mPlaylistAdapter);
         recyclerView.addItemDecoration(new SimpleListDividerDecorator(getResources().getDrawable(R.drawable.list_divider), true));
+
+		// fast scroll
+		RecyclerFastScroller fastScroller = (RecyclerFastScroller)findViewById(R.id.fast_scroller);
+		fastScroller.attachRecyclerView(recyclerView);
 
 		registerForContextMenu(recyclerView);
 		final String mediaPath = mPrefs.getString(Preferences.MEDIA_PATH, Preferences.DEFAULT_MEDIA_PATH);

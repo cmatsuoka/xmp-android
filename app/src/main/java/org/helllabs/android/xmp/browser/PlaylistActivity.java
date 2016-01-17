@@ -18,6 +18,7 @@ import com.h6ah4i.android.widget.advrecyclerview.decoration.ItemShadowDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
+import com.pluscubed.recyclerfastscroll.RecyclerFastScroller;
 
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.browser.playlist.Playlist;
@@ -96,6 +97,10 @@ public class PlaylistActivity extends BasePlaylistActivity implements PlaylistAd
 		mRecyclerView.setLayoutManager(layoutManager);
 		mRecyclerView.setAdapter(mWrappedAdapter);
 		mRecyclerView.setItemAnimator(animator);
+
+		// fast scroll
+		RecyclerFastScroller fastScroller = (RecyclerFastScroller)findViewById(R.id.fast_scroller);
+		fastScroller.attachRecyclerView(mRecyclerView);
 
 		// additional decorations
 		//noinspection StatementWithEmptyBody

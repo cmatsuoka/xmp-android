@@ -51,18 +51,31 @@
             android:gravity="top"
             android:orientation="vertical">
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipeContainer"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/modlist_listview"
-                    android:scrollbars="vertical"
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/swipeContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent">
 
-            </android.support.v4.widget.SwipeRefreshLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/modlist_listview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="vertical"/>
+
+                </android.support.v4.widget.SwipeRefreshLayout>
+
+                <com.pluscubed.recyclerfastscroll.RecyclerFastScroller
+                    android:id="@+id/fast_scroller"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"/>
+
+
+            </FrameLayout>
 
             <TextView
                 android:id="@id/android:empty"

@@ -38,4 +38,5 @@ dependencies {
         transitive = true
     }
     compile 'com.fnp:material-preferences:0.1.4'
+    compile 'com.github.pluscubed:recycler-fast-scroll:0.3.0@aar'
 }
