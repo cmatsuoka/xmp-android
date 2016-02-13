@@ -63,6 +63,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private boolean canRelease;
 	private boolean paused;
 	private boolean previousPaused;		// save previous pause state
+	private boolean discardBuffer;      // don't play current buffer if changing module while paused
 	private boolean looped;
 	private boolean allSequences;
 	private int startIndex;
@@ -220,6 +221,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		}
 		if (paused) {
 			doPauseAndNotify();
+			discardBuffer = true;
 		}
 	}
 
@@ -227,6 +229,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 		Xmp.stopModule();
 		if (paused) {
 			doPauseAndNotify();
+			discardBuffer = true;
 		}
 		cmd = CMD_NEXT;
 	}
@@ -359,11 +362,14 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 				Xmp.playAudio();
 				
 				Log.i(TAG, "Enter play loop");
+
 				do {
 					Xmp.getModVars(vars);
 					remoteControl.setMetadata(Xmp.getModName(), Xmp.getModType(), vars[0]);
 					
 					while (cmd == CMD_NONE) {
+						discardBuffer = false;
+
 						// Wait if paused
 						while (paused) {
 							try {
@@ -374,6 +380,12 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 							watchdog.refresh();
 							receiverHelper.checkReceivers();
+						}
+
+						if (discardBuffer) {
+							Log.d(TAG, "discard buffer");
+							Xmp.dropAudio();
+							break;
 						}
 
 						// Wait if no buffers available
@@ -584,6 +596,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			if (paused) {
 				doPauseAndNotify();
 			}
+			discardBuffer = true;
 		}
 
 		public void prevSong() {
@@ -592,6 +605,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			if (paused) {
 				doPauseAndNotify();
 			}
+			discardBuffer = true;
 		}
 
 		public boolean toggleLoop() throws RemoteException {

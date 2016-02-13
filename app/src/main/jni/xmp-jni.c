@@ -229,6 +229,12 @@ Java_org_helllabs_android_xmp_Xmp_playAudio(JNIEnv *env, jobject obj)
 	return play_audio();
 }
 
+JNIEXPORT jint JNICALL
+Java_org_helllabs_android_xmp_Xmp_dropAudio(JNIEnv *env, jobject obj)
+{
+	return drop_audio();
+}
+
 JNIEXPORT jboolean JNICALL
 Java_org_helllabs_android_xmp_Xmp_stopAudio(JNIEnv *env, jobject obj)
 {
@@ -252,7 +258,6 @@ Java_org_helllabs_android_xmp_Xmp_fillBuffer(JNIEnv *env, jobject obj, jboolean 
 {
 	return fill_buffer(looped);
 }
-
 
 JNIEXPORT jint JNICALL
 Java_org_helllabs_android_xmp_Xmp_nextPosition(JNIEnv *env, jobject obj)
