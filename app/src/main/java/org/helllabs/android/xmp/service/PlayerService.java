@@ -190,7 +190,9 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 	public void actionStop() {
 		Xmp.stopModule();
-		paused = false;
+		if (paused) {
+			doPauseAndNotify();
+		}
 		cmd = CMD_STOP;
 	}
 
@@ -216,12 +218,16 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			Xmp.stopModule();
 			cmd = CMD_PREV;
 		}
-		paused = false;
+		if (paused) {
+			doPauseAndNotify();
+		}
 	}
 
 	public void actionNext() {
 		Xmp.stopModule();
-		paused = false;
+		if (paused) {
+			doPauseAndNotify();
+		}
 		cmd = CMD_NEXT;
 	}
 
@@ -479,7 +485,9 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 		isAlive = false;
 		Xmp.stopModule();
-		paused = false;
+		if (paused) {
+			doPauseAndNotify();
+		}
 
 		Xmp.deinit();
 		//audio.release();
@@ -497,7 +505,10 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			notifier.setQueue(queue);
 			//notifier.clean();
 			cmd = CMD_NONE;
-			paused = false;
+
+			if (paused) {
+				doPauseAndNotify();
+			}
 
 			if (isAlive) {
 				Log.i(TAG, "Use existing player thread");
@@ -727,9 +738,5 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	
 	public boolean isPaused() {
 		return paused;
-	}
-	
-	public void setPaused(final boolean paused) {
-		this.paused = paused;
 	}
 }
