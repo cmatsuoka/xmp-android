@@ -5,6 +5,8 @@ import java.io.File;
 import android.content.Context;
 import android.content.res.AssetManager;
 
+import org.helllabs.android.xmp.util.Log;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +15,8 @@ import java.io.FileOutputStream;
 
 
 public final class Examples {
+
+	private static final String TAG = "Examples";
 	
 	private Examples() {
 		
@@ -22,10 +26,12 @@ public final class Examples {
 		final File dir = new File(path);
 		
 		if (dir.isDirectory()) {
+			Log.d(TAG, "install: " + path + " directory not found");
 			return 0;
 		}
 
 		if (!dir.mkdirs()) {
+			Log.e(TAG, "can't create directory: " + path);
 			return -1;
 		}
 		

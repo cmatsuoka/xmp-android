@@ -149,7 +149,10 @@ public class FilelistActivity extends BasePlaylistActivity implements PlaylistAd
 		alertDialog.setMessage(media_path + " not found. Create this directory or change the module path.");
 		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.create), new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int which) {
-				Examples.install(FilelistActivity.this, media_path, mPrefs.getBoolean(Preferences.EXAMPLES, true));
+				final int ret = Examples.install(FilelistActivity.this, media_path, mPrefs.getBoolean(Preferences.EXAMPLES, true));
+				if (ret < 0) {
+					Message.error(FilelistActivity.this, "Error creating directory " + media_path + ".");
+				}
 				mNavigation.startNavigation(new File(media_path));
 				updateModlist();
 			}
