@@ -34,13 +34,13 @@ public class UseSdcardActivity extends Activity {
 		apiVer.setText(String.format("Android version: %s (API level %d)", Build.VERSION.RELEASE, Build.VERSION.SDK_INT));
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-			info.setText("Android versions prior to 19 don't require special permissions to access the SD card.");
+			info.setText(R.string.msg_sd_no_need);
 		} else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-			info.setText("This android device can't access the SD card. Use the internal emulated SD card instead.");
+			info.setText(R.string.msg_sd_cant_do);
 		} else {
 			showPermissions();
-			Message.yesNoDialog(this, "Enable write access",
-					"In the following screen select your external (physical) SD card to enable write access. Continue?",
+			Message.yesNoDialog(this, getString(R.string.msg_sd_enable_write),
+					getString(R.string.msg_sd_instructions),
 					new Runnable() {
 						@Override
 						public void run() {
