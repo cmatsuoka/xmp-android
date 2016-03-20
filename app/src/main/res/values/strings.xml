@@ -24,6 +24,8 @@
     
 	<string name="pref_examples_title">Install modules</string>
     <string name="pref_examples_summary">Install example music files when creating modules directory</string>
+    <string name="pref_use_sdcard_title">Use external SD card</string>
+    <string name="pref_use_sdcard_summary">Enable write access to real (physical) SD card</string>
     <string name="pref_sampling_rate_summary">Set the mixer sampling rate</string>
     <string name="pref_sampling_rate_title">Sampling rate</string>
     <string name="pref_list_formats_title">Known formats</string>

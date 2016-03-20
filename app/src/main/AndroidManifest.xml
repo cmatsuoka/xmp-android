@@ -142,6 +142,15 @@
             android:name=".browser.PlaylistActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
+        <activity
+            android:name=".browser.UseSdcardActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="org.helllabs.android.xmp.USE_SDCARD" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <!-- ModArchive search & download -->
         
         <activity
