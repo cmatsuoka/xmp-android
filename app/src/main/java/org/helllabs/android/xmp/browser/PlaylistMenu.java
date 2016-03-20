@@ -153,6 +153,12 @@ public class PlaylistMenu extends AppCompatActivity implements PlaylistAdapter.O
 		
 		//enableHomeButton();
 
+		//updateList();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
 		updateList();
 	}
 
