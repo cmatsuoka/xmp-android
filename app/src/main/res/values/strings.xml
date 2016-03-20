@@ -3,13 +3,13 @@
 	<string name="app_name">Xmp Mod Player</string>
 	<string name="app_description">A modplayer that plays over 90 mainstream and obscure module formats, including Protracker (MOD), Scream Tracker 3 (S3M), Fast Tracker II (XM) and Impulse Tracker (IT).</string>
 	     
-    <string name="changelog_text">• Fix new file selection when paused\n• Fix FastTracker 2 arpeggio effect\n• Fix XM tremor effect\n• Fix IT instrument after keyoff\n• Fix Scream Tracker 3 MOD detection\n• Fix S3M first frame test in pattern delay\n• Fix Protracker tone portamento target\n• Fix Protracker finetune effect\n• Fix MED secondary tempo range\n
+    <string name="changelog_text">• Add option to write to SD card in Lollipop\n• Fix IT note off with instrument\n• Fix IT note recover after cut\n• Fix IT pattern break row number\n• Fix IT volume swing\n• Fix XM glissando effect\n• Fix S3M period limits\n• Fix S3M subsong detection\n• Fix GAL4 number of patterns\n• Add support to TP1, TP2 and PP10 formats\n
+\nVersion 4.7.2:\n• Fix new file selection when paused\n• Fix FastTracker 2 arpeggio effect\n• Fix XM tremor effect\n• Fix IT instrument after keyoff\n• Fix Scream Tracker 3 MOD detection\n• Fix S3M first frame test in pattern delay\n• Fix Protracker tone portamento target\n• Fix Protracker finetune effect\n
 \nVersion 4.7.1:\n• Update volley library\n• Fix modarchive client error message\n• Fix MED secondary tempo effect\n• Pause if A2DP bluetooth device disconnected\n• Add fast scroll to file list and playlists\n• Show filename if module title is empty\n
 \nVersion 4.7.0:\n• Application interface updates\n• Fix Android 6 compatibility issues\n• Many module loading error fixes\n• Fix IT portamento issues\n• Fix IT envelope fadeout issues\n• Fix IT autovibrato depth\n• Fix Oktalyzer split channels\n• Fix Oktalyzer note slides\n• Fix SoundFX effects\n
 \nVersion 4.6.0:\n• Many envelope-related fixes\n• Add IT high offset command (SAx)\n• Add IT surround command (S9x)\n• Add IT surround channel support\n• Add IT sample pan setting support\n• Fix MMD3 16-bit samples\n
-\nVersion 4.5.1:\n• Fix IT sample mode note cut on invalid sample\n• Fix IT sample mode note end detection\n• Fix IT envelope handling with carry and fadeout\n• Fix IT tone portamento with sample changes\n• Fix IT initial global volume setting\n• Fix IT old FX keyoff with instrument\n• Fix IT random volume variation\n
     </string>
-    <string name="changelog_title">New in version 4.7.2</string>
+    <string name="changelog_title">New in version 4.8.0</string>
     <string name="changelog">Changelog</string>
     
     <string name="yes">Yes</string>
