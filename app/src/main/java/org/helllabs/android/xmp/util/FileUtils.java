@@ -71,11 +71,8 @@ public final class FileUtils {
 		}
 
 		// Rename the new file to the filename the original file had.
-		if (!tempFile.renameTo(file)) {
-			return false;
-		}
+		return tempFile.renameTo(file);
 
-		return true;
 	}
 
 	static public String basename(final String pathname) {

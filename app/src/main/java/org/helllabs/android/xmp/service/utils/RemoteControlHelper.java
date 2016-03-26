@@ -40,9 +40,9 @@ public class RemoteControlHelper {
             Class sRemoteControlClientClass =
                     RemoteControlClientCompat.getActualRemoteControlClientClass(classLoader);
             sRegisterRemoteControlClientMethod = AudioManager.class.getMethod(
-                    "registerRemoteControlClient", new Class[]{sRemoteControlClientClass});
+                    "registerRemoteControlClient", sRemoteControlClientClass);
             sUnregisterRemoteControlClientMethod = AudioManager.class.getMethod(
-                    "unregisterRemoteControlClient", new Class[]{sRemoteControlClientClass});
+                    "unregisterRemoteControlClient", sRemoteControlClientClass);
             sHasRemoteControlAPIs = true;
         } catch (ClassNotFoundException e) {
             // Silently fail when running on an OS before ICS.
