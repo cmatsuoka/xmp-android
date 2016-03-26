@@ -18,12 +18,6 @@
                 android:persistent="true"
                 android:summary="@string/pref_examples_summary"
                 android:title="@string/pref_examples_title" />
-
-            <Preference
-                android:summary="@string/pref_use_sdcard_summary"
-                android:title="@string/pref_use_sdcard_title" >
-                <intent android:action="org.helllabs.android.xmp.USE_SDCARD" />
-            </Preference>
             </PreferenceCategory>
 
             <PreferenceCategory android:title="@string/pref_category_file_playlists">
