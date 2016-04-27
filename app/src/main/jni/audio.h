@@ -17,5 +17,7 @@ int restart_audio(void);
 int play_buffer(void *, int, int);
 int has_free_buffer(void);
 int fill_buffer(int);
+int get_volume(void);
+int set_volume(int);
 
 #endif

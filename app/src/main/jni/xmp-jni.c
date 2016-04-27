@@ -744,3 +744,15 @@ Java_org_helllabs_android_xmp_Xmp_getSeqVars(JNIEnv *env, jobject obj, jintArray
 
 	(*env)->SetIntArrayRegion(env, vars, 0, num, v);
 }
+
+JNIEXPORT jint JNICALL
+Java_org_helllabs_android_xmp_Xmp_getVolume(JNIEnv *env, jobject obj)
+{
+	return get_volume();
+}
+
+JNIEXPORT jint JNICALL
+Java_org_helllabs_android_xmp_Xmp_setVolume(JNIEnv *env, jobject obj, jint vol)
+{
+	return set_volume(vol);
+}

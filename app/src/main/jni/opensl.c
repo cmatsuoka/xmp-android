@@ -11,6 +11,7 @@ static SLEngineItf engine_engine;
 static SLObjectItf output_mix_obj;
 static SLObjectItf player_obj;
 static SLPlayItf player_play;
+static SLVolumeltf player_vol;
 static SLAndroidSimpleBufferQueueItf buffer_queue;
 static char *buffer;
 static int buffer_num;
@@ -136,6 +137,11 @@ static int opensl_open(int sr, int num)
 
 	/* get play interface */
 	r = (*player_obj)->GetInterface(player_obj, SL_IID_PLAY, &player_play);
+	if (r != SL_RESULT_SUCCESS) 
+		goto err3;
+
+	/* get volume interface */
+	r = (*player_obj)->GetInterface(player_obj, SL_IID_VOLUME, &player_vol);
 	if (r != SL_RESULT_SUCCESS) 
 		goto err3;
 
@@ -317,4 +323,17 @@ int stop_audio()
 	unlock();
 
 	return ret == SL_RESULT_SUCCESS ? 0 : -1;
+}
+
+int get_volume()
+{
+	SLmillibel vol;
+	SLResult r = (*player_vol)->GetVolumeLevel(player_vol, &vol);
+	return r == SL_RESULT_SUCCESS ? -vol : -1;
+}
+
+int set_volume(int vol)
+{
+	SLResult r = (*player_vol)->SetVolumeLevel(player_vol, (SLmillibel)-vol);
+	return r == SL_RESULT_SUCCESS ? 0 : -1;
 }
