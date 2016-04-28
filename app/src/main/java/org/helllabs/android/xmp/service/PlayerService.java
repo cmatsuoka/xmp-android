@@ -43,7 +43,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private static final int MAX_BUFFER_MS = 1000;
 	private static final int DEFAULT_BUFFER_MS = 400;
 	
-	private static final int DUCK_VOLUME = 20;
+	private static final int DUCK_VOLUME = 0x4000;
 
 	private AudioManager audioManager;
 	private RemoteControl remoteControl;
@@ -57,6 +57,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private SharedPreferences prefs;
 	private Watchdog watchdog;
 	private int sampleRate;
+	private int volume;
 	private Notifier notifier;
 	private int cmd;
 	private boolean restart;
@@ -108,7 +109,11 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 		if (Xmp.init(sampleRate, bufferMs)) {
 			audioInitialized = true;
+		} else {
+			Log.e(TAG, "error initializing audio");
 		}
+
+		volume = Xmp.getVolume();
 
 		isAlive = false;
 		isLoaded = false;
@@ -727,7 +732,8 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			Log.w(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
 			// Lower volume
 			synchronized (audioManager) {
-				Xmp.setPlayer(Xmp.PLAYER_VOLUME, DUCK_VOLUME);
+				volume = Xmp.getVolume();
+				Xmp.setVolume(DUCK_VOLUME);
 				ducking = true;
 			}
 			break;
@@ -736,7 +742,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			// Resume playback/raise volume
 			autoPause(false);
 			synchronized (audioManager) {
-				Xmp.setPlayer(Xmp.PLAYER_VOLUME, 100);
+				Xmp.setVolume(volume);
 				ducking = false;
 			}
 			break;

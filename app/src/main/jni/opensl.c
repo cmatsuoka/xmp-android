@@ -119,14 +119,14 @@ static int opensl_open(int sr, int num)
 
 	/* create audio player */
 	const SLInterfaceID ids1[] = {
-		SL_IID_ANDROIDSIMPLEBUFFERQUEUE
+		SL_IID_VOLUME, SL_IID_ANDROIDSIMPLEBUFFERQUEUE
 	};
 	const SLboolean req1[] = {
 		SL_BOOLEAN_TRUE
 	};
 
 	r = (*engine_engine)->CreateAudioPlayer(engine_engine, &player_obj,
-			&audio_source, &audio_sink, 1, ids1, req1);
+			&audio_source, &audio_sink, 2, ids1, req1);
 	if (r != SL_RESULT_SUCCESS) 
 		goto err2;
 
