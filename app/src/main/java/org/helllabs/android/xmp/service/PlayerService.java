@@ -43,7 +43,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	private static final int MAX_BUFFER_MS = 1000;
 	private static final int DEFAULT_BUFFER_MS = 400;
 	
-	private static final int DUCK_VOLUME = 0x4000;
+	private static final int DUCK_VOLUME = 0x500;
 
 	private AudioManager audioManager;
 	private RemoteControl remoteControl;
