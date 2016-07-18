@@ -10,7 +10,9 @@
 #include "xmp.h"
 #include "audio.h"
 
-/* #include <android/log.h> */
+/*  <android/log.h> */
+
+#define PERIOD_BASE 13696
 
 static xmp_context ctx = NULL;
 static struct xmp_module_info mi;
@@ -613,7 +615,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 		goto err;
 	}
 
-	step = (XMP_PERIOD_BASE << 5) / period;
+	step = (PERIOD_BASE << 4) / period;
 	len = xxs->len << 5;
 	lps = xxs->lps << 5;
 	lpe = xxs->lpe << 5;
