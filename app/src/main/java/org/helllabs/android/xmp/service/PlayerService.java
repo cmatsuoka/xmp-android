@@ -358,6 +358,14 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 				Xmp.setPlayer(Xmp.PLAYER_INTERP, interpType);
 				Xmp.setPlayer(Xmp.PLAYER_DSP, Xmp.DSP_LOWPASS);
 
+				int flags = Xmp.getPlayer(Xmp.PLAYER_CFLAGS);
+				if (prefs.getBoolean(Preferences.AMIGA_MIXER, false)) {
+					flags |= Xmp.FLAGS_A500;
+				} else {
+					flags &= ~Xmp.FLAGS_A500;
+				}
+				Xmp.setPlayer(Xmp.PLAYER_CFLAGS, flags);
+
 				updateData = true;
 
 				sequenceNumber = 0;

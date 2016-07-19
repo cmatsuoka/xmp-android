@@ -16,6 +16,7 @@ public final class Xmp {
 	public static final int PLAYER_MIX = 1;			// Stereo mixing
 	public static final int PLAYER_INTERP = 2;		// Interpolation type
 	public static final int PLAYER_DSP = 3;			// DSP effect flags
+	public static final int PLAYER_CFLAGS = 5;      // Current module flags
 	public static final int PLAYER_VOLUME = 7;		// Player volume (for audio focus duck)
 	public static final int PLAYER_DEFPAN = 10;		// Default pan separation
 
@@ -23,7 +24,10 @@ public final class Xmp {
 	public static final int INTERP_NEAREST = 0;		// Nearest neighbor
 	public static final int INTERP_LINEAR = 1;		// Linear (default)
 	public static final int INTERP_SPLINE = 2;		// Cubic spline
-	
+
+	// Player flags
+	public static final int FLAGS_A500 = 1 << 3;
+
 	// DSP effect types
 	public static final int DSP_LOWPASS = 1 << 0;	// Lowpass filter effect
 	
@@ -57,6 +61,7 @@ public final class Xmp {
 	public static native int time();
 	public static native int mute(int chn, int status);
 	public static native void getInfo(int[] values);
+	public static native int getPlayer(int parm);
 	public static native void setPlayer(int parm, int val);
 	public static native int getLoopCount();
 	public static native void getModVars(int[] vars);

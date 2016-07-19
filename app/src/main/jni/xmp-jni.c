@@ -345,10 +345,16 @@ Java_org_helllabs_android_xmp_Xmp_getInfo(JNIEnv *env, jobject obj, jintArray va
 	unlock();
 }
 
-JNIEXPORT jint JNICALL
+JNIEXPORT void JNICALL
 Java_org_helllabs_android_xmp_Xmp_setPlayer(JNIEnv *env, jobject obj, jint parm, jint val)
 {
-	return xmp_set_player(ctx, parm, val);
+	xmp_set_player(ctx, parm, val);
+}
+
+JNIEXPORT jint JNICALL
+Java_org_helllabs_android_xmp_Xmp_getPlayer(JNIEnv *env, jobject obj, jint parm)
+{
+	return xmp_get_player(ctx, parm);
 }
 
 JNIEXPORT jint JNICALL
