@@ -99,9 +99,9 @@
                 android:title="@string/pref_interp_type_title" />
 
             <org.helllabs.android.xmp.preferences.SeekBarPreference
-                android:defaultValue="70"
+                android:defaultValue="100"
                 android:dialogMessage="@string/preferences_pan_separation_dialog"
-                android:key="pan_separation"
+                android:key="stereo_mix"
                 android:max="100"
                 android:persistent="true"
                 android:summary="@string/pref_pan_separation_summary"

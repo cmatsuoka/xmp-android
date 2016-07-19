@@ -24,7 +24,9 @@ public class Preferences extends com.fnp.materialpreferences.PreferenceActivity 
 	public static final String VOL_BOOST = "vol_boost";
 	public static final String CHANGELOG_VERSION = "changelog_version";
 	//public static final String STEREO = "stereo";
-	public static final String PAN_SEPARATION = "pan_separation";
+	//public static final String PAN_SEPARATION = "pan_separation";
+	// change the variable name so we can use the new default mix value
+	public static final String STEREO_MIX = "stereo_mix";
 	public static final String DEFAULT_PAN = "default_pan";
 	public static final String PLAYLIST_MODE = "playlist_mode";
 	// Don't use PREF_INTERPOLATION -- was boolean in 2.x and string in 3.2.0

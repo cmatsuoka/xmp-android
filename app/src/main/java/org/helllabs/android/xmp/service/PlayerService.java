@@ -354,7 +354,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 				callbacks.finishBroadcast();
 
 				Xmp.setPlayer(Xmp.PLAYER_AMP, Integer.parseInt(volBoost));
-				Xmp.setPlayer(Xmp.PLAYER_MIX, prefs.getInt(Preferences.PAN_SEPARATION, 70));				
+				Xmp.setPlayer(Xmp.PLAYER_MIX, prefs.getInt(Preferences.STEREO_MIX, 100));
 				Xmp.setPlayer(Xmp.PLAYER_INTERP, interpType);
 				Xmp.setPlayer(Xmp.PLAYER_DSP, Xmp.DSP_LOWPASS);
 
