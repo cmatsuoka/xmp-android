@@ -285,7 +285,12 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 					}
 					continue;
 				}
-								
+
+				// Set default pan before we load the module
+				final int defpan = prefs.getInt(Preferences.DEFAULT_PAN, 50);
+				Log.i(TAG, "Set default pan to " + defpan);
+				Xmp.setPlayer(Xmp.PLAYER_DEFPAN, defpan);
+
 				// Ditto if we can't load the module
 				Log.w(TAG, "Load " + fileName);
 				if (Xmp.loadModule(fileName) < 0) {
@@ -301,10 +306,6 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 				}
 
 				lastRecognized = queue.getIndex();
-
-				final int defpan = prefs.getInt(Preferences.DEFAULT_PAN, 50);
-				Log.i(TAG, "Set default pan to " + defpan);
-				Xmp.setPlayer(Xmp.PLAYER_DEFPAN, defpan);
 
 				cmd = CMD_NONE;
 

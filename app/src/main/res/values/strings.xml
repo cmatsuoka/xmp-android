@@ -39,7 +39,7 @@
 	<string name="pref_pan_separation_title">Stereo separation</string>
     <string name="pref_pan_separation_summary">Set the mixer stereo separation</string>
     <string name="pref_default_pan_title">Default pan separation</string>
-    <string name="pref_default_pan_summary">Set the default pan separation</string>
+    <string name="pref_default_pan_summary">Set the default pan separation in old modules with hard L—R channels</string>
     <string name="pref_amiga_mixer_summary">Enable A500 simulation mixer for Amiga formats (uses more CPU)</string>
     <string name="pref_amiga_mixer_title">Amiga mixer</string>
     <string name="pref_interpolate_summary">Interpolate samples</string>
