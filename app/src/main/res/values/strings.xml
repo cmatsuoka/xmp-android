@@ -194,4 +194,7 @@
     <string name="msg_sd_enable_write">Enable write access</string>
     <string name="msg_sd_instructions">In the following screen select your external (physical) SD card to enable write access. Continue?</string>
 
+    <string name="notif_channel_desc">Current module and player controls</string>
+    <string name="notif_channel_name">Xmp</string>
+
 </resources>

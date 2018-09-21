@@ -7,6 +7,7 @@ import org.helllabs.android.xmp.preferences.Preferences;
 import org.helllabs.android.xmp.service.notifier.LegacyNotifier;
 import org.helllabs.android.xmp.service.notifier.LollipopNotifier;
 import org.helllabs.android.xmp.service.notifier.Notifier;
+import org.helllabs.android.xmp.service.notifier.OreoNotifier;
 import org.helllabs.android.xmp.service.utils.QueueManager;
 import org.helllabs.android.xmp.service.utils.RemoteControl;
 import org.helllabs.android.xmp.service.utils.Watchdog;
@@ -122,8 +123,10 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 		//session = new MediaSessionCompat(this, getPackageName());
 		//session.setActive(true);
-		
-		if (Build.VERSION.SDK_INT >= 21) {
+
+		if (Build.VERSION.SDK_INT >= 26) {
+			notifier = new OreoNotifier(this);
+		} else if (Build.VERSION.SDK_INT >= 21) {
 			notifier = new LollipopNotifier(this);
 		} else {
 			notifier = new LegacyNotifier(this);
