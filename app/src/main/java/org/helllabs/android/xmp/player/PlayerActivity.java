@@ -1,5 +1,10 @@
 package org.helllabs.android.xmp.player;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +33,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -433,7 +439,11 @@ public class PlayerActivity extends Activity {
 
 		String path = null;
 		if (intent.getData() != null) {
-			path = intent.getData().getPath();
+			if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+				path = handleIntentAction(intent);
+			} else {
+				path = intent.getData().getPath();
+			}
 		}
 
 		//fileArray = null;
@@ -481,6 +491,51 @@ public class PlayerActivity extends Activity {
 			Log.e(TAG, "Can't bind to service");
 			finish();
 		}
+	}
+
+
+	// Handle Intents provided from other applications.
+
+	private String handleIntentAction(Intent intent)  {
+		Uri uri = intent.getData();
+		String uriString;
+		if (uri != null) {
+			uriString = uri.toString();
+		} else {
+			return null;
+		}
+
+		String fileName = "temp." + uriString.substring(uriString.lastIndexOf('.') + 1);
+		File output = new File(this.getExternalCacheDir(), fileName);
+
+		// Lets delete  the temp file to ensure a clean copy.
+		if (output.exists()) {
+			if(output.delete()) {
+				Log.d(TAG, "Temp file deleted.");
+			} else {
+				Log.e(TAG, "Failed to delete temp file!");
+			}
+		}
+
+		try{
+			InputStream inputStream = getContentResolver().openInputStream(uri);
+			OutputStream outputStream = new FileOutputStream(output);
+			byte[] buffer = new byte[1024];
+			int length;
+
+			while((length=inputStream.read(buffer)) > 0) {
+				outputStream.write(buffer,0,length);
+			}
+
+			outputStream.close();
+			inputStream.close();
+		}catch (IOException e) {
+			Log.e(TAG, "Error creating temp file --Check Trace--");
+			e.printStackTrace();
+			return null;
+		}
+
+		return output.getPath();
 	}
 
 	//private void setFont(final TextView name, final String path, final int res) {
