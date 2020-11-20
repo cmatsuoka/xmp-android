@@ -2,16 +2,15 @@
 # Using Windows 10, with Windows Subsystem for Linux, and Ubuntu installed from the Store.
 # Ubuntu 20.04.1 LTS (Windows Store) is the version at the time of writing this.
 # Ubuntu must be launched, setup, and updated to use.
-# With libxmp sources placed in src/main/jni/sources.
-# Go into the libxmp folder (src\main\jni\libxmp).
-# Open "Open Linux shell here" from the contextual menu.
-#
-# Run the following command (might need to run under SU):
-# autoconf && ./configure && make && make check && (cd test-dev; autoconf && ./configure && make)
+# With libxmp sources placed in src\main\jni\libxmp.
+# Navigate into the libxmp folder and click "Open Linux shell here" from the contextual menu.
 #
 # Note: You might need to install autoconf, and gcc
 # autoconf: sudo apt install autoconf
 # gcc: sudo apt install build-essential
+#
+# Run the following command (might need to run under SU):
+# autoconf && ./configure && make && make check && (cd test-dev; autoconf && ./configure && make)
 #
 # [Linux steps should be similar with most of these steps. Refer to below.]
 # Reference: https://github.com/libxmp/libxmp/
@@ -28,14 +27,14 @@ include $(LOCAL_PATH)/src/loaders/Makefile
 include $(LOCAL_PATH)/src/loaders/prowizard/Makefile
 include $(LOCAL_PATH)/src/depackers/Makefile
 
-SRC_SOURCES	:= $(addprefix src/,$(SRC_OBJS))
+SRC_SOURCES := $(addprefix src/,$(SRC_OBJS))
 LOADERS_SOURCES := $(addprefix src/loaders/,$(LOADERS_OBJS))
-PROWIZ_SOURCES	:= $(addprefix src/loaders/prowizard/,$(PROWIZ_OBJS))
+PROWIZ_SOURCES := $(addprefix src/loaders/prowizard/,$(PROWIZ_OBJS))
 DEPACKERS_SOURCES := $(addprefix src/depackers/,$(DEPACKERS_OBJS))
 
 LOCAL_MODULE := libxmp-jni
 
-LOCAL_CFLAGS	:= -O3 -DHAVE_MKSTEMP -DHAVE_FNMATCH -DHAVE_ROUND -I$(LOCAL_PATH)/include \
+LOCAL_CFLAGS := -O3 -DHAVE_MKSTEMP -DHAVE_FNMATCH -DHAVE_ROUND -I$(LOCAL_PATH)/include \
 		   -I$(LOCAL_PATH)/src
 
 LOCAL_SRC_FILES := $(SRC_SOURCES:.o=.c) \
