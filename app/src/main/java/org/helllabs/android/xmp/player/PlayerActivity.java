@@ -803,6 +803,12 @@ public class PlayerActivity extends Activity {
 			Log.i(TAG, "Can't unbind unregistered service");
 		}
 
+		stopUpdate = true;
+		if(progressThread != null && progressThread.isAlive()) {
+			progressThread.interrupt();
+			progressThread = null;
+		}
+
 		super.onDestroy();
 	}
 
