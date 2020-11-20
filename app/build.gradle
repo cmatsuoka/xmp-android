@@ -8,9 +8,9 @@ android {
         minSdkVersion 14
         targetSdkVersion 27
 
-        ndk {
-            moduleName "xmp-prebuilt"
-        }
+        // ndk {
+        //     moduleName "xmp-prebuilt"
+        // }
     }
     buildTypes {
         release {
@@ -18,11 +18,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
         }
     }
-    // Temporarily disable ndk build
-    sourceSets.main {
-        jni.srcDirs = []
-        jniLibs.srcDir 'src/main/libs'
+    externalNativeBuild {
+        ndkBuild {
+            path 'src/main/jni/Android.mk'
+        }
     }
+    // Temporarily disable ndk build
+    // sourceSets.main {
+    //     jni.srcDirs = []
+    //     jniLibs.srcDir 'src/main/libs'
+    // }
     productFlavors {
     }
 }
