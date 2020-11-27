@@ -319,11 +319,6 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 				notifier.notify(name, Xmp.getModType(), queue.getIndex(), Notifier.TYPE_TICKER);
 				isLoaded = true;
 
-				// Unmute all channels
-				for (int i = 0; i < 64; i++) {
-					Xmp.mute(i, 0);
-				}
-
 				final String volBoost = prefs.getString(Preferences.VOL_BOOST, "1");
 
 				final int[] interpTypes = { Xmp.INTERP_NEAREST, Xmp.INTERP_LINEAR, Xmp.INTERP_SPLINE };
@@ -345,6 +340,11 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 					if (ducking) {
 						Xmp.setPlayer(Xmp.PLAYER_VOLUME, DUCK_VOLUME);
 					}
+				}
+
+				// Unmute all channels
+				for (int i = 0; i < 64; i++) {
+					Xmp.mute(i, 0);
 				}
 
 				int numClients = callbacks.beginBroadcast();
