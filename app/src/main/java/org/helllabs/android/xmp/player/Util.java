@@ -28,4 +28,10 @@ public final class Util {
 		res[0] = hexDigits[val >> 4];
 		res[1] = hexDigits[val & 0x0f];
 	}
+
+	public static void to03X(final char[] res, final int val) {
+		res[0] = hexDigits[val >> 8];
+		res[1] = hexDigits[(val >> 4) & 0x0f];
+		res[2] = hexDigits[val & 0x0f];
+	}
 }

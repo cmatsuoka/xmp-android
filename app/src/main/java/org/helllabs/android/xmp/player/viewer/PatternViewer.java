@@ -3,6 +3,7 @@ package org.helllabs.android.xmp.player.viewer;
 import org.helllabs.android.xmp.R;
 import org.helllabs.android.xmp.player.Util;
 import org.helllabs.android.xmp.service.ModInterface;
+import org.helllabs.android.xmp.util.Log;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,12 +17,15 @@ import android.os.RemoteException;
 // http://developer.android.com/guide/topics/graphics/2d-graphics.html
 
 public class PatternViewer extends Viewer {
+	private static final String TAG = "PatternViewer";
 	private static final int MAX_NOTES = 120;
+	private static final int RIGHT_BUMP = 20; // Provide a slight margin for row numbers
 	private final Paint headerPaint, headerTextPaint, notePaint, insPaint;
 	private final Paint barPaint, muteNotePaint, muteInsPaint;
 	private final int fontSize, fontHeight, fontWidth;
 	private final String[] allNotes = new String[MAX_NOTES];
-	private final String[] hexByte = new String[256];
+	private String[] hexByte = new String[0];
+	private final String[] instrumentHexByte = new String[256];
 	private final byte[] rowNotes = new byte[64];
 	private final byte[] rowInstruments = new byte[64];
 	private int oldRow, oldOrd, oldPosX;
@@ -82,7 +86,7 @@ public class PatternViewer extends Viewer {
 		final char[] c = new char[2];
 		for (int i = 0; i < 256; i++) {
 			Util.to02X(c, i);
-			hexByte[i] = new String(c);
+			instrumentHexByte[i] = new String(c);
 		}
 	}
 	
@@ -95,7 +99,7 @@ public class PatternViewer extends Viewer {
 		oldPosX = -1;
 
 		final int chn = modVars[3];
-		setMaxX((chn * 6 + 2) * fontWidth);
+		setMaxX((chn * 6 + /*2*/ 3) * fontWidth);
 	}
 
 	//@Override
@@ -149,6 +153,22 @@ public class PatternViewer extends Viewer {
 		final int chn = modVars[3];
 		final int numRows = info.values[3];
 
+		// Get the number of rows dynamically
+		// Side effect of https://github.com/cmatsuoka/xmp-android/pull/15
+		if(numRows > 0 && hexByte.length != numRows) {
+			Log.d(TAG, "Resizing numRows to " + numRows);
+			hexByte = new String[numRows];
+			final char[] c = new char[3];
+			for(int i = 0; i < numRows; i++) {
+				if(i < 256) {
+					Util.to02X(c, i);
+				} else {
+					Util.to03X(c, i);
+				}
+				hexByte[i] = new String(c);
+			}
+		}
+
 		// Clear screen
 		canvas.drawColor(Color.BLACK);
 
@@ -157,14 +177,14 @@ public class PatternViewer extends Viewer {
 		canvas.drawRect(rect, headerPaint);
 		for (int i = 0; i < chn; i++) {
 			final int adj = (i + 1) < 10 ? 1 : 0;
-			final int x = (3 + i * 6 + 1 + adj) * fontWidth - (int)posX;
+			final int x = (3 + i * 6 + 1 + adj) * fontWidth - (int)posX + RIGHT_BUMP;
 			if (x > -2 * fontWidth && x < canvasWidth) {
 				canvas.drawText(Integer.toString(i + 1), x, fontSize, headerTextPaint);
 			}
 		}
 
 		// Current line bar
-		rect.set(0, barY - fontHeight + 1, canvasWidth - 1, barY);
+		rect.set(0, barY - fontHeight + 10, canvasWidth, barY + 10);
 		canvas.drawRect(rect, barPaint);
 
 		// Pattern data
@@ -179,6 +199,7 @@ public class PatternViewer extends Viewer {
 				continue;
 			}
 
+			// Row number
 			if (posX > -2 * fontWidth) {
 				canvas.drawText(hexByte[lineInPattern], -posX, y, headerTextPaint);
 			}
@@ -196,7 +217,7 @@ public class PatternViewer extends Viewer {
 					// fail silenty
 				}
 
-				x = (3 + j * 6) * fontWidth - (int)posX;
+			x = (3 + j * 6) * fontWidth - (int)posX + RIGHT_BUMP;
 
 				if (x < -6 * fontWidth || x > canvasWidth) {
 					continue;
@@ -221,9 +242,9 @@ public class PatternViewer extends Viewer {
 					canvas.drawText("---", x, y, paint);
 				}
 
-				x = (3 + j * 6 + 3) * fontWidth - (int)posX;
+				x = (3 + j * 6 + 3) * fontWidth - (int)posX + RIGHT_BUMP;
 				if (rowInstruments[j] > 0) {
-					canvas.drawText(hexByte[rowInstruments[j]], x, y, paint2);
+					canvas.drawText(instrumentHexByte[rowInstruments[j]], x, y, paint2);
 				} else {
 					canvas.drawText("--", x, y, paint2);
 				}
