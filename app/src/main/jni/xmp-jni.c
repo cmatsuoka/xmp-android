@@ -123,17 +123,17 @@ Java_org_helllabs_android_xmp_Xmp_testModule(JNIEnv *env, jobject obj, jstring n
 			jclass modInfoClass = (*env)->FindClass(env,
 	                        	"org/helllabs/android/xmp/util/ModInfo");
 			jfieldID field;
-	
+
 			if (modInfoClass == NULL)
 				return JNI_FALSE;
-			
+
 			field = (*env)->GetFieldID(env, modInfoClass, "name",
 	                        	"Ljava/lang/String;");
 			if (field == NULL)
 				return JNI_FALSE;
 			(*env)->SetObjectField(env, info, field,
 					(*env)->NewStringUTF(env, ti.name));
-	
+
 			field = (*env)->GetFieldID(env, modInfoClass, "type",
 	                        	"Ljava/lang/String;");
 			if (field == NULL)
@@ -332,13 +332,13 @@ Java_org_helllabs_android_xmp_Xmp_getInfo(JNIEnv *env, jobject obj, jintArray va
 
 	lock();
 	if (_playing) {
-		v[0] = fi[_before].pos & 0xff;
-		v[1] = fi[_before].pattern & 0xff;
-		v[2] = fi[_before].row & 0xff;
-		v[3] = fi[_before].num_rows & 0xff;
-		v[4] = fi[_before].frame & 0xff;
-		v[5] = fi[_before].speed & 0xff;
-		v[6] = fi[_before].bpm & 0xff;
+		v[0] = fi[_before].pos; /*& 0xff*/
+		v[1] = fi[_before].pattern; /*& 0xff*/
+		v[2] = fi[_before].row; /*& 0xff*/
+		v[3] = fi[_before].num_rows; /*& 0xff*/
+		v[4] = fi[_before].frame; /*& 0xff*/
+		v[5] = fi[_before].speed; /*& 0xff*/
+		v[6] = fi[_before].bpm; /*& 0xff*/
 
 		(*env)->SetIntArrayRegion(env, values, 0, 7, v);
 	}
@@ -593,7 +593,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 	int i, pos, transient_size;
 	int limit;
 	int step, len, lps, lpe;
- 
+
 	lock();
 
 	if (!_mod_is_loaded)
@@ -661,7 +661,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 		/* loop */
 		if (xxs->flg & XMP_SAMPLE_LOOP) {
 			for (i = limit; i < width; i++) {
-				_buffer[i] = ((short *)xxs->data)[pos >> 5] >> 8;	
+				_buffer[i] = ((short *)xxs->data)[pos >> 5] >> 8;
 				pos += step;
 				if (pos >= lpe)
 					pos = lps + pos - lpe;
@@ -670,7 +670,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 			}
 		} else {
 			for (i = limit; i < width; i++) {
-				_buffer[i] = 0;	
+				_buffer[i] = 0;
 			}
 		}
 	} else {
@@ -692,7 +692,7 @@ Java_org_helllabs_android_xmp_Xmp_getSampleData(JNIEnv *env, jobject obj, jboole
 			}
 		} else {
 			for (i = limit; i < width; i++) {
-				_buffer[i] = 0;	
+				_buffer[i] = 0;
 			}
 		}
 	}
