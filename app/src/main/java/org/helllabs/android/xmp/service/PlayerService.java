@@ -295,7 +295,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 				Xmp.setPlayer(Xmp.PLAYER_DEFPAN, defpan);
 
 				// Ditto if we can't load the module
-				Log.w(TAG, "Load " + fileName);
+				Log.i(TAG, "Load " + fileName);
 				if (Xmp.loadModule(fileName) < 0) {
 					Log.e(TAG, "Error loading " + fileName);
 					if (cmd == CMD_PREV) {
@@ -427,7 +427,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 					if (allSequences && cmd == CMD_NONE) {
 						sequenceNumber++;
 
-						Log.w(TAG, "Play sequence " + sequenceNumber);
+						Log.i(TAG, "Play sequence " + sequenceNumber);
 						if (Xmp.setSequence(sequenceNumber)) {
 							playNewSequence = true;
 							notifyNewSequence();
@@ -446,7 +446,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 
 					for (int j = 0; j < numClients; j++) {
 						try {
-							Log.w(TAG, "Call end of module callback");
+							Log.i(TAG, "Call end of module callback");
 							callbacks.getBroadcastItem(j).endModCallback();
 						} catch (RemoteException e) {
 							Log.e(TAG, "Error notifying end of module to client");
@@ -468,7 +468,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 					callbacks.finishBroadcast();
 				}
 
-				Log.w(TAG, "Release module");
+				Log.i(TAG, "Release module");
 				Xmp.releaseModule();
 
 				//audio.stop();
@@ -736,12 +736,12 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 	public void onAudioFocusChange(final int focusChange) {
 		switch (focusChange) {
 		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-			Log.w(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
+			Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
 			// Pause playback
 			autoPause(true);
 			break;
 		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-			Log.w(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+			Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
 			// Lower volume
 			synchronized (audioManager) {
 				volume = Xmp.getVolume();
@@ -750,7 +750,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			}
 			break;
 		case AudioManager.AUDIOFOCUS_GAIN:
-			Log.w(TAG, "AUDIOFOCUS_GAIN");
+			Log.d(TAG, "AUDIOFOCUS_GAIN");
 			// Resume playback/raise volume
 			autoPause(false);
 			synchronized (audioManager) {
@@ -759,7 +759,7 @@ public final class PlayerService extends Service implements OnAudioFocusChangeLi
 			}
 			break;
 		case AudioManager.AUDIOFOCUS_LOSS:
-			Log.w(TAG, "AUDIOFOCUS_LOSS");
+			Log.d(TAG, "AUDIOFOCUS_LOSS");
 			// Stop playback
 			actionStop();
 			break;
