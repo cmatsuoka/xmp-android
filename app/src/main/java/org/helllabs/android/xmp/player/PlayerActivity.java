@@ -564,7 +564,7 @@ public class PlayerActivity extends Activity {
 
 	public void playButtonListener(final View view) {
 		//Debug.startMethodTracing("xmp");				
-		synchronized (this) {
+		synchronized (playerLock) {
 			Log.d(TAG, "Play/pause button pressed (paused=" + paused + ")");
 			if (modPlayer != null) {
 				try {
@@ -764,7 +764,7 @@ public class PlayerActivity extends Activity {
 					// Write our all sequences button status to shared prefs
 					final boolean allSeq = modPlayer.getAllSequences();
 					if (allSeq != prefs.getBoolean(Preferences.ALL_SEQUENCES, false)) {
-						Log.w(TAG, "Write all sequences preference");
+						Log.d(TAG, "Write all sequences preference");
 						final SharedPreferences.Editor editor = prefs.edit();
 						editor.putBoolean(Preferences.ALL_SEQUENCES, allSeq);
 						editor.apply();
